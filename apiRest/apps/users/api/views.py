@@ -13,10 +13,11 @@ from apps.users.api.serializers import (
     PasswordSerializer
 )
 
-class UserViewSet(viewsets.ViewSet):
+class UserViewSet(viewsets.GenericViewSet):
     model = User
     serializer_class = UserSerializer
     list_serializer_class = UserListSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
     queryset = None
 
     def get_object(self, pk):

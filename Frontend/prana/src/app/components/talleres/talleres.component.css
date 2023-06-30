@@ -1,0 +1,22 @@
+.contenedor-principal {
+    background-color: #78c2ad;
+}
+
+#contenedor-tarjetas {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 0 45px;
+}
+#tarjeta {
+    margin-left: 20px;
+    
+    overflow: hidden;
+}
+
+h1 {
+    margin: 40px 0;
+}
+
+#img {
+    object-fit: cover;
+}

@@ -14,11 +14,15 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+class UserShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= User
+        fields=('dni','name','last_name')
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('dni', 'email', 'name', 'last_name')
+        fields = ('dni', 'email', 'name', 'last_name','phone')
 
 class PasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128, min_length=6, write_only=True)

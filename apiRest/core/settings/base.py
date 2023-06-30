@@ -48,7 +48,8 @@ THIRT_APPS=[
 ]
 
 OWN_APPS=[
-    'apps.users'
+    'apps.users',
+    'apps.usersProfile'
 ]
 INSTALLED_APPS = DJANGO_APPS+ THIRT_APPS + OWN_APPS
 

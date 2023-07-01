@@ -28,7 +28,7 @@ class DoctorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     medicLicence= models.CharField('Matrícula', max_length=20,null=True, blank=True)
     specialty= models.ManyToManyField(MedicalSpeciality)
-    insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlan')
+    insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlanDoctor')
 
     class Meta:
         verbose_name = 'Profesional'
@@ -59,11 +59,10 @@ class DoctorSchedule(models.Model):
         return f'Horario de: {self.doctor.user.last_name.upper()}, {self.doctor.user.name}, Dia: {self.day}'
     
 
-# Tabla intermedia Doctor- HealthInsurance- Almacena costo
-class InsurancePlan(models.Model):
+class InsurancePlanDoctor(models.Model):
     doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE)
     insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     
     class Meta:
         unique_together = ('doctor', 'insurance')
@@ -77,7 +76,7 @@ class PatientProfile(models.Model):
     facebook = models.CharField(max_length=80 ,blank=True, null=True)
     instagram = models.CharField(max_length=80,blank=True, null=True)
     address=models.CharField(max_length=200,blank=True, null=True)
-    insurances = models.ManyToManyField(HealthInsurance)
+    insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlanPatient')
 
     class Meta:
         verbose_name = 'Paciente'
@@ -85,3 +84,16 @@ class PatientProfile(models.Model):
 
     def __str__(self):
         return f'Paciente: {self.user.last_name}, {self.user.name}'
+
+
+class InsurancePlanPatient(models.Model):
+    patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE)
+    insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
+    code = models.CharField(max_length=100, blank=True, null=True)
+    
+    class Meta:
+        unique_together = ('patient', 'insurance')
+    
+    def __str__(self):
+        return f'Paciente: {self.patient.user.last_name.upper()}, {self.patient.user.name}, Mutual: {self.insurance.name}, N°: {self.code}'
+

@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality, DoctorProfile, 
-                     DoctorSchedule, InsurancePlan, PatientProfile)
+                                    DoctorSchedule, InsurancePlanDoctor,InsurancePlanPatient, PatientProfile)
 from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, 
                           DoctorProfileSerializer, DoctorScheduleSerializer, 
-                          InsurancePlanSerializer, PatientProfileSerializer)
+                          InsurancePlanDoctorSerializer,InsurancePlanPatientSerializer, PatientProfileSerializer)
 
 class HealthInsuranceViewSet(viewsets.ModelViewSet):
     queryset = HealthInsurance.objects.all()
@@ -21,9 +21,16 @@ class DoctorScheduleViewSet(viewsets.ModelViewSet):
     queryset = DoctorSchedule.objects.all()
     serializer_class = DoctorScheduleSerializer
 
-class InsurancePlanViewSet(viewsets.ModelViewSet):
-    queryset = InsurancePlan.objects.all()
-    serializer_class = InsurancePlanSerializer
+class InsurancePlanDoctorViewSet(viewsets.ModelViewSet):
+    queryset = InsurancePlanDoctor.objects.all()
+    serializer_class = InsurancePlanDoctorSerializer
+
+class InsurancePlanPatientViewSet(viewsets.ModelViewSet):
+    queryset = InsurancePlanPatient.objects.all()
+    serializer_class = InsurancePlanPatientSerializer
+
+
+
 
 class PatientProfileViewSet(viewsets.ModelViewSet):
     queryset = PatientProfile.objects.all()

@@ -6,11 +6,11 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.users.api.serializers import UserSerializer , LoginSerializer
+
 from apps.users.models import User
 from apps.users.api.serializers import (
-    UserSerializer, UserListSerializer, UpdateUserSerializer,
-    PasswordSerializer
+    UserSerializer, UserListSerializer, UpdateUserSerializer,LoginSerializer,
+    PasswordSerializer,RegisterUserSerializer, UserShortSerializer
 )
 
 class UserViewSet(viewsets.GenericViewSet):
@@ -127,3 +127,18 @@ class LogoutAPI(generics.GenericAPIView):
         except Exception as e:
             print(e)
             return Response({"message": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class RegisterAPI(generics.GenericAPIView):
+    serializer_class = RegisterUserSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({
+            "user": UserShortSerializer(user, context=self.get_serializer_context()).data,
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        },status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

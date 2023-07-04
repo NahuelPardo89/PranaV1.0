@@ -29,6 +29,7 @@ class DoctorProfile(models.Model):
     medicLicence= models.CharField('Matrícula', max_length=20,null=True, blank=True)
     specialty= models.ManyToManyField(MedicalSpeciality)
     insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlanDoctor')
+    is_active = models.BooleanField(default = True)
 
     class Meta:
         verbose_name = 'Profesional'
@@ -77,6 +78,7 @@ class PatientProfile(models.Model):
     instagram = models.CharField(max_length=80,blank=True, null=True)
     address=models.CharField(max_length=200,blank=True, null=True)
     insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlanPatient')
+    is_active = models.BooleanField(default = True)
 
     class Meta:
         verbose_name = 'Paciente'

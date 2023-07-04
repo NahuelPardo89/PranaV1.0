@@ -29,7 +29,7 @@ class InsurancePlanPatientSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DoctorProfileSerializer(serializers.ModelSerializer):
+class DoctorProfileAllSerializer(serializers.ModelSerializer):
     user= UserShortSerializer()
     specialty = MedicalSpecialitySerializer(many=True, read_only=True)
     insurances = serializers.SerializerMethodField()
@@ -41,8 +41,13 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
     
     def get_insurances(self, obj):
         
-        insurance_plans = InsurancePlan.objects.filter(doctor=obj)
+        insurance_plans = InsurancePlanDoctor.objects.filter(doctor=obj)
         return InsurancePlanSerializer(insurance_plans, many=True).data
+
+class DoctorProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorProfile
+        fields = '__all__'
 
 class PatientProfileSerializer(serializers.ModelSerializer):
     user= UserShortSerializer()

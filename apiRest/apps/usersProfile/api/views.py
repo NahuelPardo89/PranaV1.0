@@ -3,7 +3,8 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality, Doctor
                                     DoctorSchedule, InsurancePlanDoctor,InsurancePlanPatient, PatientProfile)
 from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, 
                           DoctorProfileSerializer, DoctorScheduleSerializer, 
-                          InsurancePlanDoctorSerializer,InsurancePlanPatientSerializer, PatientProfileSerializer)
+                          InsurancePlanDoctorSerializer,InsurancePlanPatientSerializer, PatientProfileSerializer,
+                          DoctorProfileAllSerializer)
 
 class HealthInsuranceViewSet(viewsets.ModelViewSet):
     queryset = HealthInsurance.objects.all()
@@ -14,12 +15,15 @@ class MedicalSpecialityViewSet(viewsets.ModelViewSet):
     serializer_class = MedicalSpecialitySerializer
 
 class DoctorProfileViewSet(viewsets.ModelViewSet):
-    queryset = DoctorProfile.objects.all()
+    queryset = DoctorProfile.objects.filter(is_active=True)
     serializer_class = DoctorProfileSerializer
+
 
 class DoctorScheduleViewSet(viewsets.ModelViewSet):
     queryset = DoctorSchedule.objects.all()
     serializer_class = DoctorScheduleSerializer
+
+
 
 class InsurancePlanDoctorViewSet(viewsets.ModelViewSet):
     queryset = InsurancePlanDoctor.objects.all()
@@ -33,5 +37,5 @@ class InsurancePlanPatientViewSet(viewsets.ModelViewSet):
 
 
 class PatientProfileViewSet(viewsets.ModelViewSet):
-    queryset = PatientProfile.objects.all()
+    queryset = PatientProfile.objects.filter(is_active=True)
     serializer_class = PatientProfileSerializer

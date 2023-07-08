@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate
-
+from django.utils import timezone
 from rest_framework import serializers 
 from apps.users.models import User
+from apps.usersProfile.models import PatientProfile, HealthInsurance
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -68,6 +69,17 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
+        user.last_login = timezone.now()
         user.set_password(password)
         user.save()
+        # Crear el perfil del paciente para el usuario
+        patient_profile = PatientProfile.objects.create(user=user)
+        try:
+            particular_insurance = HealthInsurance.objects.get(name='Particular')
+            patient_profile.insurances.add(particular_insurance)
+        except HealthInsurance.DoesNotExist:
+            print("La obra social 'Particular' no existe.")
+        
+        patient_profile.save()
+
         return user

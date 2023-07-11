@@ -25,7 +25,7 @@ class MedicalSpeciality(models.Model):
 
 
 class DoctorProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctorProfile')
     medicLicence= models.CharField('Matrícula', max_length=20,null=True, blank=True)
     specialty= models.ManyToManyField(MedicalSpeciality)
     insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlanDoctor')
@@ -73,7 +73,7 @@ class InsurancePlanDoctor(models.Model):
 
 
 class PatientProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patientProfile')
     facebook = models.CharField(max_length=80 ,blank=True, null=True)
     instagram = models.CharField(max_length=80,blank=True, null=True)
     address=models.CharField(max_length=200,blank=True, null=True)

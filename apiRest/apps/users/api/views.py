@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+
 from rest_framework import viewsets,permissions,status,generics,mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -8,14 +9,15 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.users.models import User
 from apps.users.api.serializers import (
-    UserSerializer, UserListSerializer, UpdateUserSerializer,LoginSerializer,
-    PasswordSerializer,RegisterUserSerializer, UserShortSerializer
+    UserSerializer, UserListSerializer, LoginSerializer,
+    PasswordSerializer,RegisterUserSerializer, UserShortSerializer,
+    UserAdminSerializer, LogoutSerializer
 )
 
 #ADMIN VIEWS
 class UserAdminViewSet(viewsets.GenericViewSet):
     model = User
-    serializer_class = UpdateUserSerializer
+    serializer_class = UserAdminSerializer
     list_serializer_class = UserListSerializer
     permission_classes = [permissions.IsAdminUser, ]
     queryset = None
@@ -29,7 +31,6 @@ class UserAdminViewSet(viewsets.GenericViewSet):
                             .filter(is_active=True)\
                             .values('id', 'dni', 'email', 'name','last_name','phone')
         return self.queryset
-
     
     def list(self, request):
         users = self.get_queryset()
@@ -41,15 +42,18 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         if user_serializer.is_valid():
             user=user_serializer.save()
             user.set_password(str(user.dni))
+            is_superuser = user_serializer.validated_data.get('is_superuser', False)
+            if is_superuser:
+                user.is_staff = True
+                user.is_superuser = True
             user.save()
             return Response({
-                'message': 'Usuario registrado correctamente.'
+                'message': 'Usuario creado correctamente.'
             }, status=status.HTTP_201_CREATED)
         return Response({
             'message': 'Hay errores en el registro',
             'errors': user_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
-
 
     def retrieve(self, request, pk=None):
         user = self.get_object(pk)
@@ -58,7 +62,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
     
     def update(self, request, pk=None):
         user = self.get_object(pk)
-        user_serializer = UpdateUserSerializer(user, data=request.data)
+        user_serializer = UserSerializer(user, data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
             return Response({
@@ -81,12 +85,10 @@ class UserAdminViewSet(viewsets.GenericViewSet):
 
 #NORMAL USERS VIEWS
 class LoggedUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
-    serializer_class = UpdateUserSerializer
+    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        # Only return the authenticated user
-        
         return self.request.user
 
     @action(detail=False, methods=['post'])
@@ -112,7 +114,7 @@ class LoginAPI(generics.GenericAPIView):
             user.save()
             refresh = RefreshToken.for_user(user)
             return Response({
-                "user": UserSerializer(user, context=self.get_serializer_context()).data,
+                "user": UserShortSerializer(user, context=self.get_serializer_context()).data,
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
                 "message": "Usuario logueado con éxito"
@@ -121,13 +123,16 @@ class LoginAPI(generics.GenericAPIView):
             return Response({"message":"Usuario o Contraseña incorrecto"}, status=status.HTTP_400_BAD_REQUEST)
 
 class LogoutAPI(generics.GenericAPIView):
-    
+    serializer_class = LogoutSerializer  
     permission_classes = [permissions.IsAuthenticated, ]
+    
 
     def post(self, request):
+        serializer = self.serializer_class(data=request.data)  
+        serializer.is_valid(raise_exception=True)  
         
         try:
-            refresh_token = request.data.get("refresh")
+            refresh_token = serializer.validated_data.get("refresh")  
             
             if not refresh_token:
                 return Response({"message": "No se proporcionó token de actualización"}, status=status.HTTP_400_BAD_REQUEST)
@@ -152,5 +157,6 @@ class RegisterAPI(generics.GenericAPIView):
             "user": UserShortSerializer(user, context=self.get_serializer_context()).data,
             "refresh": str(refresh),
             "access": str(refresh.access_token),
+            "message": "Usuario creado con éxito"
         },status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

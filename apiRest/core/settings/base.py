@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-DJANGO_APPS=[
+DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,19 +39,20 @@ DJANGO_APPS=[
     'django.contrib.staticfiles',
 ]
 
-THIRT_APPS=[
+THIRT_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
-    
+
 ]
 
-OWN_APPS=[
+OWN_APPS = [
     'apps.users',
-    'apps.usersProfile'
+    'apps.usersProfile',
+    'apps.appointments'
 ]
-INSTALLED_APPS = DJANGO_APPS+ THIRT_APPS + OWN_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRT_APPS + OWN_APPS
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -73,7 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
+
 ]
 
 ROOT_URLCONF = 'core.urls'

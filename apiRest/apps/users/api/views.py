@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-
 from apps.users.models import User
 from apps.users.api.serializers import (
     UserSerializer, UserListSerializer, LoginSerializer,
@@ -41,12 +40,6 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         user_serializer = self.serializer_class(data=request.data)
         if user_serializer.is_valid():
             user=user_serializer.save()
-            user.set_password(str(user.dni))
-            is_superuser = user_serializer.validated_data.get('is_superuser', False)
-            if is_superuser:
-                user.is_staff = True
-                user.is_superuser = True
-            user.save()
             return Response({
                 'message': 'Usuario creado correctamente.'
             }, status=status.HTTP_201_CREATED)
@@ -57,11 +50,13 @@ class UserAdminViewSet(viewsets.GenericViewSet):
 
     def retrieve(self, request, pk=None):
         user = self.get_object(pk)
+        doctor=user.doctorProfile
         user_serializer = self.serializer_class(user)
         return Response(user_serializer.data)
     
     def update(self, request, pk=None):
         user = self.get_object(pk)
+        
         user_serializer = UserSerializer(user, data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()

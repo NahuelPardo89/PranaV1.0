@@ -21,6 +21,27 @@ class UserAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('dni', 'email', 'name', 'last_name','phone', 'is_superuser')
+    
+    def create(self, validated_data):
+        password = validated_data.get('dni')
+        user = User(**validated_data)
+        user.set_password(str(password))
+        is_superuser = validated_data.get('is_superuser', False)
+        if is_superuser:
+            user.is_staff = True
+            user.is_superuser = True
+        user.save()
+        
+        patient_profile = PatientProfile.objects.create(user=user)
+        try:
+            particular_insurance = HealthInsurance.objects.get(name='Particular')
+            patient_profile.insurances.add(particular_insurance)
+        except HealthInsurance.DoesNotExist:
+            print("La obra social 'Particular' no existe.")
+        
+        patient_profile.save()
+
+        return user
 
 class PasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128, min_length=6, write_only=True)

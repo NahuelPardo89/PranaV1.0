@@ -15,6 +15,6 @@ urlpatterns=[
     path('logout/', LogoutAPI.as_view(), name='logout'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('singin/', RegisterAPI.as_view(), name='singin'),
-    path('myaccount/', LoggedUserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
-    path('myaccount/set_password/', LoggedUserViewSet.as_view({'post': 'set_password'}), name='user-set-password'),
+    path('me/', LoggedUserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
+    path('me/set_password/', LoggedUserViewSet.as_view({'post': 'set_password'}), name='user-set-password'),
 ]+router.urls

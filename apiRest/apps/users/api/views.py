@@ -77,6 +77,15 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         return Response({
             'message': 'No existe el usuario que desea eliminar'
         }, status=status.HTTP_404_NOT_FOUND)
+    
+    @action(detail=True, methods=['post'])
+    def reset_password(self, request, pk=None):
+        user = self.get_object(pk)
+        user.set_password(str(user.dni))  
+        user.save()
+        return Response({
+            'message': 'La contraseña del usuario se ha restablecido correctamente'
+        }, status=status.HTTP_200_OK)
 
 #NORMAL USERS VIEWS
 class LoggedUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):

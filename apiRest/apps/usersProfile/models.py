@@ -1,10 +1,12 @@
+from datetime import datetime
+
 from django.db import models
 
 from apps.users.models import User
 
-
 class HealthInsurance(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=150)
+   
     
     class Meta:
         verbose_name = 'Obra Social'
@@ -23,7 +25,6 @@ class MedicalSpeciality(models.Model):
     def __str__(self):
         return self.name
 
-
 class DoctorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctorProfile')
     medicLicence= models.CharField('Matrícula', max_length=20,null=True, blank=True)
@@ -37,6 +38,25 @@ class DoctorProfile(models.Model):
     def __str__(self):
         return f'Profesional: {self.user.last_name.upper()}, {self.user.name}'
 
+    def getSchedule(self):
+        return self.schedules.all()
+    
+    def getSchedule(self, date):
+        day_map = {
+            0: 'mon',
+            1: 'tue',
+            2: 'wed',
+            3: 'thu',
+            4: 'fri',
+            5: 'sat',
+            6: 'sun'
+        }
+        date_obj = datetime.strptime(date, '%d-%m-%Y')
+        weekday = date_obj.weekday()
+        day_choice = day_map[weekday]
+        schedule = self.schedules.filter(day=day_choice)
+        return schedule
+    
 class DoctorSchedule(models.Model):
     DAY_CHOICES = [
         ('mon', 'Lunes'),
@@ -57,8 +77,7 @@ class DoctorSchedule(models.Model):
         verbose_name_plural = 'Horarios'
 
     def __str__(self):
-        return f'Horario de: {self.doctor.user.last_name.upper()}, {self.doctor.user.name}, Dia: {self.day}'
-    
+        return f'Horario de: {self.doctor.user.last_name}, {self.doctor.user.name}, Dia: {self.day}'
 
 class InsurancePlanDoctor(models.Model):
     doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE)
@@ -69,8 +88,7 @@ class InsurancePlanDoctor(models.Model):
         unique_together = ('doctor', 'insurance')
     
     def __str__(self):
-        return f'Profesional: {self.doctor.user.last_name.upper()}, {self.doctor.user.name}, Mutual: {self.insurance.name}, Costo: {self.price}'
-
+        return f'Profesional: {self.doctor.user.last_name}, {self.doctor.user.name}, Mutual: {self.insurance.name}, Costo: {self.price}'
 
 class PatientProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patientProfile')
@@ -87,7 +105,6 @@ class PatientProfile(models.Model):
     def __str__(self):
         return f'Paciente: {self.user.last_name}, {self.user.name}'
 
-
 class InsurancePlanPatient(models.Model):
     patient = models.ForeignKey(PatientProfile, on_delete=models.CASCADE)
     insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
@@ -97,5 +114,5 @@ class InsurancePlanPatient(models.Model):
         unique_together = ('patient', 'insurance')
     
     def __str__(self):
-        return f'Paciente: {self.patient.user.last_name.upper()}, {self.patient.user.name}, Mutual: {self.insurance.name}, N°: {self.code}'
+        return f'Paciente: {self.patient.user.last_name}, {self.patient.user.name}, Mutual: {self.insurance.name}, N°: {self.code}'
 

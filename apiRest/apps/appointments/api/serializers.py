@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from apps.appointments.models import Appointment
+from apps.appointments.models import Appointment, DoctorProfile
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
@@ -80,11 +80,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         if existing_appointment.exists():
             raise serializers.ValidationError(
-                "There is already an appointment at this date and time.")
-
-        if existing_appointment.exists():
-            raise serializers.ValidationError(
-                "There is already an appointment at this date and time.")
+                "Ya existe un turno agendado para este día y horario.")
 
         # Checks that a paid status is greater than zero
         if attrs['state'] == '4' and attrs['full_cost'] < 0:
@@ -113,5 +109,24 @@ class AppointmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "El costo de una consulta no puede ser negativo.")
 
+        # # Check if the appointment fit with the doctor schedule
+        # try:
+        #     doctor = DoctorProfile.objects.get(id=attrs['doctor'])
+        #     # Mira si el diccionario no es vacío, es decir que el doctor trabaja ese día
+        #     if doctor.get_schedule(attrs['day']):
+        #         # Busca el rango de horarios
+        #         for entry in doctor.get_schedule(attrs['day']):
+        #             # acá ver como me devuelve el gordo los horarios en el diccionario y compararlo con attrs[hour]
+        #             pass
+        #     else:
+        #         raise serializers.ValidationError(
+        #             "La fecha ingresada no coincide con el cronograma de trabajo del profesional")
+        # # Podría no encotrar el doc en caso de update
+        # except:
+        #     raise serializers.ValidationError(
+        #         "Doctor no encontrado")
+
         # Another option could be check if a doctor.is_active()
+
+        # Validar la forma de pago cuando el estado cambie a pago
         return attrs

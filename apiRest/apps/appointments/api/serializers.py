@@ -109,22 +109,28 @@ class AppointmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "El costo de una consulta no puede ser negativo.")
 
-        # # Check if the appointment fit with the doctor schedule
-        # try:
-        #     doctor = DoctorProfile.objects.get(id=attrs['doctor'])
-        #     # Mira si el diccionario no es vacío, es decir que el doctor trabaja ese día
-        #     if doctor.get_schedule(attrs['day']):
-        #         # Busca el rango de horarios
-        #         for entry in doctor.get_schedule(attrs['day']):
-        #             # acá ver como me devuelve el gordo los horarios en el diccionario y compararlo con attrs[hour]
-        #             pass
-        #     else:
-        #         raise serializers.ValidationError(
-        #             "La fecha ingresada no coincide con el cronograma de trabajo del profesional")
-        # # Podría no encotrar el doc en caso de update
-        # except:
-        #     raise serializers.ValidationError(
-        #         "Doctor no encontrado")
+        # Check if the appointment fit with the doctor schedule
+        try:
+            doctor = DoctorProfile.objects.get(id=attrs['doctor'])
+            schedule = doctor.schedules.filter(day = attrs['day'])
+            # Mira si el diccionario es vacío, es decir que el doctor NO trabaja ese día
+            if not schedule.exists():
+                raise serializers.ValidationError("El profesional no trabaja en el día seleccionado.")
+            
+            appointment_start = datetime.combine(attrs['day'], attrs['hour'])
+            appointment_end = appointment_start + attrs['duration']
+
+            for entry in schedule:
+                schedule_start = datetime.combine(attrs['day'], entry.start)
+                schedule_end = datetime.combine(attrs['day'], entry.end)
+
+            if not (appointment_start >= schedule_start and appointment_end <= schedule_end):
+                # El horario del turno NO está dentro del rango horario del doctor
+                raise serializers.ValidationError("El horario del turno no coincide con el rango horario del doctor.")
+        # Podría no encotrar el doc en caso de update
+        except:
+            raise serializers.ValidationError(
+                "Doctor no encontrado")
 
         # Another option could be check if a doctor.is_active()
 

@@ -47,12 +47,9 @@ class DoctorProfileAllSerializer(serializers.ModelSerializer):
 class DoctorProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorProfile
-        fields = '__all__'
+        fields = ('user', 'medicLicence', 'specialty', 'insurances')
 
 class PatientProfileSerializer(serializers.ModelSerializer):
-    user= UserShortSerializer()
-    insurances = HealthInsuranceSerializer(many=True, read_only=True)
-
     class Meta:
         model = PatientProfile
         fields = '__all__'

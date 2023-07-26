@@ -38,11 +38,17 @@ class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):
 class PatientProfileAdminViewSet(viewsets.ModelViewSet):
     queryset = PatientProfile.objects.filter(is_active=True)
     serializer_class = PatientProfileSerializer
+    
+    def destroy(self, request, *args, **kwargs):
+        patient_profile = self.get_object()
+        patient_profile.is_active = False
+        patient_profile.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class DoctorProfileAdminViewSet(viewsets.GenericViewSet):
     model = DoctorProfile
     serializer_class = DoctorProfileSerializer
-    permission_classes = [permissions.IsAdminUser, ]
+    #permission_classes = [permissions.IsAdminUser, ]
     queryset = None
 
     def get_object(self, pk):
@@ -62,6 +68,7 @@ class DoctorProfileAdminViewSet(viewsets.GenericViewSet):
         doctor_serializer = self.serializer_class(data=request.data)
         if doctor_serializer.is_valid():
             doctor=doctor_serializer.save()
+            doctor.is_active=True
             doctor.save()
             return Response({
                 'message': 'Profesional creado correctamente.'

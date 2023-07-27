@@ -1,9 +1,9 @@
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, permissions
-from apps.appointments.api.serializers import AppointmentSerializer
-from apps.appointments.models import Appointment
+from rest_framework import status, generics, permissions
+from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer
+from apps.appointments.models import Appointment, PaymentMethod
 
 
 class AppointmentListCreateView(APIView):
@@ -72,3 +72,13 @@ class AppointmentDetailView(APIView):
         appointment = self.get_object(pk)
         appointment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PaymentMethodListCreateView(generics.ListCreateAPIView):
+    queryset = PaymentMethod.objects.all()
+    serializer_class = PaymentMethodSerializer
+
+
+class PaymentMethodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PaymentMethod.objects.all()
+    serializer_class = PaymentMethodSerializer

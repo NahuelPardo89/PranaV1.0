@@ -36,7 +36,7 @@ class DoctorProfile(models.Model):
         verbose_name = 'Profesional'
         verbose_name_plural = 'Profesionales'
     def __str__(self):
-        return f'Profesional: {self.user.last_name.upper()}, {self.user.name}'
+        return f'Profesional: {self.user.last_name}, {self.user.name}'
 
     def getSchedule(self):
         return self.schedules.all()

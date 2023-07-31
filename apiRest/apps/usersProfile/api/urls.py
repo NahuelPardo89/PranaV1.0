@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet, 
                     DoctorProfileAdminViewSet, DoctorScheduleAdminViewSet, 
-                    InsurancePlanDoctorAdminViewSet,InsurancePlanPatientAdminViewSet, PatientProfileAdminViewSet, DoctorUserViewSet)
+                    InsurancePlanDoctorAdminViewSet,InsurancePlanPatientAdminViewSet, PatientProfileAdminViewSet, DoctorUserViewSet,PatientUserViewSet)
 
 routerAdmin = DefaultRouter()
 routerAdmin.register(r'health-insurances', HealthInsuranceAdminViewSet, basename='health-insurances')
@@ -19,4 +19,5 @@ routerAdmin.register(r'patient', PatientProfileAdminViewSet, basename='patient-p
 urlpatterns = [
     path('admin/', include(routerAdmin.urls)),
     path('doctor/', DoctorUserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
+    path('patient/', PatientUserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
 ]

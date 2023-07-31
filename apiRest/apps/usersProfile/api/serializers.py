@@ -53,3 +53,18 @@ class PatientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientProfile
         fields = '__all__'
+
+class PatientShortProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientProfile
+        fields = ('facebook', 'instagram', 'address','insurances')
+        read_only_fields = ('insurances',)
+
+class DoctorProfileShortSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = DoctorProfile
+        fields = ('medicLicence', 'specialty', 'insurances')
+        read_only_fields = ('insurances','specialty')
+   
+   

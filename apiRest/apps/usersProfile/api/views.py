@@ -12,7 +12,8 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality, Doctor
                                     DoctorSchedule, InsurancePlanDoctor,InsurancePlanPatient, PatientProfile)
 from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
                           DoctorProfileSerializer, DoctorScheduleSerializer, PatientProfileSerializer,
-                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer)
+                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer,PatientShortProfileSerializer,
+                          DoctorProfileShortSerializer)
                           
 #ADMINS VIEWS
 class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
@@ -109,8 +110,15 @@ class DoctorProfileAdminViewSet(viewsets.GenericViewSet):
 
 
 class DoctorUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
-    serializer_class = DoctorProfileSerializer
+    serializer_class = DoctorProfileShortSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user.doctorProfile
+
+class PatientUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+    serializer_class = PatientShortProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.patientProfile

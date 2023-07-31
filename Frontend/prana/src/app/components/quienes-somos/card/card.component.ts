@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EspecialidadesService } from '../especialidades.service';
+import { EspecialidadesService } from '../../../Services/especialidades.service';
 
 @Component({
   selector: 'app-card',

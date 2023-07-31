@@ -1,0 +1,18 @@
+.logo {
+    width: 2%;
+    
+    margin-right: 15px;
+}
+.login {
+    display: flex;
+    list-style: none;
+}
+
+.login > li {
+    margin: 5px 15px;
+}
+
+.active {
+    background-color: #999;
+    border-radius: 25%;
+}

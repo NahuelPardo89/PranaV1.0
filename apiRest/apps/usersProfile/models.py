@@ -38,24 +38,24 @@ class DoctorProfile(models.Model):
     def __str__(self):
         return f'Profesional: {self.user.last_name}, {self.user.name}'
 
-    def getSchedule(self):
-        return self.schedules.all()
-    
-    def getSchedule(self, date):
-        day_map = {
-            0: 'mon',
-            1: 'tue',
-            2: 'wed',
-            3: 'thu',
-            4: 'fri',
-            5: 'sat',
-            6: 'sun'
-        }
-        date_obj = datetime.strptime(date, '%d-%m-%Y')
-        weekday = date_obj.weekday()
-        day_choice = day_map[weekday]
-        schedule = self.schedules.filter(day=day_choice)
-        return schedule
+    def getSchedule(self, date=None):
+        if date is None:
+            return self.schedules.all()
+        else:
+            day_map = {
+                0: 'mon',
+                1: 'tue',
+                2: 'wed',
+                3: 'thu',
+                4: 'fri',
+                5: 'sat',
+                6: 'sun'
+            }
+            date_obj = datetime.strptime(date, '%d-%m-%Y')
+            weekday = date_obj.weekday()
+            day_choice = day_map[weekday]
+            schedule = self.schedules.filter(day=day_choice)
+            return schedule
     
 class DoctorSchedule(models.Model):
     DAY_CHOICES = [

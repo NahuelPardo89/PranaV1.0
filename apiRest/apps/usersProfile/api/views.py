@@ -14,44 +14,24 @@ from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer
                           DoctorProfileSerializer, DoctorScheduleSerializer, PatientProfileSerializer,
                           InsurancePlanPatientSerializer, DoctorProfileAllSerializer,PatientShortProfileSerializer,
                           DoctorProfileShortSerializer)
-                          
-#ADMINS VIEWS
-class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
-    queryset = HealthInsurance.objects.all()
-    serializer_class = HealthInsuranceSerializer
+class IsAdminOrReadOnly(permissions.BasePermission):
+    """
+    Custom permission to only allow admin users to edit it.
+    """
 
-class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
-    queryset = MedicalSpeciality.objects.all()
-    serializer_class = MedicalSpecialitySerializer
-
-class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):
-    queryset = DoctorSchedule.objects.all()
-    serializer_class = DoctorScheduleSerializer
-
-class InsurancePlanPatientAdminViewSet(viewsets.ModelViewSet):
-    queryset = InsurancePlanPatient.objects.all()
-    serializer_class = InsurancePlanPatientSerializer
-
-class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):
-    queryset = InsurancePlanDoctor.objects.all()
-    serializer_class = InsurancePlanDoctorSerializer
-
-class PatientProfileAdminViewSet(viewsets.ModelViewSet):
-    queryset = PatientProfile.objects.filter(is_active=True)
-    serializer_class = PatientProfileSerializer
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            # The method is a safe method
+            return True
+        else:
+            # The method is not a safe method
+            # Only allow if the user is admin
+            return request.user.is_staff
+#ADMIN VIEWS
+class BaseAdminViewSet(viewsets.GenericViewSet):
+    """ BASE ADMIN VIEWSET """
+    permission_classes = [IsAdminOrReadOnly, ]
     
-    def destroy(self, request, *args, **kwargs):
-        patient_profile = self.get_object()
-        patient_profile.is_active = False
-        patient_profile.save()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-class DoctorProfileAdminViewSet(viewsets.GenericViewSet):
-    model = DoctorProfile
-    serializer_class = DoctorProfileSerializer
-    #permission_classes = [permissions.IsAdminUser, ]
-    queryset = None
-
     def get_object(self, pk):
         return get_object_or_404(self.model, pk=pk)
 
@@ -61,54 +41,95 @@ class DoctorProfileAdminViewSet(viewsets.GenericViewSet):
         return self.queryset
     
     def list(self, request):
-        doctors = self.get_queryset()
-        doctors_serializer = self.serializer_class(doctors, many=True)
-        return Response(doctors_serializer.data, status=status.HTTP_200_OK)
+        instances = self.get_queryset()
+        instances_serializer = self.serializer_class(instances, many=True)
+        return Response(instances_serializer.data, status=status.HTTP_200_OK)
     
     def create(self, request):
-        doctor_serializer = self.serializer_class(data=request.data)
-        if doctor_serializer.is_valid():
-            doctor=doctor_serializer.save()
-            doctor.is_active=True
-            doctor.save()
+        instance_serializer = self.serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance=instance_serializer.save()
+            instance.save()
             return Response({
-                'message': 'Profesional creado correctamente.'
+                'message': 'Profile creado correctamente.'
             }, status=status.HTTP_201_CREATED)
         return Response({
-            'message': 'Hay errores en el registro de profesional',
-            'errors':doctor_serializer.errors
+            'message': 'Hay errores en el registro de Profile',
+            'errors':instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
-        doctor = self.get_object(pk)
-        doctor_serializer = self.serializer_class(doctor)
-        return Response(doctor_serializer.data)
+        instance= self.get_object(pk)
+        instance_serializer = self.serializer_class(instance)
+        return Response(instance_serializer.data)
     
     def update(self, request, pk=None):
-        doctor = self.get_object(pk)
-        doctor_serializer = self.serializer_class(doctor, data=request.data)
-        if doctor_serializer.is_valid():
-            doctor_serializer.save()
+        instance = self.get_object(pk)
+        instance_serializer = self.serializer_class(instance, data=request.data)
+        if instance_serializer.is_valid():
+            instance_serializer.save()
             return Response({
-                'message': 'Profesional actualizado correctamente'
+                'message': 'Profile actualizado correctamente'
             }, status=status.HTTP_200_OK)
         return Response({
             'message': 'Hay errores en la actualización',
-            'errors': doctor_serializer.errors
+            'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
         doctor_destroy = self.model.objects.filter(id=pk).update(is_active=False)
         if doctor_destroy == 1:
             return Response({
-                'message': 'Profesional eliminado correctamente'
-            })
+                'message': 'Profile eliminado correctamente'},status=status.HTTP_204_NO_CONTENT
+            )
         return Response({
-            'message': 'No existe el profesional que desea eliminar'
+            'message': 'No existe el Profile que desea eliminar'
         }, status=status.HTTP_404_NOT_FOUND)
+                 
 
+class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
+    queryset = HealthInsurance.objects.all()
+    serializer_class = HealthInsuranceSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
+class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
+    queryset = MedicalSpeciality.objects.all()
+    serializer_class = MedicalSpecialitySerializer
+    permission_classes = [IsAdminOrReadOnly]
 
+class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):
+    queryset = DoctorSchedule.objects.all()
+    serializer_class = DoctorScheduleSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class InsurancePlanPatientAdminViewSet(viewsets.ModelViewSet):
+    queryset = InsurancePlanPatient.objects.all()
+    serializer_class = InsurancePlanPatientSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):
+    queryset = InsurancePlanDoctor.objects.all()
+    serializer_class = InsurancePlanDoctorSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class PatientProfileAdminViewSet(BaseAdminViewSet):
+    model = PatientProfile
+    serializer_class = PatientProfileSerializer
+    queryset = None
+
+class DoctorProfileAdminViewSet(BaseAdminViewSet):
+    model = DoctorProfile
+    serializer_class = DoctorProfileSerializer
+    queryset = None
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        speciality = self.request.query_params.get('speciality', None)
+        if speciality is not None:
+            queryset = queryset.filter(specialty__name=speciality)
+        return queryset
+
+#NORMAL USERS VIEWSETS
 class DoctorUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     serializer_class = DoctorProfileShortSerializer
     permission_classes = [permissions.IsAuthenticated]

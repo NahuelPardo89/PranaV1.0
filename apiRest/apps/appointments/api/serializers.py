@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from django.contrib.auth import authenticate
+from django.db.models import Q
 from rest_framework import serializers
 from apps.usersProfile.models import DoctorProfile
 from apps.appointments.models import Appointment, PaymentMethod
@@ -55,30 +56,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def validate_full_cost(self, full_cost):
-        """
-        Validate that the full_cost is not negative.
-        """
-        if full_cost is not None and full_cost < 0:
-            raise serializers.ValidationError(
-                "El costo de la consulta no puede ser negativo.")
-
-    def validate_hi(self, hi):
-        """
-        Validate that the patient and the professional shares the given hi.
-        """
-        if (self.instance is not None) and (hi not in self.instance.find_common_hi()):
-            raise serializers.ValidationError(
-                "Profesional y paciente no comparten esta obra social.")
-
-    def validate_payment_method(self, state, payment_method):
-        """
-        Validate that exists a payment method when state is 'Pagado' 
-        """
-        if state == '4' and payment_method is None:
-            raise serializers.ValidationError(
-                "Se debe asignar un método de pago para un estado 'Pagado'.")
-
     def validate(self, attrs):
         """
         Custom validation method for the Appointment object.
@@ -94,10 +71,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
             serializers.ValidationError: If any validation rule fails.
         """
 
-        # Check if there is an existing appointment on the same day and time
+        # Check if there is an existing appointment on the same day and time for the doctor
         existing_appointment = Appointment.objects.filter(
-            day=attrs['day'],
-            hour=attrs['hour']
+            Q(day=attrs['day']),
+            Q(hour=attrs['hour']),
+            Q(doctor=attrs['doctor'])
         )
 
         # If is a update we must exclude the current instance
@@ -107,7 +85,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         if existing_appointment.exists():
             raise serializers.ValidationError(
-                "Ya existe un turno agendado para este día y horario.")
+                "Ya existe un turno agendado para este doctor en el día y horario seleccionado.")
 
         # Check if the appointment day is in the past
         if attrs['day'] < date.today():
@@ -126,7 +104,9 @@ class AppointmentSerializer(serializers.ModelSerializer):
                 "El turno no puede ser reservado en una hora anterior a la actual.")
 
         # Check if the cost is non-negative integer
-        self.validate_full_cost(attrs.get('full_cost'))
+        if attrs.get('full_cost') is not None and attrs.get('full_cost') < 0:
+            raise serializers.ValidationError(
+                "El costo de la consulta no puede ser negativo.")
 
         # Check if the appointment fit with the doctor schedule
         try:
@@ -147,22 +127,27 @@ class AppointmentSerializer(serializers.ModelSerializer):
                 schedule_start = datetime.combine(attrs['day'], entry.start)
                 schedule_end = datetime.combine(attrs['day'], entry.end)
 
-            # Check for appointment out of range
-            if not (appointment_start >= schedule_start and appointment_end <= schedule_end):
-                raise serializers.ValidationError(
-                    "El profesional no trabaja en el horario seleccionado.")
+                # The appointment fits within at least one schedule range
+                if appointment_start >= schedule_start and appointment_end <= schedule_end:
+                    break
+                else:
+                    raise serializers.ValidationError(
+                        "El profesional no trabaja en el horario seleccionado.")
 
         # In a update case, check if the professional exists
         except DoctorProfile.DoesNotExist:
             raise serializers.ValidationError(
                 "Profesional no encontrado")
 
-        # Checks the payment method
-        self.validate_payment_method(
-            attrs.get('state'), attrs.get('payment_method'))
+        # Checks that exists a payment method when state is 'Pagado'
+        if attrs.get('state') == '4' and attrs.get('payment_method') is None:
+            raise serializers.ValidationError(
+                "Se debe asignar un método de pago para un estado 'Pagado'.")
 
-        # Update -> Check if the professional and patient shares the given hi
-        self.validate_hi(attrs.get('health_insurance'))
+        # Update -> Checks if the professional and the patient shares the given hi
+        if (self.instance is not None) and (attrs.get('health_insurance') not in self.instance.find_common_hi()):
+            raise serializers.ValidationError(
+                "Profesional y paciente no comparten esta obra social.")
         return attrs
 
 

@@ -46,6 +46,9 @@ class Appointment(models.Model):
     def find_common_hi(self):
         """
         Find the common insurances between a professional and a patient
+
+        Returns:
+            set: A set containing the common HealthInsurance objects.
         """
         return set(self.doctor.insurances.all()) & set(
             self.patient.insurances.all())
@@ -56,7 +59,7 @@ class Appointment(models.Model):
         common insurances considering that at least they always have one: "Particular"
 
         Returns:
-            the id of the health insurance
+            int: The id of the selected HealthInsurance object.
         """
 
         # find the common insurances between the doctor and the patient
@@ -84,7 +87,11 @@ class Appointment(models.Model):
     def set_cost(self, update=False):
         """
         Set the patient copayment and health insurance copayment based on the health insurance.
-        based on the doctor's insurance price.
+        Calculate the copayment amounts based on the doctor's insurance price.
+
+        Args:
+            update (bool, optional): Whether to update the existing appointment or create a new one. 
+                                     Defaults to False.
         """
         if not update:
             hi = self.set_hi()
@@ -94,12 +101,15 @@ class Appointment(models.Model):
 
         insurance_plan = InsurancePlanDoctor.objects.get(
             doctor=self.doctor, insurance=insurance)
-        self.patient_copayment = insurance_plan.price
-        self.hi_copayment = self.full_cost - self.patient_copayment
+        self.patient_copayment = min(insurance_plan.price, self.full_cost)
+        self.hi_copayment = max(self.full_cost - self.patient_copayment, 0)
 
     def __str__(self):
         """
         Method for string representation of an appointment
+
+        Returns:
+            str: A formatted string containing appointment information.
         """
         return f"""Turno del día: {self.day} , Horario: {self.hour} \n 
             Paciente: {self.patient.user.last_name}, {self.patient.user.name} \n 

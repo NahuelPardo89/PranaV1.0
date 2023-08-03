@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.http import Http404
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import viewsets,permissions,status,generics,mixins
 from rest_framework.decorators import action
@@ -8,33 +10,31 @@ from rest_framework import viewsets
 
 
 
-from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality, DoctorProfile, 
-                                    DoctorSchedule, InsurancePlanDoctor,InsurancePlanPatient, PatientProfile)
-from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
-                          DoctorProfileSerializer, DoctorScheduleSerializer, PatientProfileSerializer,
-                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer,PatientShortProfileSerializer,
+from apps.usersProfile.models import (HealthInsurance,MedicalSpeciality,  DoctorProfile, 
+                                      DoctorSchedule, InsurancePlanDoctor,InsurancePlanPatient, 
+                                      PatientProfile)
+                                      
+from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
+                          DoctorProfileSerializer,        DoctorScheduleSerializer,    PatientProfileSerializer,
+                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
                           DoctorProfileShortSerializer)
-class IsAdminOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission to only allow admin users to edit it.
-    """
 
+class IsAdminOrReadOnly(permissions.BasePermission):
+  
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
-            # The method is a safe method
             return True
         else:
-            # The method is not a safe method
-            # Only allow if the user is admin
             return request.user.is_staff
+
 #ADMIN VIEWS
 class BaseAdminViewSet(viewsets.GenericViewSet):
     """ BASE ADMIN VIEWSET """
-    permission_classes = [IsAdminOrReadOnly, ]
+    #permission_classes = [IsAdminOrReadOnly, ]
     
     def get_object(self, pk):
-        return get_object_or_404(self.model, pk=pk)
-
+        return get_object_or_404(self.model,pk=pk)
+     
     def get_queryset(self):
         if self.queryset is None:
             self.queryset = self.model.objects.filter(is_active=True)
@@ -49,7 +49,6 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
         instance_serializer = self.serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance=instance_serializer.save()
-            instance.save()
             return Response({
                 'message': 'Profile creado correctamente.'
             }, status=status.HTTP_201_CREATED)
@@ -77,8 +76,8 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
-        doctor_destroy = self.model.objects.filter(id=pk).update(is_active=False)
-        if doctor_destroy == 1:
+        instance_destroy = self.model.objects.filter(id=pk).update(is_active=False)
+        if instance_destroy == 1:
             return Response({
                 'message': 'Profile eliminado correctamente'},status=status.HTTP_204_NO_CONTENT
             )
@@ -135,11 +134,18 @@ class DoctorUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixi
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.doctorProfile
+        try:
+            return self.request.user.doctorProfile
+        except ObjectDoesNotExist:
+            raise Http404("No existe un perfil de doctor para el usuario autenticado.")
+
 
 class PatientUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     serializer_class = PatientShortProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        return self.request.user.patientProfile
+        try:
+            return self.request.user.patientProfile
+        except ObjectDoesNotExist:
+            raise Http404("No existe un perfil de paciente para el usuario autenticado.")

@@ -45,14 +45,29 @@ class DoctorProfileAllSerializer(serializers.ModelSerializer):
         return InsurancePlanSerializer(insurance_plans, many=True).data
 
 class DoctorProfileSerializer(serializers.ModelSerializer):
+    is_active = serializers.BooleanField(required=False)
+
     class Meta:
         model = DoctorProfile
-        fields = '__all__'
+        fields = ('user', 'medicLicence', 'specialty', 'insurances', 'is_active')
 
 class PatientProfileSerializer(serializers.ModelSerializer):
-    user= UserShortSerializer()
-    insurances = HealthInsuranceSerializer(many=True, read_only=True)
-
+    is_active = serializers.BooleanField(required=False)
     class Meta:
         model = PatientProfile
-        fields = '__all__'
+        fields = ('user','facebook', 'instagram', 'address','insurances','is_active')
+
+class PatientShortProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientProfile
+        fields = ('facebook', 'instagram', 'address','insurances')
+        read_only_fields = ('insurances',)
+
+class DoctorProfileShortSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = DoctorProfile
+        fields = ('medicLicence', 'specialty', 'insurances')
+        read_only_fields = ('insurances','specialty')
+   
+   

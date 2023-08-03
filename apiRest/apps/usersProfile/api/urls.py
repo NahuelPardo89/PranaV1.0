@@ -1,18 +1,23 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import (HealthInsuranceViewSet, MedicalSpecialityViewSet, 
-                    DoctorProfileViewSet, DoctorScheduleViewSet, 
-                    InsurancePlanDoctorViewSet,InsurancePlanPatientViewSet, PatientProfileViewSet)
+from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet, 
+                    DoctorProfileAdminViewSet, DoctorScheduleAdminViewSet, 
+                    InsurancePlanDoctorAdminViewSet,InsurancePlanPatientAdminViewSet, PatientProfileAdminViewSet, DoctorUserViewSet,PatientUserViewSet)
 
-router = DefaultRouter()
-router.register(r'health-insurances', HealthInsuranceViewSet, basename='health-insurances')
-router.register(r'medical-specialities', MedicalSpecialityViewSet, basename='medical-specialities')
-router.register(r'doctor-profiles', DoctorProfileViewSet, basename='doctor-profiles')
-router.register(r'doctor-schedules', DoctorScheduleViewSet, basename='doctor-schedules')
-router.register(r'insurance-plans-doctor', InsurancePlanDoctorViewSet, basename='insurance-plans-doctor')
-router.register(r'insurance-plans-patient', InsurancePlanPatientViewSet, basename='insurance-plans-patient')
-router.register(r'patient-profiles', PatientProfileViewSet, basename='patient-profiles')
+routerAdmin = DefaultRouter()
+routerAdmin.register(r'health-insurances', HealthInsuranceAdminViewSet, basename='health-insurances')
+routerAdmin.register(r'doctor-specialities', MedicalSpecialityAdminViewSet, basename='medical-specialities')
+routerAdmin.register(r'doctor', DoctorProfileAdminViewSet, basename='doctor-profiles')
+routerAdmin.register(r'doctor-schedules', DoctorScheduleAdminViewSet, basename='doctor-schedules')
+routerAdmin.register(r'insurance-plans-doctor', InsurancePlanDoctorAdminViewSet, basename='insurance-plans-doctor')
+routerAdmin.register(r'insurance-plans-patient', InsurancePlanPatientAdminViewSet, basename='insurance-plans-patient')
+routerAdmin.register(r'patient', PatientProfileAdminViewSet, basename='patient-profiles')
+
+
+
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('admin/', include(routerAdmin.urls)),
+    path('doctor/', DoctorUserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
+    path('patient/', PatientUserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
 ]

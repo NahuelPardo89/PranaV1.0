@@ -1,8 +1,9 @@
-from django.urls import path
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from apps.appointments.api.views import AppointmentListCreateView, AppointmentDetailView, PaymentMethodListCreateView, PaymentMethodRetrieveUpdateDestroyView
+from apps.appointments.api.views import AppointmentListCreateView, AppointmentDetailView, PaymentMethodListCreateView, PaymentMethodRetrieveUpdateDestroyView, PatientAppointmentsListView, PatientAppointmentDeleteView
 
 router = DefaultRouter()
+router.register('', PatientAppointmentsListView, basename='patient')
 
 urlpatterns = [
     path('', AppointmentListCreateView.as_view(),
@@ -13,4 +14,7 @@ urlpatterns = [
          name='payment-method-list-create'),
     path('payment_method/<int:pk>/', PaymentMethodRetrieveUpdateDestroyView.as_view(),
          name='payment-method-retrieve-update-destroy'),
+    path('patient/', include(router.urls)),
+    path('patient/cancel/<int:pk>/',
+         PatientAppointmentDeleteView.as_view(), name='appointment-cancel'),
 ]

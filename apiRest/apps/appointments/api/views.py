@@ -1,8 +1,10 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics, permissions
-from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer
+from rest_framework import status, generics, permissions, viewsets
+from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer, PatientAppointmentSerializer
+from apps.usersProfile.models import PatientProfile
 from apps.appointments.models import Appointment, PaymentMethod
 
 
@@ -75,10 +77,88 @@ class AppointmentDetailView(APIView):
 
 
 class PaymentMethodListCreateView(generics.ListCreateAPIView):
+    """
+    API view for listing payment methods.
+    """
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
 
 
 class PaymentMethodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API view for updating, and deleting a payment method.
+    """
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
+
+
+class PatientAppointmentsListView(viewsets.GenericViewSet):
+    """
+    API view for listing appointments for the currently authenticated patient.
+    """
+    model = Appointment
+    queryset = None
+    serializer_class = PatientAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+
+        # def get_object(self):
+        """
+        Get the list of appointments for the currently authenticated patient.
+        """
+        try:
+            patient = self.request.user.patientProfile
+            print("Paciente: ", patient)
+            return Appointment.objects.filter(patient=patient)
+        except PatientProfile.DoesNotExist:
+            raise Http404()
+
+    def list(self, request):
+        instances = self.get_queryset()
+        instances_serializer = self.serializer_class(instances, many=True)
+        return Response(instances_serializer.data, status=status.HTTP_200_OK)
+
+
+class PatientAppointmentDeleteView(generics.DestroyAPIView):
+    """
+    API view to cancel an appointment of the authenticated patient.
+    """
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self, pk):
+        patient = self.request.user.patientProfile
+        return get_object_or_404(Appointment, pk=pk, patient=patient)
+
+
+# class PatientAppointmentsListView(generics.ListAPIView):
+#     """
+#     API view for listing appointments for the currently authenticated patient.
+#     """
+#     queryset = None
+#     serializer_class = PatientAppointmentSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get_queryset(self):
+
+#         # def get_object(self):
+#         """
+#         Get the list of appointments for the currently authenticated patient.
+#         """
+#         patient = self.request.user.patientProfile
+#         return Appointment.objects.filter(patient=patient)
+
+
+# class PatientAppointmentDeleteView(generics.DestroyAPIView):
+#     """
+#     API view to cancel an appointment of the authenticated patient.
+#     """
+#     queryset = Appointment.objects.all()
+#     serializer_class = AppointmentSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get_object(self, pk):
+#         patient = self.request.user.patientProfile
+#         return get_object_or_404(Appointment, pk=pk, patient=patient)

@@ -123,16 +123,18 @@ class AppointmentSerializer(serializers.ModelSerializer):
             appointment_end = appointment_start + attrs['duration']
 
             # Find professional schedule
+            appointment_flag = False
             for entry in schedule:
                 schedule_start = datetime.combine(attrs['day'], entry.start)
                 schedule_end = datetime.combine(attrs['day'], entry.end)
 
                 # The appointment fits within at least one schedule range
                 if appointment_start >= schedule_start and appointment_end <= schedule_end:
-                    break
-                else:
-                    raise serializers.ValidationError(
-                        "El profesional no trabaja en el horario seleccionado.")
+                    appointment_flag = True
+
+            if not appointment_flag:
+                raise serializers.ValidationError(
+                    "El profesional no trabaja en el horario seleccionado.")
 
         # In a update case, check if the professional exists
         except DoctorProfile.DoesNotExist:
@@ -155,3 +157,14 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentMethod
         fields = '__all__'
+
+
+class PatientAppointmentSerializer(serializers.ModelSerializer):
+    """
+    Serializer for appointments, showing only specific fields for the patient.
+    """
+
+    class Meta:
+        model = Appointment
+        fields = ('id', 'day', 'hour', 'patient_copayment',
+                  'doctor', 'health_insurance')

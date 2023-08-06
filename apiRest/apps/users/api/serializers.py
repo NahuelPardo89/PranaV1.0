@@ -1,40 +1,53 @@
 from django.contrib.auth import authenticate
+from django.utils import timezone
 
 from rest_framework import serializers 
+
 from apps.users.models import User
+from apps.usersProfile.models import PatientProfile, HealthInsurance
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
-    
-    def create(self,validated_data):
-        user = User(**validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
-        return user
 class UserShortSerializer(serializers.ModelSerializer):
     class Meta:
         model= User
         fields=('dni','name','last_name')
 
-class UpdateUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('dni', 'email', 'name', 'last_name','phone')
 
+class UserAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('dni', 'email', 'name', 'last_name','phone', 'is_superuser')
+    
+    def create(self, validated_data):
+        password = validated_data.get('dni')
+        user = User(**validated_data)
+        user.set_password(str(password))
+        is_superuser = validated_data.get('is_superuser', False)
+        if is_superuser:
+            user.is_staff = True
+            user.is_superuser = True
+        user.save()
+        
+        patient_profile = PatientProfile.objects.create(user=user)
+        try:
+            particular_insurance = HealthInsurance.objects.get(name='Particular')
+            patient_profile.insurances.add(particular_insurance)
+        except HealthInsurance.DoesNotExist:
+            print("La obra social 'Particular' no existe.")
+        
+        patient_profile.save()
+
+        return user
+
 class PasswordSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=128, min_length=6, write_only=True)
-    password2 = serializers.CharField(max_length=128, min_length=6, write_only=True)
+   
 
-    def validate(self, data):
-        if data['password'] != data['password2']:
-            raise serializers.ValidationError(
-                {'password':'Debe ingresar ambas contraseñas iguales'}
-            )
-        return data
-
+   
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -68,6 +81,20 @@ class RegisterUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
+        user.last_login = timezone.now()
         user.set_password(password)
         user.save()
+        
+        patient_profile = PatientProfile.objects.create(user=user)
+        try:
+            particular_insurance = HealthInsurance.objects.get(name='Particular')
+            patient_profile.insurances.add(particular_insurance)
+        except HealthInsurance.DoesNotExist:
+            print("La obra social 'Particular' no existe.")
+        
+        patient_profile.save()
+
         return user
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()

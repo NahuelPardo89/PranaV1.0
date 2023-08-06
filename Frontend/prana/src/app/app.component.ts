@@ -5,6 +5,8 @@ import { TalleresComponent } from './Modules/workshops/components/talleres/talle
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
 import { BannerComponent } from './Modules/home/components/banner/banner.component';
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
+import { LoginComponent } from './Modules/login/login/login.component';
+import { RegisterComponent } from './Modules/login/register/register.component';
 
 
 
@@ -12,7 +14,10 @@ const routes: Route[] = [
   { path: 'Home', component: BannerComponent },
   { path: 'Talleres', component: TalleresComponent },
   { path: 'AboutUs', component: QuienesSomosComponent },
+  { path: 'Login', component: LoginComponent },
+  { path: 'Register', component: RegisterComponent },
   { path: '**', component: PageNotFoundComponent },
+  
   
 ]
 

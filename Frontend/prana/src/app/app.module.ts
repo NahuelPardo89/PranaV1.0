@@ -15,6 +15,7 @@ import { HomeModule } from './Modules/home/home.module';
 import { SharedModule } from './Modules/shared/shared.module';
 import { WorkshopsModule } from './Modules/workshops/workshops.module';
 import { LoginModule } from './Modules/login/login.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -35,7 +36,8 @@ import { LoginModule } from './Modules/login/login.module';
     HomeModule,
     SharedModule,
     WorkshopsModule,
-    LoginModule
+    LoginModule,
+    BrowserAnimationsModule
     
   ],
   providers: [],

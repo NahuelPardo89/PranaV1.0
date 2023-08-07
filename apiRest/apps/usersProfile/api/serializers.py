@@ -49,7 +49,7 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DoctorProfile
-        fields = ('user', 'medicLicence', 'specialty', 'insurances', 'is_active')
+        fields = ('user', 'medicLicence', 'specialty', 'insurances', 'is_active','appoimentDuration')
 
 class PatientProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)

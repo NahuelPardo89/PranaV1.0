@@ -31,7 +31,7 @@ class DoctorProfile(models.Model):
     specialty= models.ManyToManyField(MedicalSpeciality)
     insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlanDoctor')
     is_active = models.BooleanField(default = True)
-    appoimentDuration=models.DurationField(null=True, blank=True, default=timedelta(minutes=60))
+    appoimentDuration=models.DurationField(default=timedelta(minutes=60))
 
     class Meta:
         verbose_name = 'Profesional'

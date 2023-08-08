@@ -4,8 +4,8 @@ import { RouterModule, Routes, Route, Router } from '@angular/router';
 import { BannerComponent } from './Modules/home/components/banner/banner.component';
 import { TalleresComponent } from './Modules/workshops/components/talleres/talleres.component';
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
-import { LoginComponent } from './Modules/login/login/login.component';
-import { RegisterComponent } from './Modules/login/register/register.component';
+import { LoginComponent } from './Modules/login/components/login/login.component';
+import { RegisterComponent } from './Modules/login/components/register/register.component';
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
 
 const routes: Route[] = [

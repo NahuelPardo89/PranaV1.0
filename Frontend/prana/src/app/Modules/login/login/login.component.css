@@ -7,7 +7,9 @@
     
 }
 
-
+.boton-enviar {
+    height: 50px;
+}
 
 .container-sm > img {
     padding: 2rem ;
@@ -15,9 +17,11 @@
     width: 40%;
     margin: auto;
 }
-.form > input {
-    width: 80%;
+
+.container-sm > p {
+    margin-top: 15px;
 }
+
 
 
 .container-sm > form {

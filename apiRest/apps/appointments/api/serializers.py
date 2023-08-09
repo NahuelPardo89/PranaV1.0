@@ -6,6 +6,104 @@ from apps.usersProfile.models import DoctorProfile
 from apps.appointments.models import Appointment, PaymentMethod
 
 
+def appointment_validation(attrs, instance=None):
+    """
+    Custom validation method for the Appointment object.
+    Applies additional validation rules.
+
+    Args:
+        attrs (dict): The validated data for the serializer.
+        instance (Appointment, optional): The existing Appointment instance for update validation.
+
+    Returns:
+        dict: The validated data.
+
+    Raises:
+        serializers.ValidationError: If any validation rule fails.
+    """
+
+    # Check if there is an existing appointment on the same day and time for the doctor
+    existing_appointment = Appointment.objects.filter(
+        Q(day=attrs['day']),
+        Q(hour=attrs['hour']),
+        Q(doctor=attrs['doctor'])
+    )
+
+    # If is an update we must exclude the current instance
+    if instance is not None:
+        existing_appointment = existing_appointment.exclude(
+            pk=instance.pk)
+
+    if existing_appointment.exists():
+        raise serializers.ValidationError(
+            "Ya existe un turno agendado para este doctor en el día y horario seleccionado.")
+
+    # Check if the appointment day is in the past
+    if attrs['day'] < date.today():
+        raise serializers.ValidationError(
+            "El turno no puede ser reservado en un día anterior al actual.")
+
+    # Check if the appointment hour is within working hours (7 AM to 9 PM)
+    if attrs['hour'].hour < 7 or attrs['hour'].hour > 21:
+        raise serializers.ValidationError(
+            "Los turnos solo pueden ser programados entre las 7 AM y las 21 PM.")
+
+    # Check if the appointment time is in the past
+    current_time = datetime.now().time()
+    if (attrs['day'] == date.today() and attrs['hour'] < current_time):
+        raise serializers.ValidationError(
+            "El turno no puede ser reservado en una hora anterior a la actual.")
+
+    # Check if the cost is non-negative integer
+    if attrs.get('full_cost') is not None and attrs.get('full_cost') < 0:
+        raise serializers.ValidationError(
+            "El costo de la consulta no puede ser negativo.")
+
+    # Check if the appointment fit with the doctor schedule
+    try:
+        doctor = attrs['doctor']
+        schedule = doctor.schedules.filter(
+            day=attrs['day'].strftime("%A").lower()[0:3])
+
+        # Look for an empty schedule (the professional isn't working that day)
+        if not schedule.exists():
+            raise serializers.ValidationError(
+                "El profesional no trabaja en el día seleccionado.")
+
+        appointment_start = datetime.combine(attrs['day'], attrs['hour'])
+        appointment_end = appointment_start + attrs['duration']
+
+        # Find professional schedule
+        appointment_flag = False
+        for entry in schedule:
+            schedule_start = datetime.combine(attrs['day'], entry.start)
+            schedule_end = datetime.combine(attrs['day'], entry.end)
+
+            # The appointment fits within at least one schedule range
+            if appointment_start >= schedule_start and appointment_end <= schedule_end:
+                appointment_flag = True
+
+        if not appointment_flag:
+            raise serializers.ValidationError(
+                "El profesional no trabaja en el horario seleccionado.")
+
+    # In a update case, check if the professional exists
+    except DoctorProfile.DoesNotExist:
+        raise serializers.ValidationError(
+            "Profesional no encontrado")
+
+    # Checks that exists a payment method when state is 'Pagado'
+    if attrs.get('state') == '4' and attrs.get('payment_method') is None:
+        raise serializers.ValidationError(
+            "Se debe asignar un método de pago para un estado 'Pagado'.")
+
+    # Update -> Checks if the professional and the patient shares the given hi
+    if (instance is not None) and (attrs.get('health_insurance') not in instance.find_common_hi()):
+        raise serializers.ValidationError(
+            "Profesional y paciente no comparten esta obra social.")
+    return attrs
+
+
 class AppointmentSerializer(serializers.ModelSerializer):
     """
     Serializer for the Appointment model.
@@ -70,90 +168,16 @@ class AppointmentSerializer(serializers.ModelSerializer):
         Raises:
             serializers.ValidationError: If any validation rule fails.
         """
-
-        # Check if there is an existing appointment on the same day and time for the doctor
-        existing_appointment = Appointment.objects.filter(
-            Q(day=attrs['day']),
-            Q(hour=attrs['hour']),
-            Q(doctor=attrs['doctor'])
-        )
-
-        # If is a update we must exclude the current instance
-        if self.instance is not None:
-            existing_appointment = existing_appointment.exclude(
-                pk=self.instance.pk)
-
-        if existing_appointment.exists():
-            raise serializers.ValidationError(
-                "Ya existe un turno agendado para este doctor en el día y horario seleccionado.")
-
-        # Check if the appointment day is in the past
-        if attrs['day'] < date.today():
-            raise serializers.ValidationError(
-                "El turno no puede ser reservado en un día anterior al actual.")
-
-        # Check if the appointment hour is within working hours (7 AM to 9 PM)
-        if attrs['hour'].hour < 7 or attrs['hour'].hour > 21:
-            raise serializers.ValidationError(
-                "Los turnos solo pueden ser programados entre las 7 AM y las 21 PM.")
-
-        # Check if the appointment time is in the past
-        current_time = datetime.now().time()
-        if (attrs['day'] == date.today() and attrs['hour'] < current_time):
-            raise serializers.ValidationError(
-                "El turno no puede ser reservado en una hora anterior a la actual.")
-
-        # Check if the cost is non-negative integer
-        if attrs.get('full_cost') is not None and attrs.get('full_cost') < 0:
-            raise serializers.ValidationError(
-                "El costo de la consulta no puede ser negativo.")
-
-        # Check if the appointment fit with the doctor schedule
-        try:
-            doctor = attrs['doctor']
-            schedule = doctor.schedules.filter(
-                day=attrs['day'].strftime("%A").lower()[0:3])
-
-            # Look for an empty schedule (the professional isn't working that day)
-            if not schedule.exists():
-                raise serializers.ValidationError(
-                    "El profesional no trabaja en el día seleccionado.")
-
-            appointment_start = datetime.combine(attrs['day'], attrs['hour'])
-            appointment_end = appointment_start + attrs['duration']
-
-            # Find professional schedule
-            appointment_flag = False
-            for entry in schedule:
-                schedule_start = datetime.combine(attrs['day'], entry.start)
-                schedule_end = datetime.combine(attrs['day'], entry.end)
-
-                # The appointment fits within at least one schedule range
-                if appointment_start >= schedule_start and appointment_end <= schedule_end:
-                    appointment_flag = True
-
-            if not appointment_flag:
-                raise serializers.ValidationError(
-                    "El profesional no trabaja en el horario seleccionado.")
-
-        # In a update case, check if the professional exists
-        except DoctorProfile.DoesNotExist:
-            raise serializers.ValidationError(
-                "Profesional no encontrado")
-
-        # Checks that exists a payment method when state is 'Pagado'
-        if attrs.get('state') == '4' and attrs.get('payment_method') is None:
-            raise serializers.ValidationError(
-                "Se debe asignar un método de pago para un estado 'Pagado'.")
-
-        # Update -> Checks if the professional and the patient shares the given hi
-        if (self.instance is not None) and (attrs.get('health_insurance') not in self.instance.find_common_hi()):
-            raise serializers.ValidationError(
-                "Profesional y paciente no comparten esta obra social.")
+        instance = self.instance
+        attrs = super().validate(attrs)
+        attrs = appointment_validation(attrs, instance=instance)
         return attrs
 
 
 class PaymentMethodSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the PaymentMethod model.
+    """
     class Meta:
         model = PaymentMethod
         fields = '__all__'
@@ -164,7 +188,44 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
     Serializer for appointments, showing only specific fields for the patient.
     """
 
+    state = serializers.CharField(required=False)
+
     class Meta:
         model = Appointment
-        fields = ('id', 'day', 'hour', 'patient_copayment',
-                  'doctor', 'health_insurance')
+        fields = ('day', 'hour', 'patient',
+                  'doctor', 'health_insurance', 'state', 'duration')
+        read_only_fields = ('health_insurance',)
+
+    def create(self, validated_data):
+        """
+        Create and return a new Appointment instance, given the validated data.
+
+        Args:
+            validated_data (dict): Validated data containing the appointment details.
+
+        Returns:
+            Appointment: Created Appointment instance.
+        """
+        appointment = Appointment.objects.create(**validated_data)
+        appointment.set_cost()
+        appointment.save()
+        return appointment
+
+    def validate(self, attrs):
+        """
+        Custom validation method for the Appointment object.
+        Applies additional validation rules.
+
+        Args:
+            attrs (dict): The validated data for the serializer.
+
+        Returns:
+            dict: The validated data.
+
+        Raises:
+            serializers.ValidationError: If any validation rule fails.
+        """
+        instance = self.instance
+        attrs = super().validate(attrs)
+        attrs = appointment_validation(attrs, instance=instance)
+        return attrs

@@ -22,8 +22,10 @@ class Appointment(models.Model):
         verbose_name = 'Turno'
         verbose_name_plural = 'Turnos'
 
-    CHOICES_STATE = [("1", 'Pendiente'), ("2", 'Confirmado'),
-                     ("3", 'Cancelado'), ("4", 'Pagado'), ("5", 'Adeuda')]
+    CHOICES_STATE = [("1", 'Pendiente'),
+                     ("2", 'Confirmado'),
+                     ("3", 'Adeuda'),
+                     ("4", 'Pagado')]
     doctor = models.ForeignKey(
         DoctorProfile, on_delete=models.CASCADE)
     patient = models.ForeignKey(

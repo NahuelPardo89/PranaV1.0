@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
 from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer, PatientAppointmentSerializer
-from apps.usersProfile.models import PatientProfile
+from apps.usersProfile.models import PatientProfile, DoctorProfile
 from apps.appointments.models import Appointment, PaymentMethod
 
 
@@ -34,6 +34,13 @@ class AppointmentListCreateView(APIView):
         """
         Create a new appointment.
         """
+        try:
+            doctor = DoctorProfile.objects.get(pk=request.data['doctor'])
+            request.data['duration'] = doctor.appointment_duration
+        except DoctorProfile.DoesNotExist:
+            return Response("No se puede calcular la duración de la consulta, Profesional no encontrado")
+        # request.data['duration'] = request.data['doctor'].doctorProfile.appointment_duration
+        print(request.data)
         serializer = AppointmentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -136,7 +143,7 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
         data['patient'] = request.user.patientProfile.id
         data['state'] = 1
         # Temp until the DoctorProfile duration is available
-        data['duration'] = "00:30:00"
+        # data['duration'] = "00:30:00"
         instance_serializer = self.serializer_class(data=data)
         if instance_serializer.is_valid():
             instance_serializer.save()

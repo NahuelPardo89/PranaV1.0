@@ -124,6 +124,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             Appointment: Created Appointment instance.
         """
         appointment = Appointment.objects.create(**validated_data)
+        # appointment.set_duration()
         appointment.set_cost()
         appointment.save()
         return appointment
@@ -207,6 +208,7 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
             Appointment: Created Appointment instance.
         """
         appointment = Appointment.objects.create(**validated_data)
+        # appointment.set_duration()
         appointment.set_cost()
         appointment.save()
         return appointment

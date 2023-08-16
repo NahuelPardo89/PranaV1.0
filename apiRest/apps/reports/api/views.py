@@ -55,7 +55,7 @@ class CopaymentReportView(APIView):
 
             report_data = {
                 'doctor': doctor.id,
-                'speciality': specialty,
+                'specialty': specialty,
                 'total_patient_copayment': total_patient_copayment,
                 'total_hi_copayment': total_hi_copayment,
             }

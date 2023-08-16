@@ -106,9 +106,6 @@ class Appointment(models.Model):
         self.patient_copayment = min(insurance_plan.price, self.full_cost)
         self.hi_copayment = max(self.full_cost - self.patient_copayment, 0)
 
-    # def set_duration(self):
-    #     self.duration = self.doctor.appointment_duration
-
     def __str__(self):
         """
         Method for string representation of an appointment

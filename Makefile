@@ -13,7 +13,7 @@ migrate:
 	$(MANAGEPY) migrate
 
 # Target to create a superuser
-createsuperuser:
+superuser:
 	$(MANAGEPY) createsuperuser
 
 # Target to run tests

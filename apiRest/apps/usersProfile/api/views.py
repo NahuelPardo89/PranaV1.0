@@ -12,17 +12,28 @@ from rest_framework import viewsets
 
 from apps.usersProfile.models import (HealthInsurance,MedicalSpeciality,  DoctorProfile, 
                                       DoctorSchedule, InsurancePlanDoctor,InsurancePlanPatient, 
-                                      PatientProfile)
+                                      PatientProfile, SpecialityBranch)
                                       
 from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
                           DoctorProfileSerializer,        DoctorScheduleSerializer,    PatientProfileSerializer,
                           InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer)
+                          DoctorProfileShortSerializer,   SpecialityBranchSerializer)
 
 class IsAdminOrReadOnly(permissions.BasePermission):
   
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
+            return True
+        else:
+            return request.user.is_staff
+#testear
+class IsDoctorOrReadOnly(permissions.BasePermission):
+  
+    def has_permission(self, request, view):
+        
+        if request.method in permissions.SAFE_METHODS:
+            return True        
+        elif request.user.doctorProfile:
             return True
         else:
             return request.user.is_staff
@@ -94,7 +105,12 @@ class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
 class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
     queryset = MedicalSpeciality.objects.all()
     serializer_class = MedicalSpecialitySerializer
-    permission_classes = [IsAdminOrReadOnly]
+    #permission_classes = [IsAdminOrReadOnly]
+    
+class SpecialityBranchAdminViewSet(viewsets.ModelViewSet):
+    queryset = SpecialityBranch.objects.all()
+    serializer_class = SpecialityBranchSerializer
+    #permission_classes = [IsAdminOrReadOnly]
 
 class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):
     queryset = DoctorSchedule.objects.all()
@@ -137,7 +153,7 @@ class DoctorUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixi
         try:
             return self.request.user.doctorProfile
         except ObjectDoesNotExist:
-            raise Http404("No existe un perfil de doctor para el usuario autenticado.")
+            raise Http404("No existe un perfil de Profesional para el usuario autenticado.")
 
 
 class PatientUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):

@@ -2,11 +2,14 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet, 
                     DoctorProfileAdminViewSet, DoctorScheduleAdminViewSet, 
-                    InsurancePlanDoctorAdminViewSet,InsurancePlanPatientAdminViewSet, PatientProfileAdminViewSet, DoctorUserViewSet,PatientUserViewSet)
+                    InsurancePlanDoctorAdminViewSet,InsurancePlanPatientAdminViewSet,
+                     PatientProfileAdminViewSet, DoctorUserViewSet,PatientUserViewSet
+                    ,SpecialityBranchAdminViewSet)
 
 routerAdmin = DefaultRouter()
 routerAdmin.register(r'health-insurances', HealthInsuranceAdminViewSet, basename='health-insurances')
-routerAdmin.register(r'doctor-specialities', MedicalSpecialityAdminViewSet, basename='medical-specialities')
+routerAdmin.register(r'specialities', MedicalSpecialityAdminViewSet, basename='medical-specialities')
+routerAdmin.register(r'speciality-branch', SpecialityBranchAdminViewSet, basename='speciality-branch')
 routerAdmin.register(r'doctor', DoctorProfileAdminViewSet, basename='doctor-profiles')
 routerAdmin.register(r'doctor-schedules', DoctorScheduleAdminViewSet, basename='doctor-schedules')
 routerAdmin.register(r'insurance-plans-doctor', InsurancePlanDoctorAdminViewSet, basename='insurance-plans-doctor')

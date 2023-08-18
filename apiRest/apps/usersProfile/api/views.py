@@ -26,7 +26,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             return True
         else:
             return request.user.is_staff
-#testear
+#testearr
 class IsDoctorOrReadOnly(permissions.BasePermission):
   
     def has_permission(self, request, view):

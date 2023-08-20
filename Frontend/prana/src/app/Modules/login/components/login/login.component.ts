@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { LoginUser } from 'src/app/Models/loginUser.interface';
 
 
 
@@ -31,10 +32,16 @@ export class LoginComponent implements OnInit {
     return this.loginForm.get('password');
   }
 
+  
   onSubmit() {
     if (this.loginForm.valid) {
-      // Aquí puedes agregar la lógica para manejar la autenticación.
-      console.log('Formulario válido, enviando datos...');
+      const userData: LoginUser = {
+        dni: this.loginForm.value.dni,
+        password: this.loginForm.value.password
+      };
+      
+      // Llamar a la lógica de autenticación con los datos del usuario
+      console.log('Enviando datos de usuario para autenticación:', userData);
     }
   }
 }

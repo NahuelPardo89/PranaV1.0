@@ -7,6 +7,7 @@ import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.
 import { LoginComponent } from './Modules/login/components/login/login.component';
 import { RegisterComponent } from './Modules/login/components/register/register.component';
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
+import { DashboardComponent } from './Modules/dashboard/dashboard/dashboard.component';
 
 const routes: Route[] = [
   { path: 'Home', component: BannerComponent },
@@ -14,6 +15,7 @@ const routes: Route[] = [
   { path: 'AboutUs', component: QuienesSomosComponent },
   { path: 'Login', component: LoginComponent },
   { path: 'Registro', component: RegisterComponent },
+  { path: 'Dashboard', component: DashboardComponent },
   { path: '**', component: PageNotFoundComponent },
   
   

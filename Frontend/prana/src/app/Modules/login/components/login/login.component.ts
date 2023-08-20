@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
         dni: this.loginForm.value.dni,
         password: this.loginForm.value.password
       };
+      this.router.navigate(['Dashboard'])
       
       // Llamar a la lógica de autenticación con los datos del usuario
       console.log('Enviando datos de usuario para autenticación:', userData);

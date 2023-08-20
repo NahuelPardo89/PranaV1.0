@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
   onSubmit() {
     if (this.registerForm.valid) {
       const userData: RegisterUser = this.registerForm.value;
-      this.router.navigate(['Dashboard']);
+      this.router.navigate(['Login']);
       // Lógica para manejar el registro del usuario
       console.log('Enviando datos de usuario para registro:', userData);
     }

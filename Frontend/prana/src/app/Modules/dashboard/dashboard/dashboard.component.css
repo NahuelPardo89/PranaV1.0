@@ -1,0 +1,19 @@
+.container-fluid {
+    display: flex;
+    flex-direction: row;
+}
+
+app-dashboard-nav {
+    display: flex;
+    flex-direction: column;
+    height: 70vh; 
+    width: 15%;
+    padding: 10px;
+    border: 2px solid red;
+}
+
+app-dashboard-body {
+    border: 2px solid blue;
+    width: 85%;
+    padding: 10px;
+}

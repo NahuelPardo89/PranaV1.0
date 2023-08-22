@@ -25,10 +25,11 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class InsurancePlanDoctorSerializer(serializers.ModelSerializer):
+  
     class Meta:
         model = InsurancePlanDoctor
-        fields = '__all__'
-
+        fields = ('doctor','insurance', 'branch','price')
+    
 class InsurancePlanPatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = InsurancePlanPatient

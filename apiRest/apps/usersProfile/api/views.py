@@ -105,12 +105,12 @@ class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
 class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
     queryset = MedicalSpeciality.objects.all()
     serializer_class = MedicalSpecialitySerializer
-    #permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
     
 class SpecialityBranchAdminViewSet(viewsets.ModelViewSet):
     queryset = SpecialityBranch.objects.all()
     serializer_class = SpecialityBranchSerializer
-    #permission_classes = [IsAdminOrReadOnly]
+    bpermission_classes = [IsAdminOrReadOnly]
 
 class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):
     queryset = DoctorSchedule.objects.all()

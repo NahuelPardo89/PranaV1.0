@@ -90,7 +90,7 @@ class DoctorSchedule(models.Model):
 
     def __str__(self):
         return f'Horario de: {self.doctor.user.last_name}, {self.doctor.user.name}, Dia: {self.day}'
-#testear
+
 class InsurancePlanDoctor(models.Model):
     doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE)
     insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
@@ -98,7 +98,7 @@ class InsurancePlanDoctor(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     
     class Meta:
-        unique_together = ('doctor', 'insurance')
+        unique_together = ('doctor', 'insurance','branch')
     
     def __str__(self):
         return f'Profesional: {self.doctor.user.last_name}, {self.doctor.user.name}, Mutual: {self.insurance.name}, Rama: {self.branch.name} Costo: {self.price}'

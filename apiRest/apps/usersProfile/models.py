@@ -24,6 +24,17 @@ class MedicalSpeciality(models.Model):
 
     def __str__(self):
         return self.name
+#testear
+class SpecialityBranch(models.Model):
+    name = models.CharField(max_length=100)
+    speciality = models.ForeignKey(MedicalSpeciality, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Rama'
+        verbose_name_plural = 'Ramas'
+
+    def __str__(self):
+        return f'Especialidad: {self.speciality.name}, Rama: {self.name}'
 
 class DoctorProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='doctorProfile')
@@ -83,13 +94,14 @@ class DoctorSchedule(models.Model):
 class InsurancePlanDoctor(models.Model):
     doctor = models.ForeignKey(DoctorProfile, on_delete=models.CASCADE)
     insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
+    branch= models.ForeignKey(SpecialityBranch, on_delete=models.CASCADE, null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     
     class Meta:
-        unique_together = ('doctor', 'insurance')
+        unique_together = ('doctor', 'insurance','branch')
     
     def __str__(self):
-        return f'Profesional: {self.doctor.user.last_name}, {self.doctor.user.name}, Mutual: {self.insurance.name}, Costo: {self.price}'
+        return f'Profesional: {self.doctor.user.last_name}, {self.doctor.user.name}, Mutual: {self.insurance.name}, Rama: {self.branch.name} Costo: {self.price}'
 
 class PatientProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='patientProfile')

@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from apps.appointments.models import Appointment
-from apps.usersProfile.models import DoctorProfile
+from apps.usersProfile.models import DoctorProfile, MedicalSpeciality
 from apps.reports.api.serializers import CopaymentReportSerializer
 
 
@@ -27,7 +27,6 @@ class CopaymentReportView(APIView):
         - total_patient_copayment (Decimal): Total copayment paid by patients.
         - total_hi_copayment (Decimal): Total copayment paid by health insurance.
         """
-
         serializer = CopaymentReportSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
 
@@ -35,18 +34,15 @@ class CopaymentReportView(APIView):
             end_date = serializer.validated_data['end_date']
             doctor = serializer.validated_data.get('doctor')
             specialty = serializer.validated_data.get('specialty')
+            # Agregar branch en todo
 
             appointments = Appointment.objects.filter(
                 day__range=[start_date, end_date])
 
             if doctor:
-                doctor = DoctorProfile.objects.get(id=doctor)
                 appointments = appointments.filter(doctor=doctor)
-
-            # Unuseable until the speciality are added to appintments
-            # if specialty:
-            #     appointments = appointments.filter(
-            #         doctor__doctorProfile__specialty=specialty)
+            if specialty:
+                appointments = appointments.filter(specialty=specialty)
 
             total_patient_copayment = sum(
                 appointment.patient_copayment for appointment in appointments)
@@ -54,7 +50,7 @@ class CopaymentReportView(APIView):
                 appointment.hi_copayment for appointment in appointments)
 
             report_data = {
-                'doctor': doctor.id,
+                'doctor': doctor,
                 'specialty': specialty,
                 'total_patient_copayment': total_patient_copayment,
                 'total_hi_copayment': total_hi_copayment,

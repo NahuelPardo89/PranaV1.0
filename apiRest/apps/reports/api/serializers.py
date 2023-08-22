@@ -46,18 +46,18 @@ class CopaymentReportSerializer(serializers.Serializer):
             except DoctorProfile.DoesNotExist:
                 raise serializers.ValidationError("Profesional no encontrado")
 
-        # Unuseable until the speciality are added to the appointments
-        # if specialty:
-        #     try:
-        #         specialty = MedicalSpeciality.objects.get(id=specialty)
-        #         appointments = appointments.filter(
-        #             doctor__doctorProfile__specialty=specialty)
-        #     except MedicalSpeciality.DoesNotExist:
-        #         raise serializers.ValidationError("Especialidad no encontrada")
+        if specialty:
+            try:
+                specialty = MedicalSpeciality.objects.get(id=specialty)
+                appointments = appointments.filter(specialty=specialty)
+            except MedicalSpeciality.DoesNotExist:
+                raise serializers.ValidationError("Especialidad no encontrada")
+
+        appointments = appointments.filter(state="4")
 
         # Checks if the doctor register appointments with the specific speciality
         if doctor and specialty and not appointments.exists():
             raise serializers.ValidationError(
-                "El profesional no registra turnos con la especialidad asignada")
+                "El profesional no registra turnos en estado 'Pagado' con la especialidad asignada")
 
         return data

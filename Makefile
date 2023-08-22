@@ -51,6 +51,7 @@ upgrade:
 # Virtual environment activation
 venv:
 # Set your own path here
-	D:\Workspace\prana_api\env\Scripts\activate.bat
+# D:\Workspace\prana_api\env\Scripts\activate.bat
+	cmd /c D:\Workspace\prana_api\env\Scripts\activate
 
 .PHONY: all migrate createsuperuser test clean cleanmigrations runserver install upgrade

@@ -18,7 +18,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
     model = User
     serializer_class = UserAdminSerializer
     list_serializer_class = UserListSerializer
-    permission_classes = [permissions.IsAdminUser, ]
+    #permission_classes = [permissions.IsAdminUser, ]
     queryset = None
 
     def get_object(self, pk):

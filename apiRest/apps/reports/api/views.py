@@ -34,7 +34,7 @@ class CopaymentReportView(APIView):
             end_date = serializer.validated_data['end_date']
             doctor = serializer.validated_data.get('doctor')
             specialty = serializer.validated_data.get('specialty')
-            # Agregar branch en todo
+            # Pending: add branch
 
             appointments = Appointment.objects.filter(
                 day__range=[start_date, end_date])

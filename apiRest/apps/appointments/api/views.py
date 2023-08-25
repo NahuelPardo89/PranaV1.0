@@ -1,3 +1,4 @@
+from datetime import date
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
@@ -185,9 +186,14 @@ class DoctorAppointmentListView(APIView):
         """
         Retrieve a list of appointments filtered by state.
         """
-
         doctor = self.request.user.doctorProfile
-        appointments = Appointment.objects.filter(doctor=doctor, state='1')
+        start_date = request.query_params.get('start_date', str(date.today()))
+        end_date = request.query_params.get('end_date', str(date.today()))
+        appointments = Appointment.objects.filter(
+            doctor=doctor,
+            day__range=[start_date, end_date],
+            state__in=['1', '4']
+        )
         serializer = DoctorAppointmentSerializer(appointments, many=True)
         return Response(serializer.data)
 

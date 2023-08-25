@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from apps.users.api.serializers import UserShortSerializer
 from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality, DoctorProfile,
-                                      DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient, PatientProfile)
+                                      DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
+                                      PatientProfile, SpecialityBranch)
 
 
 class HealthInsuranceSerializer(serializers.ModelSerializer):
@@ -16,6 +17,12 @@ class MedicalSpecialitySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SpecialityBranchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecialityBranch
+        fields = '__all__'
+
+
 class DoctorScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorSchedule
@@ -23,9 +30,10 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
 
 
 class InsurancePlanDoctorSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = InsurancePlanDoctor
-        fields = '__all__'
+        fields = ('doctor', 'insurance', 'branch', 'price')
 
 
 class InsurancePlanPatientSerializer(serializers.ModelSerializer):

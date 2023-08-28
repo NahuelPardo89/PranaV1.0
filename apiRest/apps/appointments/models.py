@@ -1,5 +1,5 @@
 from django.db import models
-from apps.usersProfile.models import DoctorProfile, PatientProfile, HealthInsurance, InsurancePlanDoctor
+from apps.usersProfile.models import DoctorProfile, PatientProfile, HealthInsurance, InsurancePlanDoctor, MedicalSpeciality
 
 
 class PaymentMethod(models.Model):
@@ -27,14 +27,15 @@ class Appointment(models.Model):
                      ("3", 'Adeuda'),
                      ("4", 'Pagado')]
     doctor = models.ForeignKey(
-        DoctorProfile, on_delete=models.CASCADE)
+        DoctorProfile, on_delete=models.PROTECT)
+    specialty = models.ForeignKey(
+        MedicalSpeciality, on_delete=models.SET_NULL, blank=True, null=True)
     patient = models.ForeignKey(
-        PatientProfile, on_delete=models.CASCADE)
+        PatientProfile, on_delete=models.PROTECT)
     health_insurance = models.ForeignKey(
-        HealthInsurance, on_delete=models.CASCADE, blank=True, null=True)
+        HealthInsurance, on_delete=models.SET_NULL, blank=True, null=True)
     day = models.DateField()
     hour = models.TimeField()
-    # Temp until doctor's have a duration field
     duration = models.DurationField(blank=True, null=True)
     full_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     patient_copayment = models.DecimalField(
@@ -85,6 +86,9 @@ class Appointment(models.Model):
 
         self.health_insurance = max_coverage_insurance
         return self.health_insurance.id
+
+    def set_specialty(self):
+        self.specialty = self.doctor.specialty.first()
 
     def set_cost(self, update=False):
         """

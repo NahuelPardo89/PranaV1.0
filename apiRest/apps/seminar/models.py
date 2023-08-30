@@ -50,6 +50,9 @@ class Room(BaseModel):
     capacity= models.IntegerField(validators=[MinValueValidator(1)])
     cost    = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], default=0)
 
+    def __str__(self):
+        return f'nombre: {self.name}, Capacidad: {self.capacity}, Costo: {self.cost}'
+
 
 
 class Seminar(BaseModel):
@@ -66,10 +69,16 @@ class Seminar(BaseModel):
     seminarist=models.ManyToManyField(SeminaristProfile, related_name='seminaries')
     patients= models.ManyToManyField(PatientProfile, related_name='seminaries',through='SeminarInscription')
 
+    def __str__(self):
+        return f'nombre: {self.name}, Año: {self.year}, Mes:{self.month}, Hora: {self.hour} Precio Particular: {self.price}'
+
 class SeminarRoomUsage(models.Model):
     seminar = models.ForeignKey(Seminar, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     encountersCount=models.IntegerField(default=1,validators=[MinValueValidator(1)])
+
+    def __str__(self):
+        return f'Seminario: {self.seminar.name}, Sala: {self.room.name}, Encuentros: {self.encountersCount}'
 
 class SeminarInscription(BaseModel):
     seminar= models.ForeignKey(Seminar, on_delete=models.CASCADE)

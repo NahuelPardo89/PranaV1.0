@@ -1,17 +1,29 @@
+from datetime import datetime
+
 from rest_framework import serializers
-from .models import Room,SeminarRoomUsage, SeminarInscription,Seminar
+
+from apps.seminar.models import Room,SeminarRoomUsage, SeminarInscription,Seminar
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = ['id', 'name', 'capacity', 'cost', 'created_at', 'updated_at', 'created_by']
+    
+    
 
 class SeminarRoomUsageSerializer(serializers.ModelSerializer):
+    seminar = serializers.StringRelatedField()
     class Meta:
         model = SeminarRoomUsage
         fields = ['id', 'seminar', 'room', 'encountersCount']
+    def validate_encountersCount(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("El número de encuentros debe ser un valor positivo.")
+        return value
 
 class SeminarInscriptionSerializer(serializers.ModelSerializer):
+    seminar = serializers.StringRelatedField()
+    patient=serializers.StringRelatedField()
     class Meta:
         model = SeminarInscription
         fields = ['id', 'seminar', 'patient', 'meetingNumber', 'state', 'insurance', 'paymentMethod', 'payment', 'created_at', 'updated_at', 'created_by']

@@ -20,7 +20,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 class SeminarRoomUsageViewSet(viewsets.ModelViewSet):
     queryset = SeminarRoomUsage.objects.all()
     serializer_class = SeminarRoomUsageSerializer
-
+#agrgar logica para cargar payment y y insurance
 class SeminarInscriptionViewSet(viewsets.ModelViewSet):
     queryset = SeminarInscription.objects.all()
     serializer_class = SeminarInscriptionSerializer

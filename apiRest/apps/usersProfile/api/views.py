@@ -24,7 +24,7 @@ from apps.permission import IsAdminOrReadOnly
 #ADMIN VIEWS
 class BaseAdminViewSet(viewsets.GenericViewSet):
     """ BASE ADMIN VIEWSET """
-    #permission_classes = [IsAdminOrReadOnly, ]
+    permission_classes = [IsAdminOrReadOnly, ]
     
     def get_object(self, pk):
         return get_object_or_404(self.model,pk=pk)

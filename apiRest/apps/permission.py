@@ -21,5 +21,33 @@ class IsDoctorOrReadOnly(permissions.BasePermission):
         else:
             return request.user.is_staff
 
-class IsSeminartOrReadOnly(permissions.BasePermission):
-    pass
+class IsSeminaristOrReadOnly(permissions.BasePermission):
+    
+    def has_permission(self, request, view):
+        
+        if request.method in permissions.SAFE_METHODS:
+            return True        
+        elif request.user.seminaristProfile:
+            return True
+        else:
+            return request.user.is_staff
+
+class IsDoctor(permissions.BasePermission):
+  
+    def has_permission(self, request, view):
+        
+        if request.user.doctorProfile:
+           
+            return True
+        else:
+            return request.user.is_staff
+
+class IsSeminarist(permissions.BasePermission):
+  
+    def has_permission(self, request, view):
+        
+        if request.user.seminaristProfile:
+           
+            return True
+        else:
+            return request.user.is_staff

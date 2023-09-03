@@ -46,10 +46,10 @@ class BaseModel(models.Model):
         abstract = True
 
 class Room(BaseModel):
-    name    = models.CharField(max_length=100)
-    capacity= models.IntegerField(validators=[MinValueValidator(1)])
-    cost    = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], default=0)
-
+    name     = models.CharField(max_length=100)
+    capacity = models.IntegerField(validators=[MinValueValidator(1)])
+    cost     = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], default=0)
+    is_active= models.BooleanField(default=True)
     def __str__(self):
         return f'nombre: {self.name}, Capacidad: {self.capacity}, Costo: {self.cost}'
 
@@ -76,10 +76,16 @@ class SeminarRoomUsage(models.Model):
     seminar = models.ForeignKey(Seminar, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     encountersCount=models.IntegerField(default=1,validators=[MinValueValidator(1)])
+    is_active=models.BooleanField(default=True)
 
     def __str__(self):
         return f'Seminario: {self.seminar.name}, Sala: {self.room.name}, Encuentros: {self.encountersCount}'
 
+class Payment(models.Model):
+    patient_copayment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    hi_copayment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.SET_NULL, null=True, validators=[MinValueValidator(0)])
+    
 class SeminarInscription(BaseModel):
     seminar= models.ForeignKey(Seminar, on_delete=models.CASCADE)
     patient= models.ForeignKey(PatientProfile, on_delete=models.CASCADE)
@@ -87,5 +93,10 @@ class SeminarInscription(BaseModel):
     state=models.IntegerField(choices=STATE_CHOICES,default=1)
     insurance= models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
     paymentMethod= models.ForeignKey(PaymentMethod,on_delete=models.CASCADE)
-    payment= models.DecimalField(max_digits=10, decimal_places=2,validators=[MinValueValidator(0)])
+    
 
+class Payment(models.Model):
+    patient_copayment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    hi_copayment = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.SET_NULL, null=True)
+    

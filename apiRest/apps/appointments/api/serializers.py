@@ -2,8 +2,59 @@ from datetime import date, datetime
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from rest_framework import serializers
-from apps.usersProfile.models import DoctorProfile
+from apps.usersProfile.models import DoctorProfile, InsurancePlanDoctor, HealthInsurance, SpecialityBranch
 from apps.appointments.models import Appointment, PaymentMethod
+
+
+def set_duration(attrs, instance=None) -> dict:
+    """
+    Set the duration for an appointment based on provided attributes or an existing instance.
+
+    Args:
+        attrs (dict): A dictionary of appointment attributes.
+        instance (Appointment, optional): An existing appointment instance (default is None).
+
+    Returns:
+        dict: A dictionary containing appointment attributes, including the 'duration' field.
+    """
+    if not attrs.get('duration') and not instance:
+        # Get duration from doctor
+        doctor = attrs.get('doctor')
+        attrs['duration'] = doctor.appointment_duration
+    elif instance and not attrs.get('duration'):
+        # Exists an instance and duration is none, keep the duration of the instance
+        attrs['duration'] = instance.duration
+    # else = duration already exists in attrs, no need to add manually
+    return attrs
+
+
+def perform_update(instance: Appointment, validated_data: dict) -> Appointment:
+    """
+    Update an existing appointment instance with validated data.
+
+    Args:
+        instance (Appointment): An existing appointment instance to update.
+        validated_data (dict): Validated data containing updated appointment details.
+
+    Returns:
+        Appointment: The updated appointment instance.
+    """
+    instance.doctor = validated_data.get('doctor', instance.doctor)
+    instance.branch = validated_data.get('branch', instance.branch)
+    instance.patient = validated_data.get('patient', instance.patient)
+    instance.health_insurance = validated_data.get(
+        'health_insurance', instance.health_insurance)
+    instance.day = validated_data.get('day', instance.day)
+    instance.hour = validated_data.get('hour', instance.hour)
+    instance.duration = validated_data.get('duration', instance.duration)
+    instance.full_cost = validated_data.get(
+        'full_cost', instance.full_cost)
+    instance.payment_method = validated_data.get(
+        'payment_method', instance.payment_method)
+    instance.state = validated_data.get('state', instance.state)
+    instance.set_cost()
+    instance.save()
+    return instance
 
 
 def appointment_validation(attrs, instance=None):
@@ -62,6 +113,8 @@ def appointment_validation(attrs, instance=None):
     # Check if the appointment fit with the doctor schedule
     try:
         doctor = attrs.get('doctor')
+        # set the appointment duration based on the current doctor
+        attrs = set_duration(attrs, instance)
         schedule = doctor.schedules.filter(
             day=attrs.get('day').strftime("%A").lower()[0:3])
 
@@ -94,12 +147,12 @@ def appointment_validation(attrs, instance=None):
             "Profesional no encontrado")
 
     # Checks that exists a payment method when state is 4 ('Pagado')
-    if attrs.get('state') == '4' and attrs.get('payment_method') is None:
+    if attrs.get('state') == 4 and attrs.get('payment_method') is None:
         raise serializers.ValidationError(
-            "Se debe asignar un método de pago para un estado 'Pagado'.")
+            "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
 
     # Update -> Checks if the professional and the patient shares the given hi
-    if (instance is not None) and (attrs.get('health_insurance') not in instance.find_common_hi()):
+    if (instance is not None) and attrs.get('health_insurance') and (attrs.get('health_insurance') not in instance.find_common_hi()):
         raise serializers.ValidationError(
             "Profesional y paciente no comparten esta obra social.")
 
@@ -108,21 +161,73 @@ def appointment_validation(attrs, instance=None):
         doctor = attrs.get('doctor')
         if attrs.get('specialty') and attrs.get('specialty') not in doctor.specialty.all():
             raise serializers.ValidationError(
-                "El profesional no tiene esa especialidad")
+                "El profesional no trabaja con la especialidad dada")
     except DoctorProfile.DoesNotExist:
         raise serializers.ValidationError(
             "Profesional no encontrado")
+
+    # Checks if the professional works with the given branch
+    if attrs.get('branch') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), branch=attrs.get('branch')).exists():
+        raise serializers.ValidationError(
+            "El profesional no trabaja con la rama especificada")
+
+    # Checks if the professional works with the given branch and hi
+    if attrs.get('branch') and attrs.get('health_insurance') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), insurance=attrs.get('health_insurance'), branch=attrs.get('branch')).exists():
+        raise serializers.ValidationError(
+            "No existe relación entre profesional, rama y obra social")
+
+    # Checks if exists 'PARTICULAR' health insurance
+    base_hi = HealthInsurance.objects.filter(
+        name='PARTICULAR').first()
+    if base_hi is None:
+        raise serializers.ValidationError(
+            "Debido a que todos los profesionales atienden de manera particular, por favor cargue la obra social: 'PARTICULAR' ")
+
+    # Checks if the professional works with 'PARTICULAR' for this branch (to calculate full cost)
+    if attrs.get('branch') is None:
+        branch = SpecialityBranch.objects.filter(
+            name='GENERAL', speciality=doctor.specialty.first()).first()
+        if branch is None:
+            raise serializers.ValidationError(
+                f"No se ha indicado ninguna rama para el turno, y la rama por defecto: 'GENERAL' para esta especialidad: {doctor.specialty.first()} no ha sido encontrada")
+    else:
+        branch = attrs.get('branch')
+
+    if not InsurancePlanDoctor.objects.filter(
+            doctor=attrs.get('doctor'), insurance=base_hi, branch=branch).exists():
+        raise serializers.ValidationError(
+            "El profesional no trabaja de manera particular con esta rama, imposible calcular el valor total de la consulta")
+
+    # Checks that exists a branch when state is 4 ('Pagado')
+    if attrs.get('state') == 4 and attrs.get('branch') is None:
+        raise serializers.ValidationError(
+            "Se debe asignar una rama para un turno con estado 'Pagado'.")
+
+    # Checks that
+    if attrs.get('state') != 4 and attrs.get('payment_method'):
+        raise serializers.ValidationError(
+            "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
     return attrs
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
     """
-    Serializer for the Appointment model.
+    Serializer for the Appointment model for ADMIN.
+
+    Fields:
+        All fields of the Appointment model are included for both read and write operations.
+
+    Read-Only Fields:
+        - 'hi_copayment': Health insurance copayment, calculated automatically.
+        - 'patient_copayment': Patient copayment, calculated automatically.
+        - 'specialty': The specialty associated with the appointment, set automatically.
+
     """
 
     class Meta:
         model = Appointment
         fields = '__all__'
+        read_only_fields = ('hi_copayment', 'patient_copayment', 'specialty')
 
     def create(self, validated_data):
         """
@@ -135,8 +240,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             Appointment: Created Appointment instance.
         """
         appointment = Appointment.objects.create(**validated_data)
-        appointment.set_cost()
-        appointment.set_specialty()
+        appointment.set_fields()
         appointment.save()
         return appointment
 
@@ -151,23 +255,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         Returns:
             Appointment: Updated Appointment instance.
         """
-        instance.doctor = validated_data.get('doctor', instance.doctor)
-        instance.specialty = validated_data.get(
-            'specialty', instance.specialty)
-        instance.patient = validated_data.get('patient', instance.patient)
-        instance.health_insurance = validated_data.get(
-            'health_insurance', instance.health_insurance)
-        instance.day = validated_data.get('day', instance.day)
-        instance.hour = validated_data.get('hour', instance.hour)
-        instance.duration = validated_data.get('duration', instance.duration)
-        instance.full_cost = validated_data.get(
-            'full_cost', instance.full_cost)
-        instance.payment_method = validated_data.get(
-            'payment_method', instance.payment_method)
-        instance.state = validated_data.get('state', instance.state)
-        instance.set_cost(update=True)
-        instance.save()
-        return instance
+        return perform_update(instance, validated_data)
 
     def validate(self, attrs):
         """
@@ -200,16 +288,15 @@ class PaymentMethodSerializer(serializers.ModelSerializer):
 
 class PatientAppointmentSerializer(serializers.ModelSerializer):
     """
-    Serializer for appointments, showing only specific fields for the patient.
+    Serializer for patient appointments, only specific fields availables.
     """
-
-    state = serializers.CharField(required=False)
 
     class Meta:
         model = Appointment
-        fields = ('day', 'hour', 'patient', 'specialty',
-                  'doctor', 'health_insurance', 'state', 'duration')
-        read_only_fields = ('health_insurance',)
+        fields = ('day', 'hour', 'patient', 'specialty', 'branch',
+                  'doctor', 'health_insurance', 'duration', 'state', )
+        read_only_fields = ('health_insurance', 'patient',
+                            'specialty', 'full_cost', 'duration', 'state')
 
     def create(self, validated_data):
         """
@@ -222,8 +309,7 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
             Appointment: Created Appointment instance.
         """
         appointment = Appointment.objects.create(**validated_data)
-        appointment.set_cost()
-        appointment.set_specialty()
+        appointment.set_fields()
         appointment.save()
         return appointment
 
@@ -249,14 +335,15 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
 
 class DoctorAppointmentSerializer(serializers.ModelSerializer):
     """
-    Serializer for appointments, showing only specific fields for the doctor.
+    Serializer for doctor appointments, only specific fields availables.
     """
 
     class Meta:
         model = Appointment
-        fields = ('day', 'hour', 'duration', 'full_cost',
-                  'state', 'doctor', 'health_insurance', 'patient',)
-        read_only_fields = ('specialty',)
+        fields = ('day', 'hour', 'duration', 'full_cost', 'state', 'doctor', 'specialty',
+                  'branch', 'patient', 'health_insurance', 'payment_method')
+        read_only_fields = ('specialty',
+                            'full_cost', 'health_insurance',)
 
     def create(self, validated_data):
         """
@@ -269,8 +356,7 @@ class DoctorAppointmentSerializer(serializers.ModelSerializer):
             Appointment: Created Appointment instance.
         """
         appointment = Appointment.objects.create(**validated_data)
-        appointment.set_cost()
-        appointment.set_specialty()
+        appointment.set_fields()
         appointment.save()
         return appointment
 
@@ -285,16 +371,7 @@ class DoctorAppointmentSerializer(serializers.ModelSerializer):
         Returns:
             Appointment: Updated Appointment instance.
         """
-        instance.doctor = validated_data.get('doctor', instance.doctor)
-        instance.day = validated_data.get('day', instance.day)
-        instance.hour = validated_data.get('hour', instance.hour)
-        instance.duration = validated_data.get('duration', instance.duration)
-        instance.full_cost = validated_data.get(
-            'full_cost', instance.full_cost)
-        instance.state = validated_data.get('state', instance.state)
-        instance.set_cost(update=True)
-        instance.save()
-        return instance
+        return perform_update(instance, validated_data)
 
     def validate(self, attrs):
         """

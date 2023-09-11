@@ -57,7 +57,7 @@ def perform_update(instance: Appointment, validated_data: dict) -> Appointment:
     return instance
 
 
-def validate_existing_appointment(attrs, instance=None):
+def validate_existing_appointment(attrs, instance):
     # Check if there is an existing appointment on the same day and time for the doctor
     existing_appointment = Appointment.objects.filter(
         Q(day=attrs.get('day')),
@@ -149,6 +149,94 @@ def validate_doctor_schedule(attrs, instance):
 
     return attrs
 
+def validate_paid_state(attrs, instance):
+    # Checks that exists a payment method when state is 4 ('Pagado')
+    # Creation
+    if attrs.get('state') == 4 and attrs.get('payment_method') is None:
+        raise serializers.ValidationError(
+            "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
+    # Update 
+    # if instance and 
+    return attrs
+
+def validate_hi(attrs, instance):
+    # Checks if the professional and the patient shares the given hi
+    # Creation 
+    doctor = attrs.get('doctor')
+    patient = attrs.get('patient')
+    common_insurances = set(doctor.insurances.all()) & set(
+            patient.insurances.all())
+    if attrs.get('health_insurance') and attrs.get('health_insurance') not in common_insurances :
+        raise serializers.ValidationError(
+            "Profesional y paciente no comparten esta obra social.")
+    
+    # Update
+    if (instance is not None) and attrs.get('health_insurance') and (attrs.get('health_insurance') not in instance.find_common_hi()):
+        raise serializers.ValidationError(
+            "Profesional y paciente no comparten esta obra social.")
+    return attrs
+
+def validate_specialty(attrs):
+    # Checks if the professional have the given specialty, probably never used :S
+    doctor = attrs.get('doctor')
+    if attrs.get('specialty') and attrs.get('specialty') not in doctor.specialty.all():
+        raise serializers.ValidationError(
+            "El profesional no trabaja con la especialidad dada")
+    return attrs
+
+def validate_branch(attrs):
+    if attrs.get('branch') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), branch=attrs.get('branch')).exists():
+        raise serializers.ValidationError(
+            "El profesional no trabaja con la rama especificada")
+    return attrs
+
+def validate_branch_hi(attrs):
+    if attrs.get('branch') and attrs.get('health_insurance') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), insurance=attrs.get('health_insurance'), branch=attrs.get('branch')).exists():
+        raise serializers.ValidationError(
+            "No existe relación entre profesional, rama y obra social")
+    return attrs
+
+def validate_base_hi():
+    base_hi = HealthInsurance.objects.filter(
+        name='PARTICULAR').first()
+    if base_hi is None:
+        raise serializers.ValidationError(
+            "Debido a que todos los profesionales atienden de manera particular, por favor cargue la obra social: 'PARTICULAR' ")
+
+def validate_base_hi_branch(attrs):
+    doctor = attrs.get('doctor')
+    base_hi = HealthInsurance.objects.filter(
+        name='PARTICULAR').first()
+    if attrs.get('branch') is None:
+        branch = SpecialityBranch.objects.filter(
+            name='GENERAL', speciality=doctor.specialty.first()).first()
+        if branch is None:
+            raise serializers.ValidationError(
+                f"No se ha indicado ninguna rama para el turno, y la rama por defecto: 'GENERAL' para esta especialidad: {doctor.specialty.first()} no ha sido encontrada")
+    else:
+        branch = attrs.get('branch')
+
+    if not InsurancePlanDoctor.objects.filter(
+            doctor=doctor, insurance=base_hi, branch=branch).exists():
+        raise serializers.ValidationError(
+            "El profesional no trabaja de manera particular con esta rama, imposible calcular el valor total de la consulta")
+    
+    return attrs
+
+def validate_state_branch(attrs, instance):
+    # Creation
+    if not instance and attrs.get('state') == 4 and attrs.get('branch') is None:
+        raise serializers.ValidationError(
+            "Se debe asignar una rama para un turno con estado 'Pagado'.")
+    return attrs
+
+def validate_payment_state(attrs, instance):
+    if not instance and attrs.get('state') != 4 and attrs.get('payment_method'):
+        raise serializers.ValidationError(
+            "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
+    elif instance and instance.state == 4 and attrs.get('state') != 4:
+        raise serializers.ValidationError(
+            "Este turno se ha registrado como pagado, no es posible cambiar el estado de este turno.")
 
 def appointment_validation(attrs, instance=None):
     """
@@ -247,66 +335,75 @@ def appointment_validation(attrs, instance=None):
     #         "Profesional no encontrado")
 
     # Checks that exists a payment method when state is 4 ('Pagado')
-    if attrs.get('state') == 4 and attrs.get('payment_method') is None:
-        raise serializers.ValidationError(
-            "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
+    validate_paid_state(attrs, instance)
+    # if attrs.get('state') == 4 and attrs.get('payment_method') is None:
+    #     raise serializers.ValidationError(
+    #         "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
 
-    # Update -> Checks if the professional and the patient shares the given hi
-    if (instance is not None) and attrs.get('health_insurance') and (attrs.get('health_insurance') not in instance.find_common_hi()):
-        raise serializers.ValidationError(
-            "Profesional y paciente no comparten esta obra social.")
+    # Checks if the professional and the patient shares the given hi
+    validate_hi(attrs, instance)
+    # if (instance is not None) and attrs.get('health_insurance') and (attrs.get('health_insurance') not in instance.find_common_hi()):
+    #     raise serializers.ValidationError(
+    #         "Profesional y paciente no comparten esta obra social.")
 
     # Checks if the professional have the given specialty
-    try:
-        doctor = attrs.get('doctor')
-        if attrs.get('specialty') and attrs.get('specialty') not in doctor.specialty.all():
-            raise serializers.ValidationError(
-                "El profesional no trabaja con la especialidad dada")
-    except DoctorProfile.DoesNotExist:
-        raise serializers.ValidationError(
-            "Profesional no encontrado")
+    validate_specialty(attrs)
+    # try:
+    #     doctor = attrs.get('doctor')
+    #     if attrs.get('specialty') and attrs.get('specialty') not in doctor.specialty.all():
+    #         raise serializers.ValidationError(
+    #             "El profesional no trabaja con la especialidad dada")
+    # except DoctorProfile.DoesNotExist:
+    #     raise serializers.ValidationError(
+    #         "Profesional no encontrado")
 
     # Checks if the professional works with the given branch
-    if attrs.get('branch') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), branch=attrs.get('branch')).exists():
-        raise serializers.ValidationError(
-            "El profesional no trabaja con la rama especificada")
+    validate_branch(attrs)
+    # if attrs.get('branch') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), branch=attrs.get('branch')).exists():
+    #     raise serializers.ValidationError(
+    #         "El profesional no trabaja con la rama especificada")
 
     # Checks if the professional works with the given branch and hi
-    if attrs.get('branch') and attrs.get('health_insurance') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), insurance=attrs.get('health_insurance'), branch=attrs.get('branch')).exists():
-        raise serializers.ValidationError(
-            "No existe relación entre profesional, rama y obra social")
+    validate_branch_hi(attrs)
+    # if attrs.get('branch') and attrs.get('health_insurance') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), insurance=attrs.get('health_insurance'), branch=attrs.get('branch')).exists():
+    #     raise serializers.ValidationError(
+    #         "No existe relación entre profesional, rama y obra social")
 
     # Checks if exists 'PARTICULAR' health insurance
-    base_hi = HealthInsurance.objects.filter(
-        name='PARTICULAR').first()
-    if base_hi is None:
-        raise serializers.ValidationError(
-            "Debido a que todos los profesionales atienden de manera particular, por favor cargue la obra social: 'PARTICULAR' ")
+    validate_base_hi()
+    # base_hi = HealthInsurance.objects.filter(
+    #     name='PARTICULAR').first()
+    # if base_hi is None:
+    #     raise serializers.ValidationError(
+    #         "Debido a que todos los profesionales atienden de manera particular, por favor cargue la obra social: 'PARTICULAR' ")
 
     # Checks if the professional works with 'PARTICULAR' for this branch (to calculate full cost)
-    if attrs.get('branch') is None:
-        branch = SpecialityBranch.objects.filter(
-            name='GENERAL', speciality=doctor.specialty.first()).first()
-        if branch is None:
-            raise serializers.ValidationError(
-                f"No se ha indicado ninguna rama para el turno, y la rama por defecto: 'GENERAL' para esta especialidad: {doctor.specialty.first()} no ha sido encontrada")
-    else:
-        branch = attrs.get('branch')
+    validate_base_hi_branch(attrs)
+    # if attrs.get('branch') is None:
+    #     branch = SpecialityBranch.objects.filter(
+    #         name='GENERAL', speciality=doctor.specialty.first()).first()
+    #     if branch is None:
+    #         raise serializers.ValidationError(
+    #             f"No se ha indicado ninguna rama para el turno, y la rama por defecto: 'GENERAL' para esta especialidad: {doctor.specialty.first()} no ha sido encontrada")
+    # else:
+    #     branch = attrs.get('branch')
 
-    if not InsurancePlanDoctor.objects.filter(
-            doctor=attrs.get('doctor'), insurance=base_hi, branch=branch).exists():
-        raise serializers.ValidationError(
-            "El profesional no trabaja de manera particular con esta rama, imposible calcular el valor total de la consulta")
+    # if not InsurancePlanDoctor.objects.filter(
+    #         doctor=attrs.get('doctor'), insurance=base_hi, branch=branch).exists():
+    #     raise serializers.ValidationError(
+    #         "El profesional no trabaja de manera particular con esta rama, imposible calcular el valor total de la consulta")
 
     # Checks that exists a branch when state is 4 ('Pagado')
-    if attrs.get('state') == 4 and attrs.get('branch') is None:
-        raise serializers.ValidationError(
-            "Se debe asignar una rama para un turno con estado 'Pagado'.")
+    validate_state_branch(attrs, instance)
+    # if attrs.get('state') == 4 and attrs.get('branch') is None:
+    #     raise serializers.ValidationError(
+    #         "Se debe asignar una rama para un turno con estado 'Pagado'.")
 
     # Checks that
-    if attrs.get('state') != 4 and attrs.get('payment_method'):
-        raise serializers.ValidationError(
-            "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
+    validate_payment_state(attrs, instance)
+    # if attrs.get('state') != 4 and attrs.get('payment_method'):
+    #     raise serializers.ValidationError(
+    #         "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
     return attrs
 
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from apps.appointments.models import Appointment
-from apps.usersProfile.models import DoctorProfile, MedicalSpeciality
+from apps.appointments.models import Appointment, PaymentMethod
+from apps.usersProfile.models import DoctorProfile, MedicalSpeciality, SpecialityBranch
 
 
 class CopaymentReportSerializer(serializers.Serializer):
@@ -11,6 +11,8 @@ class CopaymentReportSerializer(serializers.Serializer):
     end_date = serializers.DateField()
     doctor = serializers.IntegerField(required=False)
     specialty = serializers.IntegerField(required=False)
+    branch = serializers.IntegerField(required=False)
+    payment_method = serializers.IntegerField(required=False)
 
     def validate(self, data):
         """
@@ -25,18 +27,20 @@ class CopaymentReportSerializer(serializers.Serializer):
         Raises:
             serializers.ValidationError: If the validation fails.
         """
-        start_date = data['start_date']
-        end_date = data['end_date']
+        start_date = data.get('start_date')
+        end_date = data.get('end_date')
         doctor = data.get('doctor')
         specialty = data.get('specialty')
+        branch = data.get('branch')
+        payment_method = data.get('payment_method')
 
         # Checks if the date range is correct
         if start_date > end_date:
             raise serializers.ValidationError(
-                "La fecha de inicio del reporte debe ser posterior a la fecha de fin")
+                "La fecha de inicio debe ser anterior o igual a la fecha de fin")
 
         appointments = Appointment.objects.filter(
-            day__range=[start_date, end_date])
+            day__range=[start_date, end_date], state=4)
 
         # Checks if the doctor exists
         if doctor:
@@ -53,7 +57,25 @@ class CopaymentReportSerializer(serializers.Serializer):
             except MedicalSpeciality.DoesNotExist:
                 raise serializers.ValidationError("Especialidad no encontrada")
 
-        appointments = appointments.filter(state="4")
+        if branch:
+            try:
+                branch = SpecialityBranch.objects.get(id=branch)
+                appointments = appointments.filter(branch=branch)
+            except SpecialityBranch.DoesNotExist:
+                raise serializers.ValidationError("Rama no encontrada")
+
+        if payment_method:
+            try:
+                payment_method = PaymentMethod.objects.get(id=payment_method)
+                appointments = appointments.filter(
+                    payment_method=payment_method)
+            except PaymentMethod.DoesNotExist:
+                raise serializers.ValidationError(
+                    "Método de pago no encontrado")
+
+        if not appointments:
+            raise serializers.ValidationError(
+                "No se registran turnos con estado 'Pagado' para los datos ingresados")
 
         # Checks if the doctor register appointments with the specific speciality
         if doctor and specialty and not appointments.exists():

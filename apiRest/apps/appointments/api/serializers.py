@@ -57,22 +57,7 @@ def perform_update(instance: Appointment, validated_data: dict) -> Appointment:
     return instance
 
 
-def appointment_validation(attrs, instance=None):
-    """
-    Custom validation method for the Appointment object.
-    Applies additional validation rules.
-
-    Args:
-        attrs (dict): The validated data for the serializer.
-        instance (Appointment, optional): The existing Appointment instance for update validation.
-
-    Returns:
-        dict: The validated data.
-
-    Raises:
-        serializers.ValidationError: If any validation rule fails.
-    """
-
+def validate_existing_appointment(attrs, instance=None):
     # Check if there is an existing appointment on the same day and time for the doctor
     existing_appointment = Appointment.objects.filter(
         Q(day=attrs.get('day')),
@@ -89,27 +74,43 @@ def appointment_validation(attrs, instance=None):
         raise serializers.ValidationError(
             "Ya existe un turno agendado para este doctor en el día y horario seleccionado.")
 
+    return attrs
+
+
+def validate_appointment_day(attrs):
     # Check if the appointment day is in the past
     if attrs.get('day') < date.today():
         raise serializers.ValidationError(
             "El turno no puede ser reservado en un día anterior al actual.")
+    return attrs
 
+
+def validate_bussines_working_hour(attrs):
     # Check if the appointment hour is within working hours (7 AM to 9 PM)
     if attrs.get('hour').hour < 7 or attrs.get('hour').hour > 21:
         raise serializers.ValidationError(
             "Los turnos solo pueden ser programados entre las 7 AM y las 21 PM.")
+    return attrs
 
+
+def validate_appointment_hour(attrs):
     # Check if the appointment time is in the past
     current_time = datetime.now().time()
     if (attrs.get('day') == date.today() and attrs.get('hour') < current_time):
         raise serializers.ValidationError(
             "El turno no puede ser reservado en una hora anterior a la actual.")
+    return attrs
 
+
+def validate_negative_full_cost(attrs):
     # Check if the cost is non-negative integer
     if attrs.get('full_cost') is not None and attrs.get('full_cost') < 0:
         raise serializers.ValidationError(
             "El costo de la consulta no puede ser negativo.")
+    return attrs
 
+
+def validate_doctor_schedule(attrs, instance):
     # Check if the appointment fit with the doctor schedule
     try:
         doctor = attrs.get('doctor')
@@ -145,6 +146,105 @@ def appointment_validation(attrs, instance=None):
     except DoctorProfile.DoesNotExist:
         raise serializers.ValidationError(
             "Profesional no encontrado")
+
+    return attrs
+
+
+def appointment_validation(attrs, instance=None):
+    """
+    Custom validation method for the Appointment object.
+    Applies additional validation rules.
+
+    Args:
+        attrs (dict): The validated data for the serializer.
+        instance (Appointment, optional): The existing Appointment instance for update validation.
+
+    Returns:
+        dict: The validated data.
+
+    Raises:
+        serializers.ValidationError: If any validation rule fails.
+    """
+
+    # # Check if there is an existing appointment on the same day and time for the doctor
+    validate_existing_appointment(attrs, instance)
+
+    # existing_appointment = Appointment.objects.filter(
+    #     Q(day=attrs.get('day')),
+    #     Q(hour=attrs.get('hour')),
+    #     Q(doctor=attrs.get('doctor'))
+    # )
+
+    # # If is an update we must exclude the current instance
+    # if instance is not None:
+    #     existing_appointment = existing_appointment.exclude(
+    #         pk=instance.pk)
+
+    # if existing_appointment.exists():
+    #     raise serializers.ValidationError(
+    #         "Ya existe un turno agendado para este doctor en el día y horario seleccionado.")
+
+    # # Check if the appointment day is in the past
+    validate_appointment_day(attrs)
+    # if attrs.get('day') < date.today():
+    #     raise serializers.ValidationError(
+    #         "El turno no puede ser reservado en un día anterior al actual.")
+
+    # Check if the appointment hour is within working hours (7 AM to 9 PM)
+    validate_bussines_working_hour(attrs)
+    # if attrs.get('hour').hour < 7 or attrs.get('hour').hour > 21:
+    #     raise serializers.ValidationError(
+    #         "Los turnos solo pueden ser programados entre las 7 AM y las 21 PM.")
+
+    # Check if the appointment time is in the past
+    validate_appointment_hour(attrs)
+    # current_time = datetime.now().time()
+    # if (attrs.get('day') == date.today() and attrs.get('hour') < current_time):
+    #     raise serializers.ValidationError(
+    #         "El turno no puede ser reservado en una hora anterior a la actual.")
+
+    # Check if the cost is non-negative integer
+    validate_negative_full_cost(attrs)
+    # if attrs.get('full_cost') is not None and attrs.get('full_cost') < 0:
+    #     raise serializers.ValidationError(
+    #         "El costo de la consulta no puede ser negativo.")
+
+    # Check if the appointment fit with the doctor schedule
+    validate_doctor_schedule(attrs, instance)
+    # try:
+    #     doctor = attrs.get('doctor')
+    #     # set the appointment duration based on the current doctor
+    #     attrs = set_duration(attrs, instance)
+    #     schedule = doctor.schedules.filter(
+    #         day=attrs.get('day').strftime("%A").lower()[0:3])
+
+    #     # Look for an empty schedule (the professional isn't working that day)
+    #     if not schedule.exists():
+    #         raise serializers.ValidationError(
+    #             "El profesional no trabaja en el día seleccionado.")
+
+    #     appointment_start = datetime.combine(
+    #         attrs.get('day'), attrs.get('hour'))
+    #     appointment_end = appointment_start + attrs.get('duration')
+
+    #     # Find professional schedule
+    #     appointment_flag = False
+    #     for entry in schedule:
+    #         schedule_start = datetime.combine(attrs.get('day'), entry.start)
+    #         schedule_end = datetime.combine(attrs.get('day'), entry.end)
+
+    #         # The appointment fits within at least one schedule range
+    #         if appointment_start >= schedule_start and appointment_end <= schedule_end:
+    #             appointment_flag = True
+
+    #     if not appointment_flag:
+    #         raise serializers.ValidationError(
+    #             "El profesional no trabaja en el horario seleccionado.")
+
+    # In a update case, check if the professional exists
+    # except DoctorProfile.DoesNotExist:
+    #     raise serializers.ValidationError(
+    #         "Profesional no encontrado")
 
     # Checks that exists a payment method when state is 4 ('Pagado')
     if attrs.get('state') == 4 and attrs.get('payment_method') is None:
@@ -223,6 +323,8 @@ class AppointmentSerializer(serializers.ModelSerializer):
         - 'specialty': The specialty associated with the appointment, set automatically.
 
     """
+
+    # health_insurance = serializers.StringRelatedField()
 
     class Meta:
         model = Appointment

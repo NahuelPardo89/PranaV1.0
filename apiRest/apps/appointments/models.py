@@ -69,6 +69,8 @@ class Appointment(models.Model):
         """
         return set(self.doctor.insurances.all()) & set(
             self.patient.insurances.all())
+        # return set(self.doctor.insurances.all()) & set(
+        #     self.patient.insurances.all())
 
     def set_branch(self):
         """
@@ -84,7 +86,7 @@ class Appointment(models.Model):
         if not self.branch:
             # static branch assignment
             self.branch = SpecialityBranch.objects.get(
-                name='GENERAL')
+                name='GENERAL', speciality=self.doctor.specialty.first())
 
     def set_full_cost(self):
         """
@@ -124,15 +126,21 @@ class Appointment(models.Model):
             common_insurance = self.find_common_hi()
 
             # Aux variables
-            max_coverage_insurance = None
-            max_coverage_price = float('inf')
+            max_coverage_insurance = HealthInsurance.objects.filter(
+                name='PARTICULAR').first()
+            # max_coverage_price = float('inf')
+            max_coverage_price = 0
 
             for insurance in common_insurance:
+                if insurance.name == 'PARTICULAR':
+                    # Skip since is by default
+                    continue
                 # Check if the professional works with the branch for that specific shared hi
                 insurance_plan = InsurancePlanDoctor.objects.filter(
                     doctor=self.doctor, insurance=insurance, branch=self.branch).first()
+
                 if insurance_plan:
-                    if insurance_plan.price < max_coverage_price:
+                    if insurance_plan.price > max_coverage_price:
                         max_coverage_price = insurance_plan.price
                         max_coverage_insurance = insurance
 
@@ -155,10 +163,28 @@ class Appointment(models.Model):
         """
         insurance_plan = InsurancePlanDoctor.objects.get(
             doctor=self.doctor, insurance=self.health_insurance, branch=self.branch)
-        self.patient_copayment = min(
-            insurance_plan.price, self.full_cost)
-        self.hi_copayment = max(
-            self.full_cost - self.patient_copayment, 0)
+        if self.health_insurance.name == "PARTICULAR":
+            # For "PARTICULAR" insurance, patient pays the full cost
+            self.patient_copayment = self.full_cost
+            self.hi_copayment = 0
+        else:
+            # For other insurances, calculate copayments based on coverage
+            self.patient_copayment = max(
+                self.full_cost - insurance_plan.price, 0)
+            self.hi_copayment = min(insurance_plan.price, self.full_cost)
+
+    # def set_cost(self):
+    #     """
+    #     Set the patient copayment and health insurance copayment based on the health insurance.
+
+    #     Calculate the copayment amounts based on the doctor's insurance price and the appointment's full cost.
+    #     """
+    #     insurance_plan = InsurancePlanDoctor.objects.get(
+    #         doctor=self.doctor, insurance=self.health_insurance, branch=self.branch)
+    #     self.patient_copayment = min(
+    #         insurance_plan.price, self.full_cost)
+    #     self.hi_copayment = max(
+    #         self.full_cost - self.patient_copayment, 0)
 
     def set_fields(self):
         """

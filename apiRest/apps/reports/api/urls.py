@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import CopaymentReportView
+from .views import AdminAppointmentReportView, DoctorAppointmentReportView
 
 urlpatterns = [
-    path('copayment/', CopaymentReportView.as_view(),
+    path('copayment/appointment/admin/', AdminAppointmentReportView.as_view(),
+         name='copayment-report'),
+    path('copayment/appointment/doctor/', DoctorAppointmentReportView.as_view(),
          name='copayment-report'),
 ]

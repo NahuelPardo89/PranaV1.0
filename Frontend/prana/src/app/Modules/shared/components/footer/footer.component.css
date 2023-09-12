@@ -34,3 +34,20 @@ section > div {
 li > a {
     text-decoration: none;
 }
+
+.logo {
+    width: 70%;
+}
+
+@media screen and (max-width: 1024px) {
+        footer > section {
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+
+        }
+        .logo {
+            width: 70px;
+        }
+  }
+  

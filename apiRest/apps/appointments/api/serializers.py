@@ -58,14 +58,28 @@ def perform_update(instance: Appointment, validated_data: dict) -> Appointment:
 
 
 def validate_existing_appointment(attrs, instance):
-    # Check if there is an existing appointment on the same day and time for the doctor
+    """
+    Validate the appointment to ensure there is no existing appointment for the same doctor
+    on the same day and time.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'day', 'hour', and 'doctor'.
+        instance (Appointment): The current appointment instance being updated, if any.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If an existing appointment is found for the same doctor, day, and time.
+    """
+
     existing_appointment = Appointment.objects.filter(
         Q(day=attrs.get('day')),
         Q(hour=attrs.get('hour')),
         Q(doctor=attrs.get('doctor'))
     )
 
-    # If is an update we must exclude the current instance
+    # If it's an update, exclude the current instance
     if instance is not None:
         existing_appointment = existing_appointment.exclude(
             pk=instance.pk)
@@ -78,7 +92,19 @@ def validate_existing_appointment(attrs, instance):
 
 
 def validate_appointment_day(attrs):
-    # Check if the appointment day is in the past
+    """
+    Validate that the appointment day is not in the past.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'day'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the appointment day is in the past.
+    """
+
     if attrs.get('day') < date.today():
         raise serializers.ValidationError(
             "El turno no puede ser reservado en un día anterior al actual.")
@@ -86,7 +112,19 @@ def validate_appointment_day(attrs):
 
 
 def validate_bussines_working_hour(attrs):
-    # Check if the appointment hour is within working hours (7 AM to 9 PM)
+    """
+    Validate that the appointment hour is within business working hours (7 AM to 9 PM).
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'hour'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the appointment hour is outside the business working hours.
+    """
+
     if attrs.get('hour').hour < 7 or attrs.get('hour').hour > 21:
         raise serializers.ValidationError(
             "Los turnos solo pueden ser programados entre las 7 AM y las 21 PM.")
@@ -94,7 +132,19 @@ def validate_bussines_working_hour(attrs):
 
 
 def validate_appointment_hour(attrs):
-    # Check if the appointment time is in the past
+    """
+    Validate that the appointment time is not in the past.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'day' and 'hour'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the appointment time is in the past.
+    """
+
     current_time = datetime.now().time()
     if (attrs.get('day') == date.today() and attrs.get('hour') < current_time):
         raise serializers.ValidationError(
@@ -103,7 +153,19 @@ def validate_appointment_hour(attrs):
 
 
 def validate_negative_full_cost(attrs):
-    # Check if the cost is non-negative integer
+    """
+    Validate that the cost of the appointment is non-negative.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'full_cost'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the full cost is negative.
+    """
+
     if attrs.get('full_cost') is not None and attrs.get('full_cost') < 0:
         raise serializers.ValidationError(
             "El costo de la consulta no puede ser negativo.")
@@ -111,7 +173,20 @@ def validate_negative_full_cost(attrs):
 
 
 def validate_doctor_schedule(attrs, instance):
-    # Check if the appointment fit with the doctor schedule
+    """
+    Validate that the appointment fits within the doctor's schedule for the selected day and time.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'doctor', 'day', 'hour', and 'duration'.
+        instance: The current instance being updated (if applicable).
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the appointment does not fit within the doctor's schedule or if the doctor is not found.
+    """
+
     try:
         doctor = attrs.get('doctor')
         # set the appointment duration based on the current doctor
@@ -140,7 +215,8 @@ def validate_doctor_schedule(attrs, instance):
 
         if not appointment_flag:
             raise serializers.ValidationError(
-                "El profesional no trabaja en el horario seleccionado.")
+                """El profesional no trabaja en el horario seleccionado. 
+                Se sugiere verificar que la duración de la consulta no exceda el horario de salida del profesional""")
 
     # In a update case, check if the professional exists
     except DoctorProfile.DoesNotExist:
@@ -149,61 +225,128 @@ def validate_doctor_schedule(attrs, instance):
 
     return attrs
 
-def validate_paid_state(attrs, instance):
-    # Checks that exists a payment method when state is 4 ('Pagado')
-    # Creation
-    if attrs.get('state') == 4 and attrs.get('payment_method') is None:
-        raise serializers.ValidationError(
-            "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
-    # Update 
-    # if instance and 
-    return attrs
 
 def validate_hi(attrs, instance):
-    # Checks if the professional and the patient shares the given hi
-    # Creation 
+    """
+    Validate that the selected health insurance is shared between the doctor and patient.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'doctor', 'patient', and 'health_insurance'.
+        instance: The current instance being updated (if applicable).
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the selected health insurance is not shared between the doctor and patient.
+    """
+
+    # Creation
     doctor = attrs.get('doctor')
     patient = attrs.get('patient')
     common_insurances = set(doctor.insurances.all()) & set(
-            patient.insurances.all())
-    if attrs.get('health_insurance') and attrs.get('health_insurance') not in common_insurances :
+        patient.insurances.all())
+    if not instance and attrs.get('health_insurance') and attrs.get('health_insurance') not in common_insurances:
         raise serializers.ValidationError(
             "Profesional y paciente no comparten esta obra social.")
-    
+
     # Update
     if (instance is not None) and attrs.get('health_insurance') and (attrs.get('health_insurance') not in instance.find_common_hi()):
         raise serializers.ValidationError(
             "Profesional y paciente no comparten esta obra social.")
     return attrs
 
+
 def validate_specialty(attrs):
-    # Checks if the professional have the given specialty, probably never used :S
+    """
+    Validate that the selected specialty is one that the doctor possesses.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'doctor' and 'specialty'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the selected specialty is not one that the doctor possesses.
+    """
+
     doctor = attrs.get('doctor')
     if attrs.get('specialty') and attrs.get('specialty') not in doctor.specialty.all():
         raise serializers.ValidationError(
             "El profesional no trabaja con la especialidad dada")
     return attrs
 
+
 def validate_branch(attrs):
+    """
+    Validate that the selected branch is one that the doctor works in.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'doctor' and 'branch'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the selected branch is not one that the doctor works in.
+    """
+
     if attrs.get('branch') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), branch=attrs.get('branch')).exists():
         raise serializers.ValidationError(
             "El profesional no trabaja con la rama especificada")
     return attrs
 
+
 def validate_branch_hi(attrs):
+    """
+    Validate that the selected branch and health insurance have a relationship with the doctor.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'doctor', 'branch', and 'health_insurance'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If there is no relationship between the professional, branch, and health insurance.
+    """
+
     if attrs.get('branch') and attrs.get('health_insurance') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), insurance=attrs.get('health_insurance'), branch=attrs.get('branch')).exists():
         raise serializers.ValidationError(
             "No existe relación entre profesional, rama y obra social")
     return attrs
 
+
 def validate_base_hi():
+    """
+    Validate the existence of the base health insurance ('PARTICULAR').
+
+    Raises:
+        serializers.ValidationError: If the base health insurance ('PARTICULAR') does not exist.
+    """
+
     base_hi = HealthInsurance.objects.filter(
         name='PARTICULAR').first()
     if base_hi is None:
         raise serializers.ValidationError(
             "Debido a que todos los profesionales atienden de manera particular, por favor cargue la obra social: 'PARTICULAR' ")
 
+
 def validate_base_hi_branch(attrs):
+    """
+    Validate that the base health insurance ('PARTICULAR') is compatible with the selected branch.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'doctor', 'branch'.
+
+    Returns:
+        dict: The validated appointment attributes.
+
+    Raises:
+        serializers.ValidationError: If the professional doesn't work on the specified branch for the base health insurance.
+    """
+
     doctor = attrs.get('doctor')
     base_hi = HealthInsurance.objects.filter(
         name='PARTICULAR').first()
@@ -220,23 +363,56 @@ def validate_base_hi_branch(attrs):
             doctor=doctor, insurance=base_hi, branch=branch).exists():
         raise serializers.ValidationError(
             "El profesional no trabaja de manera particular con esta rama, imposible calcular el valor total de la consulta")
-    
+
     return attrs
 
+
 def validate_state_branch(attrs, instance):
-    # Creation
+    """
+    Validate that a branch is assigned when the appointment state is 'Paid'.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'state', 'branch'.
+        instance (Appointment): The appointment instance being updated.
+
+    Raises:
+        serializers.ValidationError: If a branch is not assigned for an appointment with the state 'Paid'.
+    """
+
     if not instance and attrs.get('state') == 4 and attrs.get('branch') is None:
         raise serializers.ValidationError(
             "Se debe asignar una rama para un turno con estado 'Pagado'.")
     return attrs
 
+
 def validate_payment_state(attrs, instance):
-    if not instance and attrs.get('state') != 4 and attrs.get('payment_method'):
+    """
+    Validate the assignment of payment method based on the appointment state.
+
+    Args:
+        attrs (dict): Dictionary containing appointment attributes, including 'state', 'payment_method'.
+        instance (Appointment): The appointment instance being updated.
+
+    Raises:
+        serializers.ValidationError: If a payment method is not assigned for an appointment with the state 'Paid', or if a payment method is assigned to an appointment with a state other than 'Paid'.
+    """
+    # Refactor here
+    if not instance and attrs.get('state') == 4 and attrs.get('payment_method') is None:
+        raise serializers.ValidationError(
+            "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
+    elif not instance and attrs.get('state') != 4 and attrs.get('payment_method'):
+        raise serializers.ValidationError(
+            "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
+    elif instance and attrs.get('state') != 4 and attrs.get('payment_method'):
         raise serializers.ValidationError(
             "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
     elif instance and instance.state == 4 and attrs.get('state') != 4:
         raise serializers.ValidationError(
             "Este turno se ha registrado como pagado, no es posible cambiar el estado de este turno.")
+    elif instance and instance.state != 4 and attrs.get('state') == 4 and attrs.get('payment_method') is None:
+        raise serializers.ValidationError(
+            "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
+
 
 def appointment_validation(attrs, instance=None):
     """
@@ -254,156 +430,21 @@ def appointment_validation(attrs, instance=None):
         serializers.ValidationError: If any validation rule fails.
     """
 
-    # # Check if there is an existing appointment on the same day and time for the doctor
     validate_existing_appointment(attrs, instance)
-
-    # existing_appointment = Appointment.objects.filter(
-    #     Q(day=attrs.get('day')),
-    #     Q(hour=attrs.get('hour')),
-    #     Q(doctor=attrs.get('doctor'))
-    # )
-
-    # # If is an update we must exclude the current instance
-    # if instance is not None:
-    #     existing_appointment = existing_appointment.exclude(
-    #         pk=instance.pk)
-
-    # if existing_appointment.exists():
-    #     raise serializers.ValidationError(
-    #         "Ya existe un turno agendado para este doctor en el día y horario seleccionado.")
-
-    # # Check if the appointment day is in the past
     validate_appointment_day(attrs)
-    # if attrs.get('day') < date.today():
-    #     raise serializers.ValidationError(
-    #         "El turno no puede ser reservado en un día anterior al actual.")
-
-    # Check if the appointment hour is within working hours (7 AM to 9 PM)
     validate_bussines_working_hour(attrs)
-    # if attrs.get('hour').hour < 7 or attrs.get('hour').hour > 21:
-    #     raise serializers.ValidationError(
-    #         "Los turnos solo pueden ser programados entre las 7 AM y las 21 PM.")
-
-    # Check if the appointment time is in the past
     validate_appointment_hour(attrs)
-    # current_time = datetime.now().time()
-    # if (attrs.get('day') == date.today() and attrs.get('hour') < current_time):
-    #     raise serializers.ValidationError(
-    #         "El turno no puede ser reservado en una hora anterior a la actual.")
-
-    # Check if the cost is non-negative integer
     validate_negative_full_cost(attrs)
-    # if attrs.get('full_cost') is not None and attrs.get('full_cost') < 0:
-    #     raise serializers.ValidationError(
-    #         "El costo de la consulta no puede ser negativo.")
-
-    # Check if the appointment fit with the doctor schedule
     validate_doctor_schedule(attrs, instance)
-    # try:
-    #     doctor = attrs.get('doctor')
-    #     # set the appointment duration based on the current doctor
-    #     attrs = set_duration(attrs, instance)
-    #     schedule = doctor.schedules.filter(
-    #         day=attrs.get('day').strftime("%A").lower()[0:3])
-
-    #     # Look for an empty schedule (the professional isn't working that day)
-    #     if not schedule.exists():
-    #         raise serializers.ValidationError(
-    #             "El profesional no trabaja en el día seleccionado.")
-
-    #     appointment_start = datetime.combine(
-    #         attrs.get('day'), attrs.get('hour'))
-    #     appointment_end = appointment_start + attrs.get('duration')
-
-    #     # Find professional schedule
-    #     appointment_flag = False
-    #     for entry in schedule:
-    #         schedule_start = datetime.combine(attrs.get('day'), entry.start)
-    #         schedule_end = datetime.combine(attrs.get('day'), entry.end)
-
-    #         # The appointment fits within at least one schedule range
-    #         if appointment_start >= schedule_start and appointment_end <= schedule_end:
-    #             appointment_flag = True
-
-    #     if not appointment_flag:
-    #         raise serializers.ValidationError(
-    #             "El profesional no trabaja en el horario seleccionado.")
-
-    # In a update case, check if the professional exists
-    # except DoctorProfile.DoesNotExist:
-    #     raise serializers.ValidationError(
-    #         "Profesional no encontrado")
-
-    # Checks that exists a payment method when state is 4 ('Pagado')
-    validate_paid_state(attrs, instance)
-    # if attrs.get('state') == 4 and attrs.get('payment_method') is None:
-    #     raise serializers.ValidationError(
-    #         "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
-
-    # Checks if the professional and the patient shares the given hi
     validate_hi(attrs, instance)
-    # if (instance is not None) and attrs.get('health_insurance') and (attrs.get('health_insurance') not in instance.find_common_hi()):
-    #     raise serializers.ValidationError(
-    #         "Profesional y paciente no comparten esta obra social.")
-
-    # Checks if the professional have the given specialty
     validate_specialty(attrs)
-    # try:
-    #     doctor = attrs.get('doctor')
-    #     if attrs.get('specialty') and attrs.get('specialty') not in doctor.specialty.all():
-    #         raise serializers.ValidationError(
-    #             "El profesional no trabaja con la especialidad dada")
-    # except DoctorProfile.DoesNotExist:
-    #     raise serializers.ValidationError(
-    #         "Profesional no encontrado")
-
-    # Checks if the professional works with the given branch
     validate_branch(attrs)
-    # if attrs.get('branch') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), branch=attrs.get('branch')).exists():
-    #     raise serializers.ValidationError(
-    #         "El profesional no trabaja con la rama especificada")
-
-    # Checks if the professional works with the given branch and hi
     validate_branch_hi(attrs)
-    # if attrs.get('branch') and attrs.get('health_insurance') and not InsurancePlanDoctor.objects.filter(doctor=attrs.get('doctor'), insurance=attrs.get('health_insurance'), branch=attrs.get('branch')).exists():
-    #     raise serializers.ValidationError(
-    #         "No existe relación entre profesional, rama y obra social")
-
-    # Checks if exists 'PARTICULAR' health insurance
     validate_base_hi()
-    # base_hi = HealthInsurance.objects.filter(
-    #     name='PARTICULAR').first()
-    # if base_hi is None:
-    #     raise serializers.ValidationError(
-    #         "Debido a que todos los profesionales atienden de manera particular, por favor cargue la obra social: 'PARTICULAR' ")
-
-    # Checks if the professional works with 'PARTICULAR' for this branch (to calculate full cost)
     validate_base_hi_branch(attrs)
-    # if attrs.get('branch') is None:
-    #     branch = SpecialityBranch.objects.filter(
-    #         name='GENERAL', speciality=doctor.specialty.first()).first()
-    #     if branch is None:
-    #         raise serializers.ValidationError(
-    #             f"No se ha indicado ninguna rama para el turno, y la rama por defecto: 'GENERAL' para esta especialidad: {doctor.specialty.first()} no ha sido encontrada")
-    # else:
-    #     branch = attrs.get('branch')
-
-    # if not InsurancePlanDoctor.objects.filter(
-    #         doctor=attrs.get('doctor'), insurance=base_hi, branch=branch).exists():
-    #     raise serializers.ValidationError(
-    #         "El profesional no trabaja de manera particular con esta rama, imposible calcular el valor total de la consulta")
-
-    # Checks that exists a branch when state is 4 ('Pagado')
     validate_state_branch(attrs, instance)
-    # if attrs.get('state') == 4 and attrs.get('branch') is None:
-    #     raise serializers.ValidationError(
-    #         "Se debe asignar una rama para un turno con estado 'Pagado'.")
-
-    # Checks that
     validate_payment_state(attrs, instance)
-    # if attrs.get('state') != 4 and attrs.get('payment_method'):
-    #     raise serializers.ValidationError(
-    #         "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
+
     return attrs
 
 

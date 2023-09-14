@@ -1,10 +1,11 @@
+from datetime import date
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
-from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer, PatientAppointmentSerializer
-from apps.usersProfile.models import PatientProfile
+from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer, PatientAppointmentSerializer, DoctorAppointmentSerializer
+from apps.usersProfile.models import PatientProfile, DoctorProfile
 from apps.appointments.models import Appointment, PaymentMethod
 
 
@@ -16,9 +17,17 @@ class AppointmentListCreateView(APIView):
 
     def get(self, request):
         """
-        Retrieve a list of appointments.
+        Retrieve a list of appointments filtered by state.
         """
-        appointments = Appointment.objects.all()
+        # Find the states to list
+        state = request.query_params.get(
+            'state')
+
+        # Filter the appointments by state, if any
+        if state is not None:
+            appointments = Appointment.objects.filter(state=state)
+        else:
+            appointments = Appointment.objects.all()
         serializer = AppointmentSerializer(appointments, many=True)
         return Response(serializer.data)
 
@@ -26,6 +35,11 @@ class AppointmentListCreateView(APIView):
         """
         Create a new appointment.
         """
+        try:
+            doctor = DoctorProfile.objects.get(pk=request.data['doctor'])
+            request.data['duration'] = doctor.appointment_duration
+        except DoctorProfile.DoesNotExist:
+            return Response("No se puede calcular la duración de la consulta, Profesional no encontrado")
         serializer = AppointmentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -92,7 +106,7 @@ class PaymentMethodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVi
     serializer_class = PaymentMethodSerializer
 
 
-class PatientAppointmentsListView(viewsets.GenericViewSet):
+class PatientAppointmentsView(viewsets.GenericViewSet):
     """
     API view for listing appointments for the currently authenticated patient.
     """
@@ -102,63 +116,139 @@ class PatientAppointmentsListView(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-
-        # def get_object(self):
         """
-        Get the list of appointments for the currently authenticated patient.
+        Define the appointments for the currently authenticated patient with state = 'Pendiente'.
         """
         try:
             patient = self.request.user.patientProfile
-            print("Paciente: ", patient)
-            return Appointment.objects.filter(patient=patient)
+            return Appointment.objects.filter(patient=patient, state=1)
         except PatientProfile.DoesNotExist:
             raise Http404()
 
     def list(self, request):
+        """
+        Get the list of appointments for the currently authenticated patient.
+        """
         instances = self.get_queryset()
         instances_serializer = self.serializer_class(instances, many=True)
         return Response(instances_serializer.data, status=status.HTTP_200_OK)
 
+    def create(self, request):
+        """
+        Create a new appointment for currently authenticated patient.
+        """
+        # Since the view does not allow access to certain fields, they must be added inside the create method
+        data = request.data
+        data['patient'] = request.user.patientProfile.id
+        data['state'] = 1
+        doctor = DoctorProfile.objects.get(pk=data['doctor'])
+        data['duration'] = doctor.appointment_duration
+        instance_serializer = self.serializer_class(data=data)
+        if instance_serializer.is_valid():
+            instance_serializer.save()
+            return Response({
+                'message': 'Turno creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Turno',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
-class PatientAppointmentDeleteView(generics.DestroyAPIView):
+    def retrieve(self, request, pk=None):
+        """
+        Retrieve a specific appointment for the patient.
+        """
+        instance = self.get_object(pk)
+        instance_serializer = self.serializer_class(instance)
+        return Response(instance_serializer.data)
+
+    def destroy(self, request, pk=None):
+        """
+        Cancel an appointment for the patient.
+        """
+        instance = self.get_object()
+        instance.delete()
+
+        return Response({
+            'message': 'Turno cancelado correctamente'
+        }, status=status.HTTP_204_NO_CONTENT)
+
+
+class DoctorAppointmentListView(APIView):
     """
-    API view to cancel an appointment of the authenticated patient.
+    API view for listing a doctor appointments.
     """
-    queryset = Appointment.objects.all()
-    serializer_class = AppointmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    model = Appointment
+    serializer_class = DoctorAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def get(self, request):
+        """
+        Retrieve a list of appointments filtered by state.
+        """
+        doctor = self.request.user.doctorProfile
+        start_date = request.query_params.get('start_date', str(date.today()))
+        end_date = request.query_params.get('end_date', str(date.today()))
+        appointments = Appointment.objects.filter(
+            doctor=doctor,
+            day__range=[start_date, end_date],
+            state__in=['1', '4']
+        )
+        serializer = DoctorAppointmentSerializer(appointments, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        """
+        Create a new appointment.
+        """
+        try:
+            doctor = DoctorProfile.objects.get(pk=request.data['doctor'])
+            request.data['duration'] = doctor.appointment_duration
+        except DoctorProfile.DoesNotExist:
+            return Response("No se puede calcular la duración de la consulta, Profesional no encontrado")
+        serializer = AppointmentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DoctorAppointmentDetailView(APIView):
+    """
+    API view for retrieving, updating, and deleting an appointment.
+    """
+    model = Appointment
+    serializer_class = DoctorAppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
 
     def get_object(self, pk):
-        patient = self.request.user.patientProfile
-        return get_object_or_404(Appointment, pk=pk, patient=patient)
+        """
+        Get the appointment object for the given primary key.
+        """
+        try:
+            return Appointment.objects.get(pk=pk)
+        except Appointment.DoesNotExist:
+            raise Http404
 
+    def get(self, request, pk):
+        """
+        Retrieve an appointment.
+        """
+        appointment = self.get_object(pk)
+        serializer = DoctorAppointmentSerializer(appointment)
+        return Response(serializer.data)
 
-# class PatientAppointmentsListView(generics.ListAPIView):
-#     """
-#     API view for listing appointments for the currently authenticated patient.
-#     """
-#     queryset = None
-#     serializer_class = PatientAppointmentSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get_queryset(self):
-
-#         # def get_object(self):
-#         """
-#         Get the list of appointments for the currently authenticated patient.
-#         """
-#         patient = self.request.user.patientProfile
-#         return Appointment.objects.filter(patient=patient)
-
-
-# class PatientAppointmentDeleteView(generics.DestroyAPIView):
-#     """
-#     API view to cancel an appointment of the authenticated patient.
-#     """
-#     queryset = Appointment.objects.all()
-#     serializer_class = AppointmentSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get_object(self, pk):
-#         patient = self.request.user.patientProfile
-#         return get_object_or_404(Appointment, pk=pk, patient=patient)
+    def put(self, request, pk):
+        """
+        Update an appointment.
+        """
+        request.data['doctor'] = self.request.user.doctorProfile.id
+        appointment = self.get_object(pk)
+        request.data['health_insurance'] = appointment.health_insurance.id
+        request.data['patient'] = appointment.patient.id
+        serializer = DoctorAppointmentSerializer(
+            appointment, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,12 +1,17 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
-from apps.seminar.models import Room, SeminarRoomUsage, SeminarInscription, Seminar
+from apps.seminar.models import Room, SeminarRoomUsage, SeminarInscription, Seminar, Payment
 from .serializers import RoomSerializer, SeminarRoomUsageSerializer, SeminarInscriptionSerializer, SeminarSerializer
-
+from apps.permission import IsAdminOrReadOnly
+from apps.users.models import User
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset= Payment.objects.all()
+    
 class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
+    permission_classes = [IsAdminOrReadOnly, ]
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -24,6 +29,16 @@ class SeminarRoomUsageViewSet(viewsets.ModelViewSet):
 class SeminarInscriptionViewSet(viewsets.ModelViewSet):
     queryset = SeminarInscription.objects.all()
     serializer_class = SeminarInscriptionSerializer
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            inscription = serializer.save()
+            inscription = request.user
+            inscription.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SeminarViewSet(viewsets.GenericViewSet):
     
@@ -64,5 +79,6 @@ class SeminarViewSet(viewsets.GenericViewSet):
     
     def destroy(self, request, pk=None):
         seminar = self.get_object()
-        seminar.delete()
+        seminar.is_active=False
+        seminar.save()
         return Response(status=status.HTTP_204_NO_CONTENT)

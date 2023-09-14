@@ -26,6 +26,10 @@ SECRET_KEY = 'django-insecure-1wfsf-osjz3(dhk06^x^=-cj97r(_rvi-5pe=4l@q1f%vi8rht
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    # otros dominios que desees permitir
+]
 
 
 # Application definition
@@ -44,6 +48,7 @@ THIRT_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'corsheaders',
 
 ]
 
@@ -75,6 +80,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 
 ]
 

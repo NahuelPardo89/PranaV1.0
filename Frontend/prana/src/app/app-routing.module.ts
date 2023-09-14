@@ -16,7 +16,8 @@ const routes: Route[] = [
   { path: 'Login', component: LoginComponent },
   { path: 'Registro', component: RegisterComponent },
   { path: 'Dashboard', component: DashboardComponent },
-  { path: '**', component: PageNotFoundComponent },
+  
+  {path: 'auth',loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule)},
   
   
 ]

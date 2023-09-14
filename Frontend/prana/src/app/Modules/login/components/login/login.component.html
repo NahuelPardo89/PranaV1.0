@@ -1,22 +1,25 @@
 <div class="container-sm">
     <img src="../../../../assets/img/usuario.png" alt="" srcset="">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <mat-form-field>
-        <input matInput placeholder="DNI" formControlName="dni">
-        <mat-error *ngIf="dni && dni.hasError('required')">El DNI es requerido.</mat-error>
-        <mat-error *ngIf="dni && dni.hasError('pattern')">El DNI debe tener entre 7 y 9 números, sin puntos ni comas.</mat-error>
-      </mat-form-field>
       
-      <mat-form-field>
-        <input matInput type="password" placeholder="Contraseña" formControlName="password">
-        <mat-error *ngIf="password && password.hasError('required')">La contraseña es requerida.</mat-error>
-        <mat-error *ngIf="password && password.hasError('minlength')">La contraseña debe tener al menos 8 caracteres.</mat-error>
+      <mat-form-field class="ancho" appearance="fill">
+        <mat-label>DNI</mat-label>
+        <input matInput formControlName="dni" required>
+        <mat-error *ngIf="loginForm.controls['dni'].errors?.['required']">Este campo es requerido</mat-error>
+        <mat-error *ngIf="loginForm.controls['dni'].errors?.['pattern']">Debe ingresar solo números</mat-error>
+        <mat-error *ngIf="loginForm.controls['dni'].errors?.['max']">Ingrese un DNI Correcto</mat-error>
+        <mat-error *ngIf="loginForm.controls['dni'].errors?.['min']">Ingrese un DNI Correcto</mat-error>
       </mat-form-field>
-      
-        <button mat-raised-button color="primary" type="submit" class="boton-enviar" [disabled]="loginForm.invalid">
-          Iniciar Sesión
-        </button>
-      </form>
+
+      <mat-form-field class="ancho" appearance="fill">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" required>
+        <mat-error *ngIf="loginForm.controls['password'].errors?.['required']">Este campo es requerido</mat-error>
+        <mat-error *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button class="ancho button mt-4" color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
+    </form>
       <p>¿No tienes cuenta?  <a routerLink="/Registro">Registrarse</a>  </p> 
       
 </div>

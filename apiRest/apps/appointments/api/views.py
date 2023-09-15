@@ -1,11 +1,10 @@
 from datetime import date
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
 from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer, PatientAppointmentSerializer, DoctorAppointmentSerializer
-from apps.usersProfile.models import PatientProfile, DoctorProfile
+from apps.usersProfile.models import PatientProfile
 from apps.appointments.models import Appointment, PaymentMethod
 
 
@@ -35,11 +34,6 @@ class AppointmentListCreateView(APIView):
         """
         Create a new appointment.
         """
-        try:
-            doctor = DoctorProfile.objects.get(pk=request.data['doctor'])
-            request.data['duration'] = doctor.appointment_duration
-        except DoctorProfile.DoesNotExist:
-            return Response("No se puede calcular la duración de la consulta, Profesional no encontrado")
         serializer = AppointmentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -87,7 +81,9 @@ class AppointmentDetailView(APIView):
         """
         appointment = self.get_object(pk)
         appointment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({
+            'message': 'Turno cancelado correctamente'
+        }, status=status.HTTP_204_NO_CONTENT)
 
 
 class PaymentMethodListCreateView(generics.ListCreateAPIView):
@@ -138,12 +134,8 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
         Create a new appointment for currently authenticated patient.
         """
         # Since the view does not allow access to certain fields, they must be added inside the create method
-        data = request.data
-        data['patient'] = request.user.patientProfile.id
-        data['state'] = 1
-        doctor = DoctorProfile.objects.get(pk=data['doctor'])
-        data['duration'] = doctor.appointment_duration
-        instance_serializer = self.serializer_class(data=data)
+        request.data['patient'] = request.user.patientProfile.id
+        instance_serializer = self.serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance_serializer.save()
             return Response({
@@ -192,21 +184,17 @@ class DoctorAppointmentListView(APIView):
         appointments = Appointment.objects.filter(
             doctor=doctor,
             day__range=[start_date, end_date],
-            state__in=['1', '4']
+            state__in=[1, 2, 4]
         )
-        serializer = DoctorAppointmentSerializer(appointments, many=True)
+        serializer = self.serializer_class(appointments, many=True)
         return Response(serializer.data)
 
     def post(self, request):
         """
         Create a new appointment.
         """
-        try:
-            doctor = DoctorProfile.objects.get(pk=request.data['doctor'])
-            request.data['duration'] = doctor.appointment_duration
-        except DoctorProfile.DoesNotExist:
-            return Response("No se puede calcular la duración de la consulta, Profesional no encontrado")
-        serializer = AppointmentSerializer(data=request.data)
+        request.data['doctor'] = request.user.doctorProfile.id
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -242,9 +230,8 @@ class DoctorAppointmentDetailView(APIView):
         """
         Update an appointment.
         """
-        request.data['doctor'] = self.request.user.doctorProfile.id
         appointment = self.get_object(pk)
-        request.data['health_insurance'] = appointment.health_insurance.id
+        request.data['doctor'] = self.request.user.doctorProfile.id
         request.data['patient'] = appointment.patient.id
         serializer = DoctorAppointmentSerializer(
             appointment, data=request.data)

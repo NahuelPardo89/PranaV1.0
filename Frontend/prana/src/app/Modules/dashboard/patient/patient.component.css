@@ -1,7 +1,9 @@
 .paciente {
+    
     display: flex;
     flex-wrap: wrap;
     text-align: center;
+    
 }
 
 .createPatient > form {
@@ -16,4 +18,10 @@
 
 .boton-enviar {
     width: 300px;
+}
+
+
+.listar-pacientes {
+    width: 90%;
+    margin: auto;
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PatientService } from 'src/app/Services/patient/patient.service'; // Asegúrate de importar el servicio correcto
-import { Patient } from 'src/app/Models/patient.interface'; // Asegúrate de importar la interfaz correcta
+import { PatientService } from 'src/app/Services/patient/patient.service'; 
+import { Patient } from 'src/app/Models/patient.interface'; 
+
 
 @Component({
   selector: 'app-listar-pacientes',

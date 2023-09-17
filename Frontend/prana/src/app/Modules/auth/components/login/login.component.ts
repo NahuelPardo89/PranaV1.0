@@ -31,22 +31,17 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      
-      let user: LoginUser = this.loginForm.value as LoginUser;
-      user.dni = Number(user.dni);
-      
-      this.authService.login(user).subscribe({
-        next: (response: JwtResponse) => {
-          localStorage.setItem('access_token', response.access);
-          localStorage.setItem('refresh_token', response.refresh);
-          localStorage.setItem('user', JSON.stringify(response.user));
-          this.router.navigateByUrl('/dashboard');
+      const user: LoginUser = this.loginForm.value;
+  
+      this.authService.login(user).subscribe(
+        () => {
+          // Una vez que el login es exitoso, navegamos al dashboard.
+          this.router.navigate(['Dashboard/']);
         },
-        error: (error) => {
-          window.alert('Usuario o contraseña incorrecto ')
-          console.log(error);
+        error => {
+          alert('Error durante el inicio de sesión. Por favor, inténtalo de nuevo.');
         }
-      });
+      );
     }
   }
 }

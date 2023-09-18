@@ -35,8 +35,11 @@
           <li class="nav-item"><a class="nav-link" routerLink="/auth/login/">Iniciar Sesión</a></li>
           <li class="nav-item"><a class="nav-link" routerLink="auth/singin/">Registrarse</a></li>
         </ul>
-       
-        <span *ngIf="currentUser">Bienvenido, {{ currentUser.name }}!</span>
+        <div *ngIf="currentUser$ | async as user">
+          <span>Bienvenido, {{ user.name }}!</span>
+        </div>
+        
+        
       </div>
     </div>
   </nav>

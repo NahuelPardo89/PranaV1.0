@@ -1,0 +1,24 @@
+<div class="container mt-4">
+  <h2>List of Health Insurances (Obras Sociales)</h2>
+  
+  <table class="table table-bordered table-striped mt-4">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name (Nombre de la Obra Social)</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let insurance of healthInsurances">
+        <td>{{ insurance.id }}</td>
+        <td>{{ insurance.name }}</td>
+        <td>
+          <!-- Puedes agregar botones o links aquí para acciones como Editar, Detalles, Eliminar, etc. -->
+          <button class="btn btn-danger btn-sm" (click)="delete(insurance.id)">Delete</button>
+          <!-- Por ejemplo, un botón para eliminar -->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

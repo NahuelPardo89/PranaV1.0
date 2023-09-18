@@ -13,7 +13,9 @@ import { DashboardBodyComponent } from './dashboard-body/dashboard-body.componen
     DashboardBodyComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    
+    
   ]
 })
 export class DashboardModule { }

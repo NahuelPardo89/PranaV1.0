@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders,HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders,HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 
@@ -42,15 +42,19 @@ export class AuthService {
 
   
  
-  register(user: RegisterUser): Observable<JwtResponse> {
-    return this.http.post<JwtResponse>(this.registerUrl, user).pipe(
-      tap(response => {
-        this.handleAuthentication(response);
-      }),
-      catchError(this.handleError)
-    );
+  register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
+    return this.http.post<JwtResponse>(this.registerUrl, user, { observe: 'response' })
+      .pipe(
+        tap(response => {
+          if (response.status === 201) {
+            this.handleAuthentication(response.body!);
+          }
+        }),
+        catchError(this.handleError)
+      );
   }
-
+  
+  
   logout(refreshToken: string): Observable<void> {
     return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }).pipe(
       tap(() => {

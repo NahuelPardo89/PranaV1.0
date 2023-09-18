@@ -17,6 +17,7 @@ const routes: Route[] = [
   { path: 'Dashboard', component: DashboardComponent },
   
   {path: 'auth',loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule)},
+  {path: 'insurance',loadChildren: () => import('./Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule)},
   
   
 ]

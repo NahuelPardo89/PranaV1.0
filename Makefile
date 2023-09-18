@@ -3,6 +3,7 @@
 # Variables
 PYTHON = python
 MANAGEPY = $(PYTHON) apiRest/manage.py
+FRONTPATH = Frontend/Prana
 
 # Default target
 all: migrate
@@ -29,10 +30,14 @@ cleanmigrations:
 	del /s /q .\api\migrations\*.py
 	del /s /q .\api\migrations\*.pyc
 
-# Target to start a development server
-run:
+# Target to start a backend development server
+runbe:
 	$(MANAGEPY) runserver
 
+# Target to start a frontend development server
+runfe:
+	cd $(FRONTPATH) && ng serve
+	
 # Terminar
 app:
 #	mkdir -p apiRest/apps/$(APP_NAME)
@@ -41,8 +46,12 @@ app:
 #	$(MANAGEPY) startapp $(APP_NAME) apiRest/apps/$(APP_NAME)
 
 # Target to install project dependencies
-install:
+reqinstall:
 	pip install -r requirements.txt
+
+# Target to install front dependencies
+feinstall:
+	cd $(FRONTPATH) && npm install
 
 # Target to upgrade project dependencies
 upgrade:

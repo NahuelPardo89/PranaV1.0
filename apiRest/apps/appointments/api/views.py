@@ -3,16 +3,22 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
-from apps.appointments.api.serializers import AppointmentSerializer, PaymentMethodSerializer, PatientAppointmentSerializer, DoctorAppointmentSerializer
+from apps.appointments.api.serializers import AppointmentSerializer, AppointmentSerializerList, PaymentMethodSerializer, PatientAppointmentSerializer, DoctorAppointmentSerializer
 from apps.usersProfile.models import PatientProfile
 from apps.appointments.models import Appointment, PaymentMethod
+
+
+class IsAdminOrReadOnly(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.is_staff
 
 
 class AppointmentListCreateView(APIView):
     """
     API view for listing and creating appointments.
     """
-    # permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [IsAdminOrReadOnly, ]
 
     def get(self, request):
         """
@@ -27,7 +33,8 @@ class AppointmentListCreateView(APIView):
             appointments = Appointment.objects.filter(state=state)
         else:
             appointments = Appointment.objects.all()
-        serializer = AppointmentSerializer(appointments, many=True)
+        # serializer = AppointmentSerializer(appointments, many=True)
+        serializer = AppointmentSerializerList(appointments, many=True)
         return Response(serializer.data)
 
     def post(self, request):

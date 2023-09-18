@@ -116,6 +116,7 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
     model = Appointment
     queryset = None
     serializer_class = PatientAppointmentSerializer
+    serializer_class_list = AppointmentSerializerList
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -133,7 +134,7 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
         Get the list of appointments for the currently authenticated patient.
         """
         instances = self.get_queryset()
-        instances_serializer = self.serializer_class(instances, many=True)
+        instances_serializer = self.serializer_class_list(instances, many=True)
         return Response(instances_serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
@@ -179,6 +180,7 @@ class DoctorAppointmentListView(APIView):
     """
     model = Appointment
     serializer_class = DoctorAppointmentSerializer
+    serializer_class_list = AppointmentSerializerList
     permission_classes = [permissions.IsAuthenticated, ]
 
     def get(self, request):
@@ -193,7 +195,7 @@ class DoctorAppointmentListView(APIView):
             day__range=[start_date, end_date],
             state__in=[1, 2, 4]
         )
-        serializer = self.serializer_class(appointments, many=True)
+        serializer = self.serializer_class_list(appointments, many=True)
         return Response(serializer.data)
 
     def post(self, request):

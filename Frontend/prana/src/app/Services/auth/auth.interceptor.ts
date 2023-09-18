@@ -38,16 +38,18 @@ export class AuthInterceptor implements HttpInterceptor {
     return this.authService.refreshToken().pipe(
       switchMap((tokenResponse: JwtResponse) => {
         localStorage.setItem('access_token', tokenResponse.access);
+        localStorage.setItem('refresh_token', tokenResponse.refresh);
         return next.handle(this.addAuthenticationToken(request));
       }),
       catchError(error => {
         // Elimina los tokens y la información del usuario del localStorage
+        console.error("ENTRO ACA")
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
         alert('Su sesión finalizo, debe volver a iniciar sesión');
         // Redirige al usuario al inicio de sesión
-        this.router.navigate(['/login']);
+        this.router.navigate(['/auth/login']);
 
         return throwError(error);
       })

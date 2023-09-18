@@ -448,6 +448,24 @@ def appointment_validation(attrs, instance=None):
     return attrs
 
 
+class AppointmentSerializerList(serializers.ModelSerializer):
+    doctor = serializers.StringRelatedField()
+    health_insurance = serializers.StringRelatedField()
+    patient = serializers.StringRelatedField()
+    branch = serializers.StringRelatedField()
+    specialty = serializers.StringRelatedField()
+    payment_method = serializers.StringRelatedField()
+
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['state'] = instance.get_state_display()
+        return rep
+
+
 class AppointmentSerializer(serializers.ModelSerializer):
     """
     Serializer for the Appointment model for ADMIN.
@@ -461,8 +479,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
         - 'specialty': The specialty associated with the appointment, set automatically.
 
     """
-
-    # health_insurance = serializers.StringRelatedField()
 
     class Meta:
         model = Appointment

@@ -1,60 +1,101 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
+from django.db.models import Sum
 from apps.appointments.models import Appointment
-from apps.usersProfile.models import DoctorProfile, MedicalSpeciality
 from apps.reports.api.serializers import CopaymentReportSerializer
 
 
-class CopaymentReportView(APIView):
+def perform_report(serializer, request):
+    start_date = serializer.validated_data['start_date']
+    end_date = serializer.validated_data['end_date']
+    doctor = serializer.validated_data.get('doctor')
+    specialty = serializer.validated_data.get('specialty')
+    branch = serializer.validated_data.get('branch')
+    payment_method = serializer.validated_data.get('payment_method')
+
+    appointments = Appointment.objects.filter(
+        day__range=[start_date, end_date], state=4)
+
+    if doctor:
+        appointments = appointments.filter(doctor=doctor)
+    if specialty:
+        appointments = appointments.filter(specialty=specialty)
+    if branch:
+        appointments = appointments.filter(branch=branch)
+    if payment_method:
+        appointments = appointments.filter(
+            payment_method=payment_method)
+
+    # total_patient_copayment = sum(
+    #     appointment.patient_copayment for appointment in appointments)
+    # total_hi_copayment = sum(
+    #     appointment.hi_copayment for appointment in appointments)
+
+    # report_data = {
+    #     'doctor': doctor,
+    #     'specialty': specialty,
+    #     'branch': branch,
+    #     'payment_method': payment_method,
+    #     'total_patient_copayment': total_patient_copayment,
+    #     'total_hi_copayment': total_hi_copayment,
+    # }
+
+    # MIRAR
+    #       appointment.payment.patient_copayment
+
+    # Calculate the number of patients and number of appointments
+    num_patients = appointments.values('patient').distinct().count()
+    num_appointments = appointments.count()
+
+    report_data = {
+        'doctor': doctor,
+        'specialty': specialty,
+        'branch': branch,
+        'payment_method': payment_method,
+        'num_patients': num_patients,
+        'num_appointments': num_appointments,
+        'total_patient_copayment': appointments.aggregate(Sum('patient_copayment'))['patient_copayment__sum'],
+        'total_hi_copayment': appointments.aggregate(Sum('hi_copayment'))['hi_copayment__sum'],
+    }
+
+    return report_data
+
+
+class AdminAppointmentReportView(APIView):
     """
     API view for generating copayment reports based on a date range, doctor, and specialty.
     """
+    serializer_class = CopaymentReportSerializer
+    # permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         """
-        Generate a copayment report based on the provided parameters.
 
-        Parameters:
-        - start_date (Date): Start date of the report range.
-        - end_date (Date): End date of the report range.
-        - doctor (int, optional): ID of the doctor to filter by.
-        - specialty (int, optional): ID of the medical specialty to filter by.
-
-        Returns:
-        - doctor (int): ID of the selected doctor.
-        - speciality (int): ID of the selected specialty.
-        - total_patient_copayment (Decimal): Total copayment paid by patients.
-        - total_hi_copayment (Decimal): Total copayment paid by health insurance.
         """
-        serializer = CopaymentReportSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            report_data = perform_report(serializer, request)
+            return Response(report_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            start_date = serializer.validated_data['start_date']
-            end_date = serializer.validated_data['end_date']
-            doctor = serializer.validated_data.get('doctor')
-            specialty = serializer.validated_data.get('specialty')
-            # Pending: add branch
 
-            appointments = Appointment.objects.filter(
-                day__range=[start_date, end_date])
+class DoctorAppointmentReportView(APIView):
+    """
+    API view for generating copayment reports based on a date range, doctor, and specialty.
+    """
+    serializer_class = CopaymentReportSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-            if doctor:
-                appointments = appointments.filter(doctor=doctor)
-            if specialty:
-                appointments = appointments.filter(specialty=specialty)
+    def post(self, request):
+        """
 
-            total_patient_copayment = sum(
-                appointment.patient_copayment for appointment in appointments)
-            total_hi_copayment = sum(
-                appointment.hi_copayment for appointment in appointments)
-
-            report_data = {
-                'doctor': doctor,
-                'specialty': specialty,
-                'total_patient_copayment': total_patient_copayment,
-                'total_hi_copayment': total_hi_copayment,
-            }
-
+        """
+        request.data['doctor'] = request.user.doctorProfile.id
+        request.data['specialty'] = request.user.doctorProfile.specialty.first().id
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            report_data = perform_report(
+                serializer, request)
             return Response(report_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

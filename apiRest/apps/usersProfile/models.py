@@ -37,7 +37,7 @@ class SpecialityBranch(models.Model):
         verbose_name_plural = 'Ramas'
 
     def __str__(self):
-        return f'Especialidad: {self.speciality.name}, Rama: {self.name}'
+        return  self.name
 
 
 class DoctorProfile(models.Model):
@@ -56,7 +56,7 @@ class DoctorProfile(models.Model):
         verbose_name_plural = 'Profesionales'
 
     def __str__(self):
-        return f'Profesional: {self.user.last_name}, {self.user.name}'
+        return f'{self.user.last_name}, {self.user.name}'
 
     def getSchedule(self, date=None):
         if date is None:
@@ -131,7 +131,7 @@ class PatientProfile(models.Model):
         verbose_name_plural = 'Pacientes'
 
     def __str__(self):
-        return f'Paciente: {self.user.last_name}, {self.user.name}'
+        return f' {self.user.last_name}, {self.user.name}'
 
 
 class InsurancePlanPatient(models.Model):

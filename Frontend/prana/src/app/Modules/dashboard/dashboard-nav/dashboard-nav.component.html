@@ -1,5 +1,31 @@
-<button class="btn btn-primary">User</button>
-<button class="btn btn-secondary">Admin</button>
-<button class="btn btn-succes">Reservas</button>
-<button class="btn btn-danger">Turnos</button>
-<button class="btn btn-primary" (click)="togglePatient()">Pacientes</button>
+<div class="contenedor">
+
+    <div class="arriba">
+        <button class="btn btn-primary" *ngIf="profile === 'admin'">
+            User</button>
+        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin'" (click)="togglePatient()">
+            Pacientes</button>
+        <button class="btn btn-danger" *ngIf="profile === 'admin'" >
+            Profesionales</button>
+        <button class="btn btn-primary" *ngIf="profile === 'doctor' || profile === 'admin'">
+            Mutual / Obra social</button>
+        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin' || profile === 'patient'">
+            Talleres</button>
+        
+        <button class="btn btn-danger">
+            Turnos</button>
+        
+        <button class="btn btn-primary">
+            Mi cuenta</button>
+    
+    
+    </div>
+
+    <div class="abajo">
+
+        <button class="btn btn-danger" (click)="isPatient()">Paciente</button>
+        <button class="btn btn-primary" (click)="isDoctor()">Doctor</button>
+        <button class="btn btn-secondary" (click)="isAdmin()">Admin</button>
+        
+    </div>
+</div>

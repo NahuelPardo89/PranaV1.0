@@ -14,5 +14,16 @@ export class DashboardNavComponent {
     this.togglePatientEvent.emit(true);
     console.log('apretado')
   }
-  
+
+  profile: string = '';
+
+  isPatient() {
+    this.profile = 'patient';
+  }
+  isDoctor() {
+    this.profile = 'doctor';
+  }
+  isAdmin() {
+    this.profile = 'admin';
+  }
 }

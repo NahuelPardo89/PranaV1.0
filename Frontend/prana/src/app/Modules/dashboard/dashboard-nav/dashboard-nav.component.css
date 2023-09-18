@@ -1,0 +1,29 @@
+button {
+    margin-bottom: 5px;
+}
+
+.contenedor {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+}
+
+.arriba {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.abajo {
+    display: flex;
+    flex-direction: row;
+    
+    
+
+}
+
+.abajo > button {
+    margin-right: 2px;
+}

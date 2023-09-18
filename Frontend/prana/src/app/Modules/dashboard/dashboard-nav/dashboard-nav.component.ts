@@ -12,7 +12,7 @@ export class DashboardNavComponent {
 
   togglePatient() {
     this.togglePatientEvent.emit(true);
-    console.log('apretado')
+    
   }
 
   profile: string = '';

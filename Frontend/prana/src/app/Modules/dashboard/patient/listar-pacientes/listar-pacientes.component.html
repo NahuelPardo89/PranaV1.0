@@ -4,23 +4,23 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>User</th>
+          
+          <th>Paciente</th>
           <th>Facebook</th>
           <th>Instagram</th>
           <th>Dirección</th>
-          <th>Activo</th>
+          <th>Mutual/Obra social</th>
           <th>Opciones</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let patient of patients">
-          <td> {{patient.id}}</td>
+          
           <td>{{ patient.user }}</td>
           <td>{{ patient.facebook }}</td>
           <td>{{ patient.instagram }}</td>
           <td>{{ patient.address }}</td>
-          <td>{{ patient.is_active ? 'Sí' : 'No' }}</td>
+          <td>{{ patient.insurance}}</td>
           <td>
             <!-- Botón para editar paciente 
             <button (click)="editPatient(patient)">Editar</button>

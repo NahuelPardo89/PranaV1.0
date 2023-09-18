@@ -20,6 +20,7 @@ export class ListarPacientesComponent implements OnInit {
   loadPatients(): void {
     this.patientService.getAllPatients().subscribe((data: Patient[]) => {
       this.patients = data;
+      // console.log(data);
     });
   }
 

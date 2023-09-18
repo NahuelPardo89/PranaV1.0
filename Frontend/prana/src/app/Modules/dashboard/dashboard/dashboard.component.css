@@ -31,10 +31,11 @@ app-dashboard-body {
         align-items: center;
     }
     app-dashboard-nav {
-        width: 80%;
+        width: 90%;
         height: fit-content;
     } 
     app-dashboard-body {
+        width: 90%;
         min-height: 450px;
     }
 }

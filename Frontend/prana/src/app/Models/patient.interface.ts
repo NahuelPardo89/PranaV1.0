@@ -5,4 +5,5 @@ export interface Patient {
     instagram: string;
     address: string;
     is_active: boolean;
+    insurance: string;
   }

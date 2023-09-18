@@ -17,9 +17,10 @@ button {
 }
 
 .abajo {
+    width: 100%;
     display: flex;
-    flex-direction: row;
-    
+    flex-direction: column;
+    box-sizing: border-box;
     
 
 }

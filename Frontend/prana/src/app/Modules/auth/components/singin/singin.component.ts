@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegisterUser } from 'src/app/Models/registerUser.interface';
+import { AuthService } from 'src/app/Services/auth/auth.service';
 
 @Component({
   selector: 'app-singin',
@@ -11,13 +12,13 @@ import { RegisterUser } from 'src/app/Models/registerUser.interface';
 export class SinginComponent {
   registerForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router,private authService: AuthService) {
     
   }
 
   ngOnInit() {
     this.registerForm = this.fb.group({
-      dni: ['', [Validators.required, Validators.pattern('^[0-9]{7,9}$')]],
+      dni: [null, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1), Validators.max(999000000)]],
       name: ['', [Validators.required]],
       last_name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -49,9 +50,21 @@ export class SinginComponent {
   onSubmit() {
     if (this.registerForm.valid) {
       const userData: RegisterUser = this.registerForm.value;
-      this.router.navigate(['Login']);
-      // Lógica para manejar el registro del usuario
-      console.log('Enviando datos de usuario para registro:', userData);
+  
+      this.authService.register(userData).subscribe(
+        response => {
+          if (response.status === 201) {
+            // Usuario registrado y autenticado con éxito, redirige al admin
+            this.router.navigate(['/Dashboard']);
+          } else {
+            alert('Error inesperado durante el registro.');
+          }
+        },
+        error => {
+          // Muestra los errores de validación al usuario
+          alert('Errores durante el registro: ' + error);
+        }
+      );
     }
   }
 }

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders,HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 
 import { JwtResponse } from 'src/app/Models/jwtResponse.interface' ;
 import { LoginUser } from 'src/app/Models/loginUser.interface';
 import { RegisterUser } from 'src/app/Models/registerUser.interface';
-import { tap } from 'rxjs/operators'; 
+import { tap,catchError } from 'rxjs/operators'; 
 import { BehaviorSubject } from 'rxjs';
-import { User } from 'src/app/Models/user.interface';
 import { UserShort } from 'src/app/Models/userShort.interface';
 
 
@@ -18,9 +17,9 @@ import { UserShort } from 'src/app/Models/userShort.interface';
 })
 export class AuthService {
   private loginUrl = 'http://127.0.0.1:8000/account/login/';
-  private registerUrl = '';
-  private logoutUrl = '';
-  private refreshTokenUrl = '';
+  private registerUrl = 'http://127.0.0.1:8000/account/singin/';
+  private logoutUrl = 'http://127.0.0.1:8000/account/logout/';
+  private refreshTokenUrl = 'http://127.0.0.1:8000/account/refresh/';
 
   private currentUserSubject: BehaviorSubject<UserShort | null> = new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
@@ -36,30 +35,37 @@ export class AuthService {
     return this.http.post<JwtResponse>(this.loginUrl, user).pipe(
       tap(response => {
         this.handleAuthentication(response);
-      })
-    );
-  }
-  
- 
-  register(user: RegisterUser): Observable<JwtResponse> {
-    return this.http.post<JwtResponse>(this.registerUrl, user).pipe(
-      tap(response => {
-        this.handleAuthentication(response);
-      })
+      }),
+      catchError(this.handleError)
     );
   }
 
+  
+ 
+  register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
+    return this.http.post<JwtResponse>(this.registerUrl, user, { observe: 'response' })
+      .pipe(
+        tap(response => {
+          if (response.status === 201) {
+            this.handleAuthentication(response.body!);
+          }
+        }),
+        catchError(this.handleError)
+      );
+  }
+  
+  
   logout(refreshToken: string): Observable<void> {
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('access_token'));
-    return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }, { headers: headers }).pipe(
+    return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }).pipe(
       tap(() => {
         this.currentUserSubject.next(null);
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
-      })
+      }),
+      catchError(this.handleError)
     );
-  }
+}
   refreshToken(): Observable<JwtResponse> {
     const refreshToken = localStorage.getItem('refresh_token');
     if (refreshToken) {
@@ -69,8 +75,19 @@ export class AuthService {
         })
       );
     } else {
-      return throwError('Refresh token not available');
+      return throwError('Refresh token no disponible');
     }
+  }
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Un error a ocurrido';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side errors
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side errors
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(errorMessage);
   }
   private handleAuthentication(response: JwtResponse): void {
     localStorage.setItem('user', JSON.stringify(response.user));

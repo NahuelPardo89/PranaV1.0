@@ -1,0 +1,27 @@
+.paciente {
+    
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    
+}
+
+.createPatient > form {
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.logo {
+    margin-right: 10px;
+}
+
+.boton-enviar {
+    width: 300px;
+}
+
+
+.listar-pacientes {
+    width: 90%;
+    margin: auto;
+}

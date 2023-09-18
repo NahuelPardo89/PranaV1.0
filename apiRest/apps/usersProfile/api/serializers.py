@@ -72,7 +72,7 @@ class PatientProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PatientProfile
-        fields = ('user', 'facebook', 'instagram',
+        fields = ('id','user', 'facebook', 'instagram',
                   'address', 'insurances', 'is_active')
 
 

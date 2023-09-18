@@ -6,7 +6,7 @@ import { AppointmentService } from 'src/app/Services/appointments/appointment.se
   templateUrl: './appointment-list.component.html',
   styleUrls: ['./appointment-list.component.css']
 })
-export class AppointmentListComponent implements OnInit{
+export class AppointmentListComponent implements OnInit {
   appointments: any[] = [];
 
   constructor(private appointmentService: AppointmentService) { }
@@ -14,6 +14,7 @@ export class AppointmentListComponent implements OnInit{
   ngOnInit(): void {
     this.appointmentService.getAdminAppointments().subscribe((data: any[]) => {
       this.appointments = data;
+      console.log(data)
     });
   }
 }

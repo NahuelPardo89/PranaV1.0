@@ -7,6 +7,7 @@ import { AppointmentDetailComponent } from './components/appointment-detail/appo
 import { AppointmentCreateComponent } from './components/appointment-create/appointment-create.component';
 import { AppointmentUpdateComponent } from './components/appointment-update/appointment-update.component';
 import { AppointmentDeleteComponent } from './components/appointment-delete/appointment-delete.component';
+import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { AppointmentDeleteComponent } from './components/appointment-delete/appo
   imports: [
     CommonModule,
     AppointmentsRoutingModule
-  ]
+  ],
+  providers: [AppointmentService]
 })
 export class AppointmentsModule { }

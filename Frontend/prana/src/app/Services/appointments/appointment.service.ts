@@ -14,7 +14,7 @@ export class AppointmentService {
   private baseUrl = 'http://127.0.0.1:8000/appointment/';
   private currentUserSubject: BehaviorSubject<UserShort | null> = new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
-  
+
   constructor(private http: HttpClient) {
     const user = localStorage.getItem('user');
     if (user) {
@@ -25,18 +25,19 @@ export class AppointmentService {
   getAdminAppointments(): Observable<AppointmentAdminInterface[]> {
     return this.http.get<AppointmentAdminInterface[]>(this.baseUrl + 'admin/');
   }
-  
+
   getDoctorAppointments(): Observable<AppointmentDoctorInterface[]> {
     // Get the access token and configure the headers
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
       return throwError('Usuario no autenticado');
     }
+    // Check if the token is expired here
     const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
 
     return this.http.get<AppointmentDoctorInterface[]>(this.baseUrl + 'doctor/', { headers });
   }
-  
+
   getPatientAppointments(): Observable<AppointmentPatientInterface[]> {
     // Get the access token and configure the headers
     const accessToken = localStorage.getItem('access_token');
@@ -44,8 +45,8 @@ export class AppointmentService {
       return throwError('Usuario no autenticado');
     }
     const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
-    
+
     return this.http.get<AppointmentPatientInterface[]>(this.baseUrl + 'patient/', { headers });
   }
-  
+
 }

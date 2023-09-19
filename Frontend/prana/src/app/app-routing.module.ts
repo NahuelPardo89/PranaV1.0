@@ -25,6 +25,9 @@ const routes: Route[] = [
   { path: '**', component: PageNotFoundComponent },
 
  
+  { path: 'speciality', loadChildren: () => import('./Modules/medicalspeciality/medicalspeciality.module').then(m => m. MedicalspecialityModule) },
+  { path: 'speciality/branch', loadChildren: () => import('./Modules/speciality-branch/speciality-branch.module').then(m => m. SpecialityBranchModule) },
+  
 ]
 
 @NgModule({

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 
-import { UserShort } from 'src/app/Models/userShort.interface';
+import { UserShort } from 'src/app/Models/user/userShort.interface';
 import { AppointmentAdminInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentPatientGet.interface';
 import { AppointmentDoctorGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentDoctorGet.interface';

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DoctorProfile } from 'src/app/Models/doctorprofile.interface';
-import { DoctorprofileService } from 'src/app/Services/doctorprofile/doctorprofile.service';
+import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
+import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 @Component({
   selector: 'app-list-doctor-profile',
   templateUrl: './list-doctor-profile.component.html',
@@ -23,5 +23,16 @@ export class ListDoctorProfileComponent {
       console.error('Error loading doctor profiles', error);
     });
   }
+  onEdit(Id: number): void {
+    // Aquí puedes agregar la lógica para manejar la edición de la especialidad médica.
+    console.log(`Editing speciality with ID: ${Id}`);
+}
+
+  onDelete(Id: number): void {
+    // Aquí puedes agregar la lógica para manejar la eliminación de la especialidad médica.
+    if (confirm('¿Estas seguro que deseas elimninar este doctor?')) {
+    console.log(`Deleting speciality with ID: ${Id}`);
+    }
+}
 }
 

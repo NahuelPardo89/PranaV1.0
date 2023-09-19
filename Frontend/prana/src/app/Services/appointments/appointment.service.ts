@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 import { UserShort } from 'src/app/Models/userShort.interface';
 import { AppointmentAdminInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
-import { AppointmentPatientInterface } from 'src/app/Models/appointments/appointmentPatient.interface';
-import { AppointmentDoctorInterface } from 'src/app/Models/appointments/appointmentDoctor.interface';
+import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentPatientGet.interface';
+import { AppointmentDoctorGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentDoctorGet.interface';
+import { AppointmentPatientCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentPatientCreate.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -26,38 +27,23 @@ export class AppointmentService {
     return this.http.get<AppointmentAdminInterface[]>(this.baseUrl + 'admin/');
   }
 
-  getDoctorAppointments(): Observable<AppointmentDoctorInterface[]> {
-    // Get the access token and configure the headers
-    const accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      return throwError('Usuario no autenticado');
-    }
-    // Check if the token is expired here
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
-
-    return this.http.get<AppointmentDoctorInterface[]>(this.baseUrl + 'doctor/', { headers });
+  getDoctorAppointments(): Observable<AppointmentDoctorGetInterface[]> {
+    return this.http.get<AppointmentDoctorGetInterface[]>(this.baseUrl + 'doctor/');
   }
 
-  getPatientAppointments(): Observable<AppointmentPatientInterface[]> {
-    // Get the access token and configure the headers
-    const accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      return throwError('Usuario no autenticado');
-    }
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${accessToken}`);
-
-    return this.http.get<AppointmentPatientInterface[]>(this.baseUrl + 'patient/', { headers });
+  getPatientAppointments(): Observable<AppointmentPatientGetInterface[]> {
+    return this.http.get<AppointmentPatientGetInterface[]>(this.baseUrl + 'patient/');
   }
 
-  createAdminAppointment(appointment: any): Observable<any> {
+  createAdminAppointment(appointment: AppointmentAdminInterface): Observable<any> {
     return this.http.post<any>(this.baseUrl + 'admin/', appointment);
   }
 
-  createDoctorAppointment(appointment: any): Observable<any> {
+  createDoctorAppointment(appointment: AppointmentDoctorGetInterface): Observable<any> {
     return this.http.post<any>(this.baseUrl + 'doctor/', appointment);
   }
 
-  createPatientAppointment(appointment: any): Observable<any> {
+  createPatientAppointment(appointment: AppointmentPatientCreateInterface): Observable<any> {
     return this.http.post<any>(this.baseUrl + 'patient/', appointment);
   }
 

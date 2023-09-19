@@ -19,8 +19,9 @@ const routes: Route[] = [
   { path: 'auth', loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule) },
   { path: 'insurance', loadChildren: () => import('./Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule) },
   { path: 'appointments', loadChildren: () => import('./Modules/appointments/appointments.module').then(m => m.AppointmentsModule) },
+  { path: 'doctors', loadChildren: () => import('./Modules/doctor-profile/doctor-profile.module').then(m => m. DoctorProfileModule) },
 
-
+ 
 ]
 
 @NgModule({

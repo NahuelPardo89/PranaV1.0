@@ -1,0 +1,26 @@
+<div class="container mt-5">
+    <h1>Listado de Profesionales</h1>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Licencia</th>
+                <th scope="col">Especialidad</th>
+                <th scope="col">Obras Sociales</th>
+                <th scope="col">Duracion del Turno</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let doctor of doctors">
+                <th scope="row">{{ doctor.id }}</th>
+                <td>{{ doctor.user }}</td>
+                <td>{{ doctor.medicLicence }}</td>
+                <td>{{ doctor.specialty.join(', ') }}</td>
+                <td>{{ doctor.insurances.join(', ') }}</td>
+                <td>{{ doctor.appointment_duration }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

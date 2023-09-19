@@ -1,1 +1,14 @@
-<p>appointment-create works!</p>
+<form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Select Doctor</mat-label>
+      <mat-select formControlName="selectedDoctor">
+        <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
+          {{ doctor.user }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    
+    <!-- Puedes agregar más campos al formulario si es necesario -->
+  
+    <button type="submit" mat-raised-button color="primary">Create Appointment</button>
+  </form>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HealthinsuranceService } from 'src/app/Services/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
 
 @Component({
   selector: 'app-healthinsurancecreate',

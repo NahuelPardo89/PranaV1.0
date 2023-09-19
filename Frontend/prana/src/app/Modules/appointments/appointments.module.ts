@@ -18,7 +18,12 @@ import { AppointmentPatientDeleteComponent } from './components/patient/appointm
 import { AppointmentPatientDetailComponent } from './components/patient/appointment-patient-detail/appointment-patient-detail.component';
 import { AppointmentPatientListComponent } from './components/patient/appointment-patient-list/appointment-patient-list.component';
 import { AppointmentPatientUpdateComponent } from './components/patient/appointment-patient-update/appointment-patient-update.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -40,8 +45,13 @@ import { AppointmentPatientUpdateComponent } from './components/patient/appointm
   ],
   imports: [
     CommonModule,
-    AppointmentsRoutingModule
+    AppointmentsRoutingModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
   ],
-  providers: [AppointmentService]
+  providers: [AppointmentService,DoctorprofileService]
 })
 export class AppointmentsModule { }

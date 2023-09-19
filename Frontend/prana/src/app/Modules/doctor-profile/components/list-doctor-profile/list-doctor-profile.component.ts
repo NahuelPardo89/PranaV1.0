@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { DoctorProfile } from 'src/app/Models/doctorprofile.interface';
-import { DoctorprofileService } from 'src/app/Services/doctorprofile/doctorprofile.service';
+import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
+import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 @Component({
   selector: 'app-list-doctor-profile',
   templateUrl: './list-doctor-profile.component.html',

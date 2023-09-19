@@ -27,23 +27,6 @@ def perform_report(serializer, request):
         appointments = appointments.filter(
             payment_method=payment_method)
 
-    # total_patient_copayment = sum(
-    #     appointment.patient_copayment for appointment in appointments)
-    # total_hi_copayment = sum(
-    #     appointment.hi_copayment for appointment in appointments)
-
-    # report_data = {
-    #     'doctor': doctor,
-    #     'specialty': specialty,
-    #     'branch': branch,
-    #     'payment_method': payment_method,
-    #     'total_patient_copayment': total_patient_copayment,
-    #     'total_hi_copayment': total_hi_copayment,
-    # }
-
-    # MIRAR
-    #       appointment.payment.patient_copayment
-
     # Calculate the number of patients and number of appointments
     num_patients = appointments.values('patient').distinct().count()
     num_appointments = appointments.count()

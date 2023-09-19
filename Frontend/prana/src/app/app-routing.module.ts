@@ -19,6 +19,7 @@ const routes: Route[] = [
   { path: 'auth', loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule) },
   { path: 'insurance', loadChildren: () => import('./Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule) },
   { path: 'appointments', loadChildren: () => import('./Modules/appointments/appointments.module').then(m => m.AppointmentsModule) },
+  { path: 'reports', loadChildren: () => import('./Modules/reports/reports.module').then(m => m.ReportsModule) },
 
 
 ]

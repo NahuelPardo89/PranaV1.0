@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppointmentAdminInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 
 @Component({
@@ -7,14 +8,14 @@ import { AppointmentService } from 'src/app/Services/appointments/appointment.se
   styleUrls: ['./appointment-list.component.css']
 })
 export class AppointmentListComponent implements OnInit {
-  appointments: any[] = [];
+  appointments: AppointmentAdminInterface[] = [];
 
   constructor(private appointmentService: AppointmentService) { }
 
   ngOnInit(): void {
-    this.appointmentService.getAdminAppointments().subscribe((data: any[]) => {
+    this.appointmentService.getAdminAppointments().subscribe((data: AppointmentAdminInterface[]) => {
       this.appointments = data;
-      console.log(data)
+      console.log(data);
     });
   }
 }

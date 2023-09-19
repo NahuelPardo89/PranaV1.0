@@ -66,12 +66,14 @@ export class AuthService {
       catchError(this.handleError)
     );
 }
+  
   refreshToken(): Observable<JwtResponse> {
     const refreshToken = localStorage.getItem('refresh_token');
     if (refreshToken) {
       return this.http.post<JwtResponse>(this.refreshTokenUrl, { refresh: refreshToken }).pipe(
         tap((response: JwtResponse) => {
           localStorage.setItem('access_token', response.access);
+          localStorage.setItem('refresh_token', response.refresh);
         })
       );
     } else {

@@ -1,0 +1,35 @@
+<div class="container mt-5">
+    <h2>Listado de Turnos - Profesional</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Profesional</th>
+                <th>Paciente</th>
+                <th>Especialidad</th>
+                <th>Rama</th>
+                <th>Obra Social</th>
+                <th>Duración</th>
+                <th>Estado</th>
+                <th>Costo Total</th>
+                <th>Método de Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let appointment of appointments">
+                <td>{{ appointment.day }}</td>
+                <td>{{ appointment.hour }}</td>
+                <td>{{ appointment.doctor }}</td>
+                <td>{{ appointment.patient }}</td>
+                <td>{{ appointment.specialty }}</td>
+                <td>{{ appointment.branch }}</td>
+                <td>{{ appointment.health_insurance }}</td>
+                <td>{{ appointment.duration }}</td>
+                <td>{{ appointment.state }}</td>
+                <td>{{ appointment.full_cost }}</td>
+                <td>{{ appointment.payment_method}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -551,8 +551,8 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = ('day', 'hour', 'patient', 'specialty', 'branch',
                   'doctor', 'health_insurance', 'duration', 'state', )
-        read_only_fields = ('health_insurance', 'patient',
-                            'specialty', 'full_cost', 'duration', 'state')
+        read_only_fields = ('health_insurance', 'specialty', 'full_cost',
+                            'duration', 'state')
 
     def create(self, validated_data):
         """
@@ -598,8 +598,7 @@ class DoctorAppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = ('day', 'hour', 'duration', 'full_cost', 'state', 'doctor', 'specialty',
                   'branch', 'patient', 'health_insurance', 'payment_method')
-        read_only_fields = ('specialty',
-                            'full_cost', 'health_insurance',)
+        read_only_fields = ('specialty', 'full_cost', 'health_insurance',)
 
     def create(self, validated_data):
         """

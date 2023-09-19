@@ -49,4 +49,16 @@ export class AppointmentService {
     return this.http.get<AppointmentPatientInterface[]>(this.baseUrl + 'patient/', { headers });
   }
 
+  createAdminAppointment(appointment: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + 'admin/', appointment);
+  }
+
+  createDoctorAppointment(appointment: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + 'doctor/', appointment);
+  }
+
+  createPatientAppointment(appointment: any): Observable<any> {
+    return this.http.post<any>(this.baseUrl + 'patient/', appointment);
+  }
+
 }

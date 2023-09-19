@@ -1,4 +1,5 @@
 export interface AppointmentPatientGetInterface {
+  id:number,
   day: Date,
   hour: string,
   doctor: number,

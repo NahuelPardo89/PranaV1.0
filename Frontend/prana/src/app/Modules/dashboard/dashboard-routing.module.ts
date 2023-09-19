@@ -12,29 +12,22 @@ import { AppointmentAdminListComponent } from '../appointments/components/admin/
 import { AppointmentDoctorListComponent } from '../appointments/components/doctor/appointment-doctor-list/appointment-doctor-list.component';
 import { AppointmentPatientListComponent } from '../appointments/components/patient/appointment-patient-list/appointment-patient-list.component';
 
-
-
 const routes: Routes = [
   {
-    path: 'Dashboard',
-    component: DashboardComponent,
+    path: '', component: DashboardComponent,
     children: [
-      // { path: 'usuarios', component:  },
-      { path: 'patient', component: PatientComponent },
-      { path: 'doctor', component:  ListDoctorProfileComponent  },
-      { path: 'healt_insurance', component: HealthinsurancelistComponent },
-      { path: 'appointment_admin', component: AppointmentAdminListComponent},
-      { path: 'appointment_doctor', component: AppointmentDoctorListComponent},
-      { path: 'appointment_patient', component: AppointmentPatientListComponent},
-      
-      // { path: 'workshops', component:    },
-      // { path: 'account', component:    },
-      
-      // Agrega más rutas según tus necesidades
-      { path: '', redirectTo: 'home', pathMatch: 'full' }, // Ruta por defecto
-    ],
-  },
+       // Redirige a una ruta por defecto si lo deseas
+      { path: 'insurance', loadChildren: () => import('src/app/Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule) },
+     
+      // ... otras rutas hijas ...
+    ]
+  }
 ];
+
+//const routes: Routes = [
+ // {path: '', component: DashboardComponent},
+  //{ path: 'insurance', loadChildren: () => import('src/app/Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule) }
+//];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

@@ -11,6 +11,7 @@
             Mutual / Obra social</button>
         <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin' || profile === 'patient'" routerLink="workshops">
             Talleres</button>
+            <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="insurance/list" > PRUEBA</button>
         
         <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="appointment_admin">
             Administrar turnos</button>

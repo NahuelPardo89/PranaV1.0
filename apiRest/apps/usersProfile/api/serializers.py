@@ -18,6 +18,7 @@ class MedicalSpecialitySerializer(serializers.ModelSerializer):
 
 
 class SpecialityBranchSerializer(serializers.ModelSerializer):
+    speciality=serializers.StringRelatedField()
     class Meta:
         model = SpecialityBranch
         fields = '__all__'

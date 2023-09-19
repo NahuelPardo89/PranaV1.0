@@ -3,16 +3,20 @@
     <div class="arriba">
         <button class="btn btn-primary" *ngIf="profile === 'admin'">
             User</button>
-        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin'" (click)="togglePatient()">
+        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="patient">
             Pacientes</button>
-        <button class="btn btn-danger" *ngIf="profile === 'admin'" >
+        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="doctor" >
             Profesionales</button>
-        <button class="btn btn-primary" *ngIf="profile === 'doctor' || profile === 'admin'">
+        <button class="btn btn-primary" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="health_insurance">
             Mutual / Obra social</button>
-        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin' || profile === 'patient'">
+        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin' || profile === 'patient'" routerLink="workshops">
             Talleres</button>
         
-        <button class="btn btn-danger">
+        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="appointment_admin">
+            Administrar turnos</button>
+        <button class="btn btn-danger" *ngIf="profile === 'doctor'" routerLink="appointment_doctor">
+            Turnos</button>
+        <button class="btn btn-danger" *ngIf="profile === 'patient'" routerLink="appointment_patient">
             Turnos</button>
         
         <button class="btn btn-primary">

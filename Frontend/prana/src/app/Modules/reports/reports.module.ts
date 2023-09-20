@@ -5,6 +5,7 @@ import { ReportsRoutingModule } from './reports-routing.module';
 import { AdminReportsComponent } from './components/admin-reports/admin-reports.component';
 import { DoctorReportsComponent } from './components/doctor-reports/doctor-reports.component';
 import { ReportService } from 'src/app/Services/reports/report.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { ReportService } from 'src/app/Services/reports/report.service';
   ],
   imports: [
     CommonModule,
-    ReportsRoutingModule
+    ReportsRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [ReportService]
 })

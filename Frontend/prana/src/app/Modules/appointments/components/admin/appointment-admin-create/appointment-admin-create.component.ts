@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { catchError } from 'rxjs';
 import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
 import { HealthInsurance } from 'src/app/Models/Profile/healthinsurance.interface';
@@ -46,6 +47,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
       doctor: [null, Validators.required],
       patient: [null, Validators.required],
       duration: [null],
+      specialty: [null],
       branch: [null],
       state: [null],
       payment_method: [null],
@@ -149,10 +151,36 @@ export class AppointmentAdminCreateComponent implements OnInit {
       filteredBody.health_insurance = formValues.health_insurance;
     }
 
+    const confirmed = window.confirm('¿Desea confirmar la generación del turno?');
+    if (confirmed) {
 
-    this.appointmentService.createAdminAppointment(filteredBody).subscribe((data: AppointmentAdminGetInterface) => {
-      this.appointmentResponse = data;
-      console.log(data);
-    })
+      this.appointmentService.createAdminAppointment(filteredBody)
+        .pipe(
+          catchError(error => {
+            // Manejar el error aquí
+            console.error('Error en la solicitud:', error);
+
+            // Verificar si hay errores específicos en "non_field_errors"
+            if (error.error && error.error.non_field_errors) {
+              // Obtener el primer mensaje de error en "non_field_errors"
+              const errorMessage = error.error.non_field_errors[0];
+
+              // Mostrar una alerta con el mensaje de error específico
+              alert('Error al generar el turno: ' + errorMessage);
+            } else {
+              // Si no hay errores específicos, mostrar un mensaje genérico
+              alert('Ha ocurrido un error en la solicitud.');
+            }
+
+            throw error; // Lanzar el error nuevamente
+          })
+        )
+        .subscribe((data: AppointmentAdminGetInterface) => {
+          this.appointmentResponse = data;
+          alert("Turno generado exitosamente")
+          console.log(data);
+        });
+    }
+
   }
 }

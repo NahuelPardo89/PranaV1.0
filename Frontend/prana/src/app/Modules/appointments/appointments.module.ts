@@ -53,6 +53,12 @@ import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    AppointmentsRoutingModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
   ],
   providers: [AppointmentService, DoctorprofileService, SpecialityService, BranchService]
 })

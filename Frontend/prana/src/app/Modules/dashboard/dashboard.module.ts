@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DashboardRoutingModule } from './dashboard-routing.module';
+
+
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { DashboardNavComponent } from './dashboard-nav/dashboard-nav.component';
 import { DashboardBodyComponent } from './dashboard-body/dashboard-body.component';
@@ -23,8 +26,12 @@ import { ListarPacientesComponent } from './patient/listar-pacientes/listar-paci
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    DashboardRoutingModule
     
+  ],
+  exports: [
+    DashboardComponent
   ]
 })
 export class DashboardModule { }

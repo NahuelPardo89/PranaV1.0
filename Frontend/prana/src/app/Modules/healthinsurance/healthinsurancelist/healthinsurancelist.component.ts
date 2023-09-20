@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HealthInsurance } from 'src/app/Models/healthinsurance.interface';
-import { HealthinsuranceService } from 'src/app/Services/healthinsurance.service';
+import { HealthInsurance } from 'src/app/Models/Profile/healthinsurance.interface';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
 
 @Component({
   selector: 'app-healthinsurancelist',
@@ -25,4 +25,15 @@ export class HealthinsurancelistComponent {
       });
     }
   }
+  onEdit(Id: number): void {
+    // Aquí puedes agregar la lógica para manejar la edición de la especialidad médica.
+    console.log(`Editing speciality with ID: ${Id}`);
+}
+
+  onDelete(Id: number): void {
+    // Aquí puedes agregar la lógica para manejar la eliminación de la especialidad médica.
+    if (confirm('¿Estas seguro que deseas elimninar esta Obra Social?')) {
+    console.log(`Deleting speciality with ID: ${Id}`);
+    }
+}
 }

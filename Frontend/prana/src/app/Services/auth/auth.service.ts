@@ -3,12 +3,12 @@ import { HttpClient, HttpHeaders,HttpErrorResponse, HttpResponse } from '@angula
 
 import { Observable, throwError } from 'rxjs';
 
-import { JwtResponse } from 'src/app/Models/jwtResponse.interface' ;
-import { LoginUser } from 'src/app/Models/loginUser.interface';
-import { RegisterUser } from 'src/app/Models/registerUser.interface';
+import { JwtResponse } from 'src/app/Models/user/jwtResponse.interface' ;
+import { LoginUser } from 'src/app/Models/user/loginUser.interface';
+import { RegisterUser } from 'src/app/Models/user/registerUser.interface';
 import { tap,catchError } from 'rxjs/operators'; 
 import { BehaviorSubject } from 'rxjs';
-import { UserShort } from 'src/app/Models/userShort.interface';
+import { UserShort } from 'src/app/Models/user/userShort.interface';
 
 
 

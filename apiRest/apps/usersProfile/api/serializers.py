@@ -18,6 +18,7 @@ class MedicalSpecialitySerializer(serializers.ModelSerializer):
 
 
 class SpecialityBranchSerializer(serializers.ModelSerializer):
+    speciality=serializers.StringRelatedField()
     class Meta:
         model = SpecialityBranch
         fields = '__all__'
@@ -60,10 +61,12 @@ class DoctorProfileAllSerializer(serializers.ModelSerializer):
 
 class DoctorProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
-
+    user=serializers.StringRelatedField()
+    specialty=serializers.StringRelatedField(many=True)
+    insurances= serializers.StringRelatedField(many=True)
     class Meta:
         model = DoctorProfile
-        fields = ('user', 'medicLicence', 'specialty',
+        fields = ('id','user', 'medicLicence', 'specialty',
                   'insurances', 'is_active', 'appointment_duration')
 
 

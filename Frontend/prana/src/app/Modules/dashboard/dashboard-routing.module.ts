@@ -11,6 +11,7 @@ import { HealthinsurancelistComponent } from '../healthinsurance/healthinsurance
 import { AppointmentAdminListComponent } from '../appointments/components/admin/appointment-admin-list/appointment-admin-list.component';
 import { AppointmentDoctorListComponent } from '../appointments/components/doctor/appointment-doctor-list/appointment-doctor-list.component';
 import { AppointmentPatientListComponent } from '../appointments/components/patient/appointment-patient-list/appointment-patient-list.component';
+import { AdminReportsComponent } from '../reports/components/admin-reports/admin-reports.component';
 
 const routes: Routes = [
   {
@@ -24,7 +25,9 @@ const routes: Routes = [
       { path: 'speciality', loadChildren: () => import('src/app/Modules/medicalspeciality/medicalspeciality.module').then(m => m. MedicalspecialityModule) },
       { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m. SpecialityBranchModule) },
       { path: 'patient', component: PatientComponent},
+      { path: 'reports', component: AdminReportsComponent},
       { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m. SpecialityBranchModule) },
+      // { path: 'reports', loadChildren: () => import('src/app/Modules/reports/reports.module').then(m => m. ReportsModule) },
   
     ]
   }

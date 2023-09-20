@@ -18,6 +18,7 @@ import { WorkshopsModule } from './Modules/workshops/workshops.module';
 import { DashboardModule } from './Modules/dashboard/dashboard.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './Services/auth/auth.interceptor';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -39,7 +40,7 @@ import { AuthInterceptor } from './Services/auth/auth.interceptor';
     HomeModule,
     SharedModule,
     WorkshopsModule,
-    
+    MatSelectModule,
     DashboardModule,
     BrowserAnimationsModule
     

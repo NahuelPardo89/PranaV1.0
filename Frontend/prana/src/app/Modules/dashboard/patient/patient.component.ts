@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Patient } from 'src/app/Models/patient.interface';
-import { PatientService } from 'src/app/Services/patient/patient.service';
+import { Patient } from 'src/app/Models/Profile/patient.interface';
+import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
 
 @Component({
   selector: 'app-patient',

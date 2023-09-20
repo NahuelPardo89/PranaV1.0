@@ -1,0 +1,114 @@
+<div class="container mt-5">
+    <h2 class="text-center">Generar Reporte</h2>
+    <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="mb-3 row align-items-center">
+                    <label for="start_date" class="col-md-4 col-form-label text-end">Fecha de inicio:</label>
+                    <div class="col-md-8">
+                        <input type="date" id="start_date" class="form-control input-field" formControlName="start_date"
+                            required>
+                    </div>
+                </div>
+
+                <div class="mb-3 row align-items-center">
+                    <label for="end_date" class="col-md-4 col-form-label text-end">Fecha de fin:</label>
+                    <div class="col-md-8">
+                        <input type="date" id="end_date" class="form-control input-field" formControlName="end_date"
+                            required>
+                    </div>
+                </div>
+
+                <div class="mb-3 row align-items-center">
+                    <label for="doctor" class="col-md-4 col-form-label text-end">Doctor:</label>
+                    <div class="col-md-8">
+                        <mat-form-field appearance="fill" class="input-field">
+                            <mat-label>Seleccionar Doctor</mat-label>
+                            <mat-select formControlName="doctor" class="input-field">
+                                <mat-option [value]="null">Sin Solicitar</mat-option>
+                                <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
+                                    {{ doctor.user }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="mb-3 row align-items-center">
+                    <label for="specialty" class="col-md-4 col-form-label text-end">Especialidad:</label>
+                    <div class="col-md-8">
+                        <mat-form-field appearance="fill" class="input-field">
+                            <mat-label>Seleccionar Especialidad</mat-label>
+                            <mat-select formControlName="specialty" class="input-field">
+                                <mat-option [value]="null">Sin Solicitar</mat-option>
+                                <mat-option *ngFor="let specialty of specialties" [value]="specialty.id">
+                                    {{ specialty.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="mb-3 row align-items-center">
+                    <label for="branch" class="col-md-4 col-form-label text-end">Rama:</label>
+                    <div class="col-md-8">
+                        <mat-form-field appearance="fill" class="input-field">
+                            <mat-label>Seleccionar Rama</mat-label>
+                            <mat-select formControlName="branch" class="input-field">
+                                <mat-option [value]="null">Sin Solicitar</mat-option>
+                                <mat-option *ngFor="let branch of branches" [value]="branch.id">
+                                    {{ branch.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="mb-3 row align-items-center">
+                    <label for="payment_method" class="col-md-4 col-form-label text-end">Forma de pago:</label>
+                    <div class="col-md-8">
+                        <input type="number" id="payment_method" class="form-control input-field"
+                            formControlName="payment_method">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        </div>
+    </form>
+</div>
+
+
+<div *ngIf="reportData">
+    <h2>Reporte Generado</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Profesional</th>
+                <th>Especialidad</th>
+                <th>Rama</th>
+                <th>Forma de Pago</th>
+                <th>Cantidad de Pacientes</th>
+                <th>Cantidad de Turnos</th>
+                <th>Total Copago Paciente</th>
+                <th>Total Copago Obra Social</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reportData.doctor !== null ? getDoctorName(reportData.doctor) : 'Sin Solicitar' }}</td>
+                <td>{{ reportData.specialty !== null ? getSpecialtyName(reportData.specialty) : 'Sin Solicitar' }}</td>
+                <td>{{ reportData.branch !== null ? getBranchName(reportData.branch) : 'Sin Solicitar' }}</td>
+                <td>{{ reportData.payment_method !== null ? reportData.payment_method : 'Sin Solicitar' }}</td>
+                <td>{{ reportData.num_patients !== null ? reportData.num_patients : 'Sin Solicitar' }}</td>
+                <td>{{ reportData.num_appointments !== null ? reportData.num_appointments : 'Sin Solicitar' }}</td>
+                <td>{{ reportData.total_patient_copayment !== null ? reportData.total_patient_copayment : 'Sin
+                    Solicitar' }}
+                </td>
+                <td>{{ reportData.total_hi_copayment !== null ? reportData.total_hi_copayment : 'Sin Solicitar' }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -3,7 +3,7 @@ import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent,HttpErrorResponse} 
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/Services/auth/auth.service';  
-import { JwtResponse } from 'src/app/Models/jwtResponse.interface'; 
+import { JwtResponse } from 'src/app/Models/user/jwtResponse.interface'; 
 import { Router } from '@angular/router';
 
 @Injectable()

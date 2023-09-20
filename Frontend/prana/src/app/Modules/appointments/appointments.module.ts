@@ -24,6 +24,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { MatSelectModule } from '@angular/material/select';
+import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
+import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,6 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatSelectModule,
   ],
-  providers: [AppointmentService, DoctorprofileService]
+  providers: [AppointmentService, DoctorprofileService, SpecialityService, BranchService]
 })
 export class AppointmentsModule { }

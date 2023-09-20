@@ -64,11 +64,11 @@
                     </div>
                 </div>
                 <div class="mb-3 row align-items-center">
-                    <label for="paymentmethod" class="col-md-4 col-form-label text-end">Metodo de pago:</label>
+                    <label for="payment_method" class="col-md-4 col-form-label text-end">Metodo de pago:</label>
                     <div class="col-md-8">
                         <mat-form-field appearance="fill" class="input-field">
                             <mat-label>Seleccionar metodo de pago</mat-label>
-                            <mat-select formControlName="paymentmethod" class="input-field">
+                            <mat-select formControlName="payment_method" class="input-field">
                                 <mat-option [value]="null">Sin Solicitar</mat-option>
                                 <mat-option *ngFor="let method of methods" [value]="method.id">
                                     {{ method.name }}
@@ -111,7 +111,8 @@
                 <td>{{ reportData.payment_method !== null ? reportData.payment_method : 'Sin Solicitar' }}</td>
                 <td>{{ reportData.num_patients !== null ? reportData.num_patients : 'Sin Solicitar' }}</td>
                 <td>{{ reportData.num_appointments !== null ? reportData.num_appointments : 'Sin Solicitar' }}</td>
-                <td>{{ reportData.total_patient_copayment !== null ? reportData.total_patient_copayment : 'Sin Solicitar' }}
+                <td>{{ reportData.total_patient_copayment !== null ? reportData.total_patient_copayment : 'Sin
+                    Solicitar' }}
                 </td>
                 <td>{{ reportData.total_hi_copayment !== null ? reportData.total_hi_copayment : 'Sin Solicitar' }}</td>
             </tr>

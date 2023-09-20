@@ -10,6 +10,8 @@ import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
 import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
+import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
+import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interface';
 
 @Component({
   selector: 'app-admin-reports',
@@ -22,9 +24,10 @@ export class AdminReportsComponent implements OnInit {
   doctors: DoctorProfile[] = [];
   specialties: Medicalspeciality[] = [];
   branches: SpecialityBranch[] = [];
+  methods: PaymentMethod[] = [];
 
   constructor(private reportService: ReportService, private fb: FormBuilder, private branchService: BranchService,
-    private doctorService: DoctorprofileService, private specialtyService: SpecialityService) {
+    private doctorService: DoctorprofileService, private specialtyService: SpecialityService, private paymentmethodservice: PaymentmethodService) {
     // Inicializa el formulario
     this.reportForm = this.fb.group({
       start_date: ['', Validators.required],
@@ -51,6 +54,7 @@ export class AdminReportsComponent implements OnInit {
     this.loadDoctors();
     this.loadSpecialties();
     this.loadBranches();
+    this.loadMethods()
   }
 
   loadDoctors(): void {
@@ -70,6 +74,11 @@ export class AdminReportsComponent implements OnInit {
       this.branches = data
     })
   }
+  loadMethods(): void {
+    this.paymentmethodservice.getPaymentMethods().subscribe(data => {
+      this.methods = data
+  })
+}
 
   getDoctorName(doctorId: number | "Sin Solicitar"): string {
     if (doctorId === "Sin Solicitar") {

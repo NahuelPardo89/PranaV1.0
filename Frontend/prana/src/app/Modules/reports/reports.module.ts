@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
 import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { MatSelectModule } from '@angular/material/select';
+import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 
 
 @NgModule({
@@ -31,6 +32,6 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatSelectModule,
   ],
-  providers: [ReportService, DoctorprofileService, SpecialityService, BranchService]
+  providers: [ReportService, DoctorprofileService, SpecialityService, BranchService,PaymentmethodService]
 })
 export class ReportsModule { }

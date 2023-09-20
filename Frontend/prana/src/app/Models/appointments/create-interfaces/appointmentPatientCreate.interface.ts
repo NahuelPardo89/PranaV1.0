@@ -1,6 +1,6 @@
 // AppointmentPatientCreateInterface
 export interface AppointmentPatientCreateInterface {
-  day: Date,
+  day: string,
   hour: string,
   doctor: number,
   patient: number,

@@ -1,14 +1,145 @@
-<form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-    <mat-form-field appearance="fill">
-      <mat-label>Select Doctor</mat-label>
-      <mat-select formControlName="selectedDoctor">
-        <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
-          {{ doctor.user }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    
-    <!-- Puedes agregar más campos al formulario si es necesario -->
-  
-    <button type="submit" mat-raised-button color="primary">Create Appointment</button>
+<div class="container mt-5">
+  <h2 class="text-center">Generar Turno</h2>
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="mb-3 row align-items-center">
+          <label for="day" class="col-md-4 col-form-label text-end">Día:</label>
+          <div class="col-md-8">
+            <input type="date" id="day" class="form-control input-field" formControlName="day" required>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="hour" class="col-md-4 col-form-label text-end">Hora (HH-MM-SS):</label>
+          <div class="col-md-8">
+            <input type="time" id="hour" class="form-control input-field" formControlName="hour" required>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="duration" class="col-md-4 col-form-label text-end">Duración de la consulta:</label>
+          <div class="col-md-8">
+            <input type="time" id="duration" class="form-control input-field" formControlName="duration" required>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="patient" class="col-md-4 col-form-label text-end">Paciente:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Paciente</mat-label>
+              <mat-select formControlName="patient" class="input-field" required>
+                <mat-option *ngFor="let patient of patients" [value]="patient.id">
+                  {{ patient.user }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="specialty" class="col-md-4 col-form-label text-end">Especialidad:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Especialidad</mat-label>
+              <mat-select formControlName="specialty" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let specialty of specialties" [value]="specialty.id">
+                  {{ specialty.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="doctor" class="col-md-4 col-form-label text-end">Doctor:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Doctor</mat-label>
+              <mat-select formControlName="doctor" class="input-field" required>
+                <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
+                  {{ doctor.user }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="branch" class="col-md-4 col-form-label text-end">Rama:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Rama</mat-label>
+              <mat-select formControlName="branch" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let branch of branches" [value]="branch.id">
+                  {{ branch.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="full_cost" class="col-md-4 col-form-label text-end">Costo:</label>
+          <div class="col-md-8">
+            <input type="number" id="full_cost" class="form-control input-field" formControlName="full_cost" required>
+          </div>
+        </div>
+
+
+        <div class="mb-3 row align-items-center">
+          <label for="payment_method" class="col-md-4 col-form-label text-end">Metodo de pago:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar metodo de pago</mat-label>
+              <mat-select formControlName="payment_method" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let method of methods" [value]="method.id">
+                  {{ method.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="state" class="col-md-4 col-form-label text-end">Estado del turno:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar un estado</mat-label>
+              <mat-select formControlName="state" class="input-field">
+                <mat-option [value]=1>Sin Solicitar</mat-option>
+                <mat-option *ngFor="let state of states" [value]="state.value">
+                  {{ state.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="health_insurance" class="col-md-4 col-form-label text-end">Obra Social:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar obra social</mat-label>
+              <mat-select formControlName="health_insurance" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let insurance of insurances" [value]="insurance.id">
+                  {{ insurance.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary">Generar Turno</button>
+    </div>
   </form>
+</div>

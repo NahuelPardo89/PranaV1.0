@@ -77,8 +77,8 @@ export class AdminReportsComponent implements OnInit {
   loadMethods(): void {
     this.paymentmethodservice.getPaymentMethods().subscribe(data => {
       this.methods = data
-  })
-}
+    })
+  }
 
   getDoctorName(doctorId: number | "Sin Solicitar"): string {
     if (doctorId === "Sin Solicitar") {

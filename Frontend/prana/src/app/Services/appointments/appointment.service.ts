@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 
 import { UserShort } from 'src/app/Models/user/userShort.interface';
-import { AppointmentAdminInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
+import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentPatientGet.interface';
 import { AppointmentDoctorGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentDoctorGet.interface';
 import { AppointmentPatientCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentPatientCreate.interface';
+import { AppointmentAdminCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentAdminCreate.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,8 @@ export class AppointmentService {
     }
   }
 
-  getAdminAppointments(): Observable<AppointmentAdminInterface[]> {
-    return this.http.get<AppointmentAdminInterface[]>(this.baseUrl + 'admin/');
+  getAdminAppointments(): Observable<AppointmentAdminGetInterface[]> {
+    return this.http.get<AppointmentAdminGetInterface[]>(this.baseUrl + 'admin/');
   }
 
   getDoctorAppointments(): Observable<AppointmentDoctorGetInterface[]> {
@@ -35,8 +36,8 @@ export class AppointmentService {
     return this.http.get<AppointmentPatientGetInterface[]>(this.baseUrl + 'patient/');
   }
 
-  createAdminAppointment(appointment: AppointmentAdminInterface): Observable<any> {
-    return this.http.post<any>(this.baseUrl + 'admin/', appointment);
+  createAdminAppointment(appointment: AppointmentAdminCreateInterface): Observable<AppointmentAdminGetInterface> {
+    return this.http.post<AppointmentAdminGetInterface>(this.baseUrl + 'admin/', appointment);
   }
 
   createDoctorAppointment(appointment: AppointmentDoctorGetInterface): Observable<any> {

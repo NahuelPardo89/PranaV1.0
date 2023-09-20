@@ -1,25 +1,30 @@
 <div class="contenedor">
 
     <div class="arriba">
-        <button class="btn btn-primary" *ngIf="profile === 'admin'">
+        <button class="btn btn-primary" *ngIf="profile === 'admin'" disabled>
             User</button>
         <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="patient">
             Pacientes</button>
-        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="doctor" >
+        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="doctors/list" >
             Profesionales</button>
-        <button class="btn btn-primary" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="health_insurance">
+        <button class="btn btn-primary" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="insurance/list">
             Mutual / Obra social</button>
-        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin' || profile === 'patient'" routerLink="workshops">
+        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin' || profile === 'patient'" routerLink="workshops" disabled>
             Talleres</button>
+        <button class="btn btn-danger" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="speciality/list">
+            Especialidades</button>
+        <button class="btn btn-primary" *ngIf="profile === 'admin'" routerLink="speciality/branch/list">
+            Ramas de especialidades</button>
+           
         
-        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="appointment_admin">
+        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="appointments/admin/list">
             Administrar turnos</button>
-        <button class="btn btn-danger" *ngIf="profile === 'doctor'" routerLink="appointment_doctor">
+        <button class="btn btn-danger" *ngIf="profile === 'doctor'" routerLink="appointments/doctor/list">
             Turnos</button>
-        <button class="btn btn-danger" *ngIf="profile === 'patient'" routerLink="appointment_patient">
+        <button class="btn btn-danger" *ngIf="profile === 'patient'" routerLink="appointments/patient/create">
             Turnos</button>
         
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" disabled>
             Mi cuenta</button>
     
     <hr>

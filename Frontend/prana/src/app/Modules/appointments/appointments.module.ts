@@ -51,6 +51,12 @@ import { MatSelectModule } from '@angular/material/select';
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    AppointmentsRoutingModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
   ],
   providers: [AppointmentService, DoctorprofileService]
 })

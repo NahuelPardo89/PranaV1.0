@@ -26,6 +26,9 @@ import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doc
 import { MatSelectModule } from '@angular/material/select';
 import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
 import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
+import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
+import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
 
 @NgModule({
   declarations: [
@@ -60,6 +63,7 @@ import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
     MatButtonModule,
     MatSelectModule,
   ],
-  providers: [AppointmentService, DoctorprofileService, SpecialityService, BranchService]
+  providers: [AppointmentService, DoctorprofileService, SpecialityService, BranchService,
+    AppointmentService, PatientService, PaymentmethodService, HealthinsuranceService]
 })
 export class AppointmentsModule { }

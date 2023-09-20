@@ -19,6 +19,7 @@ import { DashboardModule } from './Modules/dashboard/dashboard.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './Services/auth/auth.interceptor';
 import { MatSelectModule } from '@angular/material/select';
+import { ReportsModule } from './Modules/reports/reports.module';
 
 
 
@@ -42,7 +43,8 @@ import { MatSelectModule } from '@angular/material/select';
     WorkshopsModule,
     MatSelectModule,
     DashboardModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ReportsModule
     
   ],
   providers: [

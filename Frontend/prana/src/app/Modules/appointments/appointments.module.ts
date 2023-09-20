@@ -23,7 +23,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -52,6 +52,6 @@ import {MatSelectModule} from '@angular/material/select';
     MatButtonModule,
     MatSelectModule,
   ],
-  providers: [AppointmentService,DoctorprofileService]
+  providers: [AppointmentService, DoctorprofileService]
 })
 export class AppointmentsModule { }

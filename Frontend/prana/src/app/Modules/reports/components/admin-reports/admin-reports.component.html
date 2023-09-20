@@ -63,14 +63,21 @@
                         </mat-form-field>
                     </div>
                 </div>
-
                 <div class="mb-3 row align-items-center">
-                    <label for="payment_method" class="col-md-4 col-form-label text-end">Forma de pago:</label>
+                    <label for="paymentmethod" class="col-md-4 col-form-label text-end">Metodo de pago:</label>
                     <div class="col-md-8">
-                        <input type="number" id="payment_method" class="form-control input-field"
-                            formControlName="payment_method">
+                        <mat-form-field appearance="fill" class="input-field">
+                            <mat-label>Seleccionar metodo de pago</mat-label>
+                            <mat-select formControlName="paymentmethod" class="input-field">
+                                <mat-option [value]="null">Sin Solicitar</mat-option>
+                                <mat-option *ngFor="let method of methods" [value]="method.id">
+                                    {{ method.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                 </div>
+
             </div>
         </div>
 

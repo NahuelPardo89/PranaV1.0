@@ -27,6 +27,7 @@ const routes: Routes = [
       { path: 'patient', component: PatientComponent},
       { path: 'reports', component: AdminReportsComponent},
       { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m. SpecialityBranchModule) },
+      { path: 'paymentmethod', loadChildren: () => import('src/app/Modules/paymentmthod/paymentmthod.module').then(m => m. PaymentmthodModule) },
       // { path: 'reports', loadChildren: () => import('src/app/Modules/reports/reports.module').then(m => m. ReportsModule) },
   
     ]

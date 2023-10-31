@@ -29,6 +29,8 @@ import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
 import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
+import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/doctorschedule.service';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,16 @@ import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance
     MatButtonModule,
     MatSelectModule,
   ],
-  providers: [AppointmentService, DoctorprofileService, SpecialityService, BranchService,
-    AppointmentService, PatientService, PaymentmethodService, HealthinsuranceService]
+  providers: [
+    AppointmentService,
+    DoctorprofileService,
+    SpecialityService,
+    BranchService,
+    AppointmentService,
+    PatientService,
+    PaymentmethodService,
+    HealthinsuranceService,
+    SpecialtyFilterService,
+    DoctorscheduleService]
 })
 export class AppointmentsModule { }

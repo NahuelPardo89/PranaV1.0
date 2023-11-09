@@ -1,12 +1,15 @@
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime
+from django.db.models import Q
+from apps.appointments.models import Appointment
 
 from rest_framework import viewsets, permissions, status, generics, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, filters
+from rest_framework.views import APIView
 
 
 from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  DoctorProfile,
@@ -133,6 +136,76 @@ class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):
         if doctor_id:
             return DoctorSchedule.objects.filter(doctor=doctor_id)
         return DoctorSchedule.objects.all()
+
+
+class DoctorScheduleAvailableTimesView(APIView):
+    """
+    API view to get available times for a specific doctor on a given date.
+
+    This view takes a doctor's ID and a date as input and returns a list of available time slots
+    based on the doctor's schedule and existing appointments for that day.
+
+    Args:
+        doctor_id (int): The ID of the doctor for whom available times are requested.
+        date (str): The date in the format "YYYY-MM-DD".
+
+    Returns:
+        JsonResponse: A JSON response containing a list of available time slots for appointments.
+
+    Raises:
+        Http404: If the doctor with the given ID is not found.
+        Http404: If the doctor's schedule for the specified day is not found.
+
+    Methods:
+        get(self, request, doctor_id, date): Handles HTTP GET requests to retrieve available times.
+    """
+
+    def get(self, request, doctor_id, date):
+        # Get a specific doctor
+        try:
+            doctor = DoctorProfile.objects.get(id=doctor_id)
+        except DoctorProfile.DoesNotExist:
+            return JsonResponse({'error': 'Profesional no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Convert the date string to a datetime object
+        date = datetime.strptime(date, "%Y-%m-%d")
+
+        # Get the day of the week in English and take the first 3 letters
+        day = date.strftime("%a").lower()
+
+        # Get the schedule
+        schedules = DoctorSchedule.objects.filter(doctor=doctor, day=day)
+        if not schedules:
+            return JsonResponse({'error': 'El profesional no tiene asignado un horario de trabajo en el día indicado'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Get the doctor appointment duration
+        duration_minutes = doctor.appointment_duration
+        available_times = []
+
+        # Get existing appointments for the doctor on the given date
+        appointments = Appointment.objects.filter(doctor=doctor, day=date)
+
+        # Get the current time
+        now = datetime.now().time()
+
+        # Loop schedules and construct the availables times
+        for schedule in schedules:
+            start_time = datetime.combine(date, schedule.start)
+            end_time = datetime.combine(date, schedule.end)
+
+            while start_time.time() < end_time.time():
+                end_time_slot = start_time + duration_minutes
+
+                # Check if there is an existing appointment during this time slot
+                if not appointments.filter(Q(hour__gte=start_time.time(), hour__lt=end_time_slot.time()) | Q(hour__lte=start_time.time(), hour__gt=end_time_slot.time())).exists():
+                    # Check if the start time is not in the past
+                    if date.date() > datetime.today().date() or start_time.time() >= now:
+                        available_times.append(
+                            f"{start_time.time().strftime('%H:%M:%S')} - {end_time_slot.time().strftime('%H:%M:%S')}")
+
+                start_time = end_time_slot
+
+        return JsonResponse({'available_times': available_times}, status=status.HTTP_200_OK)
 
 
 class InsurancePlanPatientAdminViewSet(viewsets.ModelViewSet):

@@ -33,6 +33,15 @@ class AppointmentListCreateView(APIView):
             appointments = Appointment.objects.filter(state=state)
         else:
             appointments = Appointment.objects.all()
+
+        # Find the doctor's to list
+        doctor_id = request.query_params.get(
+            'doctor_id')
+
+        # Filter the appointments by state, if any
+        if doctor_id is not None:
+            appointments = Appointment.objects.filter(doctor=doctor_id)
+
         # serializer = AppointmentSerializer(appointments, many=True)
         serializer = AppointmentSerializerList(appointments, many=True)
         return Response(serializer.data)

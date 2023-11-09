@@ -28,7 +28,7 @@ import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmeth
 export class AppointmentAdminCreateComponent implements OnInit {
   appointmentForm: FormGroup;
   appointmentResponse: AppointmentAdminGetInterface;
-  doctors: DoctorProfile[] = []; // Review here
+  doctors: DoctorProfile[] = [];
   specialtyFilteredDoctors: DoctorProfile[] = [];
   specialties: Medicalspeciality[] = [];
   selectedSpecialty: number | null = null;
@@ -39,6 +39,11 @@ export class AppointmentAdminCreateComponent implements OnInit {
   methods: PaymentMethod[] = [];
   insurances: HealthInsurance[] = [];
   doctorSchedule: DoctorScheduleInterface[] = [];
+  selectedDoctor: number | null = null;
+  formattedDates: string[] = [];
+  availableTimes: string[] = [];
+  finalJsonDate: string = "";
+  finalJsonHour: string = "";
   states = [
     { value: 1, viewValue: 'Pendiente' },
     { value: 2, viewValue: 'Confirmado' },
@@ -94,7 +99,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
     this.loadSpecialties();
     this.loadBranches();
     this.loadPatients();
-    this.loadMethods();
+    this.loadPaymentMethods();
     this.loadInsurances();
   }
 
@@ -137,7 +142,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
     })
   }
 
-  loadMethods(): void {
+  loadPaymentMethods(): void {
     this.paymentmethodservice.getPaymentMethods().subscribe(data => {
       this.methods = data
     })
@@ -155,32 +160,167 @@ export class AppointmentAdminCreateComponent implements OnInit {
     })
   }
 
-  loadDoctorSchedule(doctor_id: number): void {
-    console.log("Me llamo?");
-    this.doctorScheduleService.getDoctorSchedule(doctor_id).subscribe(data => {
-      console.log("data schedule: " + data);
-      this.doctorSchedule = data
-      console.log("Property schedule: " + this.doctorSchedule);
-    })
-    console.log("termino");
+  onDoctorSelect(doctorId: number) {
+    this.selectedDoctor = doctorId;
+    this.doctorScheduleService.getDoctorSchedule(doctorId).subscribe(data => {
+      this.doctorSchedule = data;
+      this.formattedDates = this.formatDates(this.doctorSchedule);
+    });
+  }
+
+  onDaySelect(day: string) {
+    if (this.selectedDoctor !== null) {
+      this.finalJsonDate = this.parseDateStringToDate(day);
+      const shortEngDay = this.getShortDayName(day)
+      this.doctorScheduleService.getDoctorAvailableTime(this.selectedDoctor, this.finalJsonDate).subscribe(data => {
+        this.availableTimes = data.available_times;
+      });
+    }
+    //Else más cosas, limpiar campos del formulario
+  }
+
+  onHourSelect(hour: string) {
+    this.finalJsonHour = this.getStartAppointmentHour(hour)
+  }
+
+  // Section UTILS
+  formatDates(doctorSchedule: any): string[] {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    currentDate.setDate(1); // Establece la fecha al primer día del mes
+
+    const daysOfWeekSpanish = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const monthsSpanish = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    const formattedDates: string[] = [];
+    const today = new Date();
+
+    // Itera sobre este mes y el próximo
+    for (let m = 0; m < 2; m++) {
+      const daysInMonth = new Date(year, month + m + 1, 0).getDate();
+
+      for (let i = 0; i < daysInMonth; i++) {
+        currentDate.setMonth(month + m);
+        currentDate.setDate(i + 1); // Establece el día del mes
+
+        // Si la fecha actual es anterior a hoy, continúa con la siguiente iteración
+        if (currentDate < today) {
+          continue;
+        }
+
+        const dayOfWeek = daysOfWeekSpanish[currentDate.getDay()];
+        const dayOfMonth = currentDate.getDate();
+        const monthName = monthsSpanish[month + m];
+
+        const formattedDate = `${dayOfWeek} ${dayOfMonth} de ${monthName}`;
+
+        // Formatea el día a su nombre en inglés y solo las primeras 3 letras, tal como viene en el schedule
+        const englishShortDay = currentDate.toDateString().toLocaleLowerCase().slice(0, 3);
+        // Busca si el día del cronograma coincide con el día actual
+        const matchingDay = doctorSchedule.find((day: DoctorScheduleInterface) => day.day === englishShortDay);
+        if (matchingDay) {
+          // Si hay una coincidencia en el cronograma, agrégalo a la fecha formateada
+          //formattedDates.push(`${formattedDate} (${matchingDay.start} - ${matchingDay.end})`);
+          formattedDates.push(`${formattedDate}`);
+        }
+      }
+    }
+
+    console.log("DATES final: ", formattedDates)
+    return formattedDates;
+  }
+
+
+  // Create a class for methods like this (utils) since are usefull on several components
+  getShortDayName(fullDate: string): string | null {
+    // Define un mapeo de nombres de días en español a nombres en inglés
+    const dayMappings: { [key: string]: string } = {
+      'Lunes': 'mon',
+      'Martes': 'tue',
+      'Miércoles': 'wed',
+      'Jueves': 'thu',
+      'Viernes': 'fri',
+      'Sábado': 'sat',
+      'Domingo': 'sun',
+    };
+
+    // Divide la cadena por espacios en palabras
+    const words = fullDate.split(' ');
+
+    // Verifica si hay al menos tres palabras y la primera palabra es un día en español
+    if (words.length >= 3 && dayMappings.hasOwnProperty(words[0])) {
+      // Usa la primera palabra para buscar el día correspondiente en inglés
+      return dayMappings[words[0]];
+    }
+
+    return null; // Retorna null si no se puede mapear
+  }
+
+  // Create a class for this methods (utils) since are usefull on several components
+  parseDateStringToDate(dateString: string): string {
+    // Obtén las palabras de la cadena
+    const words = dateString.split(' ');
+
+    if (words.length < 4) {
+      throw new Error('Cadena de fecha incorrecta. Debe tener el formato "Día número de Mes".');
+    }
+
+    // Mapea nombres de mes a números
+    const months: { [key: string]: string } = {
+      'Enero': '01',
+      'Febrero': '02',
+      'Marzo': '03',
+      'Abril': '04',
+      'Mayo': '05',
+      'Junio': '06',
+      'Julio': '07',
+      'Agosto': '08',
+      'Septiembre': '09',
+      'Octubre': '10',
+      'Noviembre': '11',
+      'Diciembre': '12',
+    };
+
+    // Obtiene el año actual
+    const currentYear = new Date().getFullYear();
+
+    // Extrae el día, número y mes de la cadena
+    const day = words[0];
+    const number = words[1];
+    const month = words[3];
+
+    // Convierte el mes en un número
+    const monthNumber = months[month];
+
+    // Formatea la fecha en el formato deseado
+    const formattedDate = `${currentYear}-${monthNumber}-${number}`;
+
+    return formattedDate;
+  }
+
+  // Also on utils
+  getStartAppointmentHour(range: string): string {
+    const parts = range.split("-");
+    if (parts.length !== 2) {
+      throw new Error("Datos de entrada incorrectos al querer formatear el horario del turno ");
+    }
+    else {
+      return parts[0].trim()
+    }
   }
 
   onSubmit(): void {
     const formValues = this.appointmentForm.value;
 
     const filteredBody: AppointmentAdminCreateInterface = {
-      day: formValues.day,
-      hour: formValues.hour,
+      //day: formValues.day,
+      day: this.finalJsonDate,
+      //hour: formValues.hour,
+      hour: this.finalJsonHour,
       doctor: formValues.doctor,
       patient: formValues.patient,
     };
-
-    this.loadDoctorSchedule(filteredBody.doctor);
-    console.log("SCHEDULES \n" + this.doctorSchedule + "o soy nada?");
-
-    for (let i = 0; i++; this.doctorSchedule.length) {
-      console.log("Schedule: \n" + this.doctorSchedule.at(i)?.day)
-    }
 
     if (formValues.branch !== undefined && formValues.branch !== null) {
       filteredBody.branch = formValues.branch;

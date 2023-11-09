@@ -24,10 +24,20 @@ export class AppointmentService {
     }
   }
 
-  getAdminAppointments(): Observable<AppointmentAdminGetInterface[]> {
+  // Get all apointments 
+  getAdminAllAppointments(): Observable<AppointmentAdminGetInterface[]> {
     return this.http.get<AppointmentAdminGetInterface[]>(this.baseUrl + 'admin/');
   }
 
+  // Get all appointments of a particular doctor with admin JSON format response (all fields)
+  getAdminDoctorAppointments(doctor_id: number): Observable<AppointmentAdminGetInterface[]> {
+    console.log("Service appointments, doctor es: ", doctor_id);
+    const url = this.baseUrl + 'admin/?doctor_id=' + doctor_id;
+    console.log("Service appointments, endpoint es: ", url);
+    return this.http.get<AppointmentAdminGetInterface[]>(url);
+  }
+
+  // Get doctor TODAY´S appointments
   getDoctorAppointments(): Observable<AppointmentDoctorGetInterface[]> {
     return this.http.get<AppointmentDoctorGetInterface[]>(this.baseUrl + 'doctor/');
   }

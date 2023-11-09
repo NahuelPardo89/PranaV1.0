@@ -4,6 +4,21 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
 
+        <!-- Patient is the unique visible field since is required and is not afected by the specialty -->
+        <div class="mb-3 row align-items-center">
+          <label for="patient" class="col-md-4 col-form-label text-end">Paciente * :</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Paciente</mat-label>
+              <mat-select formControlName="patient" class="input-field" required>
+                <mat-option *ngFor="let patient of patients" [value]="patient.id">
+                  {{ patient.user }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
         <!-- First of all, we need to define the specialty, in order to filter doctors, schedules and free apointments -->
         <div class="mb-3 row align-items-center">
           <label for="specialty" class="col-md-4 col-form-label text-end">Especialidad * :</label>
@@ -21,27 +36,14 @@
           </div>
         </div>
 
-        <!-- Patient is the unique visible field since is required and is not afected by the specialty -->
-        <div class="mb-3 row align-items-center">
-          <label for="patient" class="col-md-4 col-form-label text-end">Paciente * :</label>
-          <div class="col-md-8">
-            <mat-form-field appearance="fill" class="input-field">
-              <mat-label>Seleccionar Paciente</mat-label>
-              <mat-select formControlName="patient" class="input-field" required>
-                <mat-option *ngFor="let patient of patients" [value]="patient.id">
-                  {{ patient.user }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-
         <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
           <label for="doctor" class="col-md-4 col-form-label text-end">Doctor * :</label>
           <div class="col-md-8">
             <mat-form-field appearance="fill" class="input-field">
               <mat-label>Seleccionar Doctor</mat-label>
-              <mat-select formControlName="doctor" class="input-field" required>
+              <mat-select formControlName="doctor" class="input-field" (ngModelChange)="onDoctorSelect($event)"
+                required>
+                <mat-option [value]="null">Sin Solicitar</mat-option>
                 <mat-option *ngFor="let doctor of specialtyFilteredDoctors" [value]="doctor.id">
                   {{ doctor.user }}
                 </mat-option>
@@ -49,30 +51,82 @@
             </mat-form-field>
           </div>
         </div>
+        <!-- <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+          <label for="doctor" class="col-md-4 col-form-label text-end">Doctor * :</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Doctor</mat-label>
+              <mat-select formControlName="doctor" class="input-field" (ngModelChange)="loadDoctorSchedule($event)"
+                required>
+                <mat-option *ngFor="let doctor of specialtyFilteredDoctors" [value]="doctor.id">
+                  {{ doctor.user }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div> -->
 
-        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
+          <label for="day" class="col-md-4 col-form-label text-end">Día * :</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Día</mat-label>
+              <mat-select formControlName="day" (ngModelChange)="onDaySelect($event)" required>
+                <mat-option [value]="null">Selecciona un Día</mat-option>
+                <mat-option *ngFor="let day of formattedDates" [value]="day">
+                  {{ day }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
+          <label for="day" class="col-md-4 col-form-label text-end">Día * :</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Día</mat-label>
+              <mat-select formControlName="day" required>
+                <mat-option [value]="null">Selecciona un Día</mat-option>
+                <mat-option *ngFor="let slot of availableAppointmentSlots" [value]="slot.day">
+                  {{ slot.day }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div> -->
+
+        <!-- <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
           <label for="day" class="col-md-4 col-form-label text-end">Día * :</label>
           <div class="col-md-8">
             <input type="date" id="day" class="form-control input-field" formControlName="day" required>
           </div>
-        </div>
+        </div> -->
 
-        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
-          <label for="hour" class="col-md-4 col-form-label text-end">Hora (HH-MM-SS) * :</label>
+        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
+          <label for="hour" class="col-md-4 col-form-label text-end">Horario * :</label>
           <div class="col-md-8">
-            <input type="time" id="hour" class="form-control input-field" formControlName="hour" required>
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Horario</mat-label>
+              <mat-select formControlName="hour" (ngModelChange)="onHourSelect($event)" required>
+                <mat-option [value]="null">Selecciona un Horario</mat-option>
+                <mat-option *ngFor="let hour of availableTimes" [value]="hour">
+                  {{ hour }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+        <!-- Let's avoid this for now -->
+        <!-- <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
           <label for="duration" class="col-md-4 col-form-label text-end">Duración de la consulta:</label>
           <div class="col-md-8">
             <input type="time" id="duration" class="form-control input-field" formControlName="duration"
               placeholder="Campo Opcional" required>
           </div>
-        </div>
+        </div> -->
 
-        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
           <label for="branch" class="col-md-4 col-form-label text-end">Rama:</label>
           <div class="col-md-8">
             <mat-form-field appearance="fill" class="input-field">
@@ -87,7 +141,7 @@
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
           <label for="full_cost" class="col-md-4 col-form-label text-end">Costo:</label>
           <div class="col-md-8">
             <mat-form-field appearance="fill" class="input-field">
@@ -97,7 +151,7 @@
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
           <label for="state" class="col-md-4 col-form-label text-end">Estado del turno:</label>
           <div class="col-md-8">
             <mat-form-field appearance="fill" class="input-field">
@@ -112,7 +166,7 @@
           </div>
         </div>
 
-        <div *ngIf="isPaid && selectedSpecialty" class="mb-3 row align-items-center">
+        <div *ngIf="isPaid && selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
           <label for="payment_method" class="col-md-4 col-form-label text-end">Metodo de pago:</label>
           <div class="col-md-8">
             <mat-form-field appearance="fill" class="input-field">
@@ -127,7 +181,7 @@
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
           <label for="health_insurance" class="col-md-4 col-form-label text-end">Obra Social:</label>
           <div class="col-md-8">
             <mat-form-field appearance="fill" class="input-field">

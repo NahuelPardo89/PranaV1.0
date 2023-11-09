@@ -13,7 +13,7 @@ export class AppointmentAdminListComponent implements OnInit {
   constructor(private appointmentService: AppointmentService) { }
 
   ngOnInit(): void {
-    this.appointmentService.getAdminAppointments().subscribe((data: AppointmentAdminGetInterface[]) => {
+    this.appointmentService.getAdminAllAppointments().subscribe((data: AppointmentAdminGetInterface[]) => {
       this.appointments = data;
     });
   }

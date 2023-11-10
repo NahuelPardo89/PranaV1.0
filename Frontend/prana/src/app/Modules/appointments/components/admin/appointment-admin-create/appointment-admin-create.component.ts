@@ -117,19 +117,6 @@ export class AppointmentAdminCreateComponent implements OnInit {
     this.specialtyFilteredBranches = this.specialtyFilterService.filterBranchesBySpecialty(this.branches, specialtyId);
   }
 
-  onSpecialtyChange(selectedValue: number | null): void {
-    this.selectedSpecialty = selectedValue;
-
-    if (selectedValue !== null) {
-      this.loadfilteredDoctors(selectedValue);
-      this.loadfilteredBranches(selectedValue);
-    }
-  }
-
-  updatePaymentVisibility(selectedValue: number | null): void {
-    this.isPaid = selectedValue === 4;
-  }
-
   loadSpecialties(): void {
     this.specialtyService.getSpecialities().subscribe(data => {
       this.specialties = data;
@@ -160,12 +147,61 @@ export class AppointmentAdminCreateComponent implements OnInit {
     })
   }
 
+  onSpecialtyChange(selectedValue: number | null): void {
+    this.selectedSpecialty = selectedValue;
+
+    if (selectedValue !== null) {
+      this.loadfilteredDoctors(selectedValue);
+      this.loadfilteredBranches(selectedValue);
+    }
+    else {
+      //Reset los campos
+      this.resetForm(this.appointmentForm);
+    }
+  }
+
+  resetForm(form: FormGroup): void {
+    // Valores iniciales del formulario
+    form.patchValue({
+      doctor: null,
+      day: '',
+      hour: '',
+      state: null,
+      payment_method: null,
+      full_cost: null,
+    });
+    this.finalJsonDate = '';
+    this.finalJsonHour = '';
+  }
+
+  // onDoctorSelect(doctorId: number) {
+  //   if (doctorId === null) {
+  //     // Restablece los campos del formulario
+  //     this.appointmentForm.reset({
+  //       patient: this.appointmentForm.get('patient')?.value,
+  //       specialty: this.appointmentForm.get('specialty')?.value
+  //     });
+  //   } else {
+  //     this.selectedDoctor = doctorId;
+  //     this.doctorScheduleService.getDoctorSchedule(doctorId).subscribe(data => {
+  //       this.doctorSchedule = data;
+  //       this.formattedDates = this.formatDates(this.doctorSchedule);
+  //     });
+  //   }
+  // }
+
   onDoctorSelect(doctorId: number) {
     this.selectedDoctor = doctorId;
-    this.doctorScheduleService.getDoctorSchedule(doctorId).subscribe(data => {
-      this.doctorSchedule = data;
-      this.formattedDates = this.formatDates(this.doctorSchedule);
-    });
+    if (this.selectedDoctor !== null) {
+      this.doctorScheduleService.getDoctorSchedule(doctorId).subscribe(data => {
+        this.doctorSchedule = data;
+        this.formattedDates = this.formatDates(this.doctorSchedule);
+      });
+    }
+    else {
+      //Reset los campos
+      this.resetForm(this.appointmentForm);
+    }
   }
 
   onDaySelect(day: string) {
@@ -176,11 +212,17 @@ export class AppointmentAdminCreateComponent implements OnInit {
         this.availableTimes = data.available_times;
       });
     }
-    //Else más cosas, limpiar campos del formulario
+    //Ojo, acá solo limpiar la hora!, modificar el resetForm
   }
 
   onHourSelect(hour: string) {
-    this.finalJsonHour = this.getStartAppointmentHour(hour)
+    if (hour !== '') {
+      this.finalJsonHour = this.getStartAppointmentHour(hour)
+    }
+  }
+
+  updatePaymentVisibility(selectedValue: number | null): void {
+    this.isPaid = selectedValue === 4;
   }
 
   // Section UTILS
@@ -310,6 +352,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
     }
   }
 
+
   onSubmit(): void {
     const formValues = this.appointmentForm.value;
 
@@ -373,6 +416,15 @@ export class AppointmentAdminCreateComponent implements OnInit {
           this.appointmentResponse = data;
           alert("Turno generado exitosamente")
           console.log(data);
+          // Pregunta al usuario si desea crear otro turno
+          const createAnother = window.confirm('¿Desea crear otro turno?');
+          if (createAnother) {
+            // Si el usuario confirma, restablece el formulario
+            this.appointmentForm.reset();
+          } else {
+            // Si el usuario cancela, redirige al listado de turnos
+            window.location.href = 'http://localhost:4200/Dashboard/appointments/admin/list';
+          }
         });
     }
 

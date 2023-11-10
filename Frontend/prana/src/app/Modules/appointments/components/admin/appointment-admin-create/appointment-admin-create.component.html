@@ -11,6 +11,7 @@
             <mat-form-field appearance="fill" class="input-field">
               <mat-label>Seleccionar Paciente</mat-label>
               <mat-select formControlName="patient" class="input-field" required>
+                <mat-option [value]="null">Sin Solicitar</mat-option>
                 <mat-option *ngFor="let patient of patients" [value]="patient.id">
                   {{ patient.user }}
                 </mat-option>

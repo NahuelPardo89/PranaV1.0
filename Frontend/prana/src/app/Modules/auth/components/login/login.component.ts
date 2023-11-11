@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
-
+  public errorMessage: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['Dashboard/']);
         },
         error => {
-          alert('Error durante el inicio de sesión. Por favor, inténtalo de nuevo.');
+          this.errorMessage = 'DNI o Contraseña incorrectos. Por favor, revisa los datos e inténtalo de nuevo.';
         }
       );
     }

@@ -10,6 +10,10 @@ import { PatientComponent } from './patient/patient.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ListarPacientesComponent } from './patient/listar-pacientes/listar-pacientes.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
 
 
 
@@ -27,8 +31,12 @@ import { ListarPacientesComponent } from './patient/listar-pacientes/listar-paci
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
-    DashboardRoutingModule
-    
+    DashboardRoutingModule,
+    CommonModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatInputModule  
   ],
   exports: [
     DashboardComponent

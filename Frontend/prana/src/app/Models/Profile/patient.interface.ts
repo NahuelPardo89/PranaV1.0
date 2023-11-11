@@ -6,4 +6,5 @@ export interface Patient {
     address: string;
     is_active: boolean;
     insurance: string;
+    fullName: string;
   }

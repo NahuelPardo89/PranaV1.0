@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service'; 
 import { Patient } from 'src/app/Models/Profile/patient.interface'; 
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 
@@ -21,14 +22,28 @@ export class ListarPacientesComponent implements OnInit {
     pageSize: this.pageSize,
     pageIndex: this.pageIndex,
   };
+
+  editingPatientId: number | null = null;
+  editForm: FormGroup;
   
 
+  
+
+  
+  constructor(private patientService: PatientService, private fb: FormBuilder) {
+    this.editForm = this.fb.group({
+      address: [''],
+      facebook: [''],
+      instagram: [''],
+      insurance: [0]
+    });
+  }
   pageChanged(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadPatients();
   }
-  constructor(private patientService: PatientService) { }
+
 
   ngOnInit(): void {
     this.loadPatients();
@@ -71,5 +86,34 @@ export class ListarPacientesComponent implements OnInit {
       // Después de la eliminación, vuelve a cargar la lista de pacientes actualizada
       this.loadPatients();
     });
+  }
+
+  editPatient(id: number): void {
+    this.editingPatientId = id;
+    this.patientService.getPatientDetailsById(id).subscribe((patient: Patient) => {
+      // Llenar los campos del formulario con la información actual del paciente
+      this.editForm.patchValue({
+        address: patient.address,
+        facebook: patient.facebook,
+        instagram: patient.instagram,
+        insurance: patient.insurance
+      });
+    });
+  }
+
+  cancelEdit(): void {
+    this.editingPatientId = null;
+    this.editForm.reset();
+  }
+
+  // Método para enviar la actualización al servicio
+  saveEdit(): void {
+    if (this.editingPatientId !== null) {
+      const editedData = this.editForm.value;
+      this.patientService.updatePatient(this.editingPatientId, editedData).subscribe(() => {
+        this.loadPatients();
+        this.cancelEdit();
+      });
+    }
   }
 }

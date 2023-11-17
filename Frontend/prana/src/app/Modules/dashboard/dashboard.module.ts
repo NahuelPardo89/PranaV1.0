@@ -14,6 +14,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 
 
@@ -36,7 +37,8 @@ import { MatInputModule } from '@angular/material/input';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    MatInputModule  
+    MatInputModule,
+    MatSelectModule
   ],
   exports: [
     DashboardComponent

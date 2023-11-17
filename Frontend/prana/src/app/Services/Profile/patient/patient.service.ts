@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Patient } from 'src/app/Models/Profile/patient.interface';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -41,10 +42,23 @@ export class PatientService {
     return this.httpClient.get<Patient>(url);
   }
 
-  createPatient(patientData: Patient): Observable<Patient> {
-    return this.httpClient.post<Patient>(this.apiUrl, patientData);
-  }
 
+
+
+  // CREATE PATIENT NO SE USA PORQUE EL REGISTRO LE OTORGA AUTOMÁTICAMENTE ESE PERFIL
+
+
+  // createPatient(patientData: Patient): Observable<Patient> {
+  //   return this.httpClient.post<Patient>(this.apiUrl, patientData).pipe(
+  //     catchError((error: any) => {
+  //       console.error('Error al crear el paciente:', error);
+  //       throw error; // Lanza el error para que el componente pueda manejarlo
+  //     })
+  //   );
+  // }
+
+
+  
   updatePatient(id: number, patientData: Patient): Observable<Patient> {
     const url = `${this.apiUrl}${id}/`;
     return this.httpClient.put<Patient>(url, patientData);
@@ -54,4 +68,12 @@ export class PatientService {
     const url = `${this.apiUrl}${id}/`;
     return this.httpClient.delete<any>(url);
   }
+
+
+  getPatientDetailsById(id: number): Observable<Patient> {
+    const url = `${this.apiUrl}${id}/`;
+    return this.httpClient.get<Patient>(url);
+  }
+
+
 }

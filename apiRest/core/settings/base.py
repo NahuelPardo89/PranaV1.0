@@ -56,7 +56,7 @@ OWN_APPS = [
     'apps.users',
     'apps.usersProfile',
     'apps.appointments',
-    'apps.seminar'
+    'apps.seminar',
     'apps.reports'
 
 ]

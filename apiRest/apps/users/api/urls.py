@@ -10,6 +10,7 @@ router = DefaultRouter()
 router.register(r'admin', UserAdminViewSet, basename='admin-users')
 
 
+
 urlpatterns=[
     path('login/', LoginAPI.as_view(), name='login'),
     path('logout/', LogoutAPI.as_view(), name='logout'),

@@ -13,6 +13,8 @@ from apps.users.api.serializers import (
     UserAdminSerializer, LogoutSerializer
 )
 
+
+
 #ADMIN VIEWS
 class UserAdminViewSet(viewsets.GenericViewSet):
     model = User

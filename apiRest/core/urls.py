@@ -30,5 +30,6 @@ urlpatterns = [
     path('account/', include('apps.users.api.urls')),
     path('profile/', include('apps.usersProfile.api.urls')),
     path('appointment/', include('apps.appointments.api.urls')),
+    path('seminar/', include('apps.seminar.api.urls'))
     path('report/', include('apps.reports.api.urls'))
 ]

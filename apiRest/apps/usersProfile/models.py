@@ -142,7 +142,7 @@ class SeminaristProfile(models.Model):
         verbose_name_plural = 'Talleristas'
     
     def __str__(self):
-        return f'Tallerista: {self.user.last_name}, {self.user.name}'
+        return f'{self.user.last_name}, {self.user.name}'
 
 class InsurancePlanSeminarist(models.Model):
     

@@ -3,7 +3,7 @@ from datetime import datetime
 from rest_framework import serializers
 
 from apps.seminar.models import Room,SeminarRoomUsage, SeminarInscription,Seminar
-
+from apps.usersProfile.models import InsurancePlanSeminarist, HealthInsurance
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
@@ -22,12 +22,42 @@ class SeminarRoomUsageSerializer(serializers.ModelSerializer):
         return value
 
 class SeminarInscriptionSerializer(serializers.ModelSerializer):
-    seminar = serializers.StringRelatedField()
-    patient=serializers.StringRelatedField()
+    insurance = serializers.PrimaryKeyRelatedField(queryset=HealthInsurance.objects.all(), required=False, allow_null=True)
     class Meta:
         model = SeminarInscription
-        fields = ['id', 'seminar', 'patient', 'meetingNumber', 'state', 'insurance',  'payment', 'created_at', 'updated_at', 'created_by']
+        fields = ['id', 'seminar', 'patient', 'meetingNumber', 'state','insurance',   'payment', 'created_at', 'updated_at', 'created_by']
+    
+    def validate(self, data):
 
+        if 'insurance' in data and data['insurance'] is not None:
+            return data
+        # Accessing the insurances of the patient
+        patient_insurances = set(data['patient'].insurances.all())
+        print(patient_insurances)
+        # Accessing the insurances of the seminarist associated with the seminar
+        seminarist_insurances = set(data['seminar'].seminarist.first().insurances.all())
+        print(seminarist_insurances)
+        # Finding common insurances
+        common_insurances = patient_insurances.intersection(seminarist_insurances)
+        
+        print("comunes",common_insurances)
+        if not common_insurances:
+            raise serializers.ValidationError("No common insurances found between patient and seminarist.")
+        common_insurance_ids = {insurance.id for insurance in common_insurances}
+
+        # Filtrando los planes de seguro del seminarista que están en los seguros comunes
+        common_insurances_plans = InsurancePlanSeminarist.objects.filter(insurance__id__in=common_insurance_ids)
+
+        # Encontrando el plan de seguro con la mayor cobertura
+        highest_coverage_plan = max(common_insurances_plans, key=lambda plan: plan.coverage, default=None)
+
+        if highest_coverage_plan is None:
+            raise serializers.ValidationError("No valid insurance with coverage found.")
+
+        # Asignando el ID del seguro con la mayor cobertura
+        data['insurance'] = highest_coverage_plan.insurance
+        print(data)
+        return data
 class SeminarSerializer(serializers.ModelSerializer):
     
     class Meta:

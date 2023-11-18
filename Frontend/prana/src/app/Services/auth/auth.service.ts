@@ -10,7 +10,7 @@ import { tap,catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { UserShort } from 'src/app/Models/user/userShort.interface';
 
-
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -25,16 +25,19 @@ export class AuthService {
   public readonly currentUser = this.currentUserSubject.asObservable();
 
   
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private router: Router) {
     const user = localStorage.getItem('user');
     if (user) {
       this.currentUserSubject.next(JSON.parse(user));
     }
   }
+  
+  
   login(user: LoginUser): Observable<JwtResponse> {
     return this.http.post<JwtResponse>(this.loginUrl, user).pipe(
       tap(response => {
-        this.handleAuthentication(response);
+        this.handleUser(response);
+        this.handleTokens(response);
       }),
       catchError(this.handleError)
     );
@@ -47,7 +50,7 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response.status === 201) {
-            this.handleAuthentication(response.body!);
+            this.router.navigate(['/auth/login']);
           }
         }),
         catchError(this.handleError)
@@ -55,31 +58,59 @@ export class AuthService {
   }
   
   
-  logout(refreshToken: string): Observable<void> {
-    return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }).pipe(
-      tap(() => {
-        this.currentUserSubject.next(null);
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-      }),
-      catchError(this.handleError)
-    );
-}
-  
-  refreshToken(): Observable<JwtResponse> {
+  logout(): Observable<void> {
     const refreshToken = localStorage.getItem('refresh_token');
-    if (refreshToken) {
-      return this.http.post<JwtResponse>(this.refreshTokenUrl, { refresh: refreshToken }).pipe(
-        tap((response: JwtResponse) => {
-          localStorage.setItem('access_token', response.access);
-          localStorage.setItem('refresh_token', response.refresh);
+    console.log("entre al logout");
+    if (!refreshToken) {
+      // Si no hay token de refresco, procedemos con la limpieza del cliente directamente
+      this.clearLocalStorage();
+      return throwError(() => new Error('No refresh token'));
+    }
+    return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }).pipe(
+      tap(() => this.clearLocalStorage()),
+      catchError((error) => {
+        // Incluso si hay un error, limpiamos el cliente
+        this.clearLocalStorage();
+        // Puedes decidir si quieres manejar este error de alguna manera específica
+        return throwError(() => error);
+      })
+    );
+  }
+ 
+
+  refreshToken(): Observable<HttpResponse<JwtResponse>> {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) {
+      this.logout();
+      return throwError(() => new Error('Refresh token no disponible'));
+    }
+  
+    return this.http.post<JwtResponse>(this.refreshTokenUrl, { refresh: refreshToken }, { observe: 'response' })
+      .pipe(
+        tap(response => {
+          if (response.status === 200) {
+            // Si el código de estado es 200, maneja los tokens
+            console.log("response 201 refresh token");
+            this.handleTokens(response.body!);
+          } else {
+            // Para cualquier otro código de estado, realiza el logout
+            console.log("response 401 refresh token");
+            this.logout();
+          }
+        }),
+        catchError(error => {
+          // En caso de error, también realiza el logout
+          console.log("catchg refresh token");
+          this.clearLocalStorage();
+          return throwError(() => new Error(error.message));
         })
       );
-    } else {
-      return throwError('Refresh token no disponible');
-    }
   }
+
+
+
+
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Un error a ocurrido';
     if (error.error instanceof ErrorEvent) {
@@ -91,14 +122,35 @@ export class AuthService {
     }
     return throwError(errorMessage);
   }
-  private handleAuthentication(response: JwtResponse): void {
+  
+  private handleUser(response: JwtResponse): void {
     localStorage.setItem('user', JSON.stringify(response.user));
-    localStorage.setItem('access_token', response.access);
-    localStorage.setItem('refresh_token', response.refresh);
     this.currentUserSubject.next(response.user);
   }
+
+  private handleTokens(response: JwtResponse): void {
+    
+    localStorage.setItem('access_token', response.access);
+    localStorage.setItem('refresh_token', response.refresh);
+    
+  }
+
   getCurrentUser(): Observable<UserShort | null> {
     return this.currentUserSubject.asObservable();
+  }
+  private handleRefreshError(error: HttpErrorResponse): Observable<never> {
+    // Aquí puedes agregar lógica específica basada en el tipo de error
+    console.log('Error during token refresh:', error);
+    this.clearLocalStorage();
+    return throwError(() => new Error(error.message));
+  }
+   clearLocalStorage(): void {
+    console.log("Clear local storage");
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/auth/login']);
   }
   
 }

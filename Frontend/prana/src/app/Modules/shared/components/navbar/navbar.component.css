@@ -1,5 +1,5 @@
 .logo {
-    width: 2%;
+    width: 40px;
     
     margin-right: 15px;
 }
@@ -14,5 +14,5 @@
 
 .active {
     background-color: #999;
-    border-radius: 25%;
+    border-radius: 8%;
 }

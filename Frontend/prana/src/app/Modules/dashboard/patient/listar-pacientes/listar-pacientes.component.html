@@ -1,0 +1,33 @@
+
+<div class="contenedor">
+    <h2>Listado de Pacientes</h2>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          
+          <th>Paciente</th>
+          <th>Facebook</th>
+          <th>Instagram</th>
+          <th>Dirección</th>
+          <th>Mutual/Obra social</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let patient of patients">
+          
+          <td>{{ patient.user }}</td>
+          <td>{{ patient.facebook }}</td>
+          <td>{{ patient.instagram }}</td>
+          <td>{{ patient.address }}</td>
+          <td>{{ patient.insurance}}</td>
+          <td>
+            <!-- Botón para editar paciente 
+            <button (click)="editPatient(patient)">Editar</button>
+            Botón para eliminar paciente -->
+            <button (click)="deletePatient(patient.id)" class="btn btn-danger">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>

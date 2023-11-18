@@ -1,0 +1,42 @@
+<div class="contenedor">
+
+    <div class="arriba">
+        <button class="btn btn-primary" *ngIf="profile === 'admin'" disabled>
+            User</button>
+        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="patient">
+            Pacientes</button>
+        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="doctors/list" >
+            Profesionales</button>
+        <button class="btn btn-primary" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="insurance/list">
+            Mutual / Obra social</button>
+        <button class="btn btn-secondary" *ngIf="profile === 'doctor' || profile === 'admin' || profile === 'patient'" routerLink="workshops" disabled>
+            Talleres</button>
+        <button class="btn btn-danger" *ngIf="profile === 'doctor' || profile === 'admin'" routerLink="speciality/list">
+            Especialidades</button>
+        <button class="btn btn-primary" *ngIf="profile === 'admin'" routerLink="speciality/branch/list">
+            Ramas de especialidades</button>
+        <button class="btn btn-secondary" *ngIf="profile === 'admin'" routerLink="reports">
+            Reportes</button>
+           
+        
+        <button class="btn btn-danger" *ngIf="profile === 'admin'" routerLink="appointments/admin/list">
+            Administrar turnos</button>
+        <button class="btn btn-danger" *ngIf="profile === 'doctor'" routerLink="appointments/doctor/list">
+            Turnos</button>
+        <button class="btn btn-danger" *ngIf="profile === 'patient'" routerLink="appointments/patient/create">
+            Turnos</button>
+        
+        <button class="btn btn-primary" disabled>
+            Mi cuenta</button>
+    
+    <hr>
+    </div>
+    
+    <div class="abajo">
+        <hr>
+        <button class="btn btn-danger" (click)="isPatient()">Paciente</button>
+        <button class="btn btn-primary" (click)="isDoctor()">Doctor</button>
+        <button class="btn btn-secondary" (click)="isAdmin()">Admin</button>
+        
+    </div>
+</div>

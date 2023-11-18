@@ -1,0 +1,30 @@
+button {
+    margin-bottom: 5px;
+}
+
+.contenedor {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+}
+
+.arriba {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.abajo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    
+
+}
+
+.abajo > button {
+    margin-right: 2px;
+}

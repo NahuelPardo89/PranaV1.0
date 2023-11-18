@@ -1,0 +1,12 @@
+.contenedor {
+    display: flex;
+    flex-direction: column;
+}
+td {
+    text-align: start;
+}
+th {
+    text-align: start;
+    margin-right: 2px; 
+}
+

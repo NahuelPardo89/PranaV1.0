@@ -18,7 +18,7 @@
             <a class="nav-link" routerLink="/AboutUs" routerLinkActive="active">Sobre Nosotros</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Dashboard</a>
+            <a class="nav-link" routerLink="/Dashboard" routerLinkActive="active">Dashboard</a>
           </li>
           <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -32,10 +32,13 @@
           </li> -->
         </ul>
         <ul class="login navbar-nav">
-          <li class="nav-item"><a class="nav-link" routerLink="/Login">Iniciar Sesión</a></li>
-          <li class="nav-item"><a class="nav-link" routerLink="/Register">Registrarse</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/auth/login/">Iniciar Sesión</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="auth/singin/">Registrarse</a></li>
         </ul>
-       
+        <div *ngIf="currentUser$ | async as user">
+          <span>Bienvenido, {{ user.name }}!</span>
+        </div>
+        
         
       </div>
     </div>

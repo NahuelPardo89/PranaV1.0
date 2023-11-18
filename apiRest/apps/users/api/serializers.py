@@ -74,6 +74,7 @@ class LoginSerializer(serializers.Serializer):
     
 
 class RegisterUserSerializer(serializers.ModelSerializer):
+    dni = serializers.IntegerField()
     class Meta:
         model = User
         fields = ['dni', 'name', 'last_name', 'email', 'phone', 'password']

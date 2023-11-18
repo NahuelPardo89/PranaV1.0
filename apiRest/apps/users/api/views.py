@@ -113,6 +113,7 @@ class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
+        
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data
@@ -155,6 +156,7 @@ class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterUserSerializer
 
     def post(self, request):
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -165,4 +167,6 @@ class RegisterAPI(generics.GenericAPIView):
             "access": str(refresh.access_token),
             "message": "Usuario creado con éxito"
         },status=status.HTTP_201_CREATED)
+        else:
+            print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

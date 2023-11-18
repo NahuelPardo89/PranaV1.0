@@ -1,0 +1,92 @@
+<div class="container mt-5">
+  <h2 class="text-center">Generar Turno</h2>
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="mb-3 row align-items-center">
+          <label for="day" class="col-md-4 col-form-label text-end">Día:</label>
+          <div class="col-md-8">
+            <input type="date" id="day" class="form-control input-field" formControlName="day" required>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="hour" class="col-md-4 col-form-label text-end">Hora (HH-MM-SS):</label>
+          <div class="col-md-8">
+            <input type="time" id="hour" class="form-control input-field" formControlName="hour" required>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="doctor" class="col-md-4 col-form-label text-end">Doctor:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Doctor</mat-label>
+              <mat-select formControlName="doctor" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
+                  {{ doctor.user }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="specialty" class="col-md-4 col-form-label text-end">Especialidad:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Especialidad</mat-label>
+              <mat-select formControlName="specialty" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let specialty of specialties" [value]="specialty.id">
+                  {{ specialty.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="branch" class="col-md-4 col-form-label text-end">Rama:</label>
+          <div class="col-md-8">
+            <mat-form-field appearance="fill" class="input-field">
+              <mat-label>Seleccionar Rama</mat-label>
+              <mat-select formControlName="branch" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let branch of branches" [value]="branch.id">
+                  {{ branch.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="payment_method" class="col-md-4 col-form-label text-end">Forma de pago:</label>
+          <div class="col-md-8">
+            <input type="number" id="payment_method" class="form-control input-field" formControlName="payment_method">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary">Generar Reporte</button>
+    </div>
+  </form>
+</div>
+
+<!-- <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="fill">
+    <mat-label>Select Doctor</mat-label>
+    <mat-select formControlName="doctor">
+      <mat-option *ngFor="let doctor of doctors" [value]="doctor.id">
+        {{ doctor.user }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+
+  <button type="submit" mat-raised-button color="primary">Create Appointment</button>
+</form> -->

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders,HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient,HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 
@@ -39,7 +39,7 @@ export class AuthService {
         this.handleUser(response);
         this.handleTokens(response);
       }),
-      catchError(this.handleError)
+      catchError(error => this.handleError(error, 'Error al iniciar sesión'))
     );
   }
 
@@ -53,14 +53,13 @@ export class AuthService {
             this.router.navigate(['/auth/login']);
           }
         }),
-        catchError(this.handleError)
+        catchError(error => this.handleError(error, 'Error al registrarse'))
       );
   }
   
   
   logout(): Observable<void> {
     const refreshToken = localStorage.getItem('refresh_token');
-    console.log("entre al logout");
     if (!refreshToken) {
       // Si no hay token de refresco, procedemos con la limpieza del cliente directamente
       this.clearLocalStorage();
@@ -72,7 +71,7 @@ export class AuthService {
         // Incluso si hay un error, limpiamos el cliente
         this.clearLocalStorage();
         // Puedes decidir si quieres manejar este error de alguna manera específica
-        return throwError(() => error);
+        return throwError(() => new Error('Token de refresco ha expirado'));
       })
     );
   }
@@ -85,42 +84,35 @@ export class AuthService {
       return throwError(() => new Error('Refresh token no disponible'));
     }
   
-    return this.http.post<JwtResponse>(this.refreshTokenUrl, { refresh: refreshToken }, { observe: 'response' })
-      .pipe(
-        tap(response => {
-          if (response.status === 200) {
-            // Si el código de estado es 200, maneja los tokens
-            console.log("response 201 refresh token");
-            this.handleTokens(response.body!);
-          } else {
-            // Para cualquier otro código de estado, realiza el logout
-            console.log("response 401 refresh token");
-            this.logout();
-          }
-        }),
-        catchError(error => {
-          // En caso de error, también realiza el logout
-          console.log("catchg refresh token");
+    return this.http.post<JwtResponse>(this.refreshTokenUrl, { refresh: refreshToken }, { observe: 'response' }).pipe(
+      tap(response => {
+        if (response.status === 200 && response.body) {
+          this.handleTokens(response.body);
+        } else {
           this.clearLocalStorage();
-          return throwError(() => new Error(error.message));
-        })
-      );
+        }
+      }),
+      catchError((error) => {
+        // Incluso si hay un error, limpiamos el cliente
+        this.clearLocalStorage();
+        // Puedes decidir si quieres manejar este error de alguna manera específica
+        return throwError(() =>  new Error('Refresh token ha expirado'));
+      })
+      
+    );
   }
 
 
 
 
 
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Un error a ocurrido';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(errorMessage);
+  private handleError(error: HttpErrorResponse, defaultMessage: string): Observable<never> {
+    // Proporciona un manejo de errores más específico según cada método
+    const errorMessage = error.error instanceof ErrorEvent
+      ? `Error del lado del cliente: ${error.error.message}`
+      : `Error del servidor: ${error.message}`;
+    console.error(errorMessage);
+    return throwError(() => new Error(defaultMessage));
   }
   
   private handleUser(response: JwtResponse): void {
@@ -138,13 +130,8 @@ export class AuthService {
   getCurrentUser(): Observable<UserShort | null> {
     return this.currentUserSubject.asObservable();
   }
-  private handleRefreshError(error: HttpErrorResponse): Observable<never> {
-    // Aquí puedes agregar lógica específica basada en el tipo de error
-    console.log('Error during token refresh:', error);
-    this.clearLocalStorage();
-    return throwError(() => new Error(error.message));
-  }
-   clearLocalStorage(): void {
+  
+  clearLocalStorage(): void {
     console.log("Clear local storage");
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');

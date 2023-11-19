@@ -3,7 +3,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/Services/auth/auth.service';
-import { JwtResponse } from 'src/app/Models/user/jwtResponse.interface';
+
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -50,7 +50,7 @@ export class AuthInterceptor implements HttpInterceptor {
             this.refreshTokenSubject.next(response.body.access);
             return next.handle(this.addAuthenticationToken(request));
           } else {
-            console.log("handle401 else")
+            
             return throwError(() => new Error('No se pudo refrescar el token'));
           }
         }),

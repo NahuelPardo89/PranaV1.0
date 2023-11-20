@@ -1,0 +1,59 @@
+::-webkit-scrollbar {
+    width: 7px;
+}
+  
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    
+    
+}
+.info > img {
+    border: none;
+}
+.card-body {
+    
+    height: 3rem;
+    min-height: 95px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    
+    
+}
+h4 {
+    font-size: 1rem;
+    
+}
+.foto {
+    width: 100%;
+    height: 50%;
+    overflow: hidden;
+    /* box-shadow: 5px 5px 10px rgba(199, 99, 137, 0.6); */
+}
+.fotoProf {
+    max-height: 350px;
+}
+img {
+    object-fit: cover;
+    
+}
+p {
+    text-align: start;
+}
+
+
+.card {
+    width: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: center;
+    margin: 10px 15px;
+}
+
+
+/* animaciones */
+

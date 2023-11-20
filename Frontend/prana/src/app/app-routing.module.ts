@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, Route, Router } from '@angular/router';
 
+import { StaffComponent } from './Modules/home/components/staff/staff.component';
 import { BannerComponent } from './Modules/home/components/banner/banner.component';
 import { TalleresComponent } from './Modules/workshops/components/talleres/talleres.component';
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
@@ -9,7 +10,7 @@ import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/
 import { DashboardComponent } from './Modules/dashboard/dashboard/dashboard.component';
 
 const routes: Route[] = [
-  { path: 'Home', component: BannerComponent },
+  { path: 'Home', component: StaffComponent },
   { path: 'Talleres', component: TalleresComponent },
   { path: 'AboutUs', component: QuienesSomosComponent },
   { path: 'Dashboard', loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule) },

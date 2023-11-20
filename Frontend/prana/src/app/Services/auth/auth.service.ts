@@ -38,11 +38,15 @@ export class AuthService {
       tap(response => {
         this.handleUser(response);
         this.handleTokens(response);
+        this.handleRoles(response.roles); // Maneja los roles
       }),
       catchError(error => this.handleError(error, 'Error al iniciar sesión'))
     );
   }
 
+
+
+ 
   
  
   register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
@@ -105,7 +109,10 @@ export class AuthService {
 
 
 
-
+  private handleRoles(roles: string[]): void {
+    localStorage.setItem('roles', JSON.stringify(roles));
+  }
+  
   private handleError(error: HttpErrorResponse, defaultMessage: string): Observable<never> {
     // Proporciona un manejo de errores más específico según cada método
     const errorMessage = error.error instanceof ErrorEvent

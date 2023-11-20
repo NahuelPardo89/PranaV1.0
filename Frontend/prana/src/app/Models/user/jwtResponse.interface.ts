@@ -4,4 +4,5 @@ export interface JwtResponse {
   user: UserShort;
   refresh: string;
   access: string;
+  roles: string[];
 }

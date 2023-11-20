@@ -136,13 +136,13 @@ class LoginAPI(generics.GenericAPIView):
     def get_user_roles(self, user):
         roles = []
         if hasattr(user, 'patientProfile'):
-            roles.append('patient')
+            roles.append('Paciente')
         if hasattr(user, 'doctorProfile'):
-            roles.append('doctor')
+            roles.append('Profesional')
         if hasattr(user, 'seminaristProfile'):
-            roles.append('seminarist')
+            roles.append('Tallerista')
         if user.is_staff:
-            roles.append('admin')
+            roles.append('Administrador')
         return roles
 
 class LogoutAPI(generics.GenericAPIView):

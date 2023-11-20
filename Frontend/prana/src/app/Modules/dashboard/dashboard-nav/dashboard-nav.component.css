@@ -9,7 +9,22 @@ button {
     justify-content: space-between;
     
 }
-
+.select-role {
+    background-color: #f4f4f4; /* Color de fondo */
+    border: 1px solid #ddd; /* Borde */
+    padding: 8px 12px; /* Espaciado interno */
+    font-size: 16px; /* Tamaño de la fuente */
+    border-radius: 4px; /* Bordes redondeados */
+    width: 100%; /* Ancho completo */
+  }
+  
+  .select-role:focus {
+    border-color: #aaa; /* Color del borde al enfocar */
+  }
+  
+  .select-role option {
+    padding: 8px; /* Espaciado interno para las opciones */
+  }
 .arriba {
     display: flex;
     flex-direction: column;

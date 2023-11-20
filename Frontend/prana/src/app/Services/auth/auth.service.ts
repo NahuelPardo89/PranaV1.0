@@ -23,6 +23,8 @@ export class AuthService {
 
   private currentUserSubject: BehaviorSubject<UserShort | null> = new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
+  private currentRole = new BehaviorSubject<string>(''); // Inicializa con un rol predeterminado o vacío
+
 
   
   constructor(private http: HttpClient,private router: Router) {
@@ -106,13 +108,10 @@ export class AuthService {
     );
   }
 
-
-
-
   private handleRoles(roles: string[]): void {
     localStorage.setItem('roles', JSON.stringify(roles));
   }
-  
+
   private handleError(error: HttpErrorResponse, defaultMessage: string): Observable<never> {
     // Proporciona un manejo de errores más específico según cada método
     const errorMessage = error.error instanceof ErrorEvent
@@ -133,9 +132,21 @@ export class AuthService {
     localStorage.setItem('refresh_token', response.refresh);
     
   }
-
+  setCurrentRole(role: string): void {
+    this.currentRole.next(role);
+    localStorage.setItem('currentRole', role); // Guarda el rol actual en localStorage
+    window.location.reload(); // Opcional: recarga la página
+  }
   getCurrentUser(): Observable<UserShort | null> {
     return this.currentUserSubject.asObservable();
+  }
+
+  getUserRoles(): string[] {
+    return JSON.parse(localStorage.getItem('roles') || '[]');
+  }
+
+  getCurrentRole(): string {
+    return localStorage.getItem('currentRole') || this.getUserRoles()[0]; // Devuelve el primer rol disponible si no hay ninguno seleccionado
   }
   
   clearLocalStorage(): void {

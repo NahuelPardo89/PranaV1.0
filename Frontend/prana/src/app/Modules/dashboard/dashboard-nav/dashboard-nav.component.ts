@@ -10,12 +10,14 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
 export class DashboardNavComponent {
   availableRoles: string[] = [];
   currentRole: string = '';
+  showRoleSelector: boolean = false;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     this.availableRoles = this.authService.getUserRoles();
     this.currentRole = this.authService.getCurrentRole();
+    
   }
 
   changeRole(event: Event): void {
@@ -26,22 +28,10 @@ export class DashboardNavComponent {
     }
   }
 
-  @Output() togglePatientEvent = new EventEmitter<boolean>();
-
-  togglePatient() {
-    this.togglePatientEvent.emit(true);
-    
+  toggleRoleSelector(): void {
+    this.showRoleSelector = !this.showRoleSelector;
+    console.log("Role selector toggled. Current state:", this.showRoleSelector);
   }
 
-  profile: string = '';
 
-  isPatient() {
-    this.profile = 'patient';
-  }
-  isDoctor() {
-    this.profile = 'doctor';
-  }
-  isAdmin() {
-    this.profile = 'admin';
-  }
 }

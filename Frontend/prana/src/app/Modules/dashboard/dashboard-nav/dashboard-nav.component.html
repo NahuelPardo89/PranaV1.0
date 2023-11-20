@@ -1,21 +1,46 @@
 <div class="contenedor">
     <div class="arriba">
         <!-- Botones basados en el rol actual -->
-        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" disabled>User</button>
+        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" disabled>Usuarios</button>
         <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional' || currentRole === 'admin'" routerLink="patient">Pacientes</button>
         <button class="btn btn-danger" *ngIf="currentRole === 'Administrador'" routerLink="doctors/list">Profesionales</button>
         <!-- ... otros botones ... -->
-        
+        <button class="btn btn-danger" *ngIf="currentRole === 'Administrador'" routerLink="doctors/list">
+           
+                
+            <i class="material-symbols-outlined btn-icon">stethoscope</i> Profesionales
+        </button>
+        <button class="btn btn-danger" *ngIf="currentRole === 'Administrador'" routerLink="doctors/list">
+           
+                
+            <i class="material-symbols-outlined btn-icon">patient_list</i> Pacientes
+        </button>
+        <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional' || currentRole === 'admin'" routerLink="patient">
+            <i class="material-icons btn-icon">people</i> Pacientes
+        </button>
         <button class="btn btn-danger" *ngIf="currentRole === 'Profesional'" routerLink="appointments/doctor/list">Turnos</button>
-        <button class="btn btn-danger" *ngIf="currentRole === 'Paciente'" routerLink="appointments/patient/create">Turnos</button>
+        <button class="btn btn-danger" *ngIf="currentRole === 'Paciente'" routerLink="accounts/me">Turnos</button>
 
-        <button class="btn btn-primary" disabled>Mi cuenta</button>
+        
+
+        <button class="btn btn-primary" >
+           
+                
+            <i class="material-symbols-outlined btn-icon" >manage_accounts</i> Mi cuenta
+        </button>
 
         
     </div>
-    <div class="abajo">
-        <select class="select-role form-control" (change)="changeRole($event)" [value]="currentRole">
+    <div class="selector-rol">
+        <div class="rol-actual" (click)="toggleRoleSelector()">
+            Rol: <span class="rol-color">{{ currentRole | titlecase }}</span>
+            <i class="material-icons">swap_horiz</i> <!-- Ícono Autorenew -->
+        </div>
+        
+        <select class="select-role form-control" *ngIf="showRoleSelector" (change)="changeRole($event)" [value]="currentRole">
             <option *ngFor="let role of availableRoles" [value]="role" [selected]="role === currentRole">{{ role | titlecase }}</option>
         </select>
     </div>
+
 </div>
+

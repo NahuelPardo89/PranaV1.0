@@ -55,5 +55,110 @@ p {
 }
 
 
-/* animaciones */
+/* home */
+
+.main {
+    margin: auto;
+    width: 100%;
+    height: 94vh;
+    background: rgb(211,146,202);
+    background: linear-gradient(0deg, rgba(211,146,202,1) 11%, rgba(255,255,255,1) 92%);
+    
+
+
+    
+    
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.titlePrana {
+   
+    width: 52%;
+    padding: 20px;
+    
+    display: flex;
+    
+    justify-content: center;
+
+    
+}
+.prana{
+    color: #68335a;
+    padding: 1rem;
+    font-size: 8rem;
+    font-weight: 500;
+    font-family: 'Lora', "Helvetica Neue", sans-serif;
+}
+.logo{
+    width: 20%;
+    padding: 1rem;
+}
+
+.css-button-sharp--green {
+    position: absolute;
+    bottom: 40px;
+
+
+    min-width: 130px;
+    width: 8%;
+    height: 5%;
+    
+    padding: 5px 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    display: inline-block;
+    outline: none;
+    border: 2px solid #68335a;
+    border-radius: 10%;
+    background: #7dcf13;
+  }
+  a{
+    font-family: 'Open sans', "Helvetica Neue", sans-serif;
+    font-size: 120%;
+    text-decoration: none;
+    color: black;
+  }
+  .css-button-sharp--green:hover {
+    background: #fff;
+    color: #68335a
+  }
+
+.homeDerecha {
+    box-shadow: -7px 0px 65px 0px #68335a;
+    padding: 20px;
+    width:35%;
+    height: 70%;
+    border-radius: 0.5%;
+
+
+    
+    
+
+}
+.subtitulo {
+    color: #68335a;
+    padding: 1rem;
+    font-size: 4rem;
+    font-family: Lora, "Helvetica Neue", sans-serif;
+}
+.ciudad {
+    color: #68335a;
+    padding:1rem;
+    font-family: Lora, "Helvetica Neue", sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+.description{
+    color: black;
+    padding: 1rem;
+    font-family: Lora, "Helvetica Neue", sans-serif;
+    font-size: 1.2rem;
+
+}
+
+
 

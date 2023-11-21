@@ -102,7 +102,7 @@ p {
 
 
     min-width: 130px;
-    width: 8%;
+    width: 10%;
     height: 5%;
     
     padding: 5px 10px;
@@ -112,19 +112,23 @@ p {
     
     display: inline-block;
     outline: none;
-    border: 2px solid #68335a;
-    border-radius: 10%;
-    background: #7dcf13;
+    
+    border-radius: 5%;
+    background: #68335a;
   }
   a{
-    font-family: 'Open sans', "Helvetica Neue", sans-serif;
+    font-family: 'Open Sans', "Helvetica Neue", sans-serif;
     font-size: 120%;
     text-decoration: none;
-    color: black;
+    color: WHITE;
+  }
+  :hover {
+    color: #68335a;
   }
   .css-button-sharp--green:hover {
+    
     background: #fff;
-    color: #68335a
+    
   }
 
 .homeDerecha {
@@ -162,3 +166,48 @@ p {
 
 
 
+/* body Nav */
+
+.bodyNav {
+    margin: auto;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.bodyNav-container{
+    min-height: 45vh;
+    width: 30%;
+    padding: 3%;
+
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.bodyNav-container a {
+    display: flex;
+    justify-content: center;
+    
+}
+
+.mid{
+    border-radius: 2%;
+    box-shadow: 0px 0px 100px -14px #68335a;
+}
+.bodyNav-container p {
+    font-family: 'Open Sans', "Helvetica Neue", sans-serif;
+    font-size: 120%;
+    text-align: center;
+    width: 80%;
+    margin: auto;
+}
+
+.bodyNav-container img {
+    width: 60%;
+    border-radius: 50%;
+    aspect-ratio: 1/1;
+}

@@ -11,6 +11,13 @@ export class DashboardNavComponent {
   availableRoles: string[] = [];
   currentRole: string = '';
   showRoleSelector: boolean = false;
+  showInsuranceOptions = false;
+  showUserOptions = false;
+  showSeminarOptions = false;
+  showAppoimentPatientOptions = false;
+  showSeminarPatientOptions = false;
+  showSeminarSeminaristOptions = false;
+  showDoctorEspecialityOptions = false;
 
   constructor(private authService: AuthService) {}
 
@@ -31,6 +38,30 @@ export class DashboardNavComponent {
   toggleRoleSelector(): void {
     this.showRoleSelector = !this.showRoleSelector;
     console.log("Role selector toggled. Current state:", this.showRoleSelector);
+  }
+
+  toggleInsuranceOptions() {
+    this.showInsuranceOptions = !this.showInsuranceOptions;
+  }
+  toggleUserOptions() {
+    this.showUserOptions = !this.showUserOptions;
+  }
+  toggleSeminarOptions() {
+    this.showSeminarOptions = !this.showSeminarOptions;
+  }
+  toggleAppoimentPatientOptions() {
+    this. showAppoimentPatientOptions = !this. showAppoimentPatientOptions;
+  }
+
+  toggleSeminarPatientOptions() {
+    this.showSeminarPatientOptions = !this.showSeminarPatientOptions;
+  }
+  toggleSeminarSeminaristOptions() {
+    this.showSeminarSeminaristOptions = !this.showSeminarSeminaristOptions;
+  }
+
+  toggleDoctorEspecialityOptions() {
+    this.showDoctorEspecialityOptions = !this.showDoctorEspecialityOptions;
   }
 
 

@@ -138,7 +138,7 @@ export class AuthService {
     window.location.reload(); // Opcional: recarga la página
   }
   getCurrentUser(): Observable<UserShort | null> {
-    return this.currentUserSubject.asObservable();
+    return this.currentUser;
   }
 
   getUserRoles(): string[] {

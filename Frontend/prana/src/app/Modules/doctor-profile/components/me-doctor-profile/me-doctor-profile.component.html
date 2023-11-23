@@ -1,0 +1,39 @@
+<div class="me-doctor-profile">
+  <form [formGroup]="doctorForm" (ngSubmit)="saveProfile()">
+    <!-- Matrícula Médica -->
+    <div class="form-group">
+      <label for="medicLicence">Matrícula Médica</label>
+      <div>{{ doctorForm.value.medicLicence }}</div>
+      <button (click)="editMedicLicence()">Editar</button>
+    </div>
+
+    <!-- Especialidades -->
+    <div class="form-group">
+      <label>Especialidades:</label>
+      <ul>
+        <li *ngFor="let specialty of doctorForm.value.specialty; let i = index">
+          {{ specialty }}
+          <button (click)="editSpecialty(i)">Editar</button>
+          <button (click)="deleteSpecialty(i)">Borrar</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Seguros -->
+    <div class="form-group">
+      <label>Seguros:</label>
+      <ul>
+        <li *ngFor="let insurance of doctorForm.value.insurances; let i = index">
+          {{ insurance }}
+          <button (click)="editInsurance(i)">Editar</button>
+          <button (click)="deleteInsurance(i)">Borrar</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Botón de Guardar -->
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary" [disabled]="!doctorForm.valid">Guardar Cambios</button>
+    </div>
+  </form>
+</div>

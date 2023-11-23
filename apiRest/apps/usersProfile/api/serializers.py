@@ -85,10 +85,20 @@ class PatientShortProfileSerializer(serializers.ModelSerializer):
         fields = ('facebook', 'instagram', 'address', 'insurances')
         read_only_fields = ('insurances',)
 
+class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
+    insurance = HealthInsuranceSerializer(read_only=True)
+    branch = SpecialityBranchSerializer(read_only=True)
 
+    class Meta:
+        model = InsurancePlanDoctor
+        fields = ('insurance', 'branch', 'price')
 class DoctorProfileShortSerializer(serializers.ModelSerializer):
+    insurances = InsurancePlanDoctorSerializer2(many=True, read_only=True)
+    specialty = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = DoctorProfile
-        fields = ('medicLicence', 'specialty', 'insurances')
-        read_only_fields = ('insurances', 'specialty')
+        fields = ('medicLicence', 'specialty', 'insurances', 'is_active')
+        read_only_fields = ('is_active',)
+
+

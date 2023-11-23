@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { AuthService } from 'src/app/Services/auth/auth.service';
 
 
 @Component({
@@ -7,24 +8,61 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./dashboard-nav.component.css']
 })
 export class DashboardNavComponent {
+  availableRoles: string[] = [];
+  currentRole: string = '';
+  showRoleSelector: boolean = false;
+  showInsuranceOptions = false;
+  showUserOptions = false;
+  showSeminarOptions = false;
+  showAppoimentPatientOptions = false;
+  showSeminarPatientOptions = false;
+  showSeminarSeminaristOptions = false;
+  showDoctorEspecialityOptions = false;
 
+  constructor(private authService: AuthService) {}
 
-  @Output() togglePatientEvent = new EventEmitter<boolean>();
-
-  togglePatient() {
-    this.togglePatientEvent.emit(true);
+  ngOnInit() {
+    this.availableRoles = this.authService.getUserRoles();
+    this.currentRole = this.authService.getCurrentRole();
     
   }
 
-  profile: string = '';
+  changeRole(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement; // Asegura que event.target es un elemento select
+    const newRole = selectElement.value;
+    if (newRole) {
+      this.authService.setCurrentRole(newRole);
+    }
+  }
 
-  isPatient() {
-    this.profile = 'patient';
+  toggleRoleSelector(): void {
+    this.showRoleSelector = !this.showRoleSelector;
+    console.log("Role selector toggled. Current state:", this.showRoleSelector);
   }
-  isDoctor() {
-    this.profile = 'doctor';
+
+  toggleInsuranceOptions() {
+    this.showInsuranceOptions = !this.showInsuranceOptions;
   }
-  isAdmin() {
-    this.profile = 'admin';
+  toggleUserOptions() {
+    this.showUserOptions = !this.showUserOptions;
   }
+  toggleSeminarOptions() {
+    this.showSeminarOptions = !this.showSeminarOptions;
+  }
+  toggleAppoimentPatientOptions() {
+    this. showAppoimentPatientOptions = !this. showAppoimentPatientOptions;
+  }
+
+  toggleSeminarPatientOptions() {
+    this.showSeminarPatientOptions = !this.showSeminarPatientOptions;
+  }
+  toggleSeminarSeminaristOptions() {
+    this.showSeminarSeminaristOptions = !this.showSeminarSeminaristOptions;
+  }
+
+  toggleDoctorEspecialityOptions() {
+    this.showDoctorEspecialityOptions = !this.showDoctorEspecialityOptions;
+  }
+
+
 }

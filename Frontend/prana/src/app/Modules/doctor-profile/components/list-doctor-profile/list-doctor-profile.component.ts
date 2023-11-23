@@ -18,7 +18,7 @@ export class ListDoctorProfileComponent {
   loadDoctors(): void {
     this.doctorService.getDoctors().subscribe(data => {
       this.doctors = data;
-      console.log(data)
+      
     }, error => {
       console.error('Error loading doctor profiles', error);
     });

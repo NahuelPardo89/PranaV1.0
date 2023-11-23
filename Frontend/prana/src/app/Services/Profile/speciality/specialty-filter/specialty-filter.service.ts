@@ -10,7 +10,7 @@ export class SpecialtyFilterService {
   constructor() { }
 
   filterDoctorsBySpecialty(doctors: DoctorProfile[], specialtyId: number): DoctorProfile[] {
-    return doctors.filter(doctor => doctor.specialty.includes(specialtyId));
+    return doctors.filter(doctor => doctor.specialty.includes(specialtyId.toString()));
   }
 
   filterBranchesBySpecialty(branches: SpecialityBranch[], specialtyId: number): SpecialityBranch[] {

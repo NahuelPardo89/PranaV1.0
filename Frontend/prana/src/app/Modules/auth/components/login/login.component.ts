@@ -33,15 +33,20 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       const user: LoginUser = this.loginForm.value;
   
-      this.authService.login(user).subscribe(
-        () => {
-          // Una vez que el login es exitoso, navegamos al dashboard.
-          this.router.navigate(['Dashboard/']);
+      this.authService.login(user).subscribe({
+        next: (response) => {
+          
+            // Una vez que el login es exitoso, navegamos al dashboard.
+            this.router.navigate(['Dashboard/']);
         },
-        error => {
-          alert('Error durante el inicio de sesión. Por favor, inténtalo de nuevo.');
+        error: (error) => {
+            alert('Error durante el inicio de sesión. Por favor, inténtalo de nuevo.');
+            
+        },
+        complete: () => {
+            // Opcional: código que se ejecuta cuando el observable se completa
         }
-      );
+    });
     }
   }
 }

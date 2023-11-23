@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders,HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient,HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { tap,catchError } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { UserShort } from 'src/app/Models/user/userShort.interface';
 
-
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -23,23 +23,32 @@ export class AuthService {
 
   private currentUserSubject: BehaviorSubject<UserShort | null> = new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
+  private currentRole = new BehaviorSubject<string>(''); // Inicializa con un rol predeterminado o vacío
+
 
   
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private router: Router) {
     const user = localStorage.getItem('user');
     if (user) {
       this.currentUserSubject.next(JSON.parse(user));
     }
   }
+  
+  
   login(user: LoginUser): Observable<JwtResponse> {
     return this.http.post<JwtResponse>(this.loginUrl, user).pipe(
       tap(response => {
-        this.handleAuthentication(response);
+        this.handleUser(response);
+        this.handleTokens(response);
+        this.handleRoles(response.roles); // Maneja los roles
       }),
-      catchError(this.handleError)
+      catchError(error => this.handleError(error, 'Error al iniciar sesión'))
     );
   }
 
+
+
+ 
   
  
   register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
@@ -47,58 +56,106 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response.status === 201) {
-            this.handleAuthentication(response.body!);
+            this.router.navigate(['/auth/login']);
           }
         }),
-        catchError(this.handleError)
+        catchError(error => this.handleError(error, 'Error al registrarse'))
       );
   }
   
   
-  logout(refreshToken: string): Observable<void> {
-    return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }).pipe(
-      tap(() => {
-        this.currentUserSubject.next(null);
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-      }),
-      catchError(this.handleError)
-    );
-}
-  
-  refreshToken(): Observable<JwtResponse> {
+  logout(): Observable<void> {
     const refreshToken = localStorage.getItem('refresh_token');
-    if (refreshToken) {
-      return this.http.post<JwtResponse>(this.refreshTokenUrl, { refresh: refreshToken }).pipe(
-        tap((response: JwtResponse) => {
-          localStorage.setItem('access_token', response.access);
-          localStorage.setItem('refresh_token', response.refresh);
-        })
-      );
-    } else {
-      return throwError('Refresh token no disponible');
+    if (!refreshToken) {
+      // Si no hay token de refresco, procedemos con la limpieza del cliente directamente
+      this.clearLocalStorage();
+      return throwError(() => new Error('No refresh token'));
     }
+    return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }).pipe(
+      tap(() => this.clearLocalStorage()),
+      catchError((error) => {
+        // Incluso si hay un error, limpiamos el cliente
+        this.clearLocalStorage();
+        // Puedes decidir si quieres manejar este error de alguna manera específica
+        return throwError(() => new Error('Token de refresco ha expirado'));
+      })
+    );
   }
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Un error a ocurrido';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side errors
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side errors
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+ 
+
+  refreshToken(): Observable<HttpResponse<JwtResponse>> {
+    const refreshToken = localStorage.getItem('refresh_token');
+    if (!refreshToken) {
+      this.logout();
+      return throwError(() => new Error('Refresh token no disponible'));
     }
-    return throwError(errorMessage);
+  
+    return this.http.post<JwtResponse>(this.refreshTokenUrl, { refresh: refreshToken }, { observe: 'response' }).pipe(
+      tap(response => {
+        if (response.status === 200 && response.body) {
+          this.handleTokens(response.body);
+        } else {
+          this.clearLocalStorage();
+        }
+      }),
+      catchError((error) => {
+        // Incluso si hay un error, limpiamos el cliente
+        this.clearLocalStorage();
+        // Puedes decidir si quieres manejar este error de alguna manera específica
+        return throwError(() =>  new Error('Refresh token ha expirado'));
+      })
+      
+    );
   }
-  private handleAuthentication(response: JwtResponse): void {
+
+  private handleRoles(roles: string[]): void {
+    localStorage.setItem('roles', JSON.stringify(roles));
+  }
+
+  private handleError(error: HttpErrorResponse, defaultMessage: string): Observable<never> {
+    // Proporciona un manejo de errores más específico según cada método
+    const errorMessage = error.error instanceof ErrorEvent
+      ? `Error del lado del cliente: ${error.error.message}`
+      : `Error del servidor: ${error.message}`;
+    console.error(errorMessage);
+    return throwError(() => new Error(defaultMessage));
+  }
+  
+  private handleUser(response: JwtResponse): void {
     localStorage.setItem('user', JSON.stringify(response.user));
-    localStorage.setItem('access_token', response.access);
-    localStorage.setItem('refresh_token', response.refresh);
     this.currentUserSubject.next(response.user);
   }
+
+  private handleTokens(response: JwtResponse): void {
+    
+    localStorage.setItem('access_token', response.access);
+    localStorage.setItem('refresh_token', response.refresh);
+    
+  }
+  setCurrentRole(role: string): void {
+    this.currentRole.next(role);
+    localStorage.setItem('currentRole', role); // Guarda el rol actual en localStorage
+    window.location.reload(); // Opcional: recarga la página
+  }
   getCurrentUser(): Observable<UserShort | null> {
-    return this.currentUserSubject.asObservable();
+    return this.currentUser;
+  }
+
+  getUserRoles(): string[] {
+    return JSON.parse(localStorage.getItem('roles') || '[]');
+  }
+
+  getCurrentRole(): string {
+    return localStorage.getItem('currentRole') || this.getUserRoles()[0]; // Devuelve el primer rol disponible si no hay ninguno seleccionado
+  }
+  
+  clearLocalStorage(): void {
+    console.log("Clear local storage");
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('user');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/auth/login']);
   }
   
 }

@@ -1,25 +1,25 @@
 import { Injectable } from '@angular/core';
-import {HttpInterceptor, HttpRequest, HttpHandler, HttpEvent,HttpErrorResponse} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
-import { AuthService } from 'src/app/Services/auth/auth.service';  
-import { JwtResponse } from 'src/app/Models/user/jwtResponse.interface'; 
-import { Router } from '@angular/router';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { AuthService } from 'src/app/Services/auth/auth.service';
+
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService,private router: Router) {}
+  private isRefreshing = false;
+  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+  constructor(private authService: AuthService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(this.addAuthenticationToken(req)).pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          // Si recibimos una respuesta "Unauthorized", intentamos renovar el token
+      catchError(error => {
+        if (error instanceof HttpErrorResponse && error.status === 401 && req.url !== 'http://127.0.0.1:8000/account/refresh/') {
           return this.handle401Error(req, next);
-        } else {
-          return throwError(error);
         }
+        return throwError(() => error);
       })
     );
   }
@@ -30,30 +30,47 @@ export class AuthInterceptor implements HttpInterceptor {
       return request;
     }
     return request.clone({
-      headers: request.headers.set('Authorization', 'Bearer ' + accessToken)
+      setHeaders: {
+        Authorization: `Bearer ${accessToken}`
+      }
     });
   }
 
-  private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
-    return this.authService.refreshToken().pipe(
-      switchMap((tokenResponse: JwtResponse) => {
-        localStorage.setItem('access_token', tokenResponse.access);
-        localStorage.setItem('refresh_token', tokenResponse.refresh);
-        return next.handle(this.addAuthenticationToken(request));
-      }),
-      catchError(error => {
-        // Elimina los tokens y la información del usuario del localStorage
-        console.error("ENTRO ACA")
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        alert('Su sesión finalizo, debe volver a iniciar sesión');
-        // Redirige al usuario al inicio de sesión
-        this.router.navigate(['/auth/login']);
-
-        return throwError(error);
-      })
-    );
+  private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+  
+      return this.authService.refreshToken().pipe(
+        switchMap(response => {
+          if (response.status === 200 && response.body) {
+            // La actualización del localStorage y el manejo de los tokens se hacen en refreshToken2
+            console.log("hola mundo");
+            this.isRefreshing = false;
+            this.refreshTokenSubject.next(response.body.access);
+            return next.handle(this.addAuthenticationToken(request));
+          } else {
+            
+            return throwError(() => new Error('No se pudo refrescar el token'));
+          }
+        }),
+        catchError(refreshError => {
+          // En caso de error en la petición de refresco, maneja el error aquí
+          alert("Su sesion ha expirado")
+          this.isRefreshing = false;
+          this.refreshTokenSubject.next(null);
+          return throwError(() => refreshError);
+        })
+      );
+    } else {
+      // Si ya se está refrescando el token, espera a que se complete
+      return this.refreshTokenSubject.pipe(
+        filter(token => token != null),
+        take(1),
+        switchMap(token => {
+          return next.handle(this.addAuthenticationToken(request));
+        })
+      );
+    }
   }
-
 }

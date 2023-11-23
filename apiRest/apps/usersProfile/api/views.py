@@ -21,34 +21,14 @@ from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySeria
                           InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
                           DoctorProfileShortSerializer,   SpecialityBranchSerializer)
 
-
-class IsAdminOrReadOnly(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        else:
-            return request.user.is_staff
-# testearr
-
-
-class IsDoctorOrReadOnly(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        elif request.user.doctorProfile:
-            return True
-        else:
-            return request.user.is_staff
+from apps.permission import IsAdminOrReadOnly
 
 # ADMIN VIEWS
 
 
 class BaseAdminViewSet(viewsets.GenericViewSet):
     """ BASE ADMIN VIEWSET """
-    # permission_classes = [IsAdminOrReadOnly, ]
+    permission_classes = [IsAdminOrReadOnly, ]
 
     def get_object(self, pk):
         return get_object_or_404(self.model, pk=pk)

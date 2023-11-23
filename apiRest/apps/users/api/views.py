@@ -13,6 +13,8 @@ from apps.users.api.serializers import (
     UserAdminSerializer, LogoutSerializer
 )
 
+
+
 #ADMIN VIEWS
 class UserAdminViewSet(viewsets.GenericViewSet):
     model = User
@@ -111,21 +113,37 @@ class LoginAPI(generics.GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
-        
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.validated_data
             user.last_login = timezone.now()
             user.save()
             refresh = RefreshToken.for_user(user)
+
+            # Determina los perfiles del usuario
+            roles = self.get_user_roles(user)
+
             return Response({
                 "user": UserShortSerializer(user, context=self.get_serializer_context()).data,
+                "roles": roles,
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
                 "message": "Usuario logueado con éxito"
-            },status=status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
         else:
-            return Response({"message":"Usuario o Contraseña incorrecto"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Usuario o Contraseña incorrecto"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_user_roles(self, user):
+        roles = []
+        if hasattr(user, 'patientProfile'):
+            roles.append('Paciente')
+        if hasattr(user, 'doctorProfile'):
+            roles.append('Profesional')
+        if hasattr(user, 'seminaristProfile'):
+            roles.append('Tallerista')
+        if user.is_staff:
+            roles.append('Administrador')
+        return roles
 
 class LogoutAPI(generics.GenericAPIView):
     serializer_class = LogoutSerializer  

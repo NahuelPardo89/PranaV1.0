@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AppointmentsRoutingModule } from './appointments-routing.module';
 import { AppointmentAdminListComponent } from './components/admin/appointment-admin-list/appointment-admin-list.component';
 import { AppointmentAdminDetailComponent } from './components/admin/appointment-admin-detail/appointment-admin-detail.component';
@@ -22,6 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { MatSelectModule } from '@angular/material/select';
 import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
@@ -53,7 +53,6 @@ import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/d
   imports: [
     CommonModule,
     AppointmentsRoutingModule,
-    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -64,6 +63,7 @@ import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/d
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
+    MatAutocompleteModule,
   ],
   providers: [
     AppointmentService,

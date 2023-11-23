@@ -112,6 +112,31 @@ class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
+class DoctorPatientCommonInsurancesView(APIView):
+    """
+    API view to get the common health insurances for a given doctor, patient, and branch.
+    """
+
+    def get(self, request):
+        # Parameters
+        doctor_id = request.GET.get('doctor_id')
+        patient_id = request.GET.get('patient_id')
+        branch_id = request.GET.get('branch_id')
+
+        # Filter the id's of the common health insurances that cover the branch
+        common_insurances_ids = InsurancePlanDoctor.objects.filter(doctor_id=doctor_id, branch_id=branch_id).values_list('insurance_id', flat=True).filter(
+            insurance_id__in=InsurancePlanPatient.objects.filter(patient_id=patient_id).values_list('insurance_id', flat=True))
+
+        # Get de HI
+        common_insurances = HealthInsurance.objects.filter(
+            id__in=common_insurances_ids)
+
+        # Response
+        serializer = HealthInsuranceSerializer(common_insurances, many=True)
+
+        return Response(serializer.data)
+
+
 class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
     queryset = MedicalSpeciality.objects.all()
     serializer_class = MedicalSpecialitySerializer
@@ -122,6 +147,28 @@ class SpecialityBranchAdminViewSet(viewsets.ModelViewSet):
     queryset = SpecialityBranch.objects.all()
     serializer_class = SpecialityBranchSerializer
     bpermission_classes = [IsAdminOrReadOnly]
+
+
+class DoctorBranchesView(APIView):
+    """
+    API view to get the branches for a given doctor.
+    """
+
+    def get(self, request):
+        doctor_id = request.GET.get('doctor_id')
+
+        # Filtra los planes de seguro del doctor
+        doctor_insurances = InsurancePlanDoctor.objects.filter(
+            doctor_id=doctor_id)
+
+        # Obtiene las ramas
+        doctor_branches = list(
+            set(insurance.branch for insurance in doctor_insurances))
+
+        # Serializa la respuesta
+        serializer = SpecialityBranchSerializer(doctor_branches, many=True)
+
+        return Response(serializer.data)
 
 
 class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):

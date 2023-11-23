@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { catchError } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable, catchError, map, of, startWith } from 'rxjs';
 import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
 import { DoctorScheduleInterface } from 'src/app/Models/Profile/doctorschedule.interface';
@@ -26,20 +26,28 @@ import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmeth
   styleUrls: ['./appointment-admin-create.component.css']
 })
 export class AppointmentAdminCreateComponent implements OnInit {
+  // Form
   appointmentForm: FormGroup;
+  // Response data
   appointmentResponse: AppointmentAdminGetInterface;
-  doctors: DoctorProfile[] = [];
-  specialtyFilteredDoctors: DoctorProfile[] = [];
-  specialties: Medicalspeciality[] = [];
-  selectedSpecialty: number | null = null;
-  isPaid: boolean | null = null;
-  branches: SpecialityBranch[] = [];
-  specialtyFilteredBranches: SpecialityBranch[] = [];
+  // Data
   patients: Patient[] = [];
+  doctors: DoctorProfile[] = [];
+  specialties: Medicalspeciality[] = [];
+  branches: SpecialityBranch[] = [];
   methods: PaymentMethod[] = [];
   insurances: HealthInsurance[] = [];
+  // Filtered Data
   doctorSchedule: DoctorScheduleInterface[] = [];
-  selectedDoctor: number | null = null;
+  specialtyFilteredDoctors: DoctorProfile[] = [];
+  specialtyFilteredBranches: SpecialityBranch[] = [];
+  //Selections
+  selectedSpecialty: number = 0;
+  selectedBranch: number = 0;
+  selectedPatient: number = 0;
+  selectedDoctor: number = 0;
+  // Auxiliar Variables
+  isPaid: boolean | null = null;
   formattedDates: string[] = [];
   availableTimes: string[] = [];
   finalJsonDate: string = "";
@@ -50,6 +58,19 @@ export class AppointmentAdminCreateComponent implements OnInit {
     { value: 3, viewValue: 'Adeuda' },
     { value: 4, viewValue: 'Pagado' },
   ];
+  //FormControls
+  doctorControl = new FormControl();
+  patientControl = new FormControl();
+  specialtyControl = new FormControl();
+  // Observables to reactive filter
+  filteredSpecialties: Observable<Medicalspeciality[]> = of([]);
+  filteredDoctors: Observable<DoctorProfile[]> = of([]);
+  filteredPatients: Observable<Patient[]> = of([]);
+  // Preview Variables
+  patientName: string = ''
+  doctorName: string = ''
+  specialtytName: string = ''
+  branchName: string = ''
 
   constructor(
     private fb: FormBuilder,
@@ -69,7 +90,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
       doctor: [null, Validators.required],
       patient: [null, Validators.required],
       duration: [null],
-      specialty: [null],
+      specialty: [null, Validators.required],
       branch: [null],
       state: [null],
       payment_method: [null],
@@ -103,134 +124,417 @@ export class AppointmentAdminCreateComponent implements OnInit {
     this.loadInsurances();
   }
 
+  // Init data section
+
+  /**
+  * Fetches a list of doctors from the doctor service, sorts them alphabetically by user, 
+  * and assigns them to the 'doctors' property.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching or sorting the data.
+  * @returns {void}
+  */
   loadDoctors(): void {
     this.doctorService.getDoctors().subscribe(data => {
+      //Sort doctors
+      data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
       this.doctors = data;
     });
   }
 
-  loadfilteredDoctors(specialtyId: number) {
-    this.specialtyFilteredDoctors = this.specialtyFilterService.filterDoctorsBySpecialty(this.doctors, specialtyId);
-  }
-
-  loadfilteredBranches(specialtyId: number) {
-    this.specialtyFilteredBranches = this.specialtyFilterService.filterBranchesBySpecialty(this.branches, specialtyId);
-  }
-
+  /**
+  * Fetches a list of specialties from the specialty service, sorts them alphabetically by name, 
+  * assigns them to the 'specialties' property, and filters them.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
+  * @returns {void}
+  */
   loadSpecialties(): void {
     this.specialtyService.getSpecialities().subscribe(data => {
+      data.sort((a, b) => a.name.localeCompare(b.name));
       this.specialties = data;
+      this.filterSpecialties()
     })
   }
 
+  /**
+  * Fetches a list of patients from the patient service, sorts them alphabetically by user, 
+  * assigns them to the 'patients' property, and filters them.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
+  * @returns {void}
+  */
   loadPatients(): void {
     this.patientService.getAllPatients().subscribe(data => {
+      // Sort the patients
+      data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
       this.patients = data;
+      this.filterPatients()
     })
   }
 
+  /**
+  * loadPatients(): void
+  * Fetches a list of payment methods from the payment method service, sorts them alphabetically by name, 
+  * and assigns them to the 'methods' property.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
+  * @returns {void}
+  */
   loadPaymentMethods(): void {
     this.paymentmethodservice.getPaymentMethods().subscribe(data => {
+      //Sort
+      data.sort((a, b) => a.name.localeCompare(b.name));
       this.methods = data
     })
   }
 
+  /**
+  * Fetches a list of branches from the branch service, sorts them alphabetically by name, 
+  * and assigns them to the 'branches' property.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching or sorting the data.
+  * @returns {void}
+  */
   loadBranches(): void {
     this.branchService.getSpecialityBranches().subscribe(data => {
+      //Sort
+      data.sort((a, b) => a.name.localeCompare(b.name));
       this.branches = data
     })
   }
 
+  /**
+  * Fetches a list of insurances from the insurance service, sorts them alphabetically by name, 
+  * and assigns them to the 'insurances' property.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching or sorting the data.
+  * @returns {void}
+  */
   loadInsurances(): void {
     this.insuranceService.getAll().subscribe(data => {
+      //Sort
+      data.sort((a, b) => a.name.localeCompare(b.name));
       this.insurances = data
     })
   }
+  //End Init data section
 
-  onSpecialtyChange(selectedValue: number | null): void {
+  // On Select section
+
+  /**
+  * Handles the event when a specialty is selected. 
+  * Resets the form and loads the doctors for the selected specialty.
+  * @param selectedValue The selected specialty.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in resetting the form or loading the doctors.
+  * @returns {void}
+  */
+  onSpecialtySelect(selectedValue: number): void {
     this.selectedSpecialty = selectedValue;
-
     if (selectedValue !== null) {
-      this.loadfilteredDoctors(selectedValue);
-      this.loadfilteredBranches(selectedValue);
+      this.resetForm(this.appointmentForm, { doctor: true, day: true, branch: true });
+      this.loadfilteredDoctors(this.selectedSpecialty);
+      this.filterDoctors()
     }
     else {
-      //Reset los campos
-      this.resetForm(this.appointmentForm);
+      //Reset doctor, and in consecuence day and hour
+      this.resetForm(this.appointmentForm, { doctor: true, day: true, branch: true });
     }
   }
 
-  resetForm(form: FormGroup): void {
-    // Valores iniciales del formulario
-    form.patchValue({
-      doctor: null,
-      day: '',
-      hour: '',
-      state: null,
-      payment_method: null,
-      full_cost: null,
-    });
-    this.finalJsonDate = '';
-    this.finalJsonHour = '';
-  }
-
-  // onDoctorSelect(doctorId: number) {
-  //   if (doctorId === null) {
-  //     // Restablece los campos del formulario
-  //     this.appointmentForm.reset({
-  //       patient: this.appointmentForm.get('patient')?.value,
-  //       specialty: this.appointmentForm.get('specialty')?.value
-  //     });
-  //   } else {
-  //     this.selectedDoctor = doctorId;
-  //     this.doctorScheduleService.getDoctorSchedule(doctorId).subscribe(data => {
-  //       this.doctorSchedule = data;
-  //       this.formattedDates = this.formatDates(this.doctorSchedule);
-  //     });
-  //   }
-  // }
-
-  onDoctorSelect(doctorId: number) {
+  /**
+  * Handles the event when a doctor is selected. 
+  * Resets the form and loads the schedule for the selected doctor.
+  * @param doctorId The selected doctor's ID.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in resetting the form or loading the doctor's schedule.
+  * @returns {void}
+  */
+  onDoctorSelect(doctorId: number): void {
     this.selectedDoctor = doctorId;
     if (this.selectedDoctor !== null) {
+      this.resetForm(this.appointmentForm, { day: true, branch: true });
       this.doctorScheduleService.getDoctorSchedule(doctorId).subscribe(data => {
         this.doctorSchedule = data;
         this.formattedDates = this.formatDates(this.doctorSchedule);
+        // reloads the branches of the new doctor
+        this.loadfilteredBranches(doctorId);
       });
     }
     else {
       //Reset los campos
-      this.resetForm(this.appointmentForm);
+      this.resetForm(this.appointmentForm, { day: true, branch: true });
     }
   }
 
-  onDaySelect(day: string) {
-    if (this.selectedDoctor !== null) {
+  /**
+  * Handles the event when a day is selected. 
+  * Resets the form and loads the available times for the selected day.
+  * @param day The selected day.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in resetting the form or loading the available times.
+  * @returns {void}
+  */
+  onDaySelect(day: string): void {
+    // Works good, but i want to review why i have to compare so many values
+    if (this.selectedDoctor !== null && day !== '' && day !== null && day !== undefined) {
+      // If a modification is maded on day, reset de hour
+      this.resetForm(this.appointmentForm, { hour: true });
+      // Parse de day
       this.finalJsonDate = this.parseDateStringToDate(day);
-      const shortEngDay = this.getShortDayName(day)
       this.doctorScheduleService.getDoctorAvailableTime(this.selectedDoctor, this.finalJsonDate).subscribe(data => {
         this.availableTimes = data.available_times;
       });
     }
-    //Ojo, acá solo limpiar la hora!, modificar el resetForm
-  }
-
-  onHourSelect(hour: string) {
-    if (hour !== '') {
-      this.finalJsonHour = this.getStartAppointmentHour(hour)
+    //If no day selected ('Sin Solicitar') reset the hour field
+    else {
+      this.resetForm(this.appointmentForm, { hour: true });
     }
   }
 
-  updatePaymentVisibility(selectedValue: number | null): void {
-    this.isPaid = selectedValue === 4;
+  /**
+  * Handles the event when an hour is selected. Sets the final appointment hour.
+  * @param hour The selected hour.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
+  onHourSelect(hour: string): void {
+    if (hour !== '' && hour !== undefined) {
+      this.finalJsonHour = this.getStartAppointmentHour(hour)
+    }
+    else {
+      this.finalJsonHour = '';
+    }
   }
 
+  /**
+  * Handles the event when a patient is selected. 
+  * Resets the form and loads the common insurances for the selected patient.
+  * @param patientId The selected patient's ID.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in resetting the form or loading the common insurances.
+  * @returns {void}
+  */
+  onPatientSelect(patientId: number): void {
+    // Save the patient to calculate common insurances
+    this.selectedPatient = patientId
+    if (!this.selectedPatient) {
+      // reset all 
+      this.resetForm(this.appointmentForm, { specialty: true });
+    }
+    else if (this.selectedDoctor && this.selectedBranch) {
+      // So far, patient isn't null, and we check that doctor and branch have a value
+      // Recalculate common insurances value
+      this.loadCommonInsurances(this.selectedDoctor, this.selectedPatient, this.selectedBranch);
+    }
+  }
+
+  /**
+  * Handles the event when a branch is selected. Loads the common insurances for the selected branch.
+  * @param branchId The selected branch's ID.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in loading the common insurances.
+  * @returns {void}
+  */
+  onBranchSelect(branchId: number): void {
+    // Save the BRANCH to calculate common insurances
+    this.selectedBranch = branchId
+    let branch = this.branches.find(branch => branch.id === branchId);
+    if (branch) {
+      this.branchName = branch.name;
+    }
+    if (this.selectedDoctor) {
+      // Recalculate common insurances value
+      this.loadCommonInsurances(this.selectedDoctor, this.selectedPatient, this.selectedBranch);
+    }
+    else {
+    }
+  }
+
+  /**
+  * Updates the visibility of the payment method based on the selected value.
+  * @param selectedValue The selected value.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
+  updatePaymentVisibility(selectedValue: number | null): void {
+    this.isPaid = selectedValue === 4;
+    if (!this.isPaid) {
+      this.appointmentForm.patchValue({
+        payment_method: null
+      });
+    }
+  }
+  // End On Select Section
+
+  // Filter section
+  //Patients
+  /**
+  * Filters the patients based on the value changes of the patient control.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
+  filterPatients(): void {
+    this.filteredPatients = this.patientControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value ? value.name : ''),
+        map(name => name ? this.filterPatientsByName(name) : this.patients.slice())
+      );
+  }
+
+  /**
+  * Filters the patients by name.
+  * @param name The name to filter by.
+  * @author Alvaro Olguin
+  * @returns {Patient[]} The filtered patients.
+  */
+  filterPatientsByName(name: string): Patient[] {
+    if (name) {
+      const filterValue = name.toLowerCase();
+      return this.patients.filter(patient => patient.user.toString().toLowerCase().includes(filterValue));
+    }
+    else {
+      return this.patients
+    }
+  }
+
+  // Doctors
+  /**
+  * Loads the doctors filtered by specialty.
+  * @param specialtyId The specialty to filter by.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
+  loadfilteredDoctors(specialtyId: number): void {
+    this.specialtyFilteredDoctors = this.specialtyFilterService.filterDoctorsBySpecialty(this.doctors, specialtyId);
+  }
+
+  /**
+  * Filters the doctors based on the value changes of the doctor control.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
+  filterDoctors(): void {
+    this.filteredDoctors = this.doctorControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value ? value.name : ''),
+        map(name => name ? this.filterDoctorsBySpecialty(name) : this.specialtyFilteredDoctors.slice())
+      );
+  }
+
+  /**
+  * Filters the doctors by specialty.
+  * @param name The specialty to filter by.
+  * @author Alvaro Olguin
+  * @returns {DoctorProfile[]} The filtered doctors.
+  */
+  filterDoctorsBySpecialty(name: string): DoctorProfile[] {
+    if (name) {
+      const filterValue = name.toLowerCase();
+      return this.specialtyFilteredDoctors.filter(option => option.user.toString().toLowerCase().includes(filterValue));
+    } else {
+      return this.specialtyFilteredDoctors;
+    }
+  }
+
+  //Specialties
+  /**
+  * Filters the specialties based on the value changes of the specialty control.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
+  filterSpecialties(): void {
+    this.filteredSpecialties = this.specialtyControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value ? value.name : ''),
+        map(name => name ? this.filterSpecialtiesByName(name) : this.specialties.slice())
+      );
+  }
+
+  /**
+  * Filters the specialties by name.
+  * @param name The name to filter by.
+  * @author Alvaro Olguin
+  * @returns {Medicalspeciality[]} The filtered specialties.
+  */
+  filterSpecialtiesByName(name: string): Medicalspeciality[] {
+    if (name) {
+      const filterValue = name.toLowerCase();
+      const isSpecialtyName = this.specialties.some(specialty => specialty.name.toLowerCase() === filterValue);
+      if (isSpecialtyName) {
+        return this.specialties;
+      } else {
+        return this.specialties.filter(option => option.name.toString().toLowerCase().includes(filterValue));
+      }
+    } else {
+      return this.specialties;
+    }
+  }
+
+  // Branches
+  /**
+  * Loads the branches filtered by doctor.
+  * @param doctorId The doctor to filter by.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in loading the branches.
+  * @returns {void}
+  */
+  loadfilteredBranches(doctorId: number): void {
+    this.branchService.getDoctorBranches(doctorId).subscribe(data => {
+      this.specialtyFilteredBranches = data;
+      if (this.specialtyFilteredBranches.length > 0) {
+        let generalBranch = this.specialtyFilteredBranches.find(branch => branch.name === 'GENERAL');
+        // Exists the general branch, the id property its only for interface validation (id?)
+        if (generalBranch && generalBranch.id) {
+          this.selectedBranch = generalBranch.id;
+        } else {
+          this.selectedBranch = 0;
+        }
+      } else {
+        this.selectedBranch = 0;
+      }
+      this.appointmentForm.patchValue({
+        branch: this.selectedBranch
+      });
+      this.loadCommonInsurances(doctorId, this.selectedPatient, this.selectedBranch)
+    });
+  }
+
+  // Insurances
+  /**
+  * Loads the common insurances for the given doctor, patient, and branch.
+  * @param doctorId The doctor's ID.
+  * @param patientId The patient's ID.
+  * @param branchId The branch's ID.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in loading the common insurances.
+  * @returns {void}
+  */
+  loadCommonInsurances(doctorId: number, patientId: number, branchId: number): void {
+    this.insuranceService.getDoctorPatientCommonHI(doctorId, patientId, branchId).subscribe(data => {
+      //Sort
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      this.insurances = data
+    })
+  }
+
+  // END Filter section
+
   // Section UTILS
+  /**
+  * Formats the dates of the doctor's schedule.
+  * @param doctorSchedule The doctor's schedule.
+  * @author Alvaro Olguin
+  * @returns {string[]} The formatted dates.
+  */
   formatDates(doctorSchedule: any): string[] {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    currentDate.setDate(1); // Establece la fecha al primer día del mes
+    currentDate.setDate(1);
 
     const daysOfWeekSpanish = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
     const monthsSpanish = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -238,7 +542,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
     const formattedDates: string[] = [];
     const today = new Date();
 
-    // Itera sobre este mes y el próximo
+    // Loops over the current month and the next one
     for (let m = 0; m < 2; m++) {
       const daysInMonth = new Date(year, month + m + 1, 0).getDate();
 
@@ -246,7 +550,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
         currentDate.setMonth(month + m);
         currentDate.setDate(i + 1); // Establece el día del mes
 
-        // Si la fecha actual es anterior a hoy, continúa con la siguiente iteración
+        // Continue if the date is older than today
         if (currentDate < today) {
           continue;
         }
@@ -257,58 +561,118 @@ export class AppointmentAdminCreateComponent implements OnInit {
 
         const formattedDate = `${dayOfWeek} ${dayOfMonth} de ${monthName}`;
 
-        // Formatea el día a su nombre en inglés y solo las primeras 3 letras, tal como viene en el schedule
+        // Format day (mon, tue, wed...)
         const englishShortDay = currentDate.toDateString().toLocaleLowerCase().slice(0, 3);
         // Busca si el día del cronograma coincide con el día actual
         const matchingDay = doctorSchedule.find((day: DoctorScheduleInterface) => day.day === englishShortDay);
         if (matchingDay) {
-          // Si hay una coincidencia en el cronograma, agrégalo a la fecha formateada
-          //formattedDates.push(`${formattedDate} (${matchingDay.start} - ${matchingDay.end})`);
+          // If match with the schedule, add the date 
           formattedDates.push(`${formattedDate}`);
         }
       }
     }
 
-    console.log("DATES final: ", formattedDates)
     return formattedDates;
   }
 
+  /**
+  * Resets the form based on the provided options.
+  * @param form The form to reset.
+  * @param options The options for resetting the form.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
+  resetForm(form: FormGroup, options?: { specialty?: boolean, doctor?: boolean, day?: boolean, hour?: boolean, branch?: boolean }): void {
 
-  // Create a class for methods like this (utils) since are usefull on several components
-  getShortDayName(fullDate: string): string | null {
-    // Define un mapeo de nombres de días en español a nombres en inglés
-    const dayMappings: { [key: string]: string } = {
-      'Lunes': 'mon',
-      'Martes': 'tue',
-      'Miércoles': 'wed',
-      'Jueves': 'thu',
-      'Viernes': 'fri',
-      'Sábado': 'sat',
-      'Domingo': 'sun',
-    };
-
-    // Divide la cadena por espacios en palabras
-    const words = fullDate.split(' ');
-
-    // Verifica si hay al menos tres palabras y la primera palabra es un día en español
-    if (words.length >= 3 && dayMappings.hasOwnProperty(words[0])) {
-      // Usa la primera palabra para buscar el día correspondiente en inglés
-      return dayMappings[words[0]];
+    if (options && options.specialty) {
+      this.specialtyControl.setValue(0);
     }
 
-    return null; // Retorna null si no se puede mapear
+    if (options && options.doctor) {
+      this.doctorControl.setValue(null);
+    }
+
+    if (options && options.day) {
+      form.patchValue({
+        day: ''
+      });
+      this.finalJsonDate = '';
+    }
+
+    if (options && options.hour) {
+      form.patchValue({
+        hour: ''
+      });
+      this.availableTimes = []
+      this.finalJsonHour = '';
+    }
+
+    if (options && options.branch) {
+      form.patchValue({
+        branch: 0
+      });
+    }
+
+    // Reset the remaining fields
+    form.patchValue({
+      state: null,
+      payment_method: null,
+      full_cost: null,
+    });
+  }
+
+  /**
+  * Validates the form and alerts the user if any field is empty.
+  * @author Alvaro Olguin
+  * @returns {boolean} Whether the form is valid or not.
+  */
+  validateForm(): boolean {
+    let dayControl = this.appointmentForm.get('day');
+    let hourControl = this.appointmentForm.get('hour');
+    if (!this.patientControl.value) {
+      alert('El campo "Paciente" no puede ser vacío, por favor, asigne un valor');
+      return false;
+    }
+
+    if (!this.specialtyControl.value) {
+      alert('El campo "Especialidad" no puede ser vacío, por favor, asigne un valor');
+      return false;
+    }
+
+    if (!this.doctorControl.value) {
+      alert('El campo "Profesional" no puede ser vacío, por favor, asigne un valor');
+      return false;
+    }
+
+    if (!dayControl || !dayControl.value) {
+      alert('El campo "Día" no puede ser vacío, por favor, asigne un valor');
+      return false;
+    }
+
+    if (!hourControl || !hourControl.value) {
+      alert('El campo "Hora" no puede ser vacío, por favor, asigne un valor');
+      return false;
+    }
+
+    return true;
   }
 
   // Create a class for this methods (utils) since are usefull on several components
+  /**
+  * Parses a date string to a date.
+  * @param dateString The date string to parse.
+  * @author Alvaro Olguin
+  * @throws {Error} If the date string is incorrectly formatted.
+  * @returns {string} The parsed date.
+  */
   parseDateStringToDate(dateString: string): string {
-    // Obtén las palabras de la cadena
+    // Get words in string
     const words = dateString.split(' ');
 
     if (words.length < 4) {
       throw new Error('Cadena de fecha incorrecta. Debe tener el formato "Día número de Mes".');
     }
 
-    // Mapea nombres de mes a números
     const months: { [key: string]: string } = {
       'Enero': '01',
       'Febrero': '02',
@@ -324,24 +688,30 @@ export class AppointmentAdminCreateComponent implements OnInit {
       'Diciembre': '12',
     };
 
-    // Obtiene el año actual
+    // Get the current year
     const currentYear = new Date().getFullYear();
 
-    // Extrae el día, número y mes de la cadena
+    // Get day, number and month 
     const day = words[0];
     const number = words[1];
     const month = words[3];
 
-    // Convierte el mes en un número
+    // Parse month
     const monthNumber = months[month];
 
-    // Formatea la fecha en el formato deseado
+    // Parse date
     const formattedDate = `${currentYear}-${monthNumber}-${number}`;
 
     return formattedDate;
   }
 
-  // Also on utils
+  /**
+  * Gets the start hour of an appointment from a range.
+  * @param range The range to get the start hour from.
+  * @author Alvaro Olguin
+  * @throws {Error} If the range is incorrectly formatted.
+  * @returns {string} The start hour of the appointment.
+  */
   getStartAppointmentHour(range: string): string {
     const parts = range.split("-");
     if (parts.length !== 2) {
@@ -352,81 +722,200 @@ export class AppointmentAdminCreateComponent implements OnInit {
     }
   }
 
+  /**
+  * Displays the doctor's name for a given doctor ID.
+  * @param doctorId The doctor's ID.
+  * @author Alvaro Olguin
+  * @returns {any} The doctor's name.
+  */
+  displayDoctorFn = (doctorId: number): any => {
+    if (this.specialtyFilteredDoctors !== undefined) {
+      let doctor = this.specialtyFilteredDoctors.find(doctor => doctor.id === doctorId);
+      this.doctorName = doctor ? doctor.user.toString() : '';
+      return this.doctorName;
+    }
+  }
 
+  /**
+  * Displays the patient's name for a given patient ID.
+  * @param patientId The patient's ID.
+  * @author Alvaro Olguin
+  * @returns {any} The patient's name.
+  */
+  displayPatientFn = (patientId: number): any => {
+    if (this.patients !== undefined) {
+      let patient = this.patients.find(patient => patient.id === patientId);
+      this.patientName = patient ? patient.user.toString() : '';
+      return this.patientName;
+    }
+  }
+
+  /**
+  * Displays the specialty's name for a given specialty name.
+  * @param specialtyName The specialty's name.
+  * @author Alvaro Olguin
+  * @returns {any} The specialty's name.
+  */
+  displaySpecialtyFn = (specialtyName: string): any => {
+    if (this.specialties !== undefined) {
+      let specialty = this.specialties.find(specialty => specialty.name === specialtyName);
+      this.specialtytName = specialty ? specialty.name : '';
+      return this.specialtytName;
+    }
+  }
+
+  /**
+  * Displays a preview of the appointment.
+  * @author Alvaro Olguin
+  * @returns {string} The appointment preview.
+  */
+  displayPreviewAppointment(): string {
+    let preview = `Desea confirmar el turno con los siguientes datos?: \n
+    Paciente: ${this.patientName}\n
+    Profesional: ${this.doctorName}\n
+    Día: ${this.appointmentForm.get('day')?.value}\n
+    Hora: ${this.appointmentForm.get('hour')?.value}\n
+    Especialidad: ${this.specialtytName}\n
+    Rama: ${this.branchName}\n
+    Obra Social: ${this.findFormHi()}\n
+    Estado del Turno: ${this.findFormState()}\n
+    Costo: ${this.findFormFullCost()}\n
+    Método de Pago: ${this.findFormPaymentMethod()}\n`
+    return preview
+  }
+
+  /**
+  * Finds the health insurance from the form.
+  * @author Alvaro Olguin
+  * @returns {string} The health insurance name or 'Sin Especificar' if not found.
+  */
+  findFormHi(): string {
+    const formHI = this.appointmentForm.get('health_insurance')?.value;
+    if (formHI) {
+      const hi = this.insurances.find(insurance => insurance.id === formHI);
+      return hi ? hi.name : 'Sin Especificar';
+    }
+    return 'Sin Especificar';
+  }
+
+  /**
+  * Finds the state from the form.
+  * @author Alvaro Olguin
+  * @returns {string} The state view value or 'Pendiente' if not found.
+  */
+  findFormState(): string {
+    const formState = this.appointmentForm.get('state')?.value;
+    if (formState) {
+      const state = this.states.find(state => state.value === formState);
+      return state ? state.viewValue : 'Pendiente';
+    }
+    return 'Pendiente';
+  }
+
+  /**
+  * Finds the payment method from the form.
+  * @author Alvaro Olguin
+  * @returns {string} The payment method name or 'Sin Especificar' if not found.
+  */
+  findFormPaymentMethod(): string {
+    const formPaymentMethod = this.appointmentForm.get('payment_method')?.value;
+    if (formPaymentMethod) {
+      const method = this.methods.find(method => method.id === formPaymentMethod);
+      return method ? method.name : 'Sin Especificar';
+    }
+    return 'Sin Especificar';
+  }
+
+  /**
+  * Finds the full cost from the form.
+  * @author Alvaro Olguin
+  * @returns {string} The full cost or 'Sin especificar' if not found.
+  */
+  findFormFullCost(): string {
+    const formFullCost = this.appointmentForm.get('full_cost')?.value;
+    return formFullCost ? formFullCost.toString() : 'Sin especificar';
+  }
+
+  /**
+  * Handles the form submission. Validates the form, confirms the appointment details with the user, and creates the appointment.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in validating the form, confirming the appointment, or creating the appointment.
+  * @returns {void}
+  */
   onSubmit(): void {
-    const formValues = this.appointmentForm.value;
+    if (this.validateForm()) {
+      const formValues = this.appointmentForm.value;
 
-    const filteredBody: AppointmentAdminCreateInterface = {
-      //day: formValues.day,
-      day: this.finalJsonDate,
-      //hour: formValues.hour,
-      hour: this.finalJsonHour,
-      doctor: formValues.doctor,
-      patient: formValues.patient,
-    };
+      const filteredBody: AppointmentAdminCreateInterface = {
+        day: this.finalJsonDate,
+        hour: this.finalJsonHour,
+        doctor: this.selectedDoctor,
+        patient: this.selectedPatient,
+      };
 
-    if (formValues.branch !== undefined && formValues.branch !== null) {
-      filteredBody.branch = formValues.branch;
-    }
+      if (formValues.branch !== undefined && formValues.branch !== null) {
+        filteredBody.branch = formValues.branch;
+      }
 
-    if (formValues.payment_method !== undefined && formValues.payment_method !== null) {
-      filteredBody.payment_method = formValues.payment_method;
-    }
+      if (formValues.payment_method !== undefined && formValues.payment_method !== null) {
+        filteredBody.payment_method = formValues.payment_method;
+      }
 
-    if (formValues.full_cost !== undefined && formValues.full_cost !== null) {
-      filteredBody.full_cost = formValues.full_cost;
-    }
+      if (formValues.full_cost !== undefined && formValues.full_cost !== null) {
+        filteredBody.full_cost = formValues.full_cost;
+      }
 
-    if (formValues.duration !== undefined && formValues.duration !== null) {
-      filteredBody.duration = formValues.duration;
-    }
+      if (formValues.duration !== undefined && formValues.duration !== null) {
+        filteredBody.duration = formValues.duration;
+      }
 
-    if (formValues.state !== undefined && formValues.state !== null) {
-      filteredBody.state = formValues.state;
-    }
+      if (formValues.state !== undefined && formValues.state !== null) {
+        filteredBody.state = formValues.state;
+      }
 
-    if (formValues.health_insurance !== undefined && formValues.health_insurance !== null) {
-      filteredBody.health_insurance = formValues.health_insurance;
-    }
-    console.log("BODY: ", filteredBody)
-    const confirmed = window.confirm('¿Desea confirmar la generación del turno?');
-    if (confirmed) {
+      if (formValues.health_insurance !== undefined && formValues.health_insurance !== null) {
+        filteredBody.health_insurance = formValues.health_insurance;
+      }
+      //console.log("BODY: ", filteredBody)
+      const confirmed = window.confirm(`${this.displayPreviewAppointment()}`);
+      if (confirmed) {
 
-      this.appointmentService.createAdminAppointment(filteredBody)
-        .pipe(
-          catchError(error => {
-            console.error('Error en la solicitud:', error);
+        this.appointmentService.createAdminAppointment(filteredBody)
+          .pipe(
+            catchError(error => {
+              console.error('Error en la solicitud:', error);
 
-            // Verificar si hay errores específicos en "non_field_errors"
-            if (error.error && error.error.non_field_errors) {
-              // Obtener el primer mensaje de error en "non_field_errors"
-              const errorMessage = error.error.non_field_errors[0];
+              // Checks "non_field_errors"
+              if (error.error && error.error.non_field_errors) {
+                const errorMessage = error.error.non_field_errors[0];
 
-              // Mostrar una alerta con el mensaje de error específico
-              alert('Error al generar el turno: ' + errorMessage);
+                alert('Error al generar el turno: ' + errorMessage);
+              } else {
+                // Show a general error
+                alert('Ha ocurrido un error en la solicitud.');
+              }
+
+              throw error;
+            })
+          )
+          .subscribe((data: AppointmentAdminGetInterface) => {
+            this.appointmentResponse = data;
+            alert("Turno generado exitosamente")
+            //console.log(data);
+            const createAnother = window.confirm('¿Desea generar otro turno?');
+            if (createAnother) {
+              // reset form or reload?
+              //this.appointmentForm.reset();
+              window.location.reload();
             } else {
-              // Si no hay errores específicos, mostrar un mensaje genérico
-              alert('Ha ocurrido un error en la solicitud.');
+              // Redirect to apointment list
+              window.location.href = 'http://localhost:4200/Dashboard/appointments/admin/list';
             }
+          });
+      }
 
-            throw error;
-          })
-        )
-        .subscribe((data: AppointmentAdminGetInterface) => {
-          this.appointmentResponse = data;
-          alert("Turno generado exitosamente")
-          console.log(data);
-          // Pregunta al usuario si desea crear otro turno
-          const createAnother = window.confirm('¿Desea crear otro turno?');
-          if (createAnother) {
-            // Si el usuario confirma, restablece el formulario
-            this.appointmentForm.reset();
-          } else {
-            // Si el usuario cancela, redirige al listado de turnos
-            window.location.href = 'http://localhost:4200/Dashboard/appointments/admin/list';
-          }
-        });
     }
 
   }
+
 }

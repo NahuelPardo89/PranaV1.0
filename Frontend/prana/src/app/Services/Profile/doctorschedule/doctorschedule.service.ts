@@ -13,23 +13,35 @@ export class DoctorscheduleService {
 
   constructor(private http: HttpClient) { }
 
-  // Get the list of all doctor's schedules 
+  /**
+  * Get the schedules for all doctors.
+  * @author Alvaro Olguin
+  * @returns {Observable<DoctorScheduleInterface[]>} An observable of the doctors' schedules.
+  */
   getAllDoctorsSchedules(): Observable<DoctorScheduleInterface[]> {
     return this.http.get<DoctorScheduleInterface[]>(this.baseUrl)
   }
 
-  // Get a list with the doctor schedule 
+  /**
+  * Get the schedule for a particular doctor.
+  * @param doctor_id The ID of the doctor.
+  * @author Alvaro Olguin
+  * @returns {Observable<DoctorScheduleInterface[]>} An observable of the doctor's schedule.
+  */
   getDoctorSchedule(doctor_id: number): Observable<DoctorScheduleInterface[]> {
-    console.log("Adento del service, el doctor es: ", doctor_id);
     const url = this.baseUrl + '?doctor_id=' + doctor_id;
-    console.log("Adentro del service, endpoint es: ", url)
     return this.http.get<DoctorScheduleInterface[]>(url)
   }
 
-  // Get a list with the availables times of a doctor  
+  /**
+  * Get the available times for a particular doctor on a particular day.
+  * @param doctor_id The ID of the doctor.
+  * @param day The day to fetch the available times for.
+  * @author Alvaro Olguin
+  * @returns {Observable<DoctorAvailableTimes>} An observable of the doctor's available times.
+  */
   getDoctorAvailableTime(doctor_id: number, day: string | null): Observable<DoctorAvailableTimes> {
     const url = `http://127.0.0.1:8000/profile/admin/doctor-available-times/${doctor_id}/${day}/`;
-    console.log("Adentro del service Available Times, endpoint es: ", url)
     return this.http.get<DoctorAvailableTimes>(url)
   }
 

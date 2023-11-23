@@ -22,6 +22,11 @@ export class BranchService {
     return this.http.get<SpecialityBranch>(`${this.baseUrl}${id}/`);
   }
 
+  getDoctorBranches(doctor_id: number): Observable<SpecialityBranch[]> {
+    const url = 'http://127.0.0.1:8000/profile/admin/doctor-branches/';
+    return this.http.get<SpecialityBranch[]>(url + '?doctor_id=' + doctor_id);
+  }
+
   // Create a new speciality branch
   createSpecialityBranch(data: SpecialityBranch): Observable<SpecialityBranch> {
     return this.http.post<SpecialityBranch>(this.baseUrl, data);

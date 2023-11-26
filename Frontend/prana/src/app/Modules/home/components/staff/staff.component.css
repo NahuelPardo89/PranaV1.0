@@ -1,51 +1,96 @@
+
 ::-webkit-scrollbar {
-    width: 7px;
+    width: 10px;
 }
-  
-.container {
+.nuestrosProfesionales {
+    font-size: 4.5rem;
+    text-align: center;
+    color: #68335a;
+    padding: 20px;
+    font-family: 'Lora';
+
+}
+
+.contenedorStaff {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    width: 80%;
+    gap: 2rem;
+    
+    
+    margin: auto;
 
     
     
 }
+
+.staff {
+    width: 100%;
+    background-color: #f3f3f3;
+}
+
+
 .info > img {
     border: none;
 }
 .card-body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    width: 100%;
+    height: 80px;
+    border: none;
     
-    height: 3rem;
-    min-height: 95px;
+    max-height: fit-content;
     overflow-x: hidden;
     overflow-y: scroll;
+
+    font-family: 'Lora', "Helvetica Neue", sans-serif;
+    color: #68335a;
     
+
     
 }
+.card-title {
+    font-size: 1rem;
+}
+    
+    
+
 h4 {
     font-size: 1rem;
     
 }
 .foto {
     width: 100%;
-    height: 50%;
+    height: 230px;
     overflow: hidden;
+    
     /* box-shadow: 5px 5px 10px rgba(199, 99, 137, 0.6); */
 }
-.fotoProf {
-    max-height: 350px;
-}
+
 img {
     object-fit: cover;
+    object-position: center;
     
 }
 p {
     text-align: start;
+    font-size: 1rem;
 }
+.card-text {
+    display: none;
+    padding: 5px;
+}
+
+
 
 
 .card {
     width: 15%;
+    padding: 10PX;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -56,13 +101,21 @@ p {
 
 
 /* home */
+/* home */
+.bgFull {
+    /* background: rgb(211,146,202);
+    background: linear-gradient(0deg, rgba(211,146,202,1) 11%, rgba(255,255,255,1) 92%); */
 
+
+    /* background-image: url(../../../../../assets/img/bg_bggenerator_com.png); */
+    background-color: #f9f9f9;
+
+}
 .main {
     margin: auto;
-    width: 100%;
+    width: 90%;
     height: 94vh;
-    background: rgb(211,146,202);
-    background: linear-gradient(0deg, rgba(211,146,202,1) 11%, rgba(255,255,255,1) 92%);
+    
     
 
 
@@ -75,19 +128,20 @@ p {
 }
 .titlePrana {
    
-    width: 52%;
-    padding: 20px;
+    width: 65%;
+    padding: 10px;
     
     display: flex;
     
     justify-content: center;
+    
 
     
 }
 .prana{
     color: #68335a;
     padding: 1rem;
-    font-size: 8rem;
+    font-size: 10rem;
     font-weight: 500;
     font-family: 'Lora', "Helvetica Neue", sans-serif;
 }
@@ -97,13 +151,14 @@ p {
 }
 
 .css-button-sharp--green {
-    position: absolute;
+    
     bottom: 40px;
+    
 
 
     min-width: 130px;
     width: 10%;
-    height: 5%;
+    height: 7%;
     
     padding: 5px 10px;
     font-weight: bold;
@@ -112,13 +167,13 @@ p {
     
     display: inline-block;
     outline: none;
-    
+    border-color: black;
     border-radius: 5%;
-    background: #68335a;
+    background: #f3f3f3;
   }
   a{
-    font-family: 'Open Sans', "Helvetica Neue", sans-serif;
-    font-size: 120%;
+    font-family: 'Lora', "Helvetica Neue", sans-serif;
+    font-size: 1rem;
     text-decoration: none;
     color: WHITE;
   }
@@ -133,11 +188,15 @@ p {
 
 .homeDerecha {
     box-shadow: -7px 0px 65px 0px #68335a;
-    padding: 20px;
-    width:35%;
-    height: 70%;
+    padding: 5px;
+    width:30%;
+    height: 65%;
     border-radius: 0.5%;
-
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    
 
     
     
@@ -150,14 +209,17 @@ p {
     font-family: Lora, "Helvetica Neue", sans-serif;
 }
 .ciudad {
+    width: 100%;
+   
     color: #68335a;
     padding:1rem;
     font-family: Lora, "Helvetica Neue", sans-serif;
     font-size: 2.5rem;
     margin-bottom: 20px;
+    text-align: start;
 }
 .description{
-    color: black;
+    color: #888;
     padding: 1rem;
     font-family: Lora, "Helvetica Neue", sans-serif;
     font-size: 1.2rem;
@@ -166,6 +228,8 @@ p {
 
 
 
+/* body Nav */
+/* body Nav */
 /* body Nav */
 
 .bodyNav {
@@ -210,4 +274,97 @@ p {
     width: 60%;
     border-radius: 50%;
     aspect-ratio: 1/1;
+}
+
+.separador {
+    background-color: #f3f3f3;
+    width: 80%;
+    margin: auto;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+/* ¿Cómo encontrarnos? */
+/* ¿Cómo encontrarnos? */
+/* ¿Cómo encontrarnos? */
+
+.comoEncontrarnos {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f3f3f3;
+    
+}
+.contenedorUbicacion {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    
+}
+
+.bodyUbi{   
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    
+
+    
+}
+.ubicacionTitle {
+    width: 90%;
+    padding: 15px;
+
+    font-family: 'Lora';
+    font-size: 2rem;
+    color: #68335a;
+    
+}
+.listaEncontrarnos {
+    list-style: none;
+    margin:30px ;
+    font-family: 'Lora';
+    font-size: 1.2rem;
+    
+    
+}
+.listaEncontrarnos li {
+    margin-top: 10px;
+    color: #68335a;
+}
+.listaEncontrarnos li img {
+    
+    margin-right: 10px;
+}
+.maps {
+    margin: auto;
+}
+
+
+
+.contenedorIg {
+    width: 30%;
+    
+    background-color: white;
+    height: 560px;
+
+    box-shadow: 0px 0px 100px -14px #68335a;
+
+    border-radius: 1%;
+
+    
+    
+
+    text-align: start;
+
+
+
+
+    
+}
+.contenedorIg h2 {
+    font-family: 'Open-sans';
+    font-size: 1.4rem;
+    color: #68335a;
 }

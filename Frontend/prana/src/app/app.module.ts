@@ -22,6 +22,8 @@ import { AuthInterceptor } from './Services/auth/auth.interceptor';
 import { MatSelectModule } from '@angular/material/select';
 import { ReportsModule } from './Modules/reports/reports.module';
 
+// import { AgmCoreModule } from '@agm/core';
+
 
 
 
@@ -47,7 +49,9 @@ import { ReportsModule } from './Modules/reports/reports.module';
     DashboardModule,
     BrowserAnimationsModule,
     ReportsModule,
-    
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM'
+    // })
     
   ],
   providers: [

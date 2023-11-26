@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StaffService } from 'src/app/Services/staff.service';
+import { AgmMap, AgmMarker } from '@agm/core';
 
 @Component({
   selector: 'app-staff',
@@ -7,7 +8,9 @@ import { StaffService } from 'src/app/Services/staff.service';
   styleUrls: ['./staff.component.css']
 })
 export class StaffComponent implements OnInit {
-
+  title = 'My first AGM project';
+  lat = 51.678418;
+  lng = 7.809007;
   staff: any[] = [];
 
   constructor(private staffService: StaffService) { }

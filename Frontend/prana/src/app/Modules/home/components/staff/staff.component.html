@@ -1,4 +1,4 @@
-<section>
+<section class="bgFull">
     <div class="main">
         <div class="titlePrana">
             <img src="../../../../../assets/img/logo.png" alt="logo prana" class="logo">
@@ -11,9 +11,10 @@
                 en Río cuarto
             </h3>
             <p class="description"> 
-                <b>En Prana</b>, nuestro compromiso es ofrecerte un <b>abanico completo de servicios terapéuticos</b>, respaldados por un equipo de <b>profesionales altamente capacitados</b> en diversas especialidades. Ya sea que busques apoyo psicológico, asesoramiento psiquiátrico, orientación nutricional, o la armonía que proporciona el yoga, estamos aquí para acompañarte en tu viaje hacia el <b>bienestar integral</b>.</p>
-        </div>
-        <button class="css-button-sharp--green"><a routerLink="/#bodyNav">CONOCENOS</a></button>
+                <b>En Prana</b>, nuestro compromiso es ofrecerte un <b>abanico completo de servicios terapéuticos</b>, respaldados por un equipo de <b>profesionales altamente capacitados</b> en diversas especialidades. Estamos aquí para ayudarte a conseguir el <b>bienestar integral</b>.</p>
+                <button class="css-button-sharp--green"><a routerLink="/#bodyNav">CONOCENOS</a></button>
+            </div>
+        
         
     </div>
 </section>
@@ -48,19 +49,63 @@
 
 
 <!-- Staff Section -->
-<div class="container">
-    <div class="card" *ngFor="let pro of staff; let i = index">
-        <div class="foto">
-            <img [src]="pro.img" class="card-img-top fotoProf">
-        </div>
-        <div class="card-body">
-            <h3 class="card-title">{{pro.name}}</h3>
-            <div class="info">
-                <h4 class="card-title"><b> {{pro.title}} </b></h4>
-                <button (click)="toggleDescription(i)"><img src="../../../../../assets/img/Iconos/flechaAbajo.png" alt="más información"></button>
+<!-- Staff Section -->
+<section class="staff" id="staff">
+    <h1 class="nuestrosProfesionales">NUESTRO EQUIPO</h1>
+    <div class="contenedorStaff">
+        <div class="card" *ngFor="let pro of staff; let i = index">
+            <div class="foto">
+                <img [src]="pro.img" class="card-img-top fotoProf">
             </div>
-            <p class="card-text" *ngIf="pro.showDescription">{{pro.description}}</p>
-            
+            <div class="card-body">
+                <h3 class="card-title">{{pro.name}}</h3>
+                <div class="info">
+                    <h4 class="titulo">{{pro.title}}</h4>
+                </div>
+                <p class="card-text">{{pro.description}}</p>
+            </div>
         </div>
     </div>
-</div>
+    
+</section>
+
+
+
+<div class="separador"></div>
+<!-- ¿Cómo encontrarnos? -->
+<!-- ¿Cómo encontrarnos? -->
+<!-- apiGoogleMaps AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM -->
+
+<section class="comoEncontrarnos">
+    <div class="contenedorUbicacion">
+        <div class="bodyUbi">
+            <h2 class="ubicacionTitle">Podés encontrarnos en esta ubicación</h2>
+            <ul class="listaEncontrarnos">
+                <li><img src="../../../../../assets/img/Iconos/pasador-de-ubicacion.png" alt="dirección" class="iconoEncontrarnos">Lavalle 1715 - Río Cuarto</li>
+                <li><img src="../../../../../assets/img/Iconos/reloj.png" alt="horarios" class="iconoEncontrarnos">Horario: De 08:00 a 20:00hs</li>
+                <li><img src="../../../../../assets/img/Iconos/llamada-telefonica.png" alt="celular" class="iconoEncontrarnos">+54-9-358-4029619</li>
+            </ul>
+           
+        </div>
+        <div class="maps">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3341.020154473364!2d-64.34820572341567!3d-33.13483508141987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95d20003814317e1%3A0xe00edc3414b67557!2sLavalle%201715%2C%20X5800ANI%20R%C3%ADo%20Cuarto%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1701033219536!5m2!1ses-419!2sar" width="500" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+       
+        
+    </div>
+
+    <div class="contenedorIg">
+        <h2 class="ubicacionTitle">Seguinos en Instagram y enterate de nuestros talleres</h2>
+        
+        <iframe width="550" height="440" src="https://www.instagram.com/prana_terapeutico/embed/" frameborder="0" class="embedIg"></iframe>    
+    </div>
+</section>
+
+
+<!-- IG -->
+<!-- 
+<div class="ig">
+    <h2 class="ubicacionTitle">Contactate con nosotros a través de nuestros canales</h2>
+    <h3>Seguinos en Instagram y enterate de nuestros talleres</h3>
+    <iframe width="320" height="440" src="https://www.instagram.com/prana_terapeutico/embed/" frameborder="0" class="embedIg"></iframe>    
+</div> -->

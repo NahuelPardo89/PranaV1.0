@@ -4,37 +4,37 @@
         {
             "img" : "../../assets/img/profesionales/miliPeiretti.jpg",
             "name": "Milagros Peiretti" ,
-            "title": "Psicóloga" ,
+            "title": "Psicología" ,
             "description": "Orientación psicoanalítica a niños, adolescentes y adultos."
         },
         {
             "img" : "../../assets/img/profesionales/juliCapellini.jpg" ,
             "name": "Julieta Capellini" ,
-            "title": "Psicóloga",
+            "title": "Psicología",
             "description": "Recibida de la Universidad Nacional de Córdoba. Formada en terapia psicoanalítica para atencion a niños, adolescentes y adultos. Formación en psicodiagnóstico."
         },
         {
             "img" : "../../assets/img/profesionales/marianaGutierrez.jpg" ,
             "name": "Mariana Gutierrez" ,
-            "title": "Lic. en Psicología",
+            "title": "Psicología",
             "description": "Terapia cognitiva conductual para adolescentes y adultos. Formación superior en salud mental perinatal. Formación en terapia se aceptación y compromiso."
         },
         {
             "img" : "../../assets/img/profesionales/aguirreFernanda.jpg" ,
             "name": "Fernanda Aguirre" ,
-            "title": "Cosmetologa & Dermatocosmiatria",
+            "title": "Cosmetología & Dermatocosmiatria",
             "description": "Tratamientos Faciales personalizados y asesoramiento profesional"
         },
         {
             "img" : "../../assets/img/profesionales/micaOrtiz.jpg" ,
             "name": "Micaela Ortiz" ,
-            "title": "Lic. en Nutrición",
+            "title": "Nutrición",
             "description": "Trabajo en el consultorio con un abordaje no restrictivo focalizado en el cambio de hábitos alimentarios que perduren en el tiempo. Realizo educación alimentaria constantemente. Adapto planes de alimentación a distintas patologia y realizo analisis de la composicion corporal mediante balanza de bioimpedancia (medicion de masa grasa y masa muscular)"
         },
         {
             "img" : "../../assets/img/profesionales/florCotela.jpg" ,
             "name": "Florencia Cotela" ,
-            "title": "Psicóloga",
+            "title": "Psicología",
             "description": "Psicoanálisis en niños, adolescentes y adultos."
         },
         {
@@ -46,19 +46,19 @@
         {
             "img" : "../../assets/img/profesionales/marianaBruno.jpg" ,
             "name": "Mariana Loreley Bruno" ,
-            "title": "Lic. en Psicopedagogía",
+            "title": "Psicopedagogía",
             "description": "Neuropsicología del aprendizaje- Niños/adolescentes."
         },
         {
             "img" : "../../assets/img/profesionales/giselGirardi.jpg" ,
             "name": "Gisel Solange Girardi" ,
-            "title": "Lic. en Psicología",
+            "title": "Psicología",
             "description": "Licenciada en Psicología con Orientación Cognitivo Integrativa. Formación en Evaluación, Estimulación y Rehabilitación Cognitiva en adolescentes y adultos. Psicoterapia a niños, adultos y adultos mayores. Formación en Terapia de Aceptación y Compromiso / Psicoterapia Analítico Funcional (ACT / FAP)."
         },
         {
             "img" : "../../assets/img/profesionales/erikaGerasumchuk.jpg" ,
             "name": "Erika Gerasimchuk" ,
-            "title": "Lic. en Psicología",
+            "title": "Psicología",
             "description": "Orientación psicoanalítica a niños, adolescentes y adultos."
         },
         {
@@ -70,7 +70,7 @@
         {
             "img" : "../../assets/img/profesionales/sofiGramaglia.jpg" ,
             "name": "Sofía Luz Gramaglia" ,
-            "title": "Lic. en Psicología",
+            "title": "Psicología",
             "description": "Brindo atención principalmente a niños, adolescentes y jóvenes adultos. Desde el Psicoanálisis Focalizado, de la línea de Hector Fiorini."
         },
         {
@@ -82,7 +82,7 @@
         {
             "img" : "../../assets/img/profesionales/noeFunes.jpg" ,
             "name": "Noelia Funes" ,
-            "title": "Lic. en Psicopedagogía",
+            "title": "Psicopedagogía",
             "description": "Tratamientos psicopedagógico, procesos de inclusión escolar (DAI), acompañamiento en tareas escolares y universitarias, organización y técnicas de estudio."
         }
     ]

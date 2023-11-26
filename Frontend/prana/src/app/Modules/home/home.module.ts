@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffComponent } from './components/staff/staff.component';
+// import { AgmCoreModule } from '@agm/core';
+
 
 
 
@@ -9,7 +11,11 @@ import { StaffComponent } from './components/staff/staff.component';
     StaffComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM'
+    // })
+    
   ]
 })
 export class HomeModule { }

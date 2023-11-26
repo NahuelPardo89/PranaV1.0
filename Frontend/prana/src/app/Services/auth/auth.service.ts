@@ -24,26 +24,33 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<UserShort | null> = new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
   private currentRole = new BehaviorSubject<string>(''); // Inicializa con un rol predeterminado o vacío
-
+  private isloggedIn = new BehaviorSubject<boolean>(false); // Inicializa
 
   
   constructor(private http: HttpClient,private router: Router) {
     const user = localStorage.getItem('user');
+    console.log(user);
     if (user) {
       this.currentUserSubject.next(JSON.parse(user));
+      this.isloggedIn.next(true);
     }
   }
   
   
-  login(user: LoginUser): Observable<JwtResponse> {
-    return this.http.post<JwtResponse>(this.loginUrl, user).pipe(
+  login(user: LoginUser): void {
+    this.http.post<JwtResponse>(this.loginUrl, user).pipe(
       tap(response => {
         this.handleUser(response);
         this.handleTokens(response);
-        this.handleRoles(response.roles); // Maneja los roles
+        this.handleRoles(response.roles); 
+        
+        this.router.navigate(['/']); // Navegar al dashboard
       }),
-      catchError(error => this.handleError(error, 'Error al iniciar sesión'))
-    );
+      catchError(error => {
+        this.handleError(error, 'Error al iniciar sesión');
+        return throwError(() => new Error('Error al iniciar sesión'));
+      })
+    ).subscribe();
   }
 
 
@@ -66,11 +73,9 @@ export class AuthService {
   
   logout(): Observable<void> {
     const refreshToken = localStorage.getItem('refresh_token');
-    if (!refreshToken) {
-      // Si no hay token de refresco, procedemos con la limpieza del cliente directamente
-      this.clearLocalStorage();
-      return throwError(() => new Error('No refresh token'));
-    }
+    console.log('logout autservuce')
+    this.isloggedIn.next(false);
+    this.clearLocalStorage();
     return this.http.post<void>(this.logoutUrl, { refresh: refreshToken }).pipe(
       tap(() => this.clearLocalStorage()),
       catchError((error) => {
@@ -82,7 +87,9 @@ export class AuthService {
     );
   }
  
-
+  get isLogged():Observable<boolean>{
+    return this.isloggedIn.asObservable()
+  }
   refreshToken(): Observable<HttpResponse<JwtResponse>> {
     const refreshToken = localStorage.getItem('refresh_token');
     if (!refreshToken) {
@@ -124,6 +131,7 @@ export class AuthService {
   private handleUser(response: JwtResponse): void {
     localStorage.setItem('user', JSON.stringify(response.user));
     this.currentUserSubject.next(response.user);
+    this.isloggedIn.next(true);
   }
 
   private handleTokens(response: JwtResponse): void {
@@ -138,7 +146,7 @@ export class AuthService {
     window.location.reload(); // Opcional: recarga la página
   }
   getCurrentUser(): Observable<UserShort | null> {
-    return this.currentUser;
+    return this.currentUserSubject.asObservable();
   }
 
   getUserRoles(): string[] {
@@ -151,11 +159,11 @@ export class AuthService {
   
   clearLocalStorage(): void {
     console.log("Clear local storage");
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    localStorage.removeItem('user');
+    localStorage.clear();
+   
     this.currentUserSubject.next(null);
-    this.router.navigate(['/auth/login']);
+    
+    this.router.navigate(['/home']);
   }
   
 }

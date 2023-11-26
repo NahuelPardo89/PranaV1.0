@@ -9,10 +9,10 @@ import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/
 import { DashboardComponent } from './Modules/dashboard/dashboard/dashboard.component';
 
 const routes: Route[] = [
-  { path: 'Home', component: BannerComponent },
-  { path: 'Talleres', component: TalleresComponent },
-  { path: 'AboutUs', component: QuienesSomosComponent },
-  { path: 'Dashboard', loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
+  { path: 'home', component: BannerComponent },
+  { path: 'talleres', component: TalleresComponent },
+  { path: 'aboutus', component: QuienesSomosComponent },
+  { path: 'dashboard', loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'auth', loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule) },
   
   

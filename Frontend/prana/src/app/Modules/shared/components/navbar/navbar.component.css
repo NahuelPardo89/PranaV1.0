@@ -3,6 +3,10 @@
     
     margin-right: 15px;
 }
+.navbar-brand img {
+    height: 40px; /* Ajusta esto según tu necesidad */
+    width: auto;
+}
 .login {
     display: flex;
     list-style: none;

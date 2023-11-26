@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { JwtResponse } from 'src/app/Models/user/jwtResponse.interface';
@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit , OnDestroy{
   loginForm!: FormGroup;
 
   constructor(
@@ -28,20 +28,15 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
-
+  ngOnDestroy(): void {
+      
+  }
   onSubmit(): void {
     if (this.loginForm.valid) {
       const user: LoginUser = this.loginForm.value;
-  
-      this.authService.login(user).subscribe(
-        () => {
-          // Una vez que el login es exitoso, navegamos al dashboard.
-          this.router.navigate(['Dashboard/']);
-        },
-        error => {
-          alert('Error durante el inicio de sesión. Por favor, inténtalo de nuevo.');
-        }
-      );
+      this.authService.login(user); // Llamar al método login
+      // No es necesario suscribirse aquí
     }
   }
+  
 }

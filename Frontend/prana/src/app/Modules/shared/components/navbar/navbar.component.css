@@ -20,3 +20,18 @@
     background-color: #999;
     border-radius: 8%;
 }
+.user-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px; /* Ajusta esto según tus necesidades */
+}
+
+.logout-button {
+    margin-left: auto; /* Esto empuja el botón a la derecha */
+}

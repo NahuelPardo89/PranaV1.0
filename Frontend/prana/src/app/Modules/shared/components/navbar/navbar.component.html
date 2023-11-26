@@ -23,6 +23,9 @@
               <li class="nav-item">
                   <a class="nav-link" routerLink="/aboutus">Sobre Nosotros</a>
               </li>
+              <li class="nav-item" *ngIf="isLogged">
+                <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+            </li>
           </ul>
 
           <!-- Botones del lado derecho -->
@@ -36,21 +39,24 @@
               <mat-error *ngIf="loginForm.controls['dni'].errors?.['min']">Ingrese un DNI Correcto</mat-error>
             </mat-form-field>
           
-            <mat-form-field  appearance="fill">
+            <mat-form-field  appearance="fill" class="ms-2">
               <mat-label>Contraseña</mat-label>
               <input matInput type="password" formControlName="password" required>
               <mat-error *ngIf="loginForm.controls['password'].errors?.['required']">Este campo es requerido</mat-error>
               <mat-error *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</mat-error>
             </mat-form-field>
           
-            <button  class="btn btn-primary" color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
+            <button  class="btn btn-primary ms-2" color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
           </form>
         
           <!-- Botón de cierre de sesión -->
-          <div *ngIf="isLogged">
-            <button class="btn btn-danger" (click)="logout()">Cerrar Sesión</button>
-           
-          </div>
+          <div *ngIf="isLogged" class="user-info-container">
+            <div class="user-details">
+                <span>Usuario: {{currentUser?.last_name}}, {{currentUser?.name}}</span>
+                <span>Rol: {{currentRole}}</span>
+            </div>
+            <button class="btn btn-danger logout-button" (click)="logout()">Cerrar Sesión</button>
+        </div>
       </div>
   </div>
 </nav>

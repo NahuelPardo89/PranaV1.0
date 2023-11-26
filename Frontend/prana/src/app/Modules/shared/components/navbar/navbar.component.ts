@@ -16,6 +16,7 @@ export class NavbarComponent implements OnInit {
   currentUser: UserShort | null = null;
   loginForm!: FormGroup;
   isLogged: boolean = false;
+  currentRole: string = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,7 +34,15 @@ export class NavbarComponent implements OnInit {
     this.authService.isLogged.subscribe(logged => {
       this.isLogged = logged;
     });
+    this.authService.getCurrentUser.subscribe(user => {
+      this.currentUser = user;
+    });
+    this.authService.getUserRole2().subscribe(role=>{
+      this.currentRole = role;
+      console.log(role)
+    })
   }
+ 
 
   login(): void {
     if (this.loginForm.valid) {

@@ -29,10 +29,15 @@ export class AuthService {
   
   constructor(private http: HttpClient,private router: Router) {
     const user = localStorage.getItem('user');
-    console.log(user);
+    const role = localStorage.getItem('currentRole');
+    
     if (user) {
       this.currentUserSubject.next(JSON.parse(user));
       this.isloggedIn.next(true);
+     
+    }
+    if (role){
+      this.currentRole.next(role);
     }
   }
   
@@ -44,7 +49,7 @@ export class AuthService {
         this.handleTokens(response);
         this.handleRoles(response.roles); 
         
-        this.router.navigate(['/']); // Navegar al dashboard
+        this.router.navigate(['/dashboard']); // Navegar al dashboard
       }),
       catchError(error => {
         this.handleError(error, 'Error al iniciar sesión');
@@ -143,14 +148,17 @@ export class AuthService {
   setCurrentRole(role: string): void {
     this.currentRole.next(role);
     localStorage.setItem('currentRole', role); // Guarda el rol actual en localStorage
-    window.location.reload(); // Opcional: recarga la página
+   window.location.reload()// Opcional: recarga la página
   }
-  getCurrentUser(): Observable<UserShort | null> {
+  get getCurrentUser(): Observable<UserShort | null> {
     return this.currentUserSubject.asObservable();
   }
 
   getUserRoles(): string[] {
     return JSON.parse(localStorage.getItem('roles') || '[]');
+  }
+  getUserRole2():Observable<string>{
+    return this.currentRole.asObservable();
   }
 
   getCurrentRole(): string {
@@ -160,9 +168,7 @@ export class AuthService {
   clearLocalStorage(): void {
     console.log("Clear local storage");
     localStorage.clear();
-   
     this.currentUserSubject.next(null);
-    
     this.router.navigate(['/home']);
   }
   

@@ -13,7 +13,7 @@
             </h3>
             <p class="description"> 
                 <b>En Prana</b>, nuestro compromiso es ofrecerte un <b>abanico completo de servicios terapéuticos</b>, respaldados por un equipo de <b>profesionales altamente capacitados</b> en diversas especialidades. Estamos aquí para ayudarte a conseguir el <b>bienestar integral</b>.</p>
-                <button class="css-button-sharp--green"><a routerLink="/#bodyNav">Contactanos</a></button>
+                <button class="css-button-sharp--green"><a (click)="scrollToSection()">Contactanos</a></button>
             </div>
         
         
@@ -27,21 +27,21 @@
 <section id="bodyNav">
     <div class="bodyNav">
         <div class="bodyNav-container">
-            <a href="">
+            <a routerLink="AboutUs">
                 <img src="../../../../../assets/img/foto4.jpeg" alt="fotoPrana">
             </a>
             <h2>Especialidades</h2>
             <p>En Prana contamos con una alta variedad de servicios terapéuticos</p>
         </div>
         <div class="bodyNav-container mid">
-            <a href="">
+            <a (click)="scrollToStaff()">
                 <img src="../../../../../assets/img/profesionales/miliPeiretti.jpg" alt="profesionales">
             </a>
             <h2>Profesionales</h2>
             <p>Nuestro equipo de profesionales altamente capacitados te brindarán apoyo, asesoramiento y orientación hacia tu bienestar</p>
         </div>
         <div class="bodyNav-container">
-            <a href="">
+            <a (click)="scrollToSection()">
                 <img src="../../../../../assets/img/ubicación.jpg" alt="celular con ubicación">
             </a>
             <h2>¿Dónde estamos?</h2>
@@ -88,7 +88,7 @@
 <!-- ¿Cómo encontrarnos? -->
 <!-- apiGoogleMaps AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM -->
 
-<section class="comoEncontrarnos">
+<section id="encontrarnos" class="comoEncontrarnos">
     <div class="contenedorUbicacion">
         <div class="bodyUbi">
             <h2 class="ubicacionTitle">Podés encontrarnos en esta ubicación</h2>

@@ -11,7 +11,7 @@ import { DashboardComponent } from './Modules/dashboard/dashboard/dashboard.comp
 import { EspecialidadesComponent } from './Modules/home/components/especialidades/especialidades.component';
 
 const routes: Route[] = [
-  { path: 'Home', component: EspecialidadesComponent },
+  { path: 'Home', component: StaffComponent },
   { path: 'Talleres', component: TalleresComponent },
   { path: 'AboutUs', component: QuienesSomosComponent },
   { path: 'Dashboard', loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule) },

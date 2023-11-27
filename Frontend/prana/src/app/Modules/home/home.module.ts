@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffComponent } from './components/staff/staff.component';
+import { EspecialidadesComponent } from './components/especialidades/especialidades.component';
 // import { AgmCoreModule } from '@agm/core';
 
 
@@ -8,7 +9,8 @@ import { StaffComponent } from './components/staff/staff.component';
 
 @NgModule({
   declarations: [
-    StaffComponent
+    StaffComponent,
+    EspecialidadesComponent
   ],
   imports: [
     CommonModule,

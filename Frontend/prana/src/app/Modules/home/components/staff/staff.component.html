@@ -20,6 +20,8 @@
 </section>
 
 
+<!-- BodyNavigator -->
+
 <section id="bodyNav">
     <div class="bodyNav">
         <div class="bodyNav-container">
@@ -46,23 +48,31 @@
     </div>
 </section>
 
-
+<div class="separador"></div>
 
 <!-- Staff Section -->
 <!-- Staff Section -->
 <section class="staff" id="staff">
-    <h1 class="nuestrosProfesionales">NUESTRO EQUIPO</h1>
+    <div class="introduccion">
+        
+    <h2 class="nuestrosProfesionales">Un excepcional equipo de profesionales en salud integral en Prana.</h2>
+    <h3 class="subtituloIntro">BIENVENIDOS A NUESTRO EQUIPO DE ESPECIALISTAS Y FACILITADORES</h3>
+    <p class="textIntro">En Prana, nuestro centro integral de salud liderado por la fundadora y psicóloga <b>Romina Rondoletto</b>, te presentamos a nuestro conjunto de expertos.
+        <br>Contamos con <b>profesionales altamente capacitados</b> en diversas áreas, como psicología y psiquiatría <b>para todas las edades</b>, coaching, yoga, nutrición, psicopedagogía y variados talleres.
+        Nuestro equipo está dedicado a ofrecer soluciones adaptadas y efectivas, brindando atención integral para tu bienestar emocional y  físico.
+        <br> No importa tu edad o las dificultades que enfrentes, en <b>Prana</b> encontrarás terapias y servicios diseñados para superar desafíos y <b>promover tu crecimiento personal</b>.</p>
+    </div>
     <div class="contenedorStaff">
-        <div class="card" *ngFor="let pro of staff; let i = index">
+        <div class="tarjeta" *ngFor="let pro of staff; let i = index">
             <div class="foto">
-                <img [src]="pro.img" class="card-img-top fotoProf">
+                <img [src]="pro.img" class="tarjetaImagen">
             </div>
-            <div class="card-body">
-                <h3 class="card-title">{{pro.name}}</h3>
+            <div class="TarjetaCuerpo">
+                <h3 class="tarjetaNombre">{{pro.name}}</h3>
                 <div class="info">
-                    <h4 class="titulo">{{pro.title}}</h4>
+                    <h4 class="tarjetaTitulo">{{pro.title}}</h4>
                 </div>
-                <p class="card-text">{{pro.description}}</p>
+                <!-- <p class="tarjetaText">{{pro.description}}</p> -->
             </div>
         </div>
     </div>

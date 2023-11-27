@@ -8,9 +8,10 @@ import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.
 
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
 import { DashboardComponent } from './Modules/dashboard/dashboard/dashboard.component';
+import { EspecialidadesComponent } from './Modules/home/components/especialidades/especialidades.component';
 
 const routes: Route[] = [
-  { path: 'Home', component: StaffComponent },
+  { path: 'Home', component: EspecialidadesComponent },
   { path: 'Talleres', component: TalleresComponent },
   { path: 'AboutUs', component: QuienesSomosComponent },
   { path: 'Dashboard', loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule) },

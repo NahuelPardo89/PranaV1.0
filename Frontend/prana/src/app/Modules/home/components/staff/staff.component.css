@@ -2,21 +2,49 @@
 ::-webkit-scrollbar {
     width: 10px;
 }
+
+/* profesionales */
+/* profesionales */
+.introduccion {
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
 .nuestrosProfesionales {
-    font-size: 4.5rem;
+    font-size: 2.5rem;
     text-align: center;
-    color: #68335a;
+    color: #ae71a3;
     padding: 20px;
+    margin-top: 20px;
     font-family: 'Lora';
 
+    width: 60%;
+
+}
+
+.subtituloIntro{
+    font-size: 1rem;
+    padding: 15px;
+}
+.textIntro {
+    width: 80%;
+    text-align: center;
+    text-wrap: balance;
+    margin-bottom: 20px;
+
+    font-size: 1.12rem;
 }
 
 .contenedorStaff {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: center;
     width: 80%;
-    gap: 2rem;
+    
     
     
     margin: auto;
@@ -34,53 +62,67 @@
 .info > img {
     border: none;
 }
-.card-body {
+
+.tarjeta {
+    width: 15%;
     display: flex;
     flex-direction: column;
-    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+    
+    
+}
+
+.tarjetaCuerpo {
+    display: flex;
+    flex-direction: column;
+    
 
     width: 100%;
     height: 80px;
     border: none;
     
-    max-height: fit-content;
+    
     overflow-x: hidden;
     overflow-y: scroll;
 
     font-family: 'Lora', "Helvetica Neue", sans-serif;
-    color: #68335a;
+   
     
 
     
 }
-.card-title {
+.tarjetaNombre {
     font-size: 1rem;
+    color: #ae71a3;
+}
+.tarjetaTitulo {
+    font-size: 0.8rem;
+    color: #888;
 }
     
     
 
-h4 {
-    font-size: 1rem;
-    
-}
+
+
 .foto {
+    
     width: 100%;
-    height: 230px;
-    overflow: hidden;
-    
-    /* box-shadow: 5px 5px 10px rgba(199, 99, 137, 0.6); */
+    height: 200px;
 }
-
-img {
+.tarjetaImagen {
+    width: 180px;
+    height: 180px;
     object-fit: cover;
-    object-position: center;
-    
+    border-radius: 100%;
 }
 p {
     text-align: start;
     font-size: 1rem;
 }
-.card-text {
+.tarjetaTexto {
     display: none;
     padding: 5px;
 }
@@ -88,16 +130,6 @@ p {
 
 
 
-.card {
-    width: 15%;
-    padding: 10PX;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    text-align: center;
-    margin: 10px 15px;
-}
 
 
 /* home */
@@ -169,7 +201,7 @@ p {
     outline: none;
     border-color: black;
     border-radius: 5%;
-    background: #f3f3f3;
+    background: #ae71a3;
   }
   a{
     font-family: 'Lora', "Helvetica Neue", sans-serif;
@@ -177,9 +209,7 @@ p {
     text-decoration: none;
     color: WHITE;
   }
-  :hover {
-    color: #68335a;
-  }
+  
   .css-button-sharp--green:hover {
     
     background: #fff;
@@ -203,18 +233,18 @@ p {
 
 }
 .subtitulo {
-    color: #68335a;
+    color: #ae71a3;
     padding: 1rem;
-    font-size: 4rem;
+    font-size: 3.4rem;
     font-family: Lora, "Helvetica Neue", sans-serif;
 }
 .ciudad {
     width: 100%;
    
-    color: #68335a;
+    color: #ae71a3;
     padding:1rem;
     font-family: Lora, "Helvetica Neue", sans-serif;
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 20px;
     text-align: start;
 }
@@ -245,7 +275,7 @@ p {
     min-height: 45vh;
     width: 30%;
     padding: 3%;
-
+    cursor: pointer;
     
     display: flex;
     flex-direction: column;
@@ -274,6 +304,7 @@ p {
     width: 60%;
     border-radius: 50%;
     aspect-ratio: 1/1;
+    object-fit: cover;
 }
 
 .separador {
@@ -368,3 +399,4 @@ p {
     font-size: 1.4rem;
     color: #68335a;
 }
+

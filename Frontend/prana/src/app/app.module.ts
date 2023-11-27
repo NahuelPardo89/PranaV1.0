@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './Modules/shared/components/navbar/navbar.component';
 import { BannerComponent } from './Modules/home/components/banner/banner.component';
+import { StaffComponent } from './Modules/home/components/staff/staff.component';
 
 
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
@@ -20,6 +21,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './Services/auth/auth.interceptor';
 import { MatSelectModule } from '@angular/material/select';
 import { ReportsModule } from './Modules/reports/reports.module';
+
+// import { AgmCoreModule } from '@agm/core';
+
 
 
 
@@ -44,7 +48,10 @@ import { ReportsModule } from './Modules/reports/reports.module';
     MatSelectModule,
     DashboardModule,
     BrowserAnimationsModule,
-    ReportsModule
+    ReportsModule,
+    // AgmCoreModule.forRoot({
+    //   apiKey: 'AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM'
+    // })
     
   ],
   providers: [

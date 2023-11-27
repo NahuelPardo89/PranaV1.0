@@ -1,17 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
+import { UserService } from 'src/app/Services/users/user.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-patient',
   templateUrl: './patient.component.html',
   styleUrls: ['./patient.component.css']
 })
-export class PatientComponent {
+export class PatientComponent implements OnInit {
   registerForm: FormGroup;
+  users: any[] = [];
+  
+  filterText: string = '';
+  selectedUser: any;
 
-  constructor(private formBuilder: FormBuilder, private patientService: PatientService) {
+
+  constructor(
+    private formBuilder: FormBuilder, 
+    private patientService: PatientService,
+    private userService: UserService
+    ) {
     this.registerForm = this.formBuilder.group({
       user: [0],
       facebook: [''],
@@ -20,27 +31,28 @@ export class PatientComponent {
       is_active: [true]
     });
   }
-
-  onSubmit(): void {
-    if (this.registerForm.valid) {
-      const newPatientData: Patient = this.registerForm.value as Patient;
-
-      // Llama al servicio para crear un nuevo paciente
-      this.patientService.createPatient(newPatientData).subscribe(
-        (response) => {
-          // Maneja la respuesta del servidor o realiza otras acciones aquí
-          console.log('Nuevo paciente creado:', response);
-
-          // Limpia el formulario después de crear el paciente
-          this.registerForm.reset();
-        },
-        (error) => {
-          // Maneja los errores de la solicitud HTTP aquí
-          console.error('Error al crear el paciente:', error);
-        }
-      );
-    } else {
-      // El formulario es inválido, muestra mensajes de error si es necesario
-    }
+  ngOnInit() {
+    this.userService.getUsers().subscribe(
+      (users) => {
+        this.users = users;
+        this.filteredUsers = [...this.users];
+        console.log(this.users)
+      },
+      (error) => {
+        console.error('Error al obtener la lista de usuarios:', error);
+      }
+    );
   }
+
+  filteredUsers: any[] = [];
+
+  filterUsers() {
+    this.filteredUsers = this.users.filter((user) => {
+      const searchTerm = this.filterText.toLowerCase();
+      return user.name.toLowerCase().includes(searchTerm) || user.email.toLowerCase().includes(searchTerm);
+    });
+  }
+
+  
 }
+

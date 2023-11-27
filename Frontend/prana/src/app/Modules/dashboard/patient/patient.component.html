@@ -1,51 +1,17 @@
 <div class="paciente">
 
+   
+
+
+
+   
+    
+    
+
+    
     <app-listar-pacientes class="listar-pacientes"></app-listar-pacientes>
 
-
-
-    <!--FORM PARA CREAR PATIENT-->
-
     
-    <!---
-    <div class="createPatient container">
-        <h2>Registrar Paciente</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        
-        <mat-form-field>
-            <img class="logo" src="../../../../assets/img/Iconos/direccion.png" alt="Dirección">
-            <input matInput class="form-control-sm" placeholder="Dirección" formControlName="address">
-            <mat-error *ngIf="registerForm.get('address')?.invalid && (registerForm.get('address')?.dirty || registerForm.get('address')?.touched)">
-            <span *ngIf="registerForm.get('address')?.hasError('required')">La dirección es requerida.</span>
-            </mat-error>
-        </mat-form-field>
-
-        
-        <mat-form-field>
-            <img class="logo" src="../../../../assets/img/Iconos/facebookChico.png" alt="Facebook">
-            <input matInput class="form-control-sm" placeholder="Facebook" formControlName="facebook">
-        
-        
-        </mat-form-field>
-        
-        <mat-form-field>
-            <img class="logo" src="../../../../assets/img/Iconos/instagramChico.png" alt="Instagram">
-            <input matInput class="form-control-sm" placeholder="Instagram" formControlName="instagram">
-        </mat-form-field>
-
-       
-        
-
-        <button mat-raised-button color="primary" type="submit" class="btn btn-primary boton-enviar" [disabled]="registerForm.invalid">
-        Registrar
-        </button>
-    </form>
-    
-
-    </div>  
-
-    -->
-
 
 
 

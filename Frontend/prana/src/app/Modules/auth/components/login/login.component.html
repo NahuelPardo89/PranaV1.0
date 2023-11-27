@@ -17,7 +17,9 @@
       <mat-error *ngIf="loginForm.controls['password'].errors?.['required']">Este campo es requerido</mat-error>
       <mat-error *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</mat-error>
     </mat-form-field>
-
+    <div *ngIf="errorMessage" class="error-message danger">
+      {{ errorMessage }}
+    </div>
     <button mat-raised-button class="ancho button mt-4" color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
   </form>
     <p>¿No tienes cuenta?  <a routerLink="/Registro">Registrarse</a>  </p> 

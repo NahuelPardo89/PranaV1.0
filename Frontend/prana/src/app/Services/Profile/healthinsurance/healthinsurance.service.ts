@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders,HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 
-import { tap,catchError } from 'rxjs/operators'; 
+import { tap, catchError } from 'rxjs/operators';
 import { HealthInsurance } from '../../../Models/Profile/healthinsurance.interface';
 
 
@@ -26,6 +26,14 @@ export class HealthinsuranceService {
     return this.http.get(`${this.url}healthinsurances/${id}/`);
   }
 
+  getDoctorPatientCommonHI(doctorId: number, patientId: number, branchId: number): Observable<HealthInsurance[]> {
+    const url = 'http://127.0.0.1:8000/profile/admin/common-insurances/?';
+    const doctor = 'doctor_id=' + doctorId;
+    const patient = 'patient_id=' + patientId;
+    const branch = 'branch_id=' + branchId;
+    return this.http.get<HealthInsurance[]>(url + doctor + '&' + patient + '&' + branch);
+  }
+
   // Crear una nueva HealthInsurance
   create(data: any): Observable<any> {
     return this.http.post(`${this.url}healthinsurances/`, data);
@@ -41,5 +49,5 @@ export class HealthinsuranceService {
     return this.http.delete(`${this.url}${id}/`);
   }
 
-  
+
 }

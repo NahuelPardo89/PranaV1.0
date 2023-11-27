@@ -1,0 +1,51 @@
+<!-- create-doctor.component.html
+[disabled]="!doctorForm.valid" -->
+
+<form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="userId">Usuario:</label>
+      <select id="userId" formControlName="userId" required>
+        <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+      </select>
+    </div>
+  
+    <div>
+      <label for="matricula">Matrícula:</label>
+      <input type="text" id="matricula" formControlName="matricula" required>
+    </div>
+   
+    <div>
+      <label for="specialtyId">Especialidad:</label>
+      <select id="specialtyId" formControlName="specialtyId" required>
+        <option *ngFor="let specialty of specialties" [value]="specialty.id">{{ specialty.name }}</option>
+      </select>
+    </div>
+
+    <div>
+        <label for="insurances">Seguros:</label>
+        <div *ngFor="let insurance of healthInsurances">
+          <label>
+            <input type="checkbox" [value]="insurance.id" formControlName="insuranceIds"> {{ insurance.name }}
+          </label>
+        </div>
+      </div>
+  
+    <div>
+        <label for="duration">Duración del turno:</label>
+        <select id="duration" formControlName="duration" required>
+          <option *ngFor="let interval of durationIntervals" [value]="interval">
+            {{ formatDuration(interval) }}
+          </option>
+        </select>
+      </div>
+    <div>
+      <label>
+        <input type="checkbox" formControlName="isActive"> ¿Activo?
+      </label>
+    </div>
+  
+    <div>
+      <button type="submit" >Guardar</button>
+    </div>
+  </form>
+  

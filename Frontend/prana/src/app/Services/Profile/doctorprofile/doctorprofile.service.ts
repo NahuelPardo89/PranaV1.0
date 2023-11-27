@@ -44,4 +44,5 @@ export class DoctorprofileService {
   deleteDoctor(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}/`);
   }
+
 }

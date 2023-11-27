@@ -1,9 +1,10 @@
 .paciente {
     
-    display: flex;
-    flex-wrap: wrap;
-    text-align: center;
+    display: block;
     overflow-x: scroll;
+    height: 100%;
+    text-align: center;
+
     
 }
 

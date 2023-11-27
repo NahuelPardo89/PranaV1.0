@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
 })
 export class LoginComponent implements OnInit , OnDestroy{
   loginForm!: FormGroup;
-
+  public errorMessage: string = '';
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -34,8 +34,19 @@ export class LoginComponent implements OnInit , OnDestroy{
   onSubmit(): void {
     if (this.loginForm.valid) {
       const user: LoginUser = this.loginForm.value;
-      this.authService.login(user); // Llamar al método login
-      // No es necesario suscribirse aquí
+
+
+  
+      this.authService.login(user).subscribe(
+        () => {
+          // Una vez que el login es exitoso, navegamos al dashboard.
+          this.router.navigate(['Dashboard/']);
+        },
+        error => {
+          this.errorMessage = 'DNI o Contraseña incorrectos. Por favor, revisa los datos e inténtalo de nuevo.';
+        }
+      );
+
     }
   }
   

@@ -8,7 +8,7 @@ import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interfa
 })
 export class PaymentmethodService {
 
-  private baseUrl: string = 'http://127.0.0.1:8000/appointment/payment_method/'; // Assuming this URL based on the previous pattern
+  private baseUrl: string = 'http://127.0.0.1:8000/appointment/payment_method/';
 
   constructor(private http: HttpClient) { }
 

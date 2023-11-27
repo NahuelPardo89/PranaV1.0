@@ -31,7 +31,7 @@ import { ReportsModule } from './Modules/reports/reports.module';
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
+    
     BannerComponent,
     QuienesSomosComponent,
     

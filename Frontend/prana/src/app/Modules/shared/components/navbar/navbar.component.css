@@ -9,6 +9,10 @@
     
     margin-right: 15px;
 }
+.navbar-brand img {
+    height: 40px; /* Ajusta esto según tu necesidad */
+    width: auto;
+}
 .login {
     display: flex;
     list-style: none;
@@ -22,6 +26,23 @@
     background-color: #999;
     border-radius: 8%;
 }
+
+.user-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px; /* Ajusta esto según tus necesidades */
+}
+
+.logout-button {
+    margin-left: auto; /* Esto empuja el botón a la derecha */
+}
 li > a {
     font-size: 1.2rem;
 }
+

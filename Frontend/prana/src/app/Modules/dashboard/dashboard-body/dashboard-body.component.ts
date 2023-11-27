@@ -7,5 +7,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./dashboard-body.component.css']
 })
 export class DashboardBodyComponent {
-  @Input() showPatient: boolean = false;
+  
 }

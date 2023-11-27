@@ -16,9 +16,20 @@ class MedicalSpecialitySerializer(serializers.ModelSerializer):
         model = MedicalSpeciality
         fields = '__all__'
 
+    def create(self, validated_data):
+        speciality = MedicalSpeciality.objects.create(**validated_data)
+
+        SpecialityBranch.objects.create(
+            name="GENERAL",
+            speciality=speciality
+        )
+
+        return speciality
+
 
 class SpecialityBranchSerializer(serializers.ModelSerializer):
-    speciality=serializers.StringRelatedField()
+    speciality = serializers.StringRelatedField()
+
     class Meta:
         model = SpecialityBranch
         fields = '__all__'
@@ -61,21 +72,23 @@ class DoctorProfileAllSerializer(serializers.ModelSerializer):
 
 class DoctorProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
-    user=serializers.StringRelatedField()
-    specialty=serializers.StringRelatedField(many=True)
-    insurances= serializers.StringRelatedField(many=True)
+    user = serializers.StringRelatedField()
+    specialty = serializers.StringRelatedField(many=True)
+    insurances = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = DoctorProfile
-        fields = ('id','user', 'medicLicence', 'specialty',
+        fields = ('id', 'user', 'medicLicence', 'specialty',
                   'insurances', 'is_active', 'appointment_duration')
 
 
 class PatientProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
-    user= serializers.StringRelatedField()
+    user = serializers.StringRelatedField()
+
     class Meta:
         model = PatientProfile
-        fields = ('id','user', 'facebook', 'instagram',
+        fields = ('id', 'user', 'facebook', 'instagram',
                   'address', 'insurances', 'is_active')
 
 
@@ -86,9 +99,20 @@ class PatientShortProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ('insurances',)
 
 
+class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
+    insurance = HealthInsuranceSerializer(read_only=True)
+    branch = SpecialityBranchSerializer(read_only=True)
+
+    class Meta:
+        model = InsurancePlanDoctor
+        fields = ('insurance', 'branch', 'price')
+
+
 class DoctorProfileShortSerializer(serializers.ModelSerializer):
+    insurances = InsurancePlanDoctorSerializer2(many=True, read_only=True)
+    specialty = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = DoctorProfile
-        fields = ('medicLicence', 'specialty', 'insurances')
-        read_only_fields = ('insurances', 'specialty')
+        fields = ('medicLicence', 'specialty', 'insurances', 'is_active')
+        read_only_fields = ('is_active',)

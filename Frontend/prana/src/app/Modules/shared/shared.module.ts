@@ -12,6 +12,6 @@ import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.co
   ],
   imports: [
     CommonModule
-  ]
+  ],
 })
 export class SharedModule { }

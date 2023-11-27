@@ -24,26 +24,70 @@ export class AppointmentService {
     }
   }
 
-  getAdminAppointments(): Observable<AppointmentAdminGetInterface[]> {
+  /**
+  * Get all appointments with admin JSON format response (all fields).
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentAdminGetInterface[]>} An observable of the appointments.
+  */
+  getAdminAllAppointments(): Observable<AppointmentAdminGetInterface[]> {
     return this.http.get<AppointmentAdminGetInterface[]>(this.baseUrl + 'admin/');
   }
 
+  /**
+  * Get all appointments of a particular doctor with admin JSON format response (all fields).
+  * @param doctor_id The ID of the doctor.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentAdminGetInterface[]>} An observable of the doctor's appointments.
+  */
+  getAdminDoctorAppointments(doctor_id: number): Observable<AppointmentAdminGetInterface[]> {
+    const url = this.baseUrl + 'admin/?doctor_id=' + doctor_id;
+    return this.http.get<AppointmentAdminGetInterface[]>(url);
+  }
+
+  /**
+  * Get the doctor's appointments for today.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentDoctorGetInterface[]>} An observable of the doctor's appointments.
+  */
   getDoctorAppointments(): Observable<AppointmentDoctorGetInterface[]> {
     return this.http.get<AppointmentDoctorGetInterface[]>(this.baseUrl + 'doctor/');
   }
 
+  /**
+  * Get the patient's appointments.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentPatientGetInterface[]>} An observable of the patient's appointments.
+  */
   getPatientAppointments(): Observable<AppointmentPatientGetInterface[]> {
     return this.http.get<AppointmentPatientGetInterface[]>(this.baseUrl + 'patient/');
   }
 
+  /**
+  * Creates an appointment with admin JSON format response (all fields).
+  * @param appointment The appointment to create.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentAdminGetInterface>} An observable of the created appointment.
+  */
   createAdminAppointment(appointment: AppointmentAdminCreateInterface): Observable<AppointmentAdminGetInterface> {
     return this.http.post<AppointmentAdminGetInterface>(this.baseUrl + 'admin/', appointment);
   }
 
+  /**
+  * Creates a doctor's appointment.
+  * @param appointment The appointment to create.
+  * @author Alvaro Olguin
+  * @returns {Observable<any>} An observable of the created appointment.
+  */
   createDoctorAppointment(appointment: AppointmentDoctorGetInterface): Observable<any> {
     return this.http.post<any>(this.baseUrl + 'doctor/', appointment);
   }
 
+  /**
+  * Creates a patient's appointment.
+  * @param appointment The appointment to create.
+  * @author Alvaro Olguin
+  * @returns {Observable<any>} An observable of the created appointment.
+  */
   createPatientAppointment(appointment: AppointmentPatientCreateInterface): Observable<any> {
     return this.http.post<any>(this.baseUrl + 'patient/', appointment);
   }

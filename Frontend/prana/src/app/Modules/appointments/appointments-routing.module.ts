@@ -21,7 +21,7 @@ const routes: Routes = [
   {
     path: 'admin',
     children: [
-      { path: 'create', component: AppointmentAdminCreateComponent },
+      { path: 'list/create', component: AppointmentAdminCreateComponent },
       { path: 'list', component: AppointmentAdminListComponent },
       { path: 'detail/id', component: AppointmentAdminDetailComponent },
       { path: 'update/:id', component: AppointmentAdminUpdateComponent },

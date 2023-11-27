@@ -173,19 +173,6 @@ class Appointment(models.Model):
                 self.full_cost - insurance_plan.price, 0)
             self.hi_copayment = min(insurance_plan.price, self.full_cost)
 
-    # def set_cost(self):
-    #     """
-    #     Set the patient copayment and health insurance copayment based on the health insurance.
-
-    #     Calculate the copayment amounts based on the doctor's insurance price and the appointment's full cost.
-    #     """
-    #     insurance_plan = InsurancePlanDoctor.objects.get(
-    #         doctor=self.doctor, insurance=self.health_insurance, branch=self.branch)
-    #     self.patient_copayment = min(
-    #         insurance_plan.price, self.full_cost)
-    #     self.hi_copayment = max(
-    #         self.full_cost - self.patient_copayment, 0)
-
     def set_fields(self):
         """
         This method initializes specialty, branch, full cost, health insurance, and cost-related fields

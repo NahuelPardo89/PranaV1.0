@@ -8,9 +8,18 @@ import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
 })
 export class DoctorprofileService {
   private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/doctor/';
+  private meUrl: string = 'http://127.0.0.1:8000/profile/doctor/';
 
   constructor(private http: HttpClient) { }
+  
+  getMyDoctorProfile(): Observable<DoctorProfile> {
+    return this.http.get<DoctorProfile>(this.meUrl);
+  }
 
+  // Actualizar el perfil del doctor autenticado
+  updateMyDoctorProfile(data: DoctorProfile): Observable<DoctorProfile> {
+    return this.http.put<DoctorProfile>(this.meUrl, data);
+  }
   // Get all doctor profiles
   getDoctors(): Observable<DoctorProfile[]> {
     return this.http.get<DoctorProfile[]>(this.baseUrl);
@@ -35,4 +44,5 @@ export class DoctorprofileService {
   deleteDoctor(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}/`);
   }
+
 }

@@ -28,7 +28,7 @@
             </li>
           </ul>
 
-          <!-- Botones del lado derecho -->
+          <div>
           <form *ngIf="!isLogged" [formGroup]="loginForm" (ngSubmit)="login()">
             <mat-form-field  appearance="fill">
               <mat-label>DNI</mat-label>
@@ -48,6 +48,9 @@
           
             <button  class="btn btn-primary ms-2" color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
           </form>
+          
+        </div>
+          
         
           <!-- Botón de cierre de sesión -->
           <div *ngIf="isLogged" class="user-info-container">
@@ -56,6 +59,7 @@
                 <span>Rol: {{currentRole}}</span>
             </div>
             <button class="btn btn-danger logout-button" (click)="logout()">Cerrar Sesión</button>
+            
         </div>
       </div>
   </div>

@@ -75,7 +75,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         if user_destroy == 1:
             return Response({
                 'message': 'Usuario eliminado correctamente'
-            })
+            },status=status.HTTP_204_NO_CONTENT)
         return Response({
             'message': 'No existe el usuario que desea eliminar'
         }, status=status.HTTP_404_NOT_FOUND)

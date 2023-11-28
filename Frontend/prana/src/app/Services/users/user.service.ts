@@ -16,23 +16,39 @@ export class UserService {
     return this.http.get<User[]>(this.apiUrl);
   }
 
-  getUserById(userId: number): Observable<any> {
+  getUserById(userId: number): Observable<User> {
     const url = `${this.apiUrl}${userId}/`;
-    return this.http.get<any>(url).pipe(
+    return this.http.get<User>(url).pipe(
       catchError(error => {
-        console.error('Error al obtener el usuario', error);
-        return throwError('Ocurrió un error al obtener el usuario.');
+        return throwError(() => new Error(error));
       })
     );
     
   }
 
-  createUser(user: User): Observable<User> {
+  createUser(user: User): Observable<void> {
     ; // Ajusta esta URL según la API
-    return this.http.post<User>(this.apiUrl, user).pipe(
+    return this.http.post<void>(this.apiUrl, user).pipe(
       catchError(error => {
-        console.error('Error al crear el usuario', error);
-        return throwError('Ocurrió un error al crear el usuario.');
+        
+        return throwError(() => new Error(error));
+      })
+    );
+  }
+  updateUser(userId: number, userData: User): Observable<void> {
+    const url = `${this.apiUrl}${userId}/`;
+    return this.http.put<void>(url, userData).pipe(
+      catchError(error => {
+        return throwError(() => new Error(error));
+      })
+    );
+  }
+
+  deleteUser(userId: number): Observable<void> {
+    const url = `${this.apiUrl}${userId}/`;
+    return this.http.delete<void>(url).pipe(
+      catchError(error => {
+        return throwError(() => new Error(error));
       })
     );
   }

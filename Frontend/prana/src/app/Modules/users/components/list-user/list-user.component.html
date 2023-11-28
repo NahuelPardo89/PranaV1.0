@@ -75,7 +75,7 @@
         <ng-container matColumnDef="actions">
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let row">
-            <button class="btn btn-primary" aria-label="Editar usuario" (click)="editUser(row.id)">
+            <button class="btn btn-primary" aria-label="Editar usuario" (click)="editUser(row)">
                 <i class="material-symbols-outlined  ">edit</i></button>
             <button class="btn btn-danger ms-3"  aria-label="Eliminar usuario" (click)="deleteUser(row.id)">
                 <i class="material-symbols-outlined ">delete</i></button>

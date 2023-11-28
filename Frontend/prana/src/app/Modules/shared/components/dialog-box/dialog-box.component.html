@@ -1,11 +1,20 @@
 
 <div class="container">
     <div class="message">
-    <p>{{ data.message }}</p>
-    </div>
-    <div  class="actions">
-    <button class="btn btn-primary" (click)="confirmDialog()">Aceptar</button>
-    <button class="btn btn-secondary" (click)="closeDialog()">Cancelar</button>
+      <!-- Iconos de Material Design según el tipo de mensaje -->
+    
+      <i *ngIf="data.type === 'success'" class="material-symbols-outlined success-icon">check_circle</i>
+      <i *ngIf="data.type === 'error'" class="material-symbols-outlined error-icon">report</i>
+      <i *ngIf="data.type === 'question'" class="material-symbols-outlined warning-icon">warning</i>
   
+      <p>{{ data.message }}</p>
     </div>
-</div>
+    <div class="actions">
+      <!-- Botones para los diálogos de confirmación o error -->
+      <button *ngIf="data.type === 'question'" class="btn btn-primary" (click)="confirmDialog()">Aceptar</button>
+      <button *ngIf="data.type === 'question'" class="btn btn-secondary" (click)="closeDialog()">Cancelar</button>
+  
+      <!-- Botón para cerrar en caso de éxito o error -->
+      <button *ngIf="data.type !== 'question'" class="btn btn-primary" (click)="closeDialog()">Cerrar</button>
+    </div>
+  </div>

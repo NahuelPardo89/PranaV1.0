@@ -15,11 +15,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 @NgModule({
   declarations: [
    
     CreateUserComponent,
     ListUserComponent,
+    EditUserComponent,
   ],
   imports: [
     CommonModule,

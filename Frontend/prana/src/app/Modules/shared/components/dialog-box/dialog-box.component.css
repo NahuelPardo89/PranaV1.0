@@ -17,3 +17,26 @@
     justify-content: center;
     gap: 10px; /* Espacio entre botones */
   }
+
+  
+
+  .warning-icon{
+    color:red;
+    font-size: 48px;
+    
+
+  }
+
+  .error-icon{
+    color:red;
+    font-size: 48px;
+    
+
+  }
+
+  .success-icon{
+    color:green;
+    font-size: 48px;
+    
+
+  }

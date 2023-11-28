@@ -65,4 +65,7 @@ export class EditUserComponent {
       // Manejar el caso en que el formulario no es válido
     }
   }
+  onCancel(){
+    this.router.navigate(['Dashboard/users'])
+  }
 }

@@ -48,7 +48,7 @@
         
             <!-- Botón para enviar el formulario -->
             <button class="btn btn-primary" type="submit" [disabled]="!userForm.valid">Guardar</button>
-            <button class="btn btn-secondary">Cancelar</button>
+            <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
         </form>
     </mat-card-content>
 </mat-card>

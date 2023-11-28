@@ -8,7 +8,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-
+import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -17,6 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [  
     PageNotFoundComponent,
     NavbarComponent,
+    DialogBoxComponent,
   ],
   imports: [
     CommonModule,
@@ -24,7 +27,10 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
     MatButtonModule,
+    MatDialogModule
+    
   ],
   exports: [
     NavbarComponent,

@@ -9,6 +9,7 @@ import { RegisterUser } from 'src/app/Models/user/registerUser.interface';
 import { tap,catchError } from 'rxjs/operators'; 
 import { BehaviorSubject } from 'rxjs';
 import { UserShort } from 'src/app/Models/user/userShort.interface';
+import{jwtDecode} from "jwt-decode";
 
 import { Router } from '@angular/router';
 
@@ -20,7 +21,7 @@ export class AuthService {
   private registerUrl = 'http://127.0.0.1:8000/account/singin/';
   private logoutUrl = 'http://127.0.0.1:8000/account/logout/';
   private refreshTokenUrl = 'http://127.0.0.1:8000/account/refresh/';
-
+  
   private currentUserSubject: BehaviorSubject<UserShort | null> = new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
   private currentRole = new BehaviorSubject<string>(''); // Inicializa con un rol predeterminado o vacío
@@ -30,7 +31,7 @@ export class AuthService {
   constructor(private http: HttpClient,private router: Router) {
     const user = localStorage.getItem('user');
     const role = localStorage.getItem('currentRole');
-    
+    this.checkToken()
     if (user) {
       this.currentUserSubject.next(JSON.parse(user));
       this.isloggedIn.next(true);
@@ -40,8 +41,6 @@ export class AuthService {
       this.currentRole.next(role);
     }
   }
-  
-  
   login(user: LoginUser): void {
     this.http.post<JwtResponse>(this.loginUrl, user).pipe(
       tap(response => {
@@ -49,7 +48,7 @@ export class AuthService {
         this.handleTokens(response);
         this.handleRoles(response.roles); 
         
-        this.router.navigate(['/dashboard']); // Navegar al dashboard
+        this.router.navigate(['/Dashboard']); // Navegar al dashboard
       }),
       catchError(error => {
         this.handleError(error, 'Error al iniciar sesión');
@@ -58,11 +57,6 @@ export class AuthService {
     ).subscribe();
   }
 
-
-
- 
-  
- 
   register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
     return this.http.post<JwtResponse>(this.registerUrl, user, { observe: 'response' })
       .pipe(
@@ -74,8 +68,6 @@ export class AuthService {
         catchError(error => this.handleError(error, 'Error al registrarse'))
       );
   }
-  
-  
   logout(): Observable<void> {
     const refreshToken = localStorage.getItem('refresh_token');
     console.log('logout autservuce')
@@ -164,12 +156,36 @@ export class AuthService {
   getCurrentRole(): string {
     return localStorage.getItem('currentRole') || this.getUserRoles()[0]; // Devuelve el primer rol disponible si no hay ninguno seleccionado
   }
-  
+  private checkToken():void{
+    const token = localStorage.getItem('refresh_token');
+    
+    if (token){
+      const decoded: any = jwtDecode(token);
+      const currentTime = Date.now() / 1000; // Tiempo actual en segundos
+      const isExpired= decoded.exp < currentTime;
+        if(isExpired){
+          this.logout()
+        }else{
+          this.isloggedIn.next(true);
+        }
+
+    } else {
+      this.logout()
+    }
+
+    
+    
+  }
+
+
   clearLocalStorage(): void {
-    console.log("Clear local storage");
-    localStorage.clear();
+    
+    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('roles');
     this.currentUserSubject.next(null);
-    this.router.navigate(['/home']);
+    this.router.navigate(['/Home']);
   }
   
 }

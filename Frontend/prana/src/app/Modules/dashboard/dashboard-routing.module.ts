@@ -28,6 +28,7 @@ const routes: Routes = [
       { path: 'reports', component: AdminReportsComponent},
       { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m. SpecialityBranchModule) },
       { path: 'paymentmethod', loadChildren: () => import('src/app/Modules/paymentmthod/paymentmthod.module').then(m => m. PaymentmthodModule) },
+      { path: 'users', loadChildren: () => import('src/app/Modules/users/users.module').then(m => m. UsersModule) },
       // { path: 'reports', loadChildren: () => import('src/app/Modules/reports/reports.module').then(m => m. ReportsModule) },
   
     ]

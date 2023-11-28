@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, throwError } from 'rxjs';
+import { User } from 'src/app/Models/user/user.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,8 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.apiUrl);
   }
 
   getUserById(userId: number): Observable<any> {
@@ -24,5 +25,15 @@ export class UserService {
       })
     );
     
+  }
+
+  createUser(user: User): Observable<User> {
+    ; // Ajusta esta URL según la API
+    return this.http.post<User>(this.apiUrl, user).pipe(
+      catchError(error => {
+        console.error('Error al crear el usuario', error);
+        return throwError('Ocurrió un error al crear el usuario.');
+      })
+    );
   }
 }

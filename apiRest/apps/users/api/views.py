@@ -29,7 +29,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         if self.queryset is None:
             self.queryset = self.model.objects\
                 .filter(is_active=True)\
-                .values('id', 'dni', 'email', 'name', 'last_name', 'phone')
+                .values('id', 'dni', 'email', 'name', 'last_name', 'phone','password','is_active', 'is_staff')
         return self.queryset
 
     def list(self, request):
@@ -38,6 +38,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         return Response(users_serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        
         user_serializer = self.serializer_class(data=request.data)
         if user_serializer.is_valid():
             user = user_serializer.save()

@@ -5,8 +5,8 @@
             <i class="material-symbols-outlined btn-icon">patient_list</i>Gestionar Usuarios
         </button>
             <div *ngIf="showUserOptions" class="toggle">
-                <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="" >
-                    <i class="material-symbols-outlined btn-icon">patient_list</i>Gestionar Usuarios
+                <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="users" >
+                    <i class="material-symbols-outlined btn-icon"  routerLinkActive="router-link-active" >patient_list</i>Gestionar Usuarios
                 </button>
                 <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="doctors/list">
                     <i class="material-symbols-outlined btn-icon">patient_list</i> Gestionar Profesionales

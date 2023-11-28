@@ -28,12 +28,12 @@ export class CreateUserComponent {
     if (this.userForm.valid) {
       this.userService.createUser(this.userForm.value).subscribe({
         next: (response) => {
-          this.dialog.openConfirmDialog("Usuario creado correctamente");
+          this.dialog.showSuccessDialog("Usuario creado correctamente");
           this.router.navigate(['/Dashboard/users']);
           
         },
         error: (error) => {
-          this.dialog.openConfirmDialog(error);
+          this.dialog.showErrorDialog(error);
         }
         // Opcionalmente, puedes incluir 'complete' si necesitas manejar la finalización
       });

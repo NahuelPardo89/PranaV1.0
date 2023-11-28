@@ -60,13 +60,13 @@ export class ListUserComponent {
           next: () => {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
-            this.dialogService.openConfirmDialog("Usuario Eliminado con éxito")
+            this.dialogService.showSuccessDialog("Usuario Eliminado con éxito")
 
             // Aquí podrías, por ejemplo, recargar la lista de usuarios
           },
           error: (error) => {
             // Manejo de errores
-            this.dialogService.openConfirmDialog("Hubo un error al eliminar Usuario")
+            this.dialogService.showErrorDialog("Hubo un error al eliminar Usuario")
           }
         });
       }

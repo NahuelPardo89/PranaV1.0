@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 import { UserService } from 'src/app/Services/users/user.service';
 
@@ -11,28 +12,31 @@ import { UserService } from 'src/app/Services/users/user.service';
 export class CreateUserComponent {
   userForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private userService: UserService, private dialog:DialogService) {
+  constructor(private fb: FormBuilder, private userService: UserService, private dialog:DialogService, private router: Router) {
     this.userForm = this.fb.group({
       dni: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
       name: ['', Validators.required],
-      last_name: [''],
+      last_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
-      is_active: [true],
+      phone: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
+      //is_active: [true],
       is_staff: [false]
     });
   }
 
   onSubmit(): void {
     if (this.userForm.valid) {
-      this.userService.createUser(this.userForm.value).subscribe(
-        response => {
-          this.dialog.openConfirmDialog("Usuario creado correctamente")
+      this.userService.createUser(this.userForm.value).subscribe({
+        next: (response) => {
+          this.dialog.openConfirmDialog("Usuario creado correctamente");
+          this.router.navigate(['users']);
+          
         },
-        error => {
-          // Manejo de errores
+        error: (error) => {
+          this.dialog.openConfirmDialog(error);
         }
-      );
+        // Opcionalmente, puedes incluir 'complete' si necesitas manejar la finalización
+      });
     }
   }
 

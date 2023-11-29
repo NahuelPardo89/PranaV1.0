@@ -173,7 +173,6 @@ export class AppointmentAdminCreateComponent implements OnInit {
   }
 
   /**
-  * loadPatients(): void
   * Fetches a list of payment methods from the payment method service, sorts them alphabetically by name, 
   * and assigns them to the 'methods' property.
   * @author Alvaro Olguin
@@ -486,7 +485,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
     this.branchService.getDoctorBranches(doctorId).subscribe(data => {
       this.specialtyFilteredBranches = data;
       if (this.specialtyFilteredBranches.length > 0) {
-        let generalBranch = this.specialtyFilteredBranches.find(branch => branch.name === 'GENERAL');
+        let generalBranch = this.specialtyFilteredBranches.find(branch => branch.name.toUpperCase() === 'GENERAL');
         // Exists the general branch, the id property its only for interface validation (id?)
         if (generalBranch && generalBranch.id) {
           this.selectedBranch = generalBranch.id;

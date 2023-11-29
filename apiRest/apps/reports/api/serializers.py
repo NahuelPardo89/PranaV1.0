@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from apps.appointments.models import Appointment, PaymentMethod
-from apps.usersProfile.models import DoctorProfile, MedicalSpeciality, SpecialityBranch
+from apps.usersProfile.models import DoctorProfile, MedicalSpeciality, SpecialityBranch, HealthInsurance, PatientProfile
 
 
 class CopaymentReportSerializer(serializers.Serializer):
@@ -13,6 +13,8 @@ class CopaymentReportSerializer(serializers.Serializer):
     specialty = serializers.IntegerField(required=False)
     branch = serializers.IntegerField(required=False)
     payment_method = serializers.IntegerField(required=False)
+    health_insurance = serializers.IntegerField(required=False)
+    patient = serializers.IntegerField(required=False)
 
     def validate(self, data):
         """
@@ -33,6 +35,8 @@ class CopaymentReportSerializer(serializers.Serializer):
         specialty = data.get('specialty')
         branch = data.get('branch')
         payment_method = data.get('payment_method')
+        health_insurance = data.get('health_insurance')
+        patient = data.get('patient')
 
         # Checks if the date range is correct
         if start_date > end_date:
@@ -73,13 +77,33 @@ class CopaymentReportSerializer(serializers.Serializer):
                 raise serializers.ValidationError(
                     "Método de pago no encontrado")
 
-        if not appointments:
-            raise serializers.ValidationError(
-                "No se registran turnos con estado 'Pagado' para los datos ingresados")
+        if health_insurance:
+            try:
+                health_insurance = HealthInsurance.objects.get(
+                    id=health_insurance)
+                appointments = appointments.filter(
+                    health_insurance=health_insurance)
+            except HealthInsurance.DoesNotExist:
+                raise serializers.ValidationError(
+                    "Obra social no encontrada")
+
+        if patient:
+            try:
+                patient = PatientProfile.objects.get(
+                    id=patient)
+                appointments = appointments.filter(
+                    patient=patient)
+            except PatientProfile.DoesNotExist:
+                raise serializers.ValidationError(
+                    "Paciente no encontrado")
 
         # Checks if the doctor register appointments with the specific speciality
         if doctor and specialty and not appointments.exists():
             raise serializers.ValidationError(
                 "El profesional no registra turnos en estado 'Pagado' con la especialidad asignada")
+
+        if not appointments:
+            raise serializers.ValidationError(
+                "No se registran turnos con estado 'Pagado' para los datos ingresados")
 
         return data

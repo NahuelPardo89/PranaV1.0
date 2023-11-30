@@ -54,11 +54,16 @@
         
           <!-- Botón de cierre de sesión -->
           <div *ngIf="isLogged" class="user-info-container">
-            <div class="user-details">
-                <span>Usuario: {{currentUser?.last_name}}, {{currentUser?.name}}</span>
-                <span>Rol: {{currentRole}}</span>
-            </div>
-            <button class="btn btn-danger logout-button" (click)="logout()">Cerrar Sesión</button>
+            <div class="dropdown container">
+              <button class="btn btn-outline-dark  dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="material-symbols-outlined btn-icon">person</i>: {{currentUser?.last_name}}, {{currentUser?.name}}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                 
+                  <a class="dropdown-item" (click)="logout() ">Cerrar Sesión</a>
+                  
+              </ul>
+          </div>
             
         </div>
       </div>

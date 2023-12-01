@@ -28,7 +28,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
     def get_queryset(self):
         if self.queryset is None:
             self.queryset = self.model.objects\
-                .filter(is_active=True)\
+                .filter()\
                 .values('id', 'dni', 'email', 'name', 'last_name', 'phone','password','is_active', 'is_staff')
         return self.queryset
 
@@ -59,7 +59,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
     def update(self, request, pk=None):
         user = self.get_object(pk)
 
-        user_serializer = UserSerializer(user, data=request.data)
+        user_serializer = self.serializer_class(user, data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
             return Response({

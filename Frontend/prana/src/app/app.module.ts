@@ -1,12 +1,10 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './Modules/shared/components/navbar/navbar.component';
-import { BannerComponent } from './Modules/home/components/banner/banner.component';
-import { StaffComponent } from './Modules/home/components/staff/staff.component';
 
+import { BannerComponent } from './Modules/home/components/banner/banner.component';
 
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
 import { CardComponent } from './components/quienes-somos/card/card.component';
@@ -24,19 +22,21 @@ import { ReportsModule } from './Modules/reports/reports.module';
 
 // import { AgmCoreModule } from '@agm/core';
 
+import { registerLocaleData } from '@angular/common';
+import localeEsAr from '@angular/common/locales/es-AR';
 
-
-
+// Registrar la localización española (Argentina)
+registerLocaleData(localeEsAr);
 
 @NgModule({
   declarations: [
     AppComponent,
-    
+
     BannerComponent,
     QuienesSomosComponent,
-    
+
     CardComponent,
-    FooterComponent
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,12 +52,12 @@ import { ReportsModule } from './Modules/reports/reports.module';
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM'
     // })
-    
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: LOCALE_ID, useValue: 'es-AR' },
   ],
-  
-  bootstrap: [AppComponent]
+
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

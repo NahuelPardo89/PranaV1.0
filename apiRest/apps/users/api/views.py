@@ -58,7 +58,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
 
     def update(self, request, pk=None):
         user = self.get_object(pk)
-
+        print(request.data)
         user_serializer = self.serializer_class(user, data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()

@@ -51,6 +51,10 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  register(): void {
+    this.router.navigate(['singin']);
+  }
+
   logout(): void {
     this.authService.logout();
   }

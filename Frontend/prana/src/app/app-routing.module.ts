@@ -9,6 +9,7 @@ import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
 import { DashboardComponent } from './Modules/dashboard/dashboard/dashboard.component';
 import { EspecialidadesComponent } from './Modules/home/components/especialidades/especialidades.component';
+import { SinginComponent } from './Modules/auth/components/singin/singin.component';
 
 const routes: Route[] = [
 
@@ -20,7 +21,7 @@ const routes: Route[] = [
   { path: 'Dashboard', loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule) },
 
   { path: 'auth', loadChildren: () => import('./Modules/auth/auth.module').then(m => m.AuthModule) },
-  
+  { path: 'singin',component:SinginComponent },
   
   
   //{ path: '**', component: PageNotFoundComponent },

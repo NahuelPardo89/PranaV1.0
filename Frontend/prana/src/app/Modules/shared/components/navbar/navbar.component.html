@@ -1,85 +1,94 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-      <!-- Logo o nombre de la aplicación -->
-      <a class="navbar-brand " routerLink="/home">
-        <img src="../../../../../assets/img/logo.png" alt="Logo Prana">
+    <!-- Logo o nombre de la aplicación -->
+    <a class="navbar-brand " routerLink="/home">
+      <img src="../../../../../assets/img/logo.png" alt="Logo Prana">
     </a>
 
-      <!-- Botón para versiones móviles -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Botón para versiones móviles -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Contenido del Navbar -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-          <!-- Botones del lado izquierdo -->
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                  <a class="nav-link " aria-current="page" routerLink="/Home">Inicio</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" routerLink="/Talleres">Talleres</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" routerLink="/AboutUs">Sobre Nosotros</a>
-              </li>
-              <li class="nav-item" *ngIf="isLogged">
-                <a class="nav-link" routerLink="/Dashboard">Dashboard</a>
-            </li>
-          </ul>
+    <!-- Contenido del Navbar -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Botones del lado izquierdo -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link " aria-current="page" routerLink="/Home">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/Talleres">Talleres</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/AboutUs">Sobre Nosotros</a>
+        </li>
+        <li class="nav-item" *ngIf="isLogged">
+          <a class="nav-link" routerLink="/Dashboard">Dashboard</a>
+        </li>
+      </ul>
 
-          <div>
-          
-          
-        </div>
-          
-        <div *ngIf="!isLogged" >
-          <div class="dropdown">
-            <button class="btn btn-primary  dropdown-toggle" type="button" id="dropdownLoginButton" data-bs-toggle="dropdown"
-               aria-expanded="false">
-              <i class="material-symbols-outlined btn-icon">login</i>Iniciar Sesión</button>
-            <ul class="dropdown-menu tamaño dropdown-menu-end " aria-labelledby="dropdownLoginButton">
-              <form [formGroup]="loginForm" (ngSubmit)="login()">
-                <li><mat-form-field appearance="outline" class="container-fluid mt-4">
+      <div>
+
+
+      </div>
+
+      <div *ngIf="!isLogged">
+        <div class="dropdown">
+          <button class="btn btn-primary  dropdown-toggle" type="button" id="dropdownLoginButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="material-symbols-outlined btn-icon">login</i>Iniciar Sesión</button>
+          <ul class="dropdown-menu tamaño dropdown-menu-end " aria-labelledby="dropdownLoginButton">
+            <form [formGroup]="loginForm" (ngSubmit)="login()">
+              <li><mat-form-field appearance="outline" class="container-fluid mt-4">
                   <mat-label>DNI</mat-label>
                   <input matInput formControlName="dni" required>
                   <mat-error *ngIf="loginForm.controls['dni'].errors?.['required']">Este campo es requerido</mat-error>
-                  <mat-error *ngIf="loginForm.controls['dni'].errors?.['pattern']">Debe ingresar solo números</mat-error>
+                  <mat-error *ngIf="loginForm.controls['dni'].errors?.['pattern']">Debe ingresar solo
+                    números</mat-error>
                   <mat-error *ngIf="loginForm.controls['dni'].errors?.['max']">Ingrese un DNI Correcto</mat-error>
                   <mat-error *ngIf="loginForm.controls['dni'].errors?.['min']">Ingrese un DNI Correcto</mat-error>
                 </mat-form-field></li>
-                <li><mat-form-field  appearance="outline"class="container-fluid mt-4" >
+              <li><mat-form-field appearance="outline" class="container-fluid mt-4">
                   <mat-label>Contraseña</mat-label>
                   <input matInput type="password" formControlName="password" required>
-                  <mat-error *ngIf="loginForm.controls['password'].errors?.['required']">Este campo es requerido</mat-error>
-                  <mat-error *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al menos 8 caracteres</mat-error>
+                  <mat-error *ngIf="loginForm.controls['password'].errors?.['required']">Este campo es
+                    requerido</mat-error>
+                  <mat-error *ngIf="loginForm.controls['password'].errors?.['minlength']">La contraseña debe tener al
+                    menos 8 caracteres</mat-error>
                 </mat-form-field></li>
-                <li><div class="d-flex justify-content-center mt-3">
-                <button  class="btn btn-primary "  type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
-              </div></li>
-              </form>
-              <li><div class="text-center mt-4 mb-2">
+              <li>
+                <div class="d-flex justify-content-center mt-3">
+                  <button class="btn btn-primary " type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
+                </div>
+              </li>
+            </form>
+            <li>
+              <div class="text-center mt-4 mb-2">
                 <span>¿No tienes cuenta?</span><a routerLink="/singin">Registro</a>
-              </div></li>
-                
-            </ul>
+              </div>
+            </li>
+
+          </ul>
         </div>
-          
+
       </div>
-          <!-- Botón de cierre de sesión -->
-          <div *ngIf="isLogged" class="user-info-container">
-            <div class="dropdown container">
-              <button class="btn btn-outline-dark  dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="material-symbols-outlined btn-icon">person</i>: {{currentUser?.last_name}}, {{currentUser?.name}}
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                 
-                  <a class="dropdown-item" (click)="logout() ">Cerrar Sesión</a>
-                  
-              </ul>
-          </div>
-            
+      <!-- Botón de cierre de sesión -->
+      <div *ngIf="isLogged" class="user-info-container">
+        <div class="dropdown container">
+          <button class="btn btn-outline-dark  dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="material-symbols-outlined btn-icon">person</i>: {{currentUser?.last_name}}, {{currentUser?.name}}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+            <a class="dropdown-item" (click)="logout() ">Cerrar Sesión</a>
+
+          </ul>
         </div>
+
       </div>
+    </div>
   </div>
 </nav>

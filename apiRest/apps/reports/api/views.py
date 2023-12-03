@@ -4,15 +4,34 @@ from rest_framework import status, permissions
 from django.db.models import Sum
 from apps.appointments.models import Appointment
 from apps.reports.api.serializers import CopaymentReportSerializer
+from apps.appointments.api.serializers import AppointmentSerializerList
 
 
 def perform_report(serializer, request):
+    """
+    Generates a report based on the data provided by the serializer.
+
+    Args:
+    - serializer: The serializer containing the data to generate the report.
+    - request: The request object.
+
+    Returns:
+    - report_data: A dictionary containing a summary of patient and appointment
+      information, as well as appointment details.
+
+    This function performs filtered queries on the Appointments database based on
+    the data provided by the serializer. It then calculates various aspects of
+    the report, such as the number of patients, number of appointments,
+    and sums of copayments for patients and health insurances.
+    """
     start_date = serializer.validated_data['start_date']
     end_date = serializer.validated_data['end_date']
     doctor = serializer.validated_data.get('doctor')
     specialty = serializer.validated_data.get('specialty')
     branch = serializer.validated_data.get('branch')
     payment_method = serializer.validated_data.get('payment_method')
+    health_insurance = serializer.validated_data.get('health_insurance')
+    patient = serializer.validated_data.get('patient')
 
     appointments = Appointment.objects.filter(
         day__range=[start_date, end_date], state=4)
@@ -26,20 +45,44 @@ def perform_report(serializer, request):
     if payment_method:
         appointments = appointments.filter(
             payment_method=payment_method)
+    if health_insurance:
+        appointments = appointments.filter(
+            health_insurance=health_insurance)
+    if patient:
+        appointments = appointments.filter(
+            patient=patient)
 
-    # Calculate the number of patients and number of appointments
+    # Calculate the summary data - Cant Patients
     num_patients = appointments.values('patient').distinct().count()
+    # Cant Doctors
+    num_doctors = appointments.values('doctor').distinct().count()
+    # HI
+    num_particular_insurances = appointments.filter(
+        health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
+    num_other_insurances = appointments.exclude(
+        health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
+    # Appointments
     num_appointments = appointments.count()
+    appointments_serializer = AppointmentSerializerList(
+        appointments, many=True)
 
     report_data = {
-        'doctor': doctor,
-        'specialty': specialty,
-        'branch': branch,
-        'payment_method': payment_method,
-        'num_patients': num_patients,
-        'num_appointments': num_appointments,
-        'total_patient_copayment': appointments.aggregate(Sum('patient_copayment'))['patient_copayment__sum'],
-        'total_hi_copayment': appointments.aggregate(Sum('hi_copayment'))['hi_copayment__sum'],
+        'summary': {
+            'num_appointments': num_appointments,
+            'num_patients': num_patients,
+            'num_doctors': num_doctors,
+            'num_particular_insurances': num_particular_insurances,
+            'num_other_insurances': num_other_insurances,
+            'total_patient_copayment': appointments.aggregate(Sum('patient_copayment'))['patient_copayment__sum'],
+            'total_hi_copayment': appointments.aggregate(Sum('hi_copayment'))['hi_copayment__sum'],
+            'doctor': doctor,
+            'specialty': specialty,
+            'branch': branch,
+            'payment_method': payment_method,
+            'health_insurance': health_insurance,
+            'patient': patient,
+        },
+        'appointments': appointments_serializer.data,
     }
 
     return report_data

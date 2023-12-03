@@ -57,7 +57,6 @@ import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/d
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
-    AppointmentsRoutingModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,

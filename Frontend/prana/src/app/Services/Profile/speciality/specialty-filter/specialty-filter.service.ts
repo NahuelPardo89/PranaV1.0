@@ -13,8 +13,12 @@ export class SpecialtyFilterService {
     return doctors.filter(doctor => doctor.specialty.includes(specialtyId.toString()));
   }
 
-  filterBranchesBySpecialty(branches: SpecialityBranch[], specialtyId: number): SpecialityBranch[] {
-    return branches.filter(branches => branches.speciality === specialtyId);
+  filterDoctorsBySpecialtyName(doctors: DoctorProfile[], specialtyName: string): DoctorProfile[] {
+    return doctors.filter(doctor => doctor.specialty.includes(specialtyName));
+  }
+
+  filterBranchesBySpecialtyName(branches: SpecialityBranch[], specialtyName: string): SpecialityBranch[] {
+    return branches.filter(branches => branches.speciality.toString().toLocaleUpperCase() === specialtyName.toUpperCase());
   }
 
 }

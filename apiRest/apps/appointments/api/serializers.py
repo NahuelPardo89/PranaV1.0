@@ -449,6 +449,14 @@ def appointment_validation(attrs, instance=None):
 
 
 class AppointmentSerializerList(serializers.ModelSerializer):
+    """
+    Serializer for Appointment model to represent appointments in a list.
+
+    This serializer formats the data retrieved from the Appointment model
+    to represent appointments in a list format. It customizes the serialization
+    of various fields and adds representations for state, date, cost, copayments,
+    hour, and duration in a human-readable format.
+    """
     doctor = serializers.StringRelatedField()
     health_insurance = serializers.StringRelatedField()
     patient = serializers.StringRelatedField()
@@ -461,8 +469,34 @@ class AppointmentSerializerList(serializers.ModelSerializer):
         fields = '__all__'
 
     def to_representation(self, instance):
+        """
+        Converts the Appointment instance to a representation dictionary.
+
+        Args:
+        - instance: The Appointment instance.
+
+        Returns:
+        - rep: A dictionary representing the serialized Appointment instance
+          with customized fields like state, date, cost, copayments, hour, and duration.
+        """
         rep = super().to_representation(instance)
+        # State
         rep['state'] = instance.get_state_display()
+        # Date format
+        day = instance.day
+        rep['day'] = day.strftime('%d-%m-%Y')
+        # Integer representation on fields
+        rep['full_cost'] = int(float(rep['full_cost']))
+        rep['patient_copayment'] = int(float(rep['patient_copayment']))
+        rep['hi_copayment'] = int(float(rep['hi_copayment']))
+        # Hour and Duration seconds supression
+        hour = instance.hour
+        rep['hour'] = hour.strftime('%H:%M')
+        duration = instance.duration
+        total_seconds = int(duration.total_seconds())
+        minutes, seconds = divmod(total_seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        rep['duration'] = "%02d:%02d" % (hours, minutes)
         return rep
 
 

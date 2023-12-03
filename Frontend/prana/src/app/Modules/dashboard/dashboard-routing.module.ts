@@ -17,27 +17,27 @@ const routes: Routes = [
   {
     path: '', component: DashboardComponent,
     children: [
-       
+
       { path: 'insurance', loadChildren: () => import('src/app/Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule) },
-      { path: 'doctors', loadChildren: () => import('src/app/Modules/doctor-profile/doctor-profile.module').then(m => m. DoctorProfileModule) },
+      { path: 'doctors', loadChildren: () => import('src/app/Modules/doctor-profile/doctor-profile.module').then(m => m.DoctorProfileModule) },
       { path: 'appointments', loadChildren: () => import('src/app/Modules/appointments/appointments.module').then(m => m.AppointmentsModule) },
       { path: 'appointments_doctor', loadChildren: () => import('src/app/Modules/appointments/appointments.module').then(m => m.AppointmentsModule) },
-      { path: 'speciality', loadChildren: () => import('src/app/Modules/medicalspeciality/medicalspeciality.module').then(m => m. MedicalspecialityModule) },
-      { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m. SpecialityBranchModule) },
-      { path: 'patient', component: PatientComponent},
-      { path: 'reports', component: AdminReportsComponent},
-      { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m. SpecialityBranchModule) },
-      { path: 'paymentmethod', loadChildren: () => import('src/app/Modules/paymentmthod/paymentmthod.module').then(m => m. PaymentmthodModule) },
-      { path: 'users', loadChildren: () => import('src/app/Modules/users/users.module').then(m => m. UsersModule) },
-      // { path: 'reports', loadChildren: () => import('src/app/Modules/reports/reports.module').then(m => m. ReportsModule) },
-  
+      { path: 'speciality', loadChildren: () => import('src/app/Modules/medicalspeciality/medicalspeciality.module').then(m => m.MedicalspecialityModule) },
+      { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m.SpecialityBranchModule) },
+      { path: 'patient', component: PatientComponent },
+      //{ path: 'reports', component: AdminReportsComponent},
+      { path: 'speciality/branch', loadChildren: () => import('src/app/Modules/speciality-branch/speciality-branch.module').then(m => m.SpecialityBranchModule) },
+      { path: 'paymentmethod', loadChildren: () => import('src/app/Modules/paymentmthod/paymentmthod.module').then(m => m.PaymentmthodModule) },
+      { path: 'users', loadChildren: () => import('src/app/Modules/users/users.module').then(m => m.UsersModule) },
+      { path: 'reports', loadChildren: () => import('src/app/Modules/reports/reports.module').then(m => m.ReportsModule) },
+
     ]
   }
 ];
 
 //const routes: Routes = [
- // {path: '', component: DashboardComponent},
-  //{ path: 'insurance', loadChildren: () => import('src/app/Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule) }
+// {path: '', component: DashboardComponent},
+//{ path: 'insurance', loadChildren: () => import('src/app/Modules/healthinsurance/healthinsurance.module').then(m => m.HealthinsuranceModule) }
 //];
 
 @NgModule({
@@ -45,5 +45,5 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class DashboardRoutingModule {
-  
-  }
+
+}

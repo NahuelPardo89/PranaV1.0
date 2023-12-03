@@ -28,8 +28,8 @@ class UserAdminViewSet(viewsets.GenericViewSet):
     def get_queryset(self):
         if self.queryset is None:
             self.queryset = self.model.objects\
-                .filter(is_active=True)\
-                .values('id', 'dni', 'email', 'name', 'last_name', 'phone')
+                .filter()\
+                .values('id', 'dni', 'email', 'name', 'last_name', 'phone','password','is_active', 'is_staff')
         return self.queryset
 
     def list(self, request):
@@ -38,6 +38,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         return Response(users_serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        
         user_serializer = self.serializer_class(data=request.data)
         if user_serializer.is_valid():
             user = user_serializer.save()
@@ -57,8 +58,8 @@ class UserAdminViewSet(viewsets.GenericViewSet):
 
     def update(self, request, pk=None):
         user = self.get_object(pk)
-
-        user_serializer = UserSerializer(user, data=request.data)
+        print(request.data)
+        user_serializer = self.serializer_class(user, data=request.data)
         if user_serializer.is_valid():
             user_serializer.save()
             return Response({
@@ -74,7 +75,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         if user_destroy == 1:
             return Response({
                 'message': 'Usuario eliminado correctamente'
-            })
+            },status=status.HTTP_204_NO_CONTENT)
         return Response({
             'message': 'No existe el usuario que desea eliminar'
         }, status=status.HTTP_404_NOT_FOUND)

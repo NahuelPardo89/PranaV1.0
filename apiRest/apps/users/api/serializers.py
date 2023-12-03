@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('dni', 'email', 'name', 'last_name', 'phone', 'is_superuser')
+        fields = ('id','dni', 'email', 'name', 'last_name', 'phone', 'is_staff','is_active')
 
     def create(self, validated_data):
         password = validated_data.get('dni')
@@ -64,6 +64,10 @@ class UserListSerializer(serializers.ModelSerializer):
             'last_name': instance['last_name'],
             'email': instance['email'],
             'phone': instance['phone'],
+            'is_active': instance['is_active'],
+            'is_staff': instance['is_staff'],
+
+           
         }
 
 

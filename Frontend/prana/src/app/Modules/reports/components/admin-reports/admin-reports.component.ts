@@ -24,11 +24,11 @@ import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/spec
   styleUrls: ['./admin-reports.component.css']
 })
 export class AdminReportsComponent implements OnInit {
-  //Form
+  // Form
   reportForm: FormGroup;
   // Response
   reportData: ReportAppAdminResponseInterface;
-  //Data
+  // Data
   doctors: DoctorProfile[] = [];
   patients: Patient[] = [];
   specialties: Medicalspeciality[] = [];
@@ -43,7 +43,7 @@ export class AdminReportsComponent implements OnInit {
   selectedDoctor: number = 0;
   selectedPatient: number = 0;
   selectedInsurance: number = 0;
-  //Form COntrols
+  // Form COntrols
   specialtyControl = new FormControl();
   doctorControl = new FormControl();
   patientControl = new FormControl();
@@ -53,7 +53,7 @@ export class AdminReportsComponent implements OnInit {
   filteredDoctors: Observable<DoctorProfile[]> = of([]);
   filteredPatients: Observable<Patient[]> = of([]);
   filteredInsurances: Observable<HealthInsurance[]> = of([]);
-  //Display data
+  // Display data
   specialtytName: string = ''
   doctorName: string = ''
   patientName: string = ''
@@ -88,23 +88,15 @@ export class AdminReportsComponent implements OnInit {
         branch: 0,
         payment_method: 0,
         num_patients: 0,
+        num_doctors: 0,
+        num_particular_insurances: 0,
+        num_other_insurances: 0,
         num_appointments: 0,
         total_patient_copayment: 0,
         total_hi_copayment: 0
       },
       appointments: []
     };
-    // this.reportData = {
-    //   doctor: 0,
-    //   specialty: 0,
-    //   branch: 0,
-    //   payment_method: 0,
-    //   num_patients: 0,
-    //   num_appointments: 0,
-    //   total_patient_copayment: 0,
-    //   total_hi_copayment: 0
-    // };
-
   }
   ngOnInit(): void {
     // Initialize data
@@ -113,7 +105,7 @@ export class AdminReportsComponent implements OnInit {
     this.loadInsurances();
     this.loadSpecialties();
     this.loadBranches();
-    this.loadMethods()
+    this.loadPaymentMethods()
   }
 
   /***** Init Data Section *****/
@@ -127,13 +119,9 @@ export class AdminReportsComponent implements OnInit {
   */
   loadDoctors(): void {
     this.doctorService.getDoctors().subscribe(data => {
-      //Sort doctors
       data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
       this.doctors = data;
       this.filterDoctors();
-      // this.filteredDoctors.subscribe(data => {
-      //   console.log(data);
-      // });
     });
   }
 
@@ -146,13 +134,19 @@ export class AdminReportsComponent implements OnInit {
   */
   loadPatients(): void {
     this.patientService.getAllPatients().subscribe(data => {
-      // Sort the patients
       data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
       this.patients = data;
       this.filterPatients()
     })
   }
 
+  /**
+  * Fetches a list of specialties from the specialty service, sorts them alphabetically by name, 
+  * assigns them to the 'specialties' property, and filters them.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
+  * @returns {void}
+  */
   loadSpecialties(): void {
     this.specialtyService.getSpecialities().subscribe(data => {
       data.sort((a, b) => a.name.localeCompare(b.name));
@@ -161,9 +155,15 @@ export class AdminReportsComponent implements OnInit {
     })
   }
 
+  /**
+  * Fetches a list of branches from the branch service, sorts them alphabetically by name, 
+  * and assigns them to the 'branches' property.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching or sorting the data.
+  * @returns {void}
+  */
   loadBranches(): void {
     this.branchService.getSpecialityBranches().subscribe(data => {
-      //Sort
       data.sort((a, b) => a.name.localeCompare(b.name));
       this.branches = data
     })
@@ -178,14 +178,20 @@ export class AdminReportsComponent implements OnInit {
   */
   loadInsurances(): void {
     this.insuranceService.getAll().subscribe(data => {
-      //Sort
       data.sort((a, b) => a.name.localeCompare(b.name));
       this.insurances = data
       this.filterInsurances()
     })
   }
 
-  loadMethods(): void {
+  /**
+  * Fetches a list of payment methods from the payment method service, sorts them alphabetically by name, 
+  * and assigns them to the 'methods' property.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
+  * @returns {void}
+  */
+  loadPaymentMethods(): void {
     this.paymentmethodservice.getPaymentMethods().subscribe(data => {
       //Sort
       data.sort((a, b) => a.name.localeCompare(b.name));
@@ -297,11 +303,15 @@ export class AdminReportsComponent implements OnInit {
   * @author Alvaro Olguin
   * @returns {void}
   */
-
   loadfilteredDoctors(specialtyId: number): void {
     this.specialtyFilteredDoctors = this.specialtyFilterService.filterDoctorsBySpecialtyName(this.doctors, this.getSpecialtyName(specialtyId));
   }
 
+  /**
+  * Filters the doctors based on the value changes of the doctor control.
+  * @author Alvaro Olguin
+  * @returns {void}
+  */
   filterDoctors(): void {
     let doctorsArray = this.specialtyFilteredDoctors;
     if (!this.selectedSpecialty) {
@@ -321,6 +331,12 @@ export class AdminReportsComponent implements OnInit {
       );
   }
 
+  /**
+  * Filters the doctors by specialty.
+  * @param name The specialty to filter by.
+  * @author Alvaro Olguin
+  * @returns {DoctorProfile[]} The filtered doctors.
+  */
   filterDoctorsBySpecialty(name: string, doctors: DoctorProfile[]): DoctorProfile[] {
     const filterValue = name.toLowerCase();
     return doctors.filter(option =>
@@ -506,14 +522,20 @@ export class AdminReportsComponent implements OnInit {
     }
   }
 
+  /***** FORM ACTIONS SECTION *****/
 
-  onSubmit() {
+  /**
+  * Handles the form submission. Validates the form, confirms the appointment details with the user, and creates the appointment.
+  * @author Alvaro Olguin
+  * @throws {Error} If there is an error in validating the form, confirming the appointment, or creating the appointment.
+  * @returns {void}
+  */
+  onSubmit(): void {
     if (this.reportForm.valid) {
 
-      // Obtén los valores del formulario
+      // Get form values
       const formValues = this.reportForm.value;
 
-      // Filtra los campos que no tengan valor (undefined o null)
       const filteredBody: ReportAppAdminPostInterface = {
         start_date: formValues.start_date,
         end_date: formValues.end_date
@@ -522,9 +544,14 @@ export class AdminReportsComponent implements OnInit {
       if (this.selectedDoctor) {
         filteredBody.doctor = this.selectedDoctor;
       }
-      // if (formValues.doctor !== undefined && formValues.doctor !== null && formValues.doctor !== "") {
-      //   filteredBody.doctor = formValues.doctor;
-      // }
+
+      if (this.selectedPatient) {
+        filteredBody.patient = this.selectedPatient;
+      }
+
+      if (this.selectedInsurance) {
+        filteredBody.health_insurance = this.selectedInsurance;
+      }
 
       if (this.selectedSpecialty) {
         filteredBody.specialty = this.selectedSpecialty;
@@ -543,15 +570,12 @@ export class AdminReportsComponent implements OnInit {
       this.reportService.getAdminAppointmentReport(filteredBody)
         .pipe(
           catchError(error => {
-            // Manejar el error aquí
             console.error('Error en la solicitud:', error);
 
-            // Verificar si hay errores específicos en "non_field_errors"
+            // Checks for specific error on "non_field_errors"
             if (error.error && error.error.non_field_errors) {
-              // Obtener el primer mensaje de error en "non_field_errors"
+              // Get and display the error
               const errorMessage = error.error.non_field_errors[0];
-
-              // Mostrar una alerta con el mensaje de error específico
               alert('Error: ' + errorMessage);
               this.reportData = {
                 summary: {
@@ -560,6 +584,9 @@ export class AdminReportsComponent implements OnInit {
                   branch: 0,
                   payment_method: 0,
                   num_patients: 0,
+                  num_doctors: 0,
+                  num_particular_insurances: 0,
+                  num_other_insurances: 0,
                   num_appointments: 0,
                   total_patient_copayment: 0,
                   total_hi_copayment: 0
@@ -567,7 +594,7 @@ export class AdminReportsComponent implements OnInit {
                 appointments: []
               };
             } else {
-              // Si no hay errores específicos, mostrar un mensaje genérico
+              // Generic error
               alert('Ha ocurrido un error en la solicitud.');
               this.reportData = {
                 summary: {
@@ -576,6 +603,9 @@ export class AdminReportsComponent implements OnInit {
                   branch: 0,
                   payment_method: 0,
                   num_patients: 0,
+                  num_doctors: 0,
+                  num_particular_insurances: 0,
+                  num_other_insurances: 0,
                   num_appointments: 0,
                   total_patient_copayment: 0,
                   total_hi_copayment: 0
@@ -584,7 +614,7 @@ export class AdminReportsComponent implements OnInit {
               };
             }
 
-            throw error; // Lanzar el error nuevamente
+            throw error;
           })
         )
         .subscribe((data: ReportAppAdminResponseInterface) => {

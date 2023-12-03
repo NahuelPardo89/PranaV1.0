@@ -52,8 +52,16 @@ def perform_report(serializer, request):
         appointments = appointments.filter(
             patient=patient)
 
-    # Calculate the number of patients and number of appointments
+    # Calculate the summary data - Cant Patients
     num_patients = appointments.values('patient').distinct().count()
+    # Cant Doctors
+    num_doctors = appointments.values('doctor').distinct().count()
+    # HI
+    num_particular_insurances = appointments.filter(
+        health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
+    num_other_insurances = appointments.exclude(
+        health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
+    # Appointments
     num_appointments = appointments.count()
     appointments_serializer = AppointmentSerializerList(
         appointments, many=True)
@@ -62,6 +70,9 @@ def perform_report(serializer, request):
         'summary': {
             'num_appointments': num_appointments,
             'num_patients': num_patients,
+            'num_doctors': num_doctors,
+            'num_particular_insurances': num_particular_insurances,
+            'num_other_insurances': num_other_insurances,
             'total_patient_copayment': appointments.aggregate(Sum('patient_copayment'))['patient_copayment__sum'],
             'total_hi_copayment': appointments.aggregate(Sum('hi_copayment'))['hi_copayment__sum'],
             'doctor': doctor,

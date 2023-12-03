@@ -163,6 +163,57 @@
                 <th>Cantidad de Turnos</th>
                 <th>Total Copago Paciente</th>
                 <th>Total Copago Obra Social</th>
+                <th>Cantidad de Doctores</th>
+                <th>Cantidad de Obras Sociales 'Particular'</th>
+                <th>Cantidad de Otras Obras Sociales</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ reportData.summary.doctor !== null ? getDoctorName(reportData.summary.doctor) : 'Sin Solicitar'
+                    }}
+                </td>
+                <td>{{ reportData.summary.specialty !== null ? getSpecialtyName(reportData.summary.specialty) : 'Sin
+                    Solicitar' }}</td>
+                <td>{{ reportData.summary.branch !== null ? getBranchName(reportData.summary.branch) : 'Sin Solicitar'
+                    }}
+                </td>
+                <td>{{ reportData.summary.payment_method !== null ? reportData.summary.payment_method : 'Sin Solicitar'
+                    }}
+                </td>
+                <td>{{ reportData.summary.num_patients !== null ? reportData.summary.num_patients : 'Sin Solicitar' }}
+                </td>
+                <td>{{ reportData.summary.num_appointments !== null ? reportData.summary.num_appointments : 'Sin
+                    Solicitar'
+                    }}</td>
+                <td>{{ reportData.summary.total_patient_copayment !== null ? reportData.summary.total_patient_copayment
+                    :
+                    'Sin Solicitar' }}</td>
+                <td>{{ reportData.summary.total_hi_copayment !== null ? reportData.summary.total_hi_copayment : 'Sin
+                    Solicitar' }}</td>
+                <td>{{ reportData.summary.num_doctors !== null ? reportData.summary.num_doctors : 'Sin Solicitar' }}
+                </td>
+                <td>{{ reportData.summary.num_particular_insurances !== null ?
+                    reportData.summary.num_particular_insurances
+                    : 'Sin Solicitar' }}</td>
+                <td>{{ reportData.summary.num_other_insurances !== null ? reportData.summary.num_other_insurances : 'Sin
+                    Solicitar' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- <h2>Reporte Generado</h2>
+    <h3>Resumen</h3>
+    <table class="table table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Profesional</th>
+                <th>Especialidad</th>
+                <th>Rama</th>
+                <th>Forma de Pago</th>
+                <th>Cantidad de Pacientes</th>
+                <th>Cantidad de Turnos</th>
+                <th>Total Copago Paciente</th>
+                <th>Total Copago Obra Social</th>
             </tr>
         </thead>
         <tbody>
@@ -185,7 +236,7 @@
                     Solicitar' }}</td>
             </tr>
         </tbody>
-    </table>
+    </table> -->
     <h3>Detalle de turnos</h3>
     <table class="table table-hover table-striped">
         <thead>

@@ -20,6 +20,7 @@ import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/spec
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 
+
 @Component({
   selector: 'app-appointment-create',
   templateUrl: './appointment-admin-create.component.html',
@@ -124,7 +125,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
     this.loadInsurances();
   }
 
-  // Init data section
+  /***** INIT DATA SECTION *****/
 
   /**
   * Fetches a list of doctors from the doctor service, sorts them alphabetically by user, 
@@ -216,9 +217,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
       this.insurances = data
     })
   }
-  //End Init data section
 
-  // On Select section
+  /***** ON SELECT SECTION *****/
 
   /**
   * Handles the event when a specialty is selected. 
@@ -364,9 +364,9 @@ export class AppointmentAdminCreateComponent implements OnInit {
       });
     }
   }
-  // End On Select Section
 
-  // Filter section
+  /***** FILTER SECTION *****/
+
   //Patients
   /**
   * Filters the patients based on the value changes of the patient control.
@@ -520,9 +520,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
     })
   }
 
-  // END Filter section
+  /***** UTILS SECTION *****/
 
-  // Section UTILS
   /**
   * Formats the dates of the doctor's schedule.
   * @param doctorSchedule The doctor's schedule.
@@ -556,7 +555,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
 
         const dayOfWeek = daysOfWeekSpanish[currentDate.getDay()];
         const dayOfMonth = currentDate.getDate();
-        const monthName = monthsSpanish[month + m];
+        const monthName = monthsSpanish[(month + m) % 12];
+        // const monthName = monthsSpanish[month + m];
 
         const formattedDate = `${dayOfWeek} ${dayOfMonth} de ${monthName}`;
 
@@ -656,7 +656,6 @@ export class AppointmentAdminCreateComponent implements OnInit {
     return true;
   }
 
-  // Create a class for this methods (utils) since are usefull on several components
   /**
   * Parses a date string to a date.
   * @param dateString The date string to parse.
@@ -721,6 +720,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
     }
   }
 
+  /***** DISPLAY SECTION *****/
+
   /**
   * Displays the doctor's name for a given doctor ID.
   * @param doctorId The doctor's ID.
@@ -762,6 +763,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
       return this.specialtytName;
     }
   }
+
+  /***** TEMPORAL UNTIL MODAL CREATION *****/
 
   /**
   * Displays a preview of the appointment.
@@ -834,6 +837,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
     const formFullCost = this.appointmentForm.get('full_cost')?.value;
     return formFullCost ? formFullCost.toString() : 'Sin especificar';
   }
+
+  /* FORM ACTIONS SECTION */
 
   /**
   * Handles the form submission. Validates the form, confirms the appointment details with the user, and creates the appointment.

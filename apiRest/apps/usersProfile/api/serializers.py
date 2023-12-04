@@ -82,21 +82,21 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
                   'insurances', 'is_active', 'appointment_duration')
 
 
-class PatientProfileSerializer(serializers.ModelSerializer):
+class PatientListProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
-    user = serializers.StringRelatedField()
-    insurances=serializers.StringRelatedField(many=True)
+    user = serializers.StringRelatedField(required=False)
+    insurances=serializers.StringRelatedField(many=True,required=False)
 
     class Meta:
         model = PatientProfile
         fields = ('id', 'user', 'facebook', 'instagram',
                   'address', 'insurances', 'is_active')
-
-
+        read_only_fields = ('id','user','insurances')
+        
 class PatientShortProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientProfile
-        fields = ('facebook', 'instagram', 'address', 'insurances')
+        fields = ('id','facebook', 'instagram', 'address', 'insurances','is_active')
         read_only_fields = ('insurances',)
 
 

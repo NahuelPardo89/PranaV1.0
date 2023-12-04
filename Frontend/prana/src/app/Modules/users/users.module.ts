@@ -17,6 +17,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { PatientListComponent } from './components/patient-list/patient-list.component';
+import { PatientEditComponent } from './components/patient-edit/patient-edit.component';
+
 @NgModule({
   declarations: [
    
@@ -24,6 +26,8 @@ import { PatientListComponent } from './components/patient-list/patient-list.com
     ListUserComponent,
     EditUserComponent,
     PatientListComponent,
+    PatientEditComponent,
+    
   ],
   imports: [
     CommonModule,

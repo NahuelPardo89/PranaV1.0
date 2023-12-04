@@ -29,7 +29,7 @@ export class CreateUserComponent {
       this.userService.createUser(this.userForm.value).subscribe({
         next: (response) => {
           this.dialog.showSuccessDialog("Usuario creado correctamente");
-          this.router.navigate(['/Dashboard/users']);
+          this.router.navigate(['/Dashboard/accounts/users']);
           
         },
         error: (error) => {

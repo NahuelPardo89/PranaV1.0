@@ -28,7 +28,7 @@ export class PatientListComponent {
 
   setDataTable(){
     this.patientService.getAllPatients().subscribe(data => {
-      console.log(data)
+      
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
@@ -49,6 +49,52 @@ export class PatientListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  editPatient(patient: Patient) {}
-  deletePatient(id: number){}
+  editPatient(patient: Patient) {
+    this.router.navigate(['Dashboard/accounts/pacientes/edit'], { state: { patient } });
+  }
+  
+  deletePatient(id: number) {
+    const confirmDialogRef = this.dialogService.openConfirmDialog(
+      '¿Estás seguro de que deseas desactivar este Paciente?'
+    );
+  
+
+    confirmDialogRef.afterClosed().subscribe(confirmResult => {
+      console.log("eliminar usuario")
+      if (confirmResult) {
+        this.patientService.deletePatient(id).subscribe({
+          next: () => {
+            // Manejo de la respuesta de eliminación exitosa
+            this.setDataTable();
+            this.dialogService.showSuccessDialog("Usuario Desactivado con éxito")
+
+            // Aquí podrías, por ejemplo, recargar la lista de usuarios
+          },
+          error: (error) => {
+            // Manejo de errores
+            this.dialogService.showErrorDialog("Hubo un error al Desactivar el Usuario")
+          }
+        });
+      }
+    });
+  }
+  
+  activePatient(patient: Patient){
+    patient.is_active = true;
+    
+
+    this.patientService.updatePatient(patient.id, patient).subscribe({
+      next: () => {
+        
+        this.dialogService.showSuccessDialog("Paciente Activado con éxito")
+
+        this.setDataTable();
+      },
+      error: (error) => {
+        console.log(error);
+        this.dialogService.showErrorDialog("Error al Activar el Paciente")
+        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
+      }
+    });
+  }
 }

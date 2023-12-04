@@ -11,7 +11,7 @@
       </div>
   
       <mat-form-field class="example-form-field">
-        <mat-label>Filtrar por Facebook, Instagram, Seguro</mat-label>
+        <mat-label>Filtrar por Usuario, Facebook, Instagram, Obra social</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input>
       </mat-form-field>
   
@@ -43,7 +43,7 @@
           </ng-container>
   
           <ng-container matColumnDef="insurances">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Seguro</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Obra Social</th>
             <td mat-cell *matCellDef="let row">{{ row.insurances }}</td>
           </ng-container>
   
@@ -52,15 +52,25 @@
             <td mat-cell *matCellDef="let row">{{ row.is_active ? 'Sí' : 'No' }}</td>
           </ng-container>
   
-          <ng-container matColumnDef="actions">
+          <ng-container matColumnDef="actions" >
             <th mat-header-cell *matHeaderCellDef>Acciones</th>
             <td mat-cell *matCellDef="let row">
-              <button class="btn btn-primary me-2 shadow" aria-label="Editar paciente" (click)="editPatient(row)">
-                <i class="material-symbols-outlined">edit</i>
-              </button>
-              <button class="btn btn-danger me-2 shadow" aria-label="Eliminar paciente" (click)="deletePatient(row.id)">
-                <i class="material-symbols-outlined">delete</i>
-              </button>
+              <!-- Botones cuando el usuario está activo -->
+              <ng-container  *ngIf="row.is_active; else activatePatientTemplate">
+                <button class="btn btn-primary me-2 shadow" aria-label="Editar usuario" (click)="editPatient(row)">
+                  <i class="material-symbols-outlined">edit</i>
+                </button>
+                <button class="btn btn-danger me-2 shadow" aria-label="Eliminar usuario" (click)="deletePatient(row.id)">
+                  <i class="material-symbols-outlined">delete</i>
+                </button>
+              </ng-container>
+          
+              <!-- Plantilla para cuando el usuario no está activo -->
+              <ng-template #activatePatientTemplate>
+                <button class="btn btn-success me-2 shadow d-flex align-items-center justify-content-center" aria-label="Activar usuario" (click)="activePatient(row)">
+                    <i class="material-symbols-outlined me-1 d-none d-sm-inline">check_circle</i>Activar
+                </button>
+            </ng-template>
             </td>
           </ng-container>
   

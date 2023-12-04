@@ -4,6 +4,7 @@ import { ListUserComponent } from './components/list-user/list-user.component';
 import { CreateUserComponent } from './components/create-user/create-user.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { PatientListComponent } from './components/patient-list/patient-list.component';
+import { PatientEditComponent } from './components/patient-edit/patient-edit.component';
 
 const routes: Routes = [
   { 
@@ -20,7 +21,7 @@ const routes: Routes = [
       // Aquí irían las rutas relacionadas con los pacientes
       { path: '', component: PatientListComponent },
       //          { path: 'create', component: CreatePatientComponent },
-      //          { path: 'edit', component: EditPatientComponent },
+      { path: 'edit', component: PatientEditComponent },
     ]
   },
   // Otras rutas...

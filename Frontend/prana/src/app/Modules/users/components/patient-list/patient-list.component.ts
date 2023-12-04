@@ -3,33 +3,32 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { User } from 'src/app/Models/user/user.interface';
+import { Patient } from 'src/app/Models/Profile/patient.interface';
+import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
-import { UserService } from 'src/app/Services/users/user.service';
-
 
 @Component({
-  selector: 'app-list-user',
-  templateUrl: './list-user.component.html',
-  styleUrls: ['./list-user.component.css']
+  selector: 'app-patient-list',
+  templateUrl: './patient-list.component.html',
+  styleUrls: ['./patient-list.component.css']
 })
-export class ListUserComponent {
-  displayedColumns: string[] = [ 'dni', 'name', 'last_name', 'email', 'phone', 'is_active', 'is_staff','actions'];
-  dataSource!: MatTableDataSource<User>;
+export class PatientListComponent {
+  displayedColumns: string[] = [ 'user','facebook','instagram','address','is_active','insurances','actions'];
+  dataSource!: MatTableDataSource<Patient>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private userService: UserService, private dialogService:DialogService,private router:Router) {
+  constructor(private patientService: PatientService, private dialogService:DialogService,private router:Router) {
     
   }
-
   ngOnInit() {
     this.setDataTable()
   }
 
   setDataTable(){
-    this.userService.getUsers().subscribe(data => {
+    this.patientService.getAllPatients().subscribe(data => {
+      
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
@@ -39,9 +38,9 @@ export class ListUserComponent {
       
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      
     });
   }
-
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim();
@@ -50,22 +49,20 @@ export class ListUserComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  editUser(user: User) {
-    console.log(user);
-    this.router.navigate(['Dashboard/accounts/users/edit'], { state: { user } });
+  editPatient(patient: Patient) {
+    this.router.navigate(['Dashboard/accounts/pacientes/edit'], { state: { patient } });
   }
-
-  deleteUser(id: number) {
+  
+  deletePatient(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar este usuario?'
+      '¿Estás seguro de que deseas desactivar este Paciente?'
     );
   
 
     confirmDialogRef.afterClosed().subscribe(confirmResult => {
       console.log("eliminar usuario")
       if (confirmResult) {
-        this.userService.deleteUser(id).subscribe({
+        this.patientService.deletePatient(id).subscribe({
           next: () => {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
@@ -81,24 +78,23 @@ export class ListUserComponent {
       }
     });
   }
+  
+  activePatient(patient: Patient){
+    patient.is_active = true;
+    
 
-  activeUser(user: User){
-    user.is_active=true;
-
-    this.userService.updateUser(user.id, user).subscribe({
+    this.patientService.updatePatient(patient.id, patient).subscribe({
       next: () => {
-        console.log('Usuario actualizado con éxito');
-        this.dialogService.showSuccessDialog("Usuario Activado con éxito")
+        
+        this.dialogService.showSuccessDialog("Paciente Activado con éxito")
 
         this.setDataTable();
       },
       error: (error) => {
-        console.error('Error al actualizar el usuario', error);
-        this.dialogService.showErrorDialog("Error al Activar el usuario")
+        console.log(error);
+        this.dialogService.showErrorDialog("Error al Activar el Paciente")
         // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
       }
     });
-  
+  }
 }
-}
-

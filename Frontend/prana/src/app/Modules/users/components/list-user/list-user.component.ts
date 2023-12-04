@@ -15,7 +15,7 @@ import { UserService } from 'src/app/Services/users/user.service';
   styleUrls: ['./list-user.component.css']
 })
 export class ListUserComponent {
-  displayedColumns: string[] = ['id', 'dni', 'name', 'last_name', 'email', 'phone', 'is_active', 'is_staff','actions'];
+  displayedColumns: string[] = [ 'dni', 'name', 'last_name', 'email', 'phone', 'is_active', 'is_staff','actions'];
   dataSource!: MatTableDataSource<User>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

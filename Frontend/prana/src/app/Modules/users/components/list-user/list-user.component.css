@@ -17,15 +17,13 @@
     text-align: left; /* Alinea el texto a la izquierda */
         /* Usa flexbox para controlar la alineación */
     /* Alinea verticalmente el ícono y el texto */
+    vertical-align: middle; 
     
 }
-.btn-icon{
-    margin-right: 10px;
-    
-    color: white;
-}
+
 
 .material-icons {
     margin-right: 10px;
-    vertical-align: middle; /* Alinea el ícono verticalmente con el texto */
+    vertical-align: middle; 
+
 }

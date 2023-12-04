@@ -18,6 +18,7 @@ import { PatientService } from 'src/app/Services/Profile/patient/patient.service
 import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
+import { DialogService } from 'src/app/Services/dialog/dialog.service';
 import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 
 
@@ -83,7 +84,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
     private paymentmethodservice: PaymentmethodService,
     private insuranceService: HealthinsuranceService,
     private specialtyFilterService: SpecialtyFilterService,
-    private doctorScheduleService: DoctorscheduleService
+    private doctorScheduleService: DoctorscheduleService,
+    private dialogService: DialogService
   ) {
     this.appointmentForm = this.fb.group({
       day: ['', Validators.required],
@@ -529,11 +531,6 @@ export class AppointmentAdminCreateComponent implements OnInit {
   * @returns {string[]} The formatted dates.
   */
   formatDates(doctorSchedule: any): string[] {
-    const currentDate = new Date();
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    currentDate.setDate(1);
-
     const daysOfWeekSpanish = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
     const monthsSpanish = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
@@ -542,27 +539,30 @@ export class AppointmentAdminCreateComponent implements OnInit {
 
     // Loops over the current month and the next one
     for (let m = 0; m < 2; m++) {
-      const daysInMonth = new Date(year, month + m + 1, 0).getDate();
+      const currentDate = new Date();
+      currentDate.setDate(1);
+      currentDate.setMonth(currentDate.getMonth() + m);
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
 
       for (let i = 0; i < daysInMonth; i++) {
-        currentDate.setMonth(month + m);
-        currentDate.setDate(i + 1); // Establece el día del mes
+        const date = new Date(year, month, i + 1); // Create a new date for every day
 
         // Continue if the date is older than today
-        if (currentDate < today) {
+        if (date < today && date.toDateString() !== today.toDateString()) {
           continue;
         }
 
-        const dayOfWeek = daysOfWeekSpanish[currentDate.getDay()];
-        const dayOfMonth = currentDate.getDate();
-        const monthName = monthsSpanish[(month + m) % 12];
-        // const monthName = monthsSpanish[month + m];
+        const dayOfWeek = daysOfWeekSpanish[date.getDay()];
+        const dayOfMonth = date.getDate();
+        const monthName = monthsSpanish[month];
 
         const formattedDate = `${dayOfWeek} ${dayOfMonth} de ${monthName}`;
 
         // Format day (mon, tue, wed...)
-        const englishShortDay = currentDate.toDateString().toLocaleLowerCase().slice(0, 3);
-        // Busca si el día del cronograma coincide con el día actual
+        const englishShortDay = date.toDateString().toLocaleLowerCase().slice(0, 3);
+        // Find the actual day on the dosctor schedule
         const matchingDay = doctorSchedule.find((day: DoctorScheduleInterface) => day.day === englishShortDay);
         if (matchingDay) {
           // If match with the schedule, add the date 
@@ -629,27 +629,27 @@ export class AppointmentAdminCreateComponent implements OnInit {
     let dayControl = this.appointmentForm.get('day');
     let hourControl = this.appointmentForm.get('hour');
     if (!this.patientControl.value) {
-      alert('El campo "Paciente" no puede ser vacío, por favor, asigne un valor');
+      this.dialogService.showErrorDialog('El campo "Paciente "no puede ser vacío, por favor, asigne un valor');
       return false;
     }
 
     if (!this.specialtyControl.value) {
-      alert('El campo "Especialidad" no puede ser vacío, por favor, asigne un valor');
+      this.dialogService.showErrorDialog('El campo "Especialidad "no puede ser vacío, por favor, asigne un valor');
       return false;
     }
 
     if (!this.doctorControl.value) {
-      alert('El campo "Profesional" no puede ser vacío, por favor, asigne un valor');
+      this.dialogService.showErrorDialog('El campo "Profesional "no puede ser vacío, por favor, asigne un valor');
       return false;
     }
 
     if (!dayControl || !dayControl.value) {
-      alert('El campo "Día" no puede ser vacío, por favor, asigne un valor');
+      this.dialogService.showErrorDialog('El campo "Día "no puede ser vacío, por favor, asigne un valor');
       return false;
     }
 
     if (!hourControl || !hourControl.value) {
-      alert('El campo "Hora" no puede ser vacío, por favor, asigne un valor');
+      this.dialogService.showErrorDialog('El campo "Hora "no puede ser vacío, por favor, asigne un valor');
       return false;
     }
 
@@ -772,18 +772,18 @@ export class AppointmentAdminCreateComponent implements OnInit {
   * @returns {string} The appointment preview.
   */
   displayPreviewAppointment(): string {
-    let preview = `Desea confirmar el turno con los siguientes datos?: \n
-    Paciente: ${this.patientName}\n
-    Profesional: ${this.doctorName}\n
-    Día: ${this.appointmentForm.get('day')?.value}\n
-    Hora: ${this.appointmentForm.get('hour')?.value}\n
-    Especialidad: ${this.specialtytName}\n
-    Rama: ${this.branchName}\n
-    Obra Social: ${this.findFormHi()}\n
-    Estado del Turno: ${this.findFormState()}\n
-    Costo: ${this.findFormFullCost()}\n
-    Método de Pago: ${this.findFormPaymentMethod()}\n`
-    return preview
+    let preview = `Desea confirmar el turno con los siguientes datos?: <br>
+    <strong> Paciente: </strong> ${this.patientName}<br>
+    <strong> Profesional: </strong> ${this.doctorName}<br>
+    <strong> Día: </strong> ${this.appointmentForm.get('day')?.value}<br>
+    <strong> Hora: </strong> ${this.appointmentForm.get('hour')?.value}<br>
+    <strong> Especialidad: </strong> ${this.specialtytName}<br>
+    <strong> Rama: </strong> ${this.branchName}<br>
+    <strong>Obra Social: </strong> ${this.findFormHi()}<br>
+    <strong>Estado del Turno: </strong> ${this.findFormState()}<br>
+    <strong>Costo: </strong> ${this.findFormFullCost()}<br>
+    <strong> Método de Pago: </strong> ${this.findFormPaymentMethod()}<br>`;
+    return preview.replace(/\n/g, '');
   }
 
   /**
@@ -881,45 +881,53 @@ export class AppointmentAdminCreateComponent implements OnInit {
         filteredBody.health_insurance = formValues.health_insurance;
       }
       //console.log("BODY: ", filteredBody)
-      const confirmed = window.confirm(`${this.displayPreviewAppointment()}`);
-      if (confirmed) {
+      //const confirmed = window.confirm(`${this.displayPreviewAppointment()}`);
+      const confirmAppointment = this.dialogService.openConfirmDialog(
+        `${this.displayPreviewAppointment()}`
+      );
+      confirmAppointment.afterClosed().subscribe(confirmResult => {
+        if (confirmResult) {
+          this.appointmentService.createAdminAppointment(filteredBody)
+            .pipe(
+              catchError(error => {
+                console.error('Error en la solicitud:', error);
 
-        this.appointmentService.createAdminAppointment(filteredBody)
-          .pipe(
-            catchError(error => {
-              console.error('Error en la solicitud:', error);
+                // Checks "non_field_errors"
+                if (error.error && error.error.non_field_errors) {
+                  const errorMessage = error.error.non_field_errors[0];
+                  this.dialogService.showErrorDialog('Error al generar el turno: ' + errorMessage);
+                } else {
+                  // Show a general error
+                  this.dialogService.showErrorDialog('Ha ocurrido un error en la solicitud.');
+                }
 
-              // Checks "non_field_errors"
-              if (error.error && error.error.non_field_errors) {
-                const errorMessage = error.error.non_field_errors[0];
+                throw error;
+              })
+            )
+            .subscribe((data: AppointmentAdminGetInterface) => {
+              this.appointmentResponse = data;
+              const successDialog = this.dialogService.showSuccessDialog("Turno generado exitosamente");
 
-                alert('Error al generar el turno: ' + errorMessage);
-              } else {
-                // Show a general error
-                alert('Ha ocurrido un error en la solicitud.');
-              }
+              successDialog.afterClosed().subscribe(() => {
+                const createAnotherAppointment = this.dialogService.openConfirmDialog(
+                  '¿Desea generar otro turno?'
+                );
+                createAnotherAppointment.afterClosed().subscribe(confirmResult => {
+                  if (confirmResult) {
+                    // reset form or reload?
+                    //this.appointmentForm.reset();
+                    window.location.reload();
+                  } else {
+                    // Redirect to apointment list
+                    window.location.href = 'http://localhost:4200/Dashboard/appointments/admin/list';
+                  }
+                });
+              })
 
-              throw error;
-            })
-          )
-          .subscribe((data: AppointmentAdminGetInterface) => {
-            this.appointmentResponse = data;
-            alert("Turno generado exitosamente")
-            //console.log(data);
-            const createAnother = window.confirm('¿Desea generar otro turno?');
-            if (createAnother) {
-              // reset form or reload?
-              //this.appointmentForm.reset();
-              window.location.reload();
-            } else {
-              // Redirect to apointment list
-              window.location.href = 'http://localhost:4200/Dashboard/appointments/admin/list';
-            }
-          });
-      }
 
+            });
+        }
+      });
     }
-
   }
-
 }

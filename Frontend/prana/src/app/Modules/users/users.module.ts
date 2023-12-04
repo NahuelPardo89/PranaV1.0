@@ -16,12 +16,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { PatientListComponent } from './components/patient-list/patient-list.component';
 @NgModule({
   declarations: [
    
     CreateUserComponent,
     ListUserComponent,
     EditUserComponent,
+    PatientListComponent,
   ],
   imports: [
     CommonModule,

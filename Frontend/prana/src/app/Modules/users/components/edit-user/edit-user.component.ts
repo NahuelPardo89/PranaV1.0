@@ -66,6 +66,6 @@ export class EditUserComponent {
     }
   }
   onCancel(){
-    this.router.navigate(['Dashboard/users'])
+    this.router.navigate(['Dashboard/accounts/users'])
   }
 }

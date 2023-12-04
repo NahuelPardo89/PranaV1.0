@@ -85,6 +85,7 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
 class PatientProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
     user = serializers.StringRelatedField()
+    insurances=serializers.StringRelatedField(many=True)
 
     class Meta:
         model = PatientProfile

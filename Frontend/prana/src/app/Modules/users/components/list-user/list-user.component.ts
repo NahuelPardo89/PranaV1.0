@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator"
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -54,7 +53,7 @@ export class ListUserComponent {
 
   editUser(user: User) {
     console.log(user);
-    this.router.navigate(['Dashboard/users/edit'], { state: { user } });
+    this.router.navigate(['Dashboard/accounts/users/edit'], { state: { user } });
   }
 
   deleteUser(id: number) {

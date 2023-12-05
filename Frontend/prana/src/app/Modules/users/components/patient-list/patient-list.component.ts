@@ -60,19 +60,19 @@ export class PatientListComponent {
   
 
     confirmDialogRef.afterClosed().subscribe(confirmResult => {
-      console.log("eliminar usuario")
+      
       if (confirmResult) {
         this.patientService.deletePatient(id).subscribe({
           next: () => {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
-            this.dialogService.showSuccessDialog("Usuario Desactivado con éxito")
+            this.dialogService.showSuccessDialog("Paciente Desactivado con éxito")
 
             // Aquí podrías, por ejemplo, recargar la lista de usuarios
           },
           error: (error) => {
             // Manejo de errores
-            this.dialogService.showErrorDialog("Hubo un error al Desactivar el Usuario")
+            this.dialogService.showErrorDialog("Hubo un error al Desactivar el PAciente")
           }
         });
       }

@@ -80,12 +80,13 @@ class DoctoListProfileSerializer(serializers.ModelSerializer):
         model = DoctorProfile
         fields = ('id', 'user', 'medicLicence', 'specialty',
                   'insurances', 'is_active', 'appointment_duration')
-class DoctorShortProfileSerializer(serializers.ModelSerializer):
+
+class DoctorCreateUpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorProfile
         fields = ('id', 'user', 'medicLicence', 'specialty',
                   'insurances', 'is_active', 'appointment_duration')
-        read_only_fields = ('user','insurances','specialty')
+        read_only_fields = ('insurances',)
 
 class PatientListProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)

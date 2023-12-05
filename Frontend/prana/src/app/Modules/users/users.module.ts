@@ -21,7 +21,8 @@ import { PatientEditComponent } from './components/patient-edit/patient-edit.com
 import { DoctorListComponent } from './components/doctor-list/doctor-list.component';
 import { DoctorEditComponent } from './components/doctor-edit/doctor-edit.component';
 import { DoctorCreateComponent } from './components/doctor-create/doctor-create.component';
-
+import {MatSelectModule} from '@angular/material/select';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 @NgModule({
   declarations: [
    
@@ -48,7 +49,9 @@ import { DoctorCreateComponent } from './components/doctor-create/doctor-create.
     MatCardModule,
     FormsModule,
     ReactiveFormsModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    MatAutocompleteModule
   ]
 })
 export class UsersModule { }

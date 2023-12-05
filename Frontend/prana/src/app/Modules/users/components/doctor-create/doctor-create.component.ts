@@ -21,7 +21,7 @@ export class DoctorCreateComponent {
   users: User[] = [];
   healthInsurances: HealthInsurance[] = [];
   doctorForm: FormGroup;
-
+  
   // Lista de intervalos de 15 minutos para la duración del turno
   durationIntervals: number[] = Array.from({ length: 13 }, (_, index) => (index + 2) * 15);
 
@@ -34,12 +34,11 @@ export class DoctorCreateComponent {
     private router: Router,
   ) {
     this.doctorForm = this.fb.group({
-      userId: ['', Validators.required],
-      matricula: ['', Validators.required],
-      specialtyId: ['', Validators.required],
-       
-      duration: [null, Validators.required],
-      isActive: [true],
+      user: ['', Validators.required],
+      medicLicence: ['', Validators.required],
+      specialty: ['', Validators.required],
+      appointment_duration: ['', Validators.required],
+      
     });
   }
 
@@ -71,7 +70,7 @@ export class DoctorCreateComponent {
   onSubmit(): void {
     if (this.doctorForm.valid) {
       
-  
+      console.log(this.doctorForm.value);
       this.doctorProfileService.createDoctor(this.doctorForm.value).subscribe({
         next: (response) => {
               this.dialog.showSuccessDialog("Usuario creado correctamente");

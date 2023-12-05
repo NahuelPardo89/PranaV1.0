@@ -57,7 +57,7 @@ export class DoctorListComponent {
 
   deleteDoctor(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar este usuario?'
+      '¿Estás seguro de que deseas desactivar este Profesional?'
     );
   
 
@@ -68,13 +68,13 @@ export class DoctorListComponent {
           next: () => {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
-            this.dialogService.showSuccessDialog("Usuario Desactivado con éxito")
+            this.dialogService.showSuccessDialog("Profesional Desactivado con éxito")
 
             // Aquí podrías, por ejemplo, recargar la lista de usuarios
           },
           error: (error) => {
             // Manejo de errores
-            this.dialogService.showErrorDialog("Hubo un error al Desactivar el Usuario")
+            this.dialogService.showErrorDialog("Hubo un error al Desactivar el Profesional")
           }
         });
       }
@@ -82,18 +82,19 @@ export class DoctorListComponent {
   }
 
   activeDoctor(doctor: DoctorProfile){
-    doctor.is_active=true;
+    const dataToUpdate = { is_active: true };
+    console.log(doctor)
 
-    this.doctorService.updateDoctor(doctor.id, doctor).subscribe({
+    this.doctorService.partialupdateDoctor(doctor.id, dataToUpdate).subscribe({
       next: () => {
-        console.log('Usuario actualizado con éxito');
-        this.dialogService.showSuccessDialog("Usuario Activado con éxito")
+        
+        this.dialogService.showSuccessDialog("Profesional Activado con éxito")
 
         this.setDataTable();
       },
       error: (error) => {
-        console.error('Error al actualizar el usuario', error);
-        this.dialogService.showErrorDialog("Error al Activar el usuario")
+       
+        this.dialogService.showErrorDialog("Error al Activar el Profesional")
         // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
       }
     });

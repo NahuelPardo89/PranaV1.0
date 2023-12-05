@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="title bg-info text-center text-bold border border-dark rounded-top mb-4">
-      <h1 class="">Doctores</h1>
+      <h1 class="text-white">Profesionales</h1>
     </div>
   
     <div class="container-fluid">
@@ -11,7 +11,7 @@
       </div>
   
       <mat-form-field class="example-form-field">
-        <mat-label>Filtrar por Licencia Médica, Especialidades, Seguros</mat-label>
+        <mat-label>Filtrar por Doctor, Especialidades, Obra Social</mat-label>
         <input matInput (keyup)="applyFilter($event)" #input>
       </mat-form-field>
   
@@ -28,7 +28,7 @@
           </ng-container>
   
           <ng-container matColumnDef="medicLicence">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Licencia Médica</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Matrícula</th>
             <td mat-cell *matCellDef="let row">{{ row.medicLicence }}</td>
           </ng-container>
   
@@ -38,12 +38,12 @@
           </ng-container>
   
           <ng-container matColumnDef="insurances">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Seguros</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Obras Sociales</th>
             <td mat-cell *matCellDef="let row">{{ row.insurances.join(', ') }}</td>
           </ng-container>
   
           <ng-container matColumnDef="appointment_duration">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Duración Cita</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Duración Turno</th>
             <td mat-cell *matCellDef="let row">{{ row.appointment_duration }}</td>
           </ng-container>
   

@@ -1,47 +1,52 @@
-<form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="userId">Usuario:</label>
-      <select id="userId" formControlName="userId" required>
-        <option *ngFor="let user of users" [value]="user.id">{{ user.name }},{{ user.last_name }}</option>
-      </select>
+<div class="container mt-3">
+  <div class="card">
+    <div class="card-header bg-info text-white">
+      <h2>Crear Profesional</h2>
     </div>
-  
-    <div>
-      <label for="matricula">Matrícula:</label>
-      <input type="text" id="matricula" formControlName="matricula" required>
-    </div>
-   
-    <div>
-      <label for="specialtyId">Especialidad:</label>
-      <select id="specialtyId" formControlName="specialtyId" required>
-        <option *ngFor="let specialty of specialties" [value]="specialty.id">{{ specialty.name }}</option>
-      </select>
-    </div>
+    <div class="card-body">
+      <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
+        <!-- Campo Usuario (ID de usuario) -->
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Usuario</mat-label>
+          
+          
+          
+          <mat-select formControlName="user">
+            <mat-option *ngFor="let user of users" [value]="user.id">
+              {{ user.name }}, {{ user.last_name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <div>
-        <label for="insurances">Seguros:</label>
-        <div *ngFor="let insurance of healthInsurances">
-          <label>
-            <input type="checkbox" [value]="insurance.id" formControlName="insuranceIds"> {{ insurance.name }}
-          </label>
-        </div>
-      </div>
-  
-    <div>
-        <label for="duration">Duración del turno:</label>
-        <select id="duration" formControlName="duration" required>
-          <option *ngFor="let interval of durationIntervals" [value]="interval">
-            {{ formatDuration(interval) }}
-          </option>
-        </select>
-      </div>
-    <div>
-      <label>
-        <input type="checkbox" formControlName="isActive"> ¿Activo?
-      </label>
+        <!-- Campo Licencia Médica -->
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Licencia Médica</mat-label>
+          <input matInput formControlName="medicLicence">
+        </mat-form-field>
+
+        <!-- Campo Especialidades -->
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Especialidades</mat-label>
+          <mat-select formControlName="specialty" multiple>
+            <mat-option *ngFor="let specialty of specialties" [value]="specialty.id">
+              {{ specialty.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Checkbox Activo -->
+        <mat-checkbox formControlName="is_active" class="mb-3">Activo</mat-checkbox>
+
+        <!-- Campo Duración de Cita -->
+        <mat-form-field appearance="fill" class="w-100">
+          <mat-label>Duración de la Cita</mat-label>
+          <input matInput formControlName="appointment_duration">
+        </mat-form-field>
+
+        <!-- Botones -->
+        <button type="submit" mat-raised-button color="primary" [disabled]="!doctorForm.valid">Crear Doctor</button>
+        <button type="button" mat-raised-button color="warn" >Cancelar</button>
+      </form>
     </div>
-  
-    <div>
-      <button type="submit" >Guardar</button>
-    </div>
-  </form>
+  </div>
+</div>

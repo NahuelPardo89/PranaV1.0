@@ -17,9 +17,9 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
                                       PatientProfile, SpecialityBranch)
 
 from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
-                          DoctorProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
+                          DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
                           InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer,   SpecialityBranchSerializer)
+                          DoctorProfileShortSerializer,   SpecialityBranchSerializer,DoctorShortProfileSerializer)
 
 from apps.permission import IsAdminOrReadOnly
 
@@ -271,7 +271,8 @@ class PatientProfileAdminViewSet(BaseAdminViewSet):
 
 class DoctorProfileAdminViewSet(BaseAdminViewSet):
     model = DoctorProfile
-    serializer_class = DoctorProfileSerializer
+    serializer_class = DoctoListProfileSerializer
+    update_serializer_class= DoctorShortProfileSerializer
     queryset = None
 
     def get_queryset(self):
@@ -280,6 +281,21 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
         if speciality is not None:
             queryset = queryset.filter(specialty__name=speciality)
         return queryset
+    
+    def update(self, request, pk=None):
+        
+        instance = self.get_object(pk)
+        instance_serializer = self.update_serializer_class(
+            instance, data=request.data)
+        if instance_serializer.is_valid():
+            instance_serializer.save()
+            return Response({
+                'message': 'Profile actualizado correctamente'
+            }, status=status.HTTP_200_OK)
+        return Response({
+            'message': 'Hay errores en la actualización',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 # NORMAL USERS VIEWSETS
 

@@ -18,6 +18,9 @@ import { MatCardModule } from '@angular/material/card';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { PatientListComponent } from './components/patient-list/patient-list.component';
 import { PatientEditComponent } from './components/patient-edit/patient-edit.component';
+import { DoctorListComponent } from './components/doctor-list/doctor-list.component';
+import { DoctorEditComponent } from './components/doctor-edit/doctor-edit.component';
+import { DoctorCreateComponent } from './components/doctor-create/doctor-create.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,9 @@ import { PatientEditComponent } from './components/patient-edit/patient-edit.com
     EditUserComponent,
     PatientListComponent,
     PatientEditComponent,
+    DoctorListComponent,
+    DoctorEditComponent,
+    DoctorCreateComponent,
     
   ],
   imports: [

@@ -1,11 +1,8 @@
-<!-- create-doctor.component.html
-[disabled]="!doctorForm.valid" -->
-
 <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
     <div>
       <label for="userId">Usuario:</label>
       <select id="userId" formControlName="userId" required>
-        <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        <option *ngFor="let user of users" [value]="user.id">{{ user.name }},{{ user.last_name }}</option>
       </select>
     </div>
   
@@ -48,4 +45,3 @@
       <button type="submit" >Guardar</button>
     </div>
   </form>
-  

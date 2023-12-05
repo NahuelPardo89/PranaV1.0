@@ -70,7 +70,7 @@ class DoctorProfileAllSerializer(serializers.ModelSerializer):
         return InsurancePlanSerializer(insurance_plans, many=True).data
 
 
-class DoctorProfileSerializer(serializers.ModelSerializer):
+class DoctoListProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
     user = serializers.StringRelatedField()
     specialty = serializers.StringRelatedField(many=True)
@@ -80,7 +80,12 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
         model = DoctorProfile
         fields = ('id', 'user', 'medicLicence', 'specialty',
                   'insurances', 'is_active', 'appointment_duration')
-
+class DoctorShortProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorProfile
+        fields = ('id', 'user', 'medicLicence', 'specialty',
+                  'insurances', 'is_active', 'appointment_duration')
+        read_only_fields = ('user','insurances','specialty')
 
 class PatientListProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)

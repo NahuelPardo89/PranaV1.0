@@ -25,24 +25,22 @@ class AppointmentListCreateView(APIView):
         Retrieve a list of appointments filtered by state.
         """
         # Find the states to list
-        state = request.query_params.get(
-            'state')
+        state = request.query_params.get('state')
+        doctor_id = request.query_params.get('doctor_id')
+        day = request.query_params.get('day')
 
         # Filter the appointments by state, if any
         if state is not None:
             appointments = Appointment.objects.filter(state=state)
+        elif doctor_id is not None:
+            appointments = Appointment.objects.filter(doctor=doctor_id)
+        elif day is not None:
+            appointments = Appointment.objects.filter(day=day)
         else:
             appointments = Appointment.objects.all()
 
-        # Find the doctor's to list
-        doctor_id = request.query_params.get(
-            'doctor_id')
+        appointments = appointments.order_by('-day', 'hour')
 
-        # Filter the appointments by state, if any
-        if doctor_id is not None:
-            appointments = Appointment.objects.filter(doctor=doctor_id)
-
-        # serializer = AppointmentSerializer(appointments, many=True)
         serializer = AppointmentSerializerList(appointments, many=True)
         return Response(serializer.data)
 

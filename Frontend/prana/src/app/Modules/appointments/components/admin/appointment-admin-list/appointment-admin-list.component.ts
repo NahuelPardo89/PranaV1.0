@@ -1,8 +1,10 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Route, Router } from '@angular/router';
+import { Observable, catchError } from 'rxjs';
 import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
@@ -19,21 +21,19 @@ export class AppointmentAdminListComponent {
     'patient',
     'doctor',
     'specialty',
-    'branch',
+    //'branch',
     'health_insurance',
-    'duration',
-    'payment_method',
-    'full_cost',
+    //'payment_method',
+    //'full_cost',
     'patient_copayment',
     'hi_copayment',
-    'state'
+    'state',
+    'actions'
   ];
 
   dataSource!: MatTableDataSource<AppointmentAdminGetInterface>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  appointments: AppointmentAdminGetInterface[] = []; //Review
 
   constructor(
     private appointmentService: AppointmentService,
@@ -43,13 +43,16 @@ export class AppointmentAdminListComponent {
 
   ngOnInit(): void {
     this.setDataTable()
-    // this.appointmentService.getAdminAllAppointments().subscribe((data: AppointmentAdminGetInterface[]) => {
-    //   this.appointments = data;
-    // });
   }
 
-  setDataTable() {
-    this.appointmentService.getAdminAllAppointments().subscribe((data: AppointmentAdminGetInterface[]) => {
+  setDataTable(day?: string) {
+    let observable: Observable<AppointmentAdminGetInterface[]>;
+    if (day) {
+      observable = this.appointmentService.getAdminTodayAppointments(day);
+    } else {
+      observable = this.appointmentService.getAdminAllAppointments();
+    }
+    observable.subscribe((data: AppointmentAdminGetInterface[]) => {
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
@@ -58,8 +61,16 @@ export class AppointmentAdminListComponent {
       this.paginator._intl.previousPageLabel = 'página anterior';
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      //this.appointments = data;
     });
+  }
+
+  showAll() {
+    this.setDataTable();
+  }
+
+  filterToday() {
+    const today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+    this.setDataTable(today);
   }
 
   applyFilter(event: Event) {
@@ -71,15 +82,40 @@ export class AppointmentAdminListComponent {
     }
   }
 
-  onEdit(Id: number): void {
-    // Aquí puedes agregar la lógica para manejar la edición de la especialidad médica.
-    console.log(`Editing speciality with ID: ${Id}`);
+  onEdit(appointment: AppointmentAdminGetInterface): void {
+    this.router.navigate(['Dashboard/appointments/admin/update'], { state: { appointment } });
   }
 
-  onDelete(Id: number): void {
-    // Aquí puedes agregar la lógica para manejar la eliminación de la especialidad médica.
-    if (confirm('¿Estas seguro que deseas elimninar este Turno?')) {
-      console.log(`Deleting speciality with ID: ${Id}`);
-    }
+  onDelete(appointment_id: number): void {
+    const confirmDialogRef = this.dialogService.openConfirmDialog(
+      '¿Confirma la eliminación de este turno?'
+    );
+
+    confirmDialogRef.afterClosed().subscribe(confirmResult => {
+      if (confirmResult) {
+        this.appointmentService.deleteAdminAppointment(appointment_id).pipe(
+
+          catchError(error => {
+            console.error('Error en la solicitud:', error);
+
+            // Checks "non_field_errors"
+            if (error.error && error.error.non_field_errors) {
+              const errorMessage = error.error.non_field_errors[0];
+              this.dialogService.showErrorDialog('Error al generar el turno: ' + errorMessage);
+            } else {
+              // Show a general error
+              this.dialogService.showErrorDialog('Ha ocurrido un error en la solicitud.');
+            }
+
+            throw error;
+          })
+        ).subscribe((data: any) => {
+          this.setDataTable();
+          this.dialogService.showSuccessDialog("Turno eliminado con éxito" + data)
+        })
+
+      }
+    });
   }
+
 }

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
-import {MatPaginatorIntl, PageEvent} from "@angular/material/paginator"
+import { MatPaginatorIntl, PageEvent } from "@angular/material/paginator"
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -15,29 +15,29 @@ import { UserService } from 'src/app/Services/users/user.service';
   styleUrls: ['./list-user.component.css']
 })
 export class ListUserComponent {
-  displayedColumns: string[] = ['id', 'dni', 'name', 'last_name', 'email', 'phone', 'is_active', 'is_staff','actions'];
+  displayedColumns: string[] = ['id', 'dni', 'name', 'last_name', 'email', 'phone', 'is_active', 'is_staff', 'actions'];
   dataSource!: MatTableDataSource<User>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private userService: UserService, private dialogService:DialogService,private router:Router) {
-    
+  constructor(private userService: UserService, private dialogService: DialogService, private router: Router) {
+
   }
 
   ngOnInit() {
     this.setDataTable()
   }
 
-  setDataTable(){
+  setDataTable() {
     this.userService.getUsers().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
-      this.paginator._intl.lastPageLabel ='última página';
+      this.paginator._intl.lastPageLabel = 'última página';
       this.paginator._intl.nextPageLabel = 'página siguiente';
-      this.paginator._intl.previousPageLabel='página anterior';
-      
+      this.paginator._intl.previousPageLabel = 'página anterior';
+
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
@@ -61,7 +61,7 @@ export class ListUserComponent {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Estás seguro de que deseas desactivar este usuario?'
     );
-  
+
 
     confirmDialogRef.afterClosed().subscribe(confirmResult => {
       console.log("eliminar usuario")
@@ -83,8 +83,8 @@ export class ListUserComponent {
     });
   }
 
-  activeUser(user: User){
-    user.is_active=true;
+  activeUser(user: User) {
+    user.is_active = true;
 
     this.userService.updateUser(user.id, user).subscribe({
       next: () => {
@@ -99,7 +99,7 @@ export class ListUserComponent {
         // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
       }
     });
-  
-}
+
+  }
 }
 

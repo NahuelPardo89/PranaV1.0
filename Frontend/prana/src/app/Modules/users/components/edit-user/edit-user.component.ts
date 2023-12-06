@@ -48,7 +48,7 @@ export class EditUserComponent {
             console.log('Usuario actualizado con éxito');
             this.dialogService.showSuccessDialog("Usuario Editado con éxito")
 
-            this.router.navigate(['Dashboard/users']); // Ajusta la ruta según sea necesario
+            this.router.navigate(['Dashboard/accounts/users']); // Ajusta la ruta según sea necesario
           },
           error: (error) => {
             console.error('Error al actualizar el usuario', error);
@@ -66,6 +66,6 @@ export class EditUserComponent {
     }
   }
   onCancel(){
-    this.router.navigate(['Dashboard/users'])
+    this.router.navigate(['Dashboard/accounts/users'])
   }
 }

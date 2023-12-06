@@ -14,15 +14,7 @@ export class PatientService {
   constructor(private httpClient: HttpClient) { }
 
   getAllPatients(): Observable<Patient[]> {
-    return this.httpClient.get<Patient[]>(this.apiUrl).pipe(
-      map((patients: Patient[]) => {
-        // Realiza la transformación para calcular el campo fullName
-        return patients.map((patient) => ({
-          ...patient,
-          fullName: this.calculateFullName(patient.user)
-        }));
-      })
-    );
+    return this.httpClient.get<Patient[]>(this.apiUrl)
   }
   
   // Función para calcular el campo fullName a partir del campo user

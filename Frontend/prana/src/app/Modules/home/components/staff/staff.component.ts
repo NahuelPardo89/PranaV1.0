@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StaffService } from 'src/app/Services/staff.service';
 import { ViewportScroller } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-staff',
@@ -11,7 +12,7 @@ export class StaffComponent implements OnInit {
   
   staff: any[] = [];
 
-  constructor(private staffService: StaffService, private viewportScroller: ViewportScroller) { }
+  constructor(private staffService: StaffService, private viewportScroller: ViewportScroller, private router : Router) { }
 
   scrollToSection() {
     const targetElement = document.getElementById('encontrarnos');
@@ -39,6 +40,9 @@ export class StaffComponent implements OnInit {
       });
     }
   }
+  navigateToAboutUs() {
+    this.router.navigate(['/AboutUs']);
+}
 
 
 

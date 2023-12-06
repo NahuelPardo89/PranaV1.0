@@ -51,7 +51,7 @@ class Room(BaseModel):
     cost     = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], default=0)
     is_active= models.BooleanField(default=True)
     def __str__(self):
-        return f'nombre: {self.name}, Capacidad: {self.capacity}, Costo: {self.cost}'
+        return self.name
 
 class Seminar(BaseModel):
     name = models.CharField(max_length=100)

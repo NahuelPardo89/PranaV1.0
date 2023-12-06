@@ -39,7 +39,9 @@ export class DoctorprofileService {
   updateDoctor(id: number, data: DoctorProfile): Observable<DoctorProfile> {
     return this.http.put<DoctorProfile>(`${this.baseUrl}${id}/`, data);
   }
-
+  partialupdateDoctor(doctorId: number, data: Partial<DoctorProfile>): Observable<any> {
+    return this.http.patch(`${this.baseUrl}${doctorId}/`, data); 
+}
   // Delete a doctor profile
   deleteDoctor(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}/`);

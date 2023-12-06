@@ -1,6 +1,6 @@
 
 export interface DoctorProfile {
-    id?: number;
+    id: number;
     user: number; // integer (User)
     medicLicence: string | null; // string or null (Matrícula) <= 20 characters
     specialty: string[]; // Array of integers unique

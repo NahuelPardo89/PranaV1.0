@@ -17,9 +17,9 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
                                       PatientProfile, SpecialityBranch)
 
 from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
-                          DoctorProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
+                          DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
                           InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer,   SpecialityBranchSerializer)
+                          DoctorProfileShortSerializer,   SpecialityBranchSerializer,DoctorCreateUpdateProfileSerializer)
 
 from apps.permission import IsAdminOrReadOnly
 
@@ -271,7 +271,8 @@ class PatientProfileAdminViewSet(BaseAdminViewSet):
 
 class DoctorProfileAdminViewSet(BaseAdminViewSet):
     model = DoctorProfile
-    serializer_class = DoctorProfileSerializer
+    serializer_class = DoctoListProfileSerializer
+    createUpdate_serializer_class= DoctorCreateUpdateProfileSerializer
     queryset = None
 
     def get_queryset(self):
@@ -280,6 +281,41 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
         if speciality is not None:
             queryset = queryset.filter(specialty__name=speciality)
         return queryset
+    
+    def update(self, request, pk=None):
+        
+        instance = self.get_object(pk)
+        instance_serializer = self.createUpdate_serializer_class(
+            instance, data=request.data)
+        if instance_serializer.is_valid():
+            instance_serializer.save()
+            return Response({
+                'message': 'Profile actualizado correctamente'
+            }, status=status.HTTP_200_OK)
+        return Response({
+            'message': 'Hay errores en la actualización',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    def partial_update(self, request, pk=None):
+        instance = self.get_object(pk)
+        serializer = self.get_serializer(instance, data=request.data, partial=True) # partial=True permite la actualización parcial
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request):
+        print(request.data)
+        instance_serializer = self.createUpdate_serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Profile',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 # NORMAL USERS VIEWSETS
 

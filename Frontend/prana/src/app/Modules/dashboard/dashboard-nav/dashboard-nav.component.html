@@ -9,7 +9,7 @@
                 <i class="material-symbols-outlined btn-icon"
                     routerLinkActive="router-link-active">patient_list</i>Gestionar Usuarios
             </button>
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="doctors/list">
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="accounts/doctores">
                 <i class="material-symbols-outlined btn-icon">patient_list</i> Gestionar Profesionales
             </button>
             <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="accounts/pacientes">
@@ -46,7 +46,7 @@
             <i class="material-symbols-outlined btn-icon">self_improvement</i> Gestionar Talleres
         </button>
         <div *ngIf="showSeminarOptions" class="toggle">
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="seminar/"><i
                     class="material-symbols-outlined btn-icon">self_improvement</i>
                 Gestionar Talleres
             </button>
@@ -55,7 +55,7 @@
                 Gestionar Inscripciones
             </button>
         </div>
-        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink="appointments/admin/list"><i
+        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
                 class="material-symbols-outlined btn-icon">calendar_month</i>
             Gestionar Turnos
         </button>

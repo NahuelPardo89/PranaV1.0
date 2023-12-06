@@ -39,5 +39,8 @@ export class CreateUserComponent {
       });
     }
   }
+  onCancel(){
+    this.router.navigate(['/Dashboard/accounts/users']);
+  }
 
 }

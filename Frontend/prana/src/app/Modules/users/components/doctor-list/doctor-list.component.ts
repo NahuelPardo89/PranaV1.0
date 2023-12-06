@@ -3,32 +3,32 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Patient } from 'src/app/Models/Profile/patient.interface';
-import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
+import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
+import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-patient-list',
-  templateUrl: './patient-list.component.html',
-  styleUrls: ['./patient-list.component.css']
+  selector: 'app-doctor-list',
+  templateUrl: './doctor-list.component.html',
+  styleUrls: ['./doctor-list.component.css']
 })
-export class PatientListComponent {
-  displayedColumns: string[] = [ 'user','facebook','instagram','address','is_active','insurances','actions'];
-  dataSource!: MatTableDataSource<Patient>;
+export class DoctorListComponent {
+  displayedColumns: string[] = ['id','user','medicLicence','specialty','insurances','appointment_duration','is_active','actions'];
+  dataSource!: MatTableDataSource<DoctorProfile>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private patientService: PatientService, private dialogService:DialogService,private router:Router) {
+  constructor(private doctorService: DoctorprofileService, private dialogService:DialogService,private router:Router) {
     
   }
+
   ngOnInit() {
     this.setDataTable()
   }
 
   setDataTable(){
-    this.patientService.getAllPatients().subscribe(data => {
-      
+    this.doctorService.getDoctors().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
@@ -38,9 +38,9 @@ export class PatientListComponent {
       
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-      
     });
   }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim();
@@ -49,52 +49,55 @@ export class PatientListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  editPatient(patient: Patient) {
-    this.router.navigate(['Dashboard/accounts/pacientes/edit'], { state: { patient } });
+
+  editDoctor(doctor: DoctorProfile) {
+    console.log(doctor);
+    this.router.navigate(['Dashboard/accounts/doctores/edit'], { state: { doctor } });
   }
-  
-  deletePatient(id: number) {
+
+  deleteDoctor(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar este Paciente?'
+      '¿Estás seguro de que deseas desactivar este Profesional?'
     );
   
 
     confirmDialogRef.afterClosed().subscribe(confirmResult => {
-      
+      console.log("eliminar usuario")
       if (confirmResult) {
-        this.patientService.deletePatient(id).subscribe({
+        this.doctorService.deleteDoctor(id).subscribe({
           next: () => {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
-            this.dialogService.showSuccessDialog("Paciente Desactivado con éxito")
+            this.dialogService.showSuccessDialog("Profesional Desactivado con éxito")
 
             // Aquí podrías, por ejemplo, recargar la lista de usuarios
           },
           error: (error) => {
             // Manejo de errores
-            this.dialogService.showErrorDialog("Hubo un error al Desactivar el PAciente")
+            this.dialogService.showErrorDialog("Hubo un error al Desactivar el Profesional")
           }
         });
       }
     });
   }
-  
-  activePatient(patient: Patient){
-    patient.is_active = true;
-    
 
-    this.patientService.updatePatient(patient.id, patient).subscribe({
+  activeDoctor(doctor: DoctorProfile){
+    const dataToUpdate = { is_active: true };
+    console.log(doctor)
+
+    this.doctorService.partialupdateDoctor(doctor.id, dataToUpdate).subscribe({
       next: () => {
         
-        this.dialogService.showSuccessDialog("Paciente Activado con éxito")
+        this.dialogService.showSuccessDialog("Profesional Activado con éxito")
 
         this.setDataTable();
       },
       error: (error) => {
-        console.log(error);
-        this.dialogService.showErrorDialog("Error al Activar el Paciente")
+       
+        this.dialogService.showErrorDialog("Error al Activar el Profesional")
         // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
       }
     });
-  }
+  
+}
 }

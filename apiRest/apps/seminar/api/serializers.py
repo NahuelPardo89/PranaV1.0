@@ -59,7 +59,8 @@ class SeminarInscriptionSerializer(serializers.ModelSerializer):
         print(data)
         return data
 class SeminarSerializer(serializers.ModelSerializer):
-    
+    rooms=serializers.StringRelatedField(many=True)
+    seminarist=serializers.StringRelatedField(many=True)
     class Meta:
         model = Seminar
         fields = [

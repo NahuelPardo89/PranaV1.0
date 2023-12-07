@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListUserComponent } from './components/list-user/list-user.component';
-import { CreateUserComponent } from './components/create-user/create-user.component';
-import { EditUserComponent } from './components/edit-user/edit-user.component';
-import { PatientListComponent } from './components/patient-list/patient-list.component';
-import { PatientEditComponent } from './components/patient-edit/patient-edit.component';
-import { DoctorListComponent } from './components/doctor-list/doctor-list.component';
-import { DoctorEditComponent } from './components/doctor-edit/doctor-edit.component';
-import { DoctorCreateComponent } from './components/doctor-create/doctor-create.component';
+import { ListUserComponent } from './components/admin/user/list-user/list-user.component';
+import { CreateUserComponent } from './components/admin/user/create-user/create-user.component';
+import { EditUserComponent } from './components/admin/user/edit-user/edit-user.component';
+import { PatientListComponent } from './components/admin/patient/patient-list/patient-list.component';
+import { PatientEditComponent } from './components/admin/patient/patient-edit/patient-edit.component';
+import { DoctorListComponent } from './components/admin/doctor/doctor-list/doctor-list.component';
+import { DoctorEditComponent } from './components/admin/doctor/doctor-edit/doctor-edit.component';
+import { DoctorCreateComponent } from './components/admin/doctor/doctor-create/doctor-create.component';
 
 const routes: Routes = [
   { 

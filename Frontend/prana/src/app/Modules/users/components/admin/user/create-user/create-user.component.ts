@@ -19,7 +19,6 @@ export class CreateUserComponent {
       last_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
-      //is_active: [true],
       is_staff: [false]
     });
   }

@@ -1,0 +1,106 @@
+<div class="container-fluid">
+    <div class="title bg-info text-center border border-dark rounded-top mb-4">
+      <h1 class="text-white">Seminarios</h1>
+    </div>
+    <div class="container-fluid">
+      <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-success" routerLink="create">
+          <i class="material-symbols-outlined btn-icon">add</i> Agregar Seminario
+        </button>
+      </div>
+  
+      <mat-form-field class="example-form-field">
+        <mat-label>Filtrar por nombre, mes, año, etc.</mat-label>
+        <input matInput (keyup)="applyFilter($event)" #input>
+      </mat-form-field>
+  
+      <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- Columna Nombre -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+          </ng-container>
+  
+          <!-- Columna Año -->
+          <ng-container matColumnDef="year">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Año</th>
+            <td mat-cell *matCellDef="let row">{{ row.year }}</td>
+          </ng-container>
+          <!-- Columna Mes -->
+          <ng-container matColumnDef="month">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Mes</th>
+            <td mat-cell *matCellDef="let row">{{ row.month }}</td>
+          </ng-container>
+  
+            
+          <!-- Columna Día de la semana -->
+          <ng-container matColumnDef="weekday">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Día</th>
+            <td mat-cell *matCellDef="let row">{{ row.weekday }}</td>
+          </ng-container>
+  
+          <!-- Columna Hora -->
+          <ng-container matColumnDef="hour">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Hora</th>
+            <td mat-cell *matCellDef="let row">{{ row.hour  }}</td>
+          </ng-container>
+  
+          <!-- Columna Número de reunión -->
+          <ng-container matColumnDef="meetingNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant. Encuentros</th>
+            <td mat-cell *matCellDef="let row">{{ row.meetingNumber }}</td>
+          </ng-container>
+  
+          <!-- Columna Cupo máximo -->
+          <ng-container matColumnDef="maxInscription">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cupo</th>
+            <td mat-cell *matCellDef="let row">{{ row.maxInscription }}</td>
+          </ng-container>
+  
+          <!-- Columna Precio -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Precio</th>
+            <td mat-cell *matCellDef="let row">{{ row.price}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="rooms">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Salas</th>
+            <td mat-cell *matCellDef="let row">{{ row.rooms.join(', ') }}</td>
+          </ng-container>
+  
+          <!-- Columna Seminaristas -->
+          <ng-container matColumnDef="seminarist">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Seminaristas</th>
+            <td mat-cell *matCellDef="let row">{{ row.seminarist.join(', ') }}</td>
+          </ng-container>
+  
+          <!-- Columna Activo -->
+          <ng-container matColumnDef="is_active">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
+            <td mat-cell *matCellDef="let row">{{ row.is_active ? 'Sí' : 'No' }}</td>
+          </ng-container>
+  
+          <!-- Columna Acciones -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let row">
+              <button class="btn btn-primary me-2" (click)="editSeminar(row)">
+                <i class="material-symbols-outlined">edit</i>
+              </button>
+              <button class="btn btn-danger me-2" (click)="deleteSeminar(row.id)">
+                <i class="material-symbols-outlined">delete</i>
+              </button>
+            </td>
+          </ng-container>
+  
+          <!-- Encabezados y filas de la tabla -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+  
+      <!-- Paginador -->
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>

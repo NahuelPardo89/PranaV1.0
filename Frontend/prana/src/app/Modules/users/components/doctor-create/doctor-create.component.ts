@@ -57,21 +57,19 @@ export class DoctorCreateComponent {
     this.loadSpecialties();
     this.loadUsers();
     this.filterUsers();
-    
-    
   }
   
   loadSpecialties(): void {    this.specialtyService.getSpecialities().subscribe(data => {
       this.specialties = data;
     });
   }
-
   
   loadUsers(): void {
     this.userService.getUsers().subscribe(data => {
       this.users = data;
     });
   }
+
   filterUsers(){
     this.filteredUsers = this.doctorForm.get('user')!.valueChanges
       .pipe(
@@ -85,7 +83,6 @@ export class DoctorCreateComponent {
     if (this.doctorForm.valid) {
       const userid =this.doctorForm.value.user.id
       this.doctorForm.value.user=userid;
-      console.log(this.doctorForm.value);
       this.doctorProfileService.createDoctor(this.doctorForm.value).subscribe({
         next: (response) => {
               this.dialog.showSuccessDialog("Usuario creado correctamente");
@@ -94,24 +91,19 @@ export class DoctorCreateComponent {
             },
             error: (error) => {
               console.log(error);
-              this.dialog.showErrorDialog(error);
+              this.dialog.showErrorDialog("Hubo un error al crear el Profesional");
             }
-            // Opcionalmente, puedes incluir 'complete' si necesitas manejar la finalización
+           
           });
         
     } 
   }
-
-  formatDuration(minutes: number): string {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}:00`;
+  onCancel() {
+    this.router.navigate(['/Dashboard/accounts/doctores']);
   }
-  
-
+ 
   displayUser(user: User): string {
     
-    console.log(user)
     return user ? `${user.name} ${user.last_name}` : '';
   }
 

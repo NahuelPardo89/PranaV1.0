@@ -14,12 +14,14 @@
               {{ user.name }}, {{ user.last_name }}
             </mat-option>
           </mat-autocomplete>
+          <mat-error *ngIf="doctorForm.get('user')!.errors?.['required']">El campo Usuario es obligatorio</mat-error>
         </mat-form-field>
 
         <!-- Campo Licencia Médica -->
         <mat-form-field appearance="fill" >
           <mat-label>Licencia Médica</mat-label>
           <input matInput formControlName="medicLicence">
+          <mat-error *ngIf="doctorForm.get('medicLicence')!.errors?.['required']">El campo Licencia Médica es obligatorio</mat-error>
         </mat-form-field>
 
         <!-- Campo Especialidades -->
@@ -30,6 +32,7 @@
               {{ specialty.name }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="doctorForm.get('specialty')!.errors?.['required']">El campo Especialidad es obligatorio</mat-error>
         </mat-form-field>
 
         
@@ -41,11 +44,12 @@
               {{ option.label }}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="doctorForm.get('appointment_duration')!.errors?.['required']">El campo Duración del turno es obligatorio</mat-error>
         </mat-form-field>
 
         <!-- Botones -->
         <button class="btn btn-primary" type="submit"  [disabled]="!doctorForm.valid">Crear Profesional</button>
-        <button class="btn btn-secondary" >Cancelar</button>
+        <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
       </form>
     </div>
   </div>

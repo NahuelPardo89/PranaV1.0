@@ -1,5 +1,9 @@
-<mat-card>
-    <mat-card-content>
+<div class="container mt-3">
+    <div class="card">
+      <div class="card-header bg-info text-white text-center">
+        <h2 class="text-center">Editar Usuario</h2>
+      </div>
+      <div class="card-body">
         <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="create-user-form">
 
             <!-- Campo DNI -->
@@ -50,5 +54,6 @@
             <button class="btn btn-primary" type="submit" [disabled]="!userForm.valid">Guardar</button>
             <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
         </form>
-    </mat-card-content>
-</mat-card>
+    </div>
+</div>
+</div>   

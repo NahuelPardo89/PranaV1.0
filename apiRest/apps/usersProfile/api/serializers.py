@@ -88,6 +88,8 @@ class DoctorCreateUpdateProfileSerializer(serializers.ModelSerializer):
                   'insurances', 'is_active', 'appointment_duration')
         read_only_fields = ('insurances',)
 
+       
+
 class PatientListProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
     user = serializers.StringRelatedField(required=False)

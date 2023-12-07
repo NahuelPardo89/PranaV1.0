@@ -51,7 +51,6 @@ export class DoctorListComponent {
   }
 
   editDoctor(doctor: DoctorProfile) {
-    console.log(doctor);
     this.router.navigate(['Dashboard/accounts/doctores/edit'], { state: { doctor } });
   }
 
@@ -66,14 +65,10 @@ export class DoctorListComponent {
       if (confirmResult) {
         this.doctorService.deleteDoctor(id).subscribe({
           next: () => {
-            // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
             this.dialogService.showSuccessDialog("Profesional Desactivado con éxito")
-
-            // Aquí podrías, por ejemplo, recargar la lista de usuarios
           },
           error: (error) => {
-            // Manejo de errores
             this.dialogService.showErrorDialog("Hubo un error al Desactivar el Profesional")
           }
         });
@@ -83,17 +78,12 @@ export class DoctorListComponent {
 
   activeDoctor(doctor: DoctorProfile){
     const dataToUpdate = { is_active: true };
-    console.log(doctor)
-
     this.doctorService.partialupdateDoctor(doctor.id, dataToUpdate).subscribe({
       next: () => {
-        
-        this.dialogService.showSuccessDialog("Profesional Activado con éxito")
-
-        this.setDataTable();
+         this.dialogService.showSuccessDialog("Profesional Activado con éxito")
+         this.setDataTable();
       },
       error: (error) => {
-       
         this.dialogService.showErrorDialog("Error al Activar el Profesional")
         // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
       }

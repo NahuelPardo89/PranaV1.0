@@ -10,7 +10,7 @@
         class="create-user-form"
       >
         <!-- Campo Usuario (ID de usuario) -->
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="outline">
           <mat-label>Usuario</mat-label>
           <input
             matInput
@@ -35,7 +35,7 @@
         </mat-form-field>
 
         <!-- Campo Licencia Médica -->
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="outline">
           <mat-label>Licencia Médica</mat-label>
           <input matInput formControlName="medicLicence" />
           <mat-error
@@ -45,7 +45,7 @@
         </mat-form-field>
 
         <!-- Campo Especialidades -->
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="outline">
           <mat-label>Especialidades</mat-label>
           <mat-select formControlName="specialty" multiple>
             <mat-option
@@ -61,7 +61,7 @@
         </mat-form-field>
 
         <!-- Campo Duración de Cita -->
-        <mat-form-field appearance="fill">
+        <mat-form-field appearance="outline">
           <mat-label>Duración del turno</mat-label>
           <mat-select formControlName="appointment_duration">
             <mat-option

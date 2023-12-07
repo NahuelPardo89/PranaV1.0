@@ -21,22 +21,20 @@ const routes: Routes = [
   { 
     path: 'pacientes', 
     children: [
-      // Aquí irían las rutas relacionadas con los pacientes
       { path: '', component: PatientListComponent },
-      //          { path: 'create', component: CreatePatientComponent },
       { path: 'edit', component: PatientEditComponent },
     ]
   },
   { 
     path: 'doctores', 
     children: [
-      // Aquí irían las rutas relacionadas con los pacientes
+      
       { path: '', component: DoctorListComponent },
       { path: 'create', component: DoctorCreateComponent },
       { path: 'edit', component: DoctorEditComponent },
     ]
   },
-  // Otras rutas...
+ 
 ];
 
 @NgModule({

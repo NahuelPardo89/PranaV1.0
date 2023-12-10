@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
 import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
@@ -85,7 +86,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
     private insuranceService: HealthinsuranceService,
     private specialtyFilterService: SpecialtyFilterService,
     private doctorScheduleService: DoctorscheduleService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private router: Router
   ) {
     this.appointmentForm = this.fb.group({
       day: ['', Validators.required],
@@ -118,6 +120,10 @@ export class AppointmentAdminCreateComponent implements OnInit {
     }
   }
 
+  /**
+  * Initializes the component.
+  * @author Alvaro Olguin
+  */
   ngOnInit(): void {
     this.loadDoctors();
     this.loadSpecialties();
@@ -263,7 +269,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
       });
     }
     else {
-      //Reset los campos
+      //Reset fields
       this.resetForm(this.appointmentForm, { day: true, branch: true });
     }
   }
@@ -337,19 +343,18 @@ export class AppointmentAdminCreateComponent implements OnInit {
   * @throws {Error} If there is an error in loading the common insurances.
   * @returns {void}
   */
+
   onBranchSelect(branchId: number): void {
     // Save the BRANCH to calculate common insurances
     this.selectedBranch = branchId
     let branch = this.branches.find(branch => branch.id === branchId);
+    // its neccesary to reset full_cost, state and health insurances fields, since on branch selection could change the cost of the appointment
+    this.resetForm(this.appointmentForm, { hi: true });
     if (branch) {
       this.branchName = branch.name;
     }
-    if (this.selectedDoctor) {
-      // Recalculate common insurances value
-      this.loadCommonInsurances(this.selectedDoctor, this.selectedPatient, this.selectedBranch);
-    }
-    else {
-    }
+    // It is guaranteed that patient and doctor have values, no need to conditional
+    this.loadCommonInsurances(this.selectedDoctor, this.selectedPatient, this.selectedBranch);
   }
 
   /**
@@ -581,7 +586,14 @@ export class AppointmentAdminCreateComponent implements OnInit {
   * @author Alvaro Olguin
   * @returns {void}
   */
-  resetForm(form: FormGroup, options?: { specialty?: boolean, doctor?: boolean, day?: boolean, hour?: boolean, branch?: boolean }): void {
+  resetForm(form: FormGroup, options?: {
+    specialty?: boolean,
+    doctor?: boolean,
+    day?: boolean,
+    hour?: boolean,
+    branch?: boolean,
+    hi?: boolean
+  }): void {
 
     if (options && options.specialty) {
       this.specialtyControl.setValue(0);
@@ -609,6 +621,12 @@ export class AppointmentAdminCreateComponent implements OnInit {
     if (options && options.branch) {
       form.patchValue({
         branch: 0
+      });
+    }
+
+    if (options && options.hi) {
+      form.patchValue({
+        health_insurance: null
       });
     }
 
@@ -881,7 +899,6 @@ export class AppointmentAdminCreateComponent implements OnInit {
         filteredBody.health_insurance = formValues.health_insurance;
       }
       //console.log("BODY: ", filteredBody)
-      //const confirmed = window.confirm(`${this.displayPreviewAppointment()}`);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );
@@ -919,7 +936,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
                     window.location.reload();
                   } else {
                     // Redirect to apointment list
-                    window.location.href = 'http://localhost:4200/Dashboard/appointments/admin/list';
+                    this.router.navigate(['Dashboard/appointments/admin/list'])
                   }
                 });
               })

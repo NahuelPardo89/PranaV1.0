@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, catchError, throwError } from 'rxjs';
-
 import { UserShort } from 'src/app/Models/user/userShort.interface';
 import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentPatientGet.interface';
@@ -125,14 +124,13 @@ export class AppointmentService {
   }
 
   /**
-  * Update an appointment.
+  * Update an appointment with admin options.
   * @param appointment_id The id of the appointment to update.
   * @author Alvaro Olguin
   * @returns {Observable<AppointmentAdminGetInterface>} An observable of the updated appointment.
   */
   updateAdminAppointment(appointment_id: number, data: AppointmentAdminCreateInterface): Observable<AppointmentAdminGetInterface> {
     const url = this.baseUrl + 'admin/' + appointment_id + '/';
-    console.log("Service: ", url, "   ", data)
     return this.http.put<AppointmentAdminGetInterface>(url, data)
   }
 

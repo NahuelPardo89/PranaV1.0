@@ -61,6 +61,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     { value: 4, viewValue: 'Pagado' },
   ];
   recoveredHour: string = '';
+  recoveredDate: string = '';
   //FormControls
   doctorControl = new FormControl();
   patientControl = new FormControl();
@@ -120,6 +121,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     }
   }
 
+  /**
+  * Initializes the component.
+  * @author Alvaro Olguin
+  * @returns {Promise<void>} A promise that resolves when the initialization is complete.
+  */
   async ngOnInit(): Promise<void> {
     if (history.state.appointment) {
       await Promise.all([
@@ -137,26 +143,29 @@ export class AppointmentAdminUpdateComponent implements OnInit {
 
   /***** INIT DATA SECTION *****/
 
+  /**
+  * Initializes the form with the given appointment data.
+  * @author Alvaro Olguin
+  * @param {AppointmentAdminGetInterface} appointment - The appointment data to initialize the form with.
+  */
   initForm(appointment: AppointmentAdminGetInterface): void {
-    // Recupero la appointment con su id, debo hacerlo así por el string related fields que me pasa el history
+    /* Recover the appointment from service, regardless having the appointment, 
+    * since the string related fields on back modifies the response of several fields */
     this.appointmentService.getAdminOneAppointment(appointment.id).subscribe((data: AppointmentAdminGetInterface) => {
-      // acá con la data me cargo el form o los formcontrols?, veremos
-      // Form Controls init
+      // Form Controls init and onSelect triggers
       this.patientControl.patchValue(data.patient);
       this.onPatientSelect(data.patient)
       this.specialtyControl.patchValue(appointment.specialty);
       this.onSpecialtySelect(appointment.specialty)
       this.doctorControl.patchValue(data.doctor);
-      this.onDoctorSelect(data.doctor)
 
       // Form Init
-      let dateParts = data.day.toString().split('-'); // Divide la fecha en [año, mes, día]
-      let date = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2])); // Crea la fecha en la 
-      let recoveredDate = this.recoverDayFormat(date);
+      this.recoveredDate = this.recoverDayFormat(data.day);
+      this.onDoctorSelect(data.doctor)
       this.appointmentForm.patchValue({
-        day: recoveredDate,
+        day: this.recoveredDate,
       });
-      this.onDaySelect(recoveredDate);
+      this.onDaySelect(this.recoveredDate);
       this.recoveredHour = this.recoveryHourFormat(data.hour, data.duration)
       this.appointmentForm.patchValue({
         hour: this.recoveredHour,
@@ -170,12 +179,16 @@ export class AppointmentAdminUpdateComponent implements OnInit {
         full_cost: data.full_cost,
         health_insurance: data.health_insurance,
       });
-
-      this.isPaid = data.state === 4
+      this.selectedBranch = data.branch;
+      this.isPaid = data.state === 4;
     })
   }
 
-
+  /**
+  * Loads the doctors from the service.
+  * @author Alvaro Olguin
+  * @returns {Observable<DoctorProfile[]>} An observable of the doctors.
+  */
   loadDoctors(): Observable<DoctorProfile[]> {
     return this.doctorService.getDoctors().pipe(tap(data => {
       //Sort doctors
@@ -184,6 +197,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     }));
   }
 
+  /**
+  * Loads the specialties from the service.
+  * @author Alvaro Olguin
+  * @returns {Observable<Medicalspeciality[]>} An observable of the specialties.
+  */
   loadSpecialties(): Observable<Medicalspeciality[]> {
     return this.specialtyService.getSpecialities().pipe(tap(data => {
       data.sort((a, b) => a.name.localeCompare(b.name));
@@ -192,6 +210,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     }));
   }
 
+  /**
+  * Loads the patients from the service.
+  * @author Alvaro Olguin
+  * @returns {Observable<Patient[]>} An observable of the patients.
+  */
   loadPatients(): Observable<Patient[]> {
     return this.patientService.getAllPatients().pipe(tap(data => {
       // Sort the patients
@@ -201,6 +224,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     }));
   }
 
+  /**
+  * Loads the payment methods from the service.
+  * @author Alvaro Olguin
+  * @returns {Observable<PaymentMethod[]>} An observable of the payment methods.
+  */
   loadPaymentMethods(): Observable<PaymentMethod[]> {
     return this.paymentmethodservice.getPaymentMethods().pipe(tap(data => {
       //Sort
@@ -209,6 +237,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     }));
   }
 
+  /**
+  * Loads the branches from the service.
+  * @author Alvaro Olguin
+  * @returns {Observable<SpecialityBranch[]>} An observable of the branches.
+  */
   loadBranches(): Observable<SpecialityBranch[]> {
     return this.branchService.getSpecialityBranches().pipe(tap(data => {
       //Sort
@@ -217,6 +250,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     }));
   }
 
+  /**
+  * Loads the insurances from the service.
+  * @author Alvaro Olguin
+  * @returns {Observable<HealthInsurance[]>} An observable of the insurances.
+  */
   loadInsurances(): Observable<HealthInsurance[]> {
     return this.insuranceService.getAll().pipe(tap(data => {
       //Sort
@@ -224,97 +262,6 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       this.insurances = data
     }));
   }
-
-  // /**
-  // * Fetches a list of doctors from the doctor service, sorts them alphabetically by user, 
-  // * and assigns them to the 'doctors' property.
-  // * @author Alvaro Olguin
-  // * @throws {Error} If there is an error in fetching or sorting the data.
-  // * @returns {void}
-  // */
-  // loadDoctors(): void {
-  //   this.doctorService.getDoctors().subscribe(data => {
-  //     //Sort doctors
-  //     data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
-  //     this.doctors = data;
-  //   });
-  // }
-
-  // /**
-  // * Fetches a list of specialties from the specialty service, sorts them alphabetically by name, 
-  // * assigns them to the 'specialties' property, and filters them.
-  // * @author Alvaro Olguin
-  // * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
-  // * @returns {void}
-  // */
-  // loadSpecialties(): void {
-  //   this.specialtyService.getSpecialities().subscribe(data => {
-  //     data.sort((a, b) => a.name.localeCompare(b.name));
-  //     this.specialties = data;
-  //     this.filterSpecialties()
-  //   })
-  // }
-
-  // /**
-  // * Fetches a list of patients from the patient service, sorts them alphabetically by user, 
-  // * assigns them to the 'patients' property, and filters them.
-  // * @author Alvaro Olguin
-  // * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
-  // * @returns {void}
-  // */
-  // loadPatients(): void {
-  //   this.patientService.getAllPatients().subscribe(data => {
-  //     // Sort the patients
-  //     data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
-  //     this.patients = data;
-  //     this.filterPatients()
-  //   })
-  // }
-
-  // /**
-  // * Fetches a list of payment methods from the payment method service, sorts them alphabetically by name, 
-  // * and assigns them to the 'methods' property.
-  // * @author Alvaro Olguin
-  // * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
-  // * @returns {void}
-  // */
-  // loadPaymentMethods(): void {
-  //   this.paymentmethodservice.getPaymentMethods().subscribe(data => {
-  //     //Sort
-  //     data.sort((a, b) => a.name.localeCompare(b.name));
-  //     this.methods = data
-  //   })
-  // }
-
-  // /**
-  // * Fetches a list of branches from the branch service, sorts them alphabetically by name, 
-  // * and assigns them to the 'branches' property.
-  // * @author Alvaro Olguin
-  // * @throws {Error} If there is an error in fetching or sorting the data.
-  // * @returns {void}
-  // */
-  // loadBranches(): void {
-  //   this.branchService.getSpecialityBranches().subscribe(data => {
-  //     //Sort
-  //     data.sort((a, b) => a.name.localeCompare(b.name));
-  //     this.branches = data
-  //   })
-  // }
-
-  // /**
-  // * Fetches a list of insurances from the insurance service, sorts them alphabetically by name, 
-  // * and assigns them to the 'insurances' property.
-  // * @author Alvaro Olguin
-  // * @throws {Error} If there is an error in fetching or sorting the data.
-  // * @returns {void}
-  // */
-  // loadInsurances(): void {
-  //   this.insuranceService.getAll().subscribe(data => {
-  //     //Sort
-  //     data.sort((a, b) => a.name.localeCompare(b.name));
-  //     this.insurances = data
-  //   })
-  // }
 
   /***** ON SELECT SECTION *****/
 
@@ -354,6 +301,8 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       this.doctorScheduleService.getDoctorSchedule(doctorId).subscribe(data => {
         this.doctorSchedule = data;
         this.formattedDates = this.formatDates(this.doctorSchedule);
+        // add the previous date
+        this.formattedDates.unshift(this.recoveredDate);
         // reloads the branches of the new doctor
         this.loadfilteredBranches(doctorId);
       });
@@ -438,15 +387,13 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     // Save the BRANCH to calculate common insurances
     this.selectedBranch = branchId
     let branch = this.branches.find(branch => branch.id === branchId);
+    // its neccesary to reset full_cost, state and health insurances fields, since on branch selection could change the cost of the appointment
+    this.resetForm(this.appointmentForm, { hi: true });
     if (branch) {
       this.branchName = branch.name;
     }
-    if (this.selectedDoctor) {
-      // Recalculate common insurances value
-      this.loadCommonInsurances(this.selectedDoctor, this.selectedPatient, this.selectedBranch);
-    }
-    else {
-    }
+    // It is guaranteed that patient and doctor have values, no need to conditional
+    this.loadCommonInsurances(this.selectedDoctor, this.selectedPatient, this.selectedBranch);
   }
 
   /**
@@ -583,20 +530,6 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   loadfilteredBranches(doctorId: number): void {
     this.branchService.getDoctorBranches(doctorId).subscribe(data => {
       this.specialtyFilteredBranches = data;
-      if (this.specialtyFilteredBranches.length > 0) {
-        let generalBranch = this.specialtyFilteredBranches.find(branch => branch.name.toUpperCase() === 'GENERAL');
-        // Exists the general branch, the id property its only for interface validation (id?)
-        if (generalBranch && generalBranch.id) {
-          this.selectedBranch = generalBranch.id;
-        } else {
-          this.selectedBranch = 0;
-        }
-      } else {
-        this.selectedBranch = 0;
-      }
-      this.appointmentForm.patchValue({
-        branch: this.selectedBranch
-      });
       this.loadCommonInsurances(doctorId, this.selectedPatient, this.selectedBranch)
     });
   }
@@ -671,39 +604,55 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     return formattedDates;
   }
 
+  /**
+  * Recovers the day format from a date.
+  * @author Alvaro Olguin
+  * @param {Date} date - The date in 'YYYY-MM-DD' format.
+  * @returns {string} The formatted date in 'DayOfWeek DayOfMonth de MonthName' format.
+  */
   recoverDayFormat(date: Date): string {
+    // Inicial treatment
+    let dateParts = date.toString().split('-');
+    let realDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+    // Const definitions
     const daysOfWeekSpanish = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
     const monthsSpanish = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-    const dayOfWeek = daysOfWeekSpanish[date.getDay()];
-    const dayOfMonth = date.getDate();
-    const monthName = monthsSpanish[date.getMonth()];
+    const dayOfWeek = daysOfWeekSpanish[realDate.getDay()];
+    const dayOfMonth = realDate.getDate();
+    const monthName = monthsSpanish[realDate.getMonth()];
 
     return `${dayOfWeek} ${dayOfMonth} de ${monthName}`;
   }
 
+  /**
+ * Recovers the hour format from a start hour and a duration.
+ *
+ * @author Alvaro Olguin
+ * @param {string} startHour - The start hour in 'HH:mm:ss' format.
+ * @param {string} duration - The duration in 'HH:mm:ss' format.
+ * @returns {string} The start and end hour in 'HH:mm:ss - HH:mm:ss' format.
+ */
   recoveryHourFormat(startHour: string, duration: string): string {
-    // Convierte la hora de inicio y la duración en objetos Date
+    // parse startHour and duration to date objects
     let startTime = new Date(`1970-01-01T${startHour}Z`);
     let durationTime = new Date(`1970-01-01T${duration}Z`);
 
-    // Calcula la hora final sumando la duración a la hora de inicio
+    // Calculate end time
     let endTime = new Date(startTime.getTime() + durationTime.getTime());
 
-    // Formatea las horas como cadenas HH:MM:SS
-    let startHourStr = startTime.toISOString().substr(11, 8);
-    let endHourStr = endTime.toISOString().substr(11, 8);
+    // Format
+    let startHourStr = startTime.toISOString().slice(11, 16);
+    let endHourStr = endTime.toISOString().slice(11, 16);
 
-    // Crea la cadena formateada
+    // return string
     let formattedHour = `${startHourStr} - ${endHourStr}`;
 
-    // Agrega la hora formateada a this.availableTimes
-    this.availableTimes.push(formattedHour);
+    // add the hour to availables times 
+    //this.availableTimes.push(formattedHour);
 
-    // Devuelve la cadena formateada
     return formattedHour;
   }
-
 
   /**
   * Resets the form based on the provided options.
@@ -712,7 +661,14 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   * @author Alvaro Olguin
   * @returns {void}
   */
-  resetForm(form: FormGroup, options?: { specialty?: boolean, doctor?: boolean, day?: boolean, hour?: boolean, branch?: boolean }): void {
+  resetForm(form: FormGroup, options?: {
+    specialty?: boolean,
+    doctor?: boolean,
+    day?: boolean,
+    hour?: boolean,
+    branch?: boolean,
+    hi?: boolean
+  }): void {
 
     if (options && options.specialty) {
       this.specialtyControl.setValue(0);
@@ -740,6 +696,12 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     if (options && options.branch) {
       form.patchValue({
         branch: 0
+      });
+    }
+
+    if (options && options.hi) {
+      form.patchValue({
+        health_insurance: null
       });
     }
 
@@ -972,9 +934,9 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   /* FORM ACTIONS SECTION */
 
   /**
-  * Handles the form submission. Validates the form, confirms the appointment details with the user, and creates the appointment.
+  * Handles the form submission. Validates the form, and update the appointment.
   * @author Alvaro Olguin
-  * @throws {Error} If there is an error in validating the form, confirming the appointment, or creating the appointment.
+  * @throws {Error} If there is an error in validating the form, confirming the appointment, or updating the appointment.
   * @returns {void}
   */
   onSubmit(): void {
@@ -1012,13 +974,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
         filteredBody.health_insurance = formValues.health_insurance;
       }
       //console.log("BODY: ", filteredBody)
-      //const confirmed = window.confirm(`${this.displayPreviewAppointment()}`);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );
       confirmAppointment.afterClosed().subscribe(confirmResult => {
         if (confirmResult) {
-          //console.log("id: ", history.state.appointment.id)
           this.appointmentService.updateAdminAppointment(history.state.appointment.id, filteredBody)
             .pipe(
               catchError(error => {
@@ -1042,22 +1002,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
 
               successDialog.afterClosed().subscribe(() => {
                 this.router.navigate(['Dashboard/appointments/admin/list'])
-                // const createAnotherAppointment = this.dialogService.openConfirmDialog(
-                //   '¿Desea generar otro turno?'
-                // );
-                // createAnotherAppointment.afterClosed().subscribe(confirmResult => {
-                //   if (confirmResult) {
-                //     // reset form or reload?
-                //     //this.appointmentForm.reset();
-                //     window.location.reload();
-                //   } else {
-                //     // Redirect to apointment list
-                //     window.location.href = 'http://localhost:4200/Dashboard/appointments/admin/list';
-                //   }
-                // });
               })
-
-
             });
         }
       });

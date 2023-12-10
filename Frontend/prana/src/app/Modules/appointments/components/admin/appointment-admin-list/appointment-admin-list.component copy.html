@@ -1,0 +1,47 @@
+<div class="container mt-5">
+    <h2>Listado de Turnos - Administrador</h2>
+    <button class="btn btn-primary btn-sm" routerLink="create">Crear Turno</button>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Profesional</th>
+                <th>Paciente</th>
+                <th>Especialidad</th>
+                <th>Rama</th>
+                <th>Obra Social</th>
+                <th>Estado</th>
+                <th>Costo Total</th>
+                <th>Método de Pago</th>
+                <th>Co-pago Paciente</th>
+                <th>Co-pago Seguro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let appointment of appointments">
+                <td>{{ appointment.day }}</td>
+                <td>{{ appointment.hour }}</td>
+                <td>{{ appointment.doctor }}</td>
+                <td>{{ appointment.patient }}</td>
+                <td>{{ appointment.specialty }}</td>
+                <td>{{ appointment.branch }}</td>
+                <td>{{ appointment.health_insurance }}</td>
+
+                <td>{{ appointment.state }}</td>
+                <td>{{ appointment.full_cost }}</td>
+                <td>{{ appointment.payment_method}}</td>
+                <td>{{ appointment.patient_copayment }}</td>
+                <td>{{ appointment.hi_copayment }}</td>
+                <td>
+                    <!-- Puedes agregar botones o links aquí para acciones como Editar, Detalles, Eliminar, etc. -->
+                    <button class="btn btn-primary btn-sm" (click)="onEdit(appointment.id)">Editar</button>
+                    <button class="btn btn-danger btn-sm" (click)="onDelete(appointment.id)">Borrar</button>
+
+                    <!-- Por ejemplo, un botón para eliminar -->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

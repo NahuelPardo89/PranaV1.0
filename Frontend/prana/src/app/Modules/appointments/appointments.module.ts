@@ -17,7 +17,7 @@ import { AppointmentPatientDeleteComponent } from './components/patient/appointm
 import { AppointmentPatientDetailComponent } from './components/patient/appointment-patient-detail/appointment-patient-detail.component';
 import { AppointmentPatientListComponent } from './components/patient/appointment-patient-list/appointment-patient-list.component';
 import { AppointmentPatientUpdateComponent } from './components/patient/appointment-patient-update/appointment-patient-update.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +31,12 @@ import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmeth
 import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
 import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/doctorschedule.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -53,14 +59,18 @@ import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/d
   imports: [
     CommonModule,
     AppointmentsRoutingModule,
-    MatFormFieldModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     MatInputModule,
+    MatFormFieldModule,
     MatButtonModule,
-    MatSelectModule,
+    MatCheckboxModule,
+    MatCardModule,
+    FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
-    MatButtonModule,
     MatSelectModule,
     MatAutocompleteModule,
   ],

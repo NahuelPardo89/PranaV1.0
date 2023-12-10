@@ -32,7 +32,7 @@ export class ListUserComponent {
     private userService: UserService,
     private dialogService: DialogService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.setDataTable();

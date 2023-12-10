@@ -297,8 +297,9 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
     def partial_update(self, request, pk=None):
+        
         instance = self.get_object(pk)
-        serializer = self.get_serializer(instance, data=request.data, partial=True) # partial=True permite la actualización parcial
+        serializer = self.createUpdate_serializer_class(instance, data=request.data, partial=True) # partial=True permite la actualización parcial
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

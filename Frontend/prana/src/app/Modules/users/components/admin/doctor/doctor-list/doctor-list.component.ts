@@ -10,32 +10,43 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-doctor-list',
   templateUrl: './doctor-list.component.html',
-  styleUrls: ['./doctor-list.component.css']
+  styleUrls: ['./doctor-list.component.css'],
 })
 export class DoctorListComponent {
-  displayedColumns: string[] = ['id','user','medicLicence','specialty','insurances','appointment_duration','is_active','actions'];
+  displayedColumns: string[] = [
+    'id',
+    'user',
+    'medicLicence',
+    'specialty',
+    'insurances',
+    'appointment_duration',
+    'is_active',
+    'actions',
+  ];
   dataSource!: MatTableDataSource<DoctorProfile>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private doctorService: DoctorprofileService, private dialogService:DialogService,private router:Router) {
-    
-  }
+  constructor(
+    private doctorService: DoctorprofileService,
+    private dialogService: DialogService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.setDataTable()
+    this.setDataTable();
   }
 
-  setDataTable(){
-    this.doctorService.getDoctors().subscribe(data => {
+  setDataTable() {
+    this.doctorService.getDoctors().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
-      this.paginator._intl.lastPageLabel ='última página';
+      this.paginator._intl.lastPageLabel = 'última página';
       this.paginator._intl.nextPageLabel = 'página siguiente';
-      this.paginator._intl.previousPageLabel='página anterior';
-      
+      this.paginator._intl.previousPageLabel = 'página anterior';
+
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
@@ -51,53 +62,47 @@ export class DoctorListComponent {
   }
 
   editDoctor(doctor: DoctorProfile) {
-    console.log(doctor);
-    this.router.navigate(['Dashboard/accounts/doctores/edit'], { state: { doctor } });
+    this.router.navigate(['Dashboard/accounts/doctores/edit'], {
+      state: { doctor },
+    });
   }
 
   deleteDoctor(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Estás seguro de que deseas desactivar este Profesional?'
     );
-  
 
-    confirmDialogRef.afterClosed().subscribe(confirmResult => {
-      console.log("eliminar usuario")
+    confirmDialogRef.afterClosed().subscribe((confirmResult) => {
+      console.log('eliminar usuario');
       if (confirmResult) {
         this.doctorService.deleteDoctor(id).subscribe({
           next: () => {
-            // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
-            this.dialogService.showSuccessDialog("Profesional Desactivado con éxito")
-
-            // Aquí podrías, por ejemplo, recargar la lista de usuarios
+            this.dialogService.showSuccessDialog(
+              'Profesional Desactivado con éxito'
+            );
           },
           error: (error) => {
-            // Manejo de errores
-            this.dialogService.showErrorDialog("Hubo un error al Desactivar el Profesional")
-          }
+            this.dialogService.showErrorDialog(
+              'Hubo un error al Desactivar el Profesional'
+            );
+          },
         });
       }
     });
   }
 
-  activeDoctor(doctor: DoctorProfile){
+  activeDoctor(doctor: DoctorProfile) {
     const dataToUpdate = { is_active: true };
-    console.log(doctor)
-
     this.doctorService.partialupdateDoctor(doctor.id, dataToUpdate).subscribe({
       next: () => {
-        
-        this.dialogService.showSuccessDialog("Profesional Activado con éxito")
-
+        this.dialogService.showSuccessDialog('Profesional Activado con éxito');
         this.setDataTable();
       },
       error: (error) => {
-       
-        this.dialogService.showErrorDialog("Error al Activar el Profesional")
+        this.dialogService.showErrorDialog('Error al Activar el Profesional');
         // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-      }
+      },
     });
-  
-}
+  }
 }

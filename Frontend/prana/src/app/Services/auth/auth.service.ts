@@ -12,6 +12,7 @@ import { UserShort } from 'src/app/Models/user/userShort.interface';
 import{jwtDecode} from "jwt-decode";
 
 import { Router } from '@angular/router';
+import { DialogService } from '../dialog/dialog.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class AuthService {
   private isloggedIn = new BehaviorSubject<boolean>(false); // Inicializa
 
   
-  constructor(private http: HttpClient,private router: Router) {
+  constructor(private http: HttpClient,private router: Router, private dialogService: DialogService) {
     const user = localStorage.getItem('user');
     const role = localStorage.getItem('currentRole');
     this.checkToken()
@@ -51,6 +52,7 @@ export class AuthService {
         this.router.navigate(['/Dashboard']); // Navegar al dashboard
       }),
       catchError(error => {
+        this.dialogService.showErrorDialog("Usuario o Contraseña incorrectos")
         this.handleError(error, 'Error al iniciar sesión');
         return throwError(() => new Error('Error al iniciar sesión'));
       })

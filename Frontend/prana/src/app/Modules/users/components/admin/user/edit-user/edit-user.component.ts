@@ -7,7 +7,7 @@ import { UserService } from 'src/app/Services/users/user.service';
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
-  styleUrls: ['./edit-user.component.css']
+  styleUrls: ['./edit-user.component.css'],
 })
 export class EditUserComponent {
   userForm!: FormGroup;
@@ -28,13 +28,13 @@ export class EditUserComponent {
 
   private initForm() {
     this.userForm = this.fb.group({
-      dni: [null, [Validators.required, Validators.pattern("^[0-9]*$")]],
+      dni: [null, [Validators.required, Validators.pattern('^[0-9]*$')]],
       name: ['', Validators.required],
       last_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required,Validators.pattern("^[0-9]*$")]],
+      phone: ['', [Validators.required, Validators.pattern('^[0-9]*$')]],
       is_active: [true],
-      is_staff: [false]
+      is_staff: [false],
     });
   }
 
@@ -46,18 +46,22 @@ export class EditUserComponent {
         this.userService.updateUser(userId, this.userForm.value).subscribe({
           next: () => {
             console.log('Usuario actualizado con éxito');
-            this.dialogService.showSuccessDialog("Usuario Editado con éxito")
+            this.dialogService.showSuccessDialog('Usuario Editado con éxito');
 
             this.router.navigate(['Dashboard/accounts/users']); // Ajusta la ruta según sea necesario
           },
           error: (error) => {
             console.error('Error al actualizar el usuario', error);
-            this.dialogService.showErrorDialog("Error al actualizar el usuario")
+            this.dialogService.showErrorDialog(
+              'Error al actualizar el usuario'
+            );
             // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-          }
+          },
         });
       } else {
-        console.error('Error: No se pudo obtener el ID del usuario para la actualización.');
+        console.error(
+          'Error: No se pudo obtener el ID del usuario para la actualización.'
+        );
         // Manejar el caso en que no se tiene un ID de usuario
       }
     } else {
@@ -65,7 +69,7 @@ export class EditUserComponent {
       // Manejar el caso en que el formulario no es válido
     }
   }
-  onCancel(){
-    this.router.navigate(['Dashboard/accounts/users'])
+  onCancel() {
+    this.router.navigate(['Dashboard/accounts/users']);
   }
 }

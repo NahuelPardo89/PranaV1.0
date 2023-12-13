@@ -88,7 +88,7 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
 
 
 class HealthInsuranceAdminViewSet(BaseAdminViewSet):
-    queryset = HealthInsurance.objects.all()
+    model=HealthInsurance
     serializer_class = HealthInsuranceSerializer
     permission_classes = [IsAdminOrReadOnly]
 

@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListInsuranceComponent } from './componentes/list-insurance/list-insurance.component';
-import { CreateInsuranceComponent } from './componentes/create-insurance/create-insurance.component';
-import { EditInsuranceComponent } from './componentes/edit-insurance/edit-insurance.component';
+import { ListInsuranceComponent } from './componentes/insurance/list-insurance/list-insurance.component';
+import { CreateInsuranceComponent } from './componentes/insurance/create-insurance/create-insurance.component';
+import { EditInsuranceComponent } from './componentes/insurance/edit-insurance/edit-insurance.component';
+import { ListInsurancePatientComponent } from './componentes/insurancePlanPratient/list-insurance-patient/list-insurance-patient.component';
 
 const routes: Routes = [
 
@@ -12,6 +13,14 @@ const routes: Routes = [
       { path: '', component: ListInsuranceComponent },
       { path: 'create', component: CreateInsuranceComponent },
       { path: 'edit', component: EditInsuranceComponent },
+    ]
+  },
+  { 
+    path: 'patient', 
+    children: [
+      { path: '', component: ListInsurancePatientComponent },
+      //{ path: 'create', component: CreateInsuranceComponent },
+      //{ path: 'edit', component: EditInsuranceComponent },
     ]
   },
 ];

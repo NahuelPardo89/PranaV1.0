@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse } from '@angul
 import { Observable, throwError } from 'rxjs';
 
 import { tap, catchError } from 'rxjs/operators';
-import { HealthInsurance } from '../../../Models/Profile/healthinsurance.interface';
+import { HealthInsurance } from '../../../../Models/Profile/healthinsurance.interface';
 
 
 

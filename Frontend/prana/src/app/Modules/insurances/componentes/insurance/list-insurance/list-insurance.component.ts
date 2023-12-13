@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { HealthInsurance } from 'src/app/Models/Profile/healthinsurance.interface';
-import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({

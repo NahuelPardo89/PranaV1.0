@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HealthInsurance } from 'src/app/Models/Profile/healthinsurance.interface';
-import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 
 @Component({
   selector: 'app-healthinsurancelist',

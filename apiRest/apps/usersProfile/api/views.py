@@ -18,7 +18,7 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
 
 from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
                           DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
-                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
+                          InsurancePlanPatientSerializer,InsurancePlanPatientListSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
                           DoctorProfileShortSerializer,   SpecialityBranchSerializer,DoctorCreateUpdateProfileSerializer)
 
 from apps.permission import IsAdminOrReadOnly
@@ -127,7 +127,7 @@ class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
 class SpecialityBranchAdminViewSet(viewsets.ModelViewSet):
     queryset = SpecialityBranch.objects.all()
     serializer_class = SpecialityBranchSerializer
-    bpermission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class DoctorBranchesView(APIView):
@@ -236,9 +236,10 @@ class DoctorScheduleAvailableTimesView(APIView):
         return JsonResponse({'available_times': available_times}, status=status.HTTP_200_OK)
 
 
-class InsurancePlanPatientAdminViewSet(viewsets.ModelViewSet):
+class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
+    model=InsurancePlanPatient
     queryset = InsurancePlanPatient.objects.all()
-    serializer_class = InsurancePlanPatientSerializer
+    serializer_class = InsurancePlanPatientListSerializer
     permission_classes = [IsAdminOrReadOnly]
 
 

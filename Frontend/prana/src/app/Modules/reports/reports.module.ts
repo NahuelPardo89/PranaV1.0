@@ -14,7 +14,7 @@ import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { MatSelectModule } from '@angular/material/select';
 import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
-import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
 

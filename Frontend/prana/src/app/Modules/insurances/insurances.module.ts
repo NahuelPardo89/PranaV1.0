@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { InsurancesRoutingModule } from './insurances-routing.module';
-import { ListInsuranceComponent } from './componentes/list-insurance/list-insurance.component';
+import { ListInsuranceComponent } from './componentes/insurance/list-insurance/list-insurance.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -15,12 +15,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { CreateInsuranceComponent } from './componentes/create-insurance/create-insurance.component';
-import { EditInsuranceComponent } from './componentes/edit-insurance/edit-insurance.component';
+import { CreateInsuranceComponent } from './componentes/insurance/create-insurance/create-insurance.component';
+import { EditInsuranceComponent } from './componentes/insurance/edit-insurance/edit-insurance.component';
+import { ListInsurancePatientComponent } from './componentes/insurancePlanPratient/list-insurance-patient/list-insurance-patient.component';
 
 
 @NgModule({
-  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent],
+  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent, ListInsurancePatientComponent],
   imports: [
     CommonModule,
     InsurancesRoutingModule,

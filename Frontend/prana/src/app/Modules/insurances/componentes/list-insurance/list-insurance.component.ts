@@ -68,7 +68,11 @@ export class ListInsuranceComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  insuranceEdit(insureance:HealthInsurance){}
+  insuranceEdit(insurance:HealthInsurance){
+    this.router.navigate(['Dashboard/insurances/insurance/edit'], {
+      state: { insurance },
+    });
+  }
   insuranceDelete(id:number){
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Estás seguro de que deseas desactivar esta Obra Social?'

@@ -16,10 +16,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CreateInsuranceComponent } from './componentes/create-insurance/create-insurance.component';
+import { EditInsuranceComponent } from './componentes/edit-insurance/edit-insurance.component';
 
 
 @NgModule({
-  declarations: [ListInsuranceComponent, CreateInsuranceComponent],
+  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent],
   imports: [
     CommonModule,
     InsurancesRoutingModule,

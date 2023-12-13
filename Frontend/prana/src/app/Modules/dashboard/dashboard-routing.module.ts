@@ -9,10 +9,10 @@ const routes: Routes = [
     component: DashboardComponent,
     children: [
       {
-        path: 'insurance',
+        path: 'insurances',
         loadChildren: () =>
-          import('src/app/Modules/healthinsurance/healthinsurance.module').then(
-            (m) => m.HealthinsuranceModule
+          import('src/app/Modules/insurances/insurances.module').then(
+            (m) => m.InsurancesModule
           ),
       },
       {

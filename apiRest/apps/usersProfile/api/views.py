@@ -87,7 +87,7 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
         }, status=status.HTTP_404_NOT_FOUND)
 
 
-class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
+class HealthInsuranceAdminViewSet(BaseAdminViewSet):
     queryset = HealthInsurance.objects.all()
     serializer_class = HealthInsuranceSerializer
     permission_classes = [IsAdminOrReadOnly]

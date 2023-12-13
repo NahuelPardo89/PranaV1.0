@@ -25,6 +25,8 @@ export class ListInsuranceComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  showInactive: boolean = false;
+
   constructor(
     private insuranceService: HealthinsuranceService,
     private dialogService: DialogService,
@@ -37,7 +39,10 @@ export class ListInsuranceComponent {
 
   setDataTable() {
     this.insuranceService.getAll().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data);
+      const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
+      
+      this.dataSource = new MatTableDataSource(filteredData);
+      
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
       this.paginator._intl.lastPageLabel = 'última página';
@@ -45,8 +50,14 @@ export class ListInsuranceComponent {
       this.paginator._intl.previousPageLabel = 'página anterior';
 
       this.dataSource.paginator = this.paginator;
+      this.sort.active = 'name'; // El nombre de la columna por la que quieres ordenar inicialmente
+      this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
+       // Puede ser 'asc' o 'desc'
     });
+  }
+  onShowInactiveChange() {
+    this.setDataTable();
   }
 
   applyFilter(event: Event) {
@@ -58,6 +69,49 @@ export class ListInsuranceComponent {
     }
   }
   insuranceEdit(insureance:HealthInsurance){}
-  insuranceDelete(id:number){}
-  activeInsurance(insurance:HealthInsurance){}
+  insuranceDelete(id:number){
+    const confirmDialogRef = this.dialogService.openConfirmDialog(
+      '¿Estás seguro de que deseas desactivar esta Obra Social?'
+    );
+
+    confirmDialogRef.afterClosed().subscribe((confirmResult) => {
+      console.log('eliminar Obra Social');
+      if (confirmResult) {
+        this.insuranceService.delete(id).subscribe({
+          next: () => {
+            // Manejo de la respuesta de eliminación exitosa
+            this.setDataTable();
+            this.dialogService.showSuccessDialog(
+              'Obra Social Desactivado con éxito'
+            );
+
+            // Aquí podrías, por ejemplo, recargar la lista de usuarios
+          },
+          error: (error) => {
+            // Manejo de errores
+            this.dialogService.showErrorDialog(
+              'Hubo un error al Desactivar la Obra Social'
+            );
+          },
+        });
+      }
+    });
+  }
+  activeInsurance(insurance:HealthInsurance){
+    insurance.is_active = true;
+
+    this.insuranceService.update(insurance.id, insurance).subscribe({
+      next: () => {
+        console.log('Obra Social actualizado con éxito');
+        this.dialogService.showSuccessDialog('Obra Social Activada con éxito');
+
+        this.setDataTable();
+      },
+      error: (error) => {
+        console.error('Error al actualizar obra social', error);
+        this.dialogService.showErrorDialog('Error al Activar Obra Social');
+        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
+      },
+    });
+  }
 }

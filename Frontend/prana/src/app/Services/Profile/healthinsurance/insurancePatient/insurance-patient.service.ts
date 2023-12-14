@@ -17,6 +17,9 @@ export class InsurancePatientService {
   delete(id: number): Observable<any>{
     return this.http.delete(`${this.url}${id}/`);
   }
-
+  // Crear una nueva HealthInsurance
+  create(data:InsurancePlanPatient): Observable<any> {
+    return this.http.post(`${this.url}`, data);
+  }
   update(id:number, data:InsurancePlanPatient){}
 }

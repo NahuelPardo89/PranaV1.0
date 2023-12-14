@@ -18,10 +18,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CreateInsuranceComponent } from './componentes/insurance/create-insurance/create-insurance.component';
 import { EditInsuranceComponent } from './componentes/insurance/edit-insurance/edit-insurance.component';
 import { ListInsurancePatientComponent } from './componentes/insurancePlanPratient/list-insurance-patient/list-insurance-patient.component';
+import { CreateInsurancePatientComponent } from './componentes/insurancePlanPratient/create-insurance-patient/create-insurance-patient.component';
 
 
 @NgModule({
-  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent, ListInsurancePatientComponent],
+  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent, ListInsurancePatientComponent, CreateInsurancePatientComponent],
   imports: [
     CommonModule,
     InsurancesRoutingModule,

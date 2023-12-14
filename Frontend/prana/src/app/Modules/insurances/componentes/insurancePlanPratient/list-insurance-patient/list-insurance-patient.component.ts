@@ -29,8 +29,6 @@ export class ListInsurancePatientComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  showInactive: boolean = false;
-
   constructor(
     private insurancePatientService:InsurancePatientService,
     private dialogService: DialogService,
@@ -60,9 +58,7 @@ export class ListInsurancePatientComponent {
        // Puede ser 'asc' o 'desc'
     });
   }
-  onShowInactiveChange() {
-    this.setDataTable();
-  }
+  
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -79,7 +75,7 @@ export class ListInsurancePatientComponent {
   }
   insuranceDelete(id:number){
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar esta Obra Social?'
+      '¿Estás seguro de que deseas Eliminar esta Obra Social del Paciente?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
@@ -90,7 +86,7 @@ export class ListInsurancePatientComponent {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
             this.dialogService.showSuccessDialog(
-              'Obra Social Desactivado con éxito'
+              'Obra Social Eliminada con éxito'
             );
 
             // Aquí podrías, por ejemplo, recargar la lista de usuarios
@@ -98,7 +94,7 @@ export class ListInsurancePatientComponent {
           error: (error) => {
             // Manejo de errores
             this.dialogService.showErrorDialog(
-              'Hubo un error al Desactivar la Obra Social'
+              'Hubo un error al Eliminar la Obra Social'
             );
           },
         });

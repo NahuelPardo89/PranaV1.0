@@ -4,6 +4,7 @@ import { ListInsuranceComponent } from './componentes/insurance/list-insurance/l
 import { CreateInsuranceComponent } from './componentes/insurance/create-insurance/create-insurance.component';
 import { EditInsuranceComponent } from './componentes/insurance/edit-insurance/edit-insurance.component';
 import { ListInsurancePatientComponent } from './componentes/insurancePlanPratient/list-insurance-patient/list-insurance-patient.component';
+import { CreateInsurancePatientComponent } from './componentes/insurancePlanPratient/create-insurance-patient/create-insurance-patient.component';
 
 const routes: Routes = [
 
@@ -19,7 +20,7 @@ const routes: Routes = [
     path: 'patient', 
     children: [
       { path: '', component: ListInsurancePatientComponent },
-      //{ path: 'create', component: CreateInsuranceComponent },
+      { path: 'create', component: CreateInsurancePatientComponent },
       //{ path: 'edit', component: EditInsuranceComponent },
     ]
   },

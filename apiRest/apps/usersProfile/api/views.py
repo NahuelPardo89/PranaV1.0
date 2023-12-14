@@ -238,9 +238,44 @@ class DoctorScheduleAvailableTimesView(APIView):
 
 class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
     model=InsurancePlanPatient
-    queryset = InsurancePlanPatient.objects.all()
     serializer_class = InsurancePlanPatientListSerializer
+    create_serializer_class= InsurancePlanPatientSerializer
     permission_classes = [IsAdminOrReadOnly]
+    
+    def create(self, request):
+        print(request.data)
+        instance_serializer = self.create_serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        else:
+            errors = instance_serializer.errors
+            # Comprobar si existe el error de campos únicos
+            if 'non_field_errors' in errors and errors['non_field_errors']:
+                if "Los campos patient, insurance deben formar un conjunto único." in errors['non_field_errors']:
+                    return Response({
+                        'message': 'Ya existe la Obra Social para ese Paciente'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Respuesta genérica para otros errores
+            return Response({
+                'message': 'Hay errores en el registro de Profile',
+                'errors': errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk=None):
+        try:
+            instance_to_destroy = self.get_object(pk)
+            instance_to_destroy.delete()
+            return Response({
+                'message': 'Profile eliminado correctamente'
+            }, status=status.HTTP_204_NO_CONTENT)
+        except self.model.DoesNotExist:
+            return Response({
+                'message': 'No existe el Profile que desea eliminar'
+            }, status=status.HTTP_404_NOT_FOUND)
 
 
 class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):

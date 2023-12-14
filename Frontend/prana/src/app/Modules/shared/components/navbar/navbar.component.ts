@@ -1,8 +1,8 @@
 
-import { Component, OnInit, OnDestroy,  } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+
 import { LoginUser } from 'src/app/Models/user/loginUser.interface';
 import { UserShort } from 'src/app/Models/user/userShort.interface';
 import { AuthService } from 'src/app/Services/auth/auth.service';
@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
     });
     this.authService.getUserRole2().subscribe(role=>{
       this.currentRole = role;
-      console.log(role)
+      
     })
   }
  

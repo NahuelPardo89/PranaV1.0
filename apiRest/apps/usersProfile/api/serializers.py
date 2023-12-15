@@ -53,6 +53,13 @@ class InsurancePlanPatientSerializer(serializers.ModelSerializer):
         model = InsurancePlanPatient
         fields = '__all__'
 
+class InsurancePlanPatientListSerializer(serializers.ModelSerializer):
+    patient=serializers.StringRelatedField()
+    insurance=serializers.StringRelatedField()
+    class Meta:
+        model = InsurancePlanPatient
+        fields = '__all__'
+
 
 class DoctorProfileAllSerializer(serializers.ModelSerializer):
     user = UserShortSerializer()

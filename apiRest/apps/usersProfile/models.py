@@ -7,6 +7,7 @@ from apps.users.models import User
 
 class HealthInsurance(models.Model):
     name = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Obra Social'

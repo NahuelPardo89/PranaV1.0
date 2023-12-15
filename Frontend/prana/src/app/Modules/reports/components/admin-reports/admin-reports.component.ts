@@ -13,7 +13,7 @@ import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interface';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
-import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { HealthInsurance } from 'src/app/Models/Profile/healthinsurance.interface';
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';

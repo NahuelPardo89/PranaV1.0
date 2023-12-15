@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HealthinsuranceRoutingModule } from './healthinsurance-routing.module';
-import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 import { HealthinsurancelistComponent } from './healthinsurancelist/healthinsurancelist.component';
 import { HealthinsurancecreateComponent } from './healthinsurancecreate/healthinsurancecreate.component';
 import { ReactiveFormsModule } from '@angular/forms';

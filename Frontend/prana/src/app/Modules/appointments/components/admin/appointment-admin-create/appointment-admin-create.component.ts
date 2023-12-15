@@ -14,7 +14,7 @@ import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interfa
 import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/doctorschedule.service';
-import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
 import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';

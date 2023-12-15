@@ -18,7 +18,7 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
 
 from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
                           DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
-                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
+                          InsurancePlanPatientSerializer,InsurancePlanPatientListSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
                           DoctorProfileShortSerializer,   SpecialityBranchSerializer,DoctorCreateUpdateProfileSerializer)
 
 from apps.permission import IsAdminOrReadOnly
@@ -87,8 +87,8 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
         }, status=status.HTTP_404_NOT_FOUND)
 
 
-class HealthInsuranceAdminViewSet(viewsets.ModelViewSet):
-    queryset = HealthInsurance.objects.all()
+class HealthInsuranceAdminViewSet(BaseAdminViewSet):
+    model=HealthInsurance
     serializer_class = HealthInsuranceSerializer
     permission_classes = [IsAdminOrReadOnly]
 
@@ -127,7 +127,7 @@ class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
 class SpecialityBranchAdminViewSet(viewsets.ModelViewSet):
     queryset = SpecialityBranch.objects.all()
     serializer_class = SpecialityBranchSerializer
-    bpermission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class DoctorBranchesView(APIView):
@@ -236,10 +236,46 @@ class DoctorScheduleAvailableTimesView(APIView):
         return JsonResponse({'available_times': available_times}, status=status.HTTP_200_OK)
 
 
-class InsurancePlanPatientAdminViewSet(viewsets.ModelViewSet):
-    queryset = InsurancePlanPatient.objects.all()
-    serializer_class = InsurancePlanPatientSerializer
+class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
+    model=InsurancePlanPatient
+    serializer_class = InsurancePlanPatientListSerializer
+    create_serializer_class= InsurancePlanPatientSerializer
     permission_classes = [IsAdminOrReadOnly]
+    
+    def create(self, request):
+        print(request.data)
+        instance_serializer = self.create_serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        else:
+            errors = instance_serializer.errors
+            # Comprobar si existe el error de campos únicos
+            if 'non_field_errors' in errors and errors['non_field_errors']:
+                if "Los campos patient, insurance deben formar un conjunto único." in errors['non_field_errors']:
+                    return Response({
+                        'message': 'Ya existe la Obra Social para ese Paciente'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Respuesta genérica para otros errores
+            return Response({
+                'message': 'Hay errores en el registro de Profile',
+                'errors': errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk=None):
+        try:
+            instance_to_destroy = self.get_object(pk)
+            instance_to_destroy.delete()
+            return Response({
+                'message': 'Profile eliminado correctamente'
+            }, status=status.HTTP_204_NO_CONTENT)
+        except self.model.DoesNotExist:
+            return Response({
+                'message': 'No existe el Profile que desea eliminar'
+            }, status=status.HTTP_404_NOT_FOUND)
 
 
 class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):

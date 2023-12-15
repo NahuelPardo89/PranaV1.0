@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse, HttpResponse } from '@angul
 import { Observable, throwError } from 'rxjs';
 
 import { tap, catchError } from 'rxjs/operators';
-import { HealthInsurance } from '../../../Models/Profile/healthinsurance.interface';
+import { HealthInsurance } from '../../../../Models/Profile/healthinsurance.interface';
 
 
 
@@ -36,12 +36,12 @@ export class HealthinsuranceService {
 
   // Crear una nueva HealthInsurance
   create(data: any): Observable<any> {
-    return this.http.post(`${this.url}healthinsurances/`, data);
+    return this.http.post(`${this.url}`, data);
   }
 
   // Actualizar una HealthInsurance
   update(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.url}healthinsurances/${id}/`, data);
+    return this.http.put(`${this.url}${id}/`, data);
   }
 
   // Eliminar una HealthInsurance

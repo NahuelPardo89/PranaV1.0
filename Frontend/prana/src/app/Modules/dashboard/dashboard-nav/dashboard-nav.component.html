@@ -23,24 +23,22 @@
         <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleInsuranceOptions()">
             <i class="material-symbols-outlined btn-icon">medical_services</i> Gestionar Obras Sociales
         </button>
-        <div *ngIf="showInsuranceOptions" class="toggle">
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
-                    class="material-symbols-outlined btn-icon">medical_services</i>
-                Obras Sociales
-            </button>
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
-                    class="material-symbols-outlined btn-icon">medical_services</i>
-                Obras Sociales Pacientes
-            </button>
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
-                    class="material-symbols-outlined btn-icon">medical_services</i>
-                Obras Sociales Profesionales
-            </button>
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
-                    class="material-symbols-outlined btn-icon">medical_services</i>
-                Obras Sociales Talleristas
-            </button>
-        </div>
+
+                <div *ngIf="showInsuranceOptions"class="toggle">
+                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="insurances/insurance/"><i class="material-symbols-outlined btn-icon">medical_services</i>
+                      Obras Sociales
+                    </button>
+                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="insurances/patient/"><i class="material-symbols-outlined btn-icon">medical_services</i>
+                      Obras Sociales Pacientes
+                    </button>
+                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i class="material-symbols-outlined btn-icon">medical_services</i>
+                      Obras Sociales Profesionales
+                    </button>
+                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i class="material-symbols-outlined btn-icon">medical_services</i>
+                        Obras Sociales Talleristas
+                    </button>
+                </div>
+            
 
         <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleSeminarOptions()">
             <i class="material-symbols-outlined btn-icon">self_improvement</i> Gestionar Talleres

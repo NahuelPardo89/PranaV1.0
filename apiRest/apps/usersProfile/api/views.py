@@ -118,8 +118,8 @@ class DoctorPatientCommonInsurancesView(APIView):
         return Response(serializer.data)
 
 
-class MedicalSpecialityAdminViewSet(viewsets.ModelViewSet):
-    queryset = MedicalSpeciality.objects.all()
+class MedicalSpecialityAdminViewSet(BaseAdminViewSet):
+    model=MedicalSpeciality
     serializer_class = MedicalSpecialitySerializer
     permission_classes = [IsAdminOrReadOnly]
 

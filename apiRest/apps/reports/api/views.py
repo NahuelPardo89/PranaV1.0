@@ -58,7 +58,7 @@ def perform_report(serializer, request):
     num_doctors = appointments.values('doctor').distinct().count()
     # HI
     num_particular_insurances = appointments.filter(
-        health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
+        health_insurance__name__iexact='particular').values('health_insurance').count()
     num_other_insurances = appointments.exclude(
         health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
     # Appointments
@@ -97,7 +97,7 @@ class AdminAppointmentReportView(APIView):
 
     def post(self, request):
         """
-
+        API view for generating copayment reports based on a date range.
         """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):

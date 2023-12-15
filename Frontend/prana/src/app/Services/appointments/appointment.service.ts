@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
-
+import { Observable, BehaviorSubject, catchError, throwError } from 'rxjs';
 import { UserShort } from 'src/app/Models/user/userShort.interface';
 import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentPatientGet.interface';
@@ -34,6 +33,16 @@ export class AppointmentService {
   }
 
   /**
+  * Get a specific appointments with admin JSON format response (all fields).
+  * @param appointment_id The ID of the appointment to recover.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentAdminGetInterface[]>} An observable of the appointment.
+  */
+  getAdminOneAppointment(appointment_id: number): Observable<AppointmentAdminGetInterface> {
+    return this.http.get<AppointmentAdminGetInterface>(this.baseUrl + 'admin/' + appointment_id + '/');
+  }
+
+  /**
   * Get all appointments of a particular doctor with admin JSON format response (all fields).
   * @param doctor_id The ID of the doctor.
   * @author Alvaro Olguin
@@ -41,6 +50,17 @@ export class AppointmentService {
   */
   getAdminDoctorAppointments(doctor_id: number): Observable<AppointmentAdminGetInterface[]> {
     const url = this.baseUrl + 'admin/?doctor_id=' + doctor_id;
+    return this.http.get<AppointmentAdminGetInterface[]>(url);
+  }
+
+  /**
+  * Get all appointments of a particular doctor with admin JSON format response (all fields).
+  * @param doctor_id The ID of the doctor.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentAdminGetInterface[]>} An observable of the doctor's appointments.
+  */
+  getAdminTodayAppointments(day: string): Observable<AppointmentAdminGetInterface[]> {
+    const url = this.baseUrl + 'admin/?day=' + day;
     return this.http.get<AppointmentAdminGetInterface[]>(url);
   }
 
@@ -90,6 +110,28 @@ export class AppointmentService {
   */
   createPatientAppointment(appointment: AppointmentPatientCreateInterface): Observable<any> {
     return this.http.post<any>(this.baseUrl + 'patient/', appointment);
+  }
+
+  /**
+  * Delete an appointment.
+  * @param appointment_id The id of the appointment to delete.
+  * @author Alvaro Olguin
+  * @returns {Observable<any>} An observable of the deleted appointment.
+  */
+  deleteAdminAppointment(appointment_id: number): Observable<any> {
+    const url = this.baseUrl + 'admin/' + appointment_id + '/';
+    return this.http.delete<any>(url)
+  }
+
+  /**
+  * Update an appointment with admin options.
+  * @param appointment_id The id of the appointment to update.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentAdminGetInterface>} An observable of the updated appointment.
+  */
+  updateAdminAppointment(appointment_id: number, data: AppointmentAdminCreateInterface): Observable<AppointmentAdminGetInterface> {
+    const url = this.baseUrl + 'admin/' + appointment_id + '/';
+    return this.http.put<AppointmentAdminGetInterface>(url, data)
   }
 
 }

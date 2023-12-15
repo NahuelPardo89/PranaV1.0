@@ -16,10 +16,11 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
                                       PatientProfile, SpecialityBranch)
 
-from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
-                          DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
-                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer,   SpecialityBranchSerializer,DoctorCreateUpdateProfileSerializer)
+from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
+                          DoctoListProfileSerializer, DoctorScheduleSerializer, PatientListProfileSerializer,
+                          InsurancePlanPatientSerializer, DoctorProfileAllSerializer, PatientShortProfileSerializer,
+                          DoctorProfileShortSerializer, SpecialityBranchSerializer, DoctorCreateUpdateProfileSerializer,
+                          DoctorReportSerializer, )
 
 from apps.permission import IsAdminOrReadOnly
 
@@ -61,7 +62,7 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
         return Response(instance_serializer.data)
 
     def update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
         instance_serializer = self.serializer_class(
             instance, data=request.data)
@@ -251,10 +252,11 @@ class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):
 class PatientProfileAdminViewSet(BaseAdminViewSet):
     model = PatientProfile
     serializer_class = PatientListProfileSerializer
-    update_serializer_class=PatientShortProfileSerializer
+    update_serializer_class = PatientShortProfileSerializer
     queryset = None
+
     def update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
         instance_serializer = self.update_serializer_class(
             instance, data=request.data)
@@ -272,7 +274,7 @@ class PatientProfileAdminViewSet(BaseAdminViewSet):
 class DoctorProfileAdminViewSet(BaseAdminViewSet):
     model = DoctorProfile
     serializer_class = DoctoListProfileSerializer
-    createUpdate_serializer_class= DoctorCreateUpdateProfileSerializer
+    createUpdate_serializer_class = DoctorCreateUpdateProfileSerializer
     queryset = None
 
     def get_queryset(self):
@@ -281,9 +283,9 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
         if speciality is not None:
             queryset = queryset.filter(specialty__name=speciality)
         return queryset
-    
+
     def update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
         instance_serializer = self.createUpdate_serializer_class(
             instance, data=request.data)
@@ -296,18 +298,23 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
             'message': 'Hay errores en la actualización',
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
     def partial_update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
-        serializer = self.createUpdate_serializer_class(instance, data=request.data, partial=True) # partial=True permite la actualización parcial
+        # partial=True permite la actualización parcial
+        serializer = self.createUpdate_serializer_class(
+            instance, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def create(self, request):
         print(request.data)
-        instance_serializer = self.createUpdate_serializer_class(data=request.data)
+        instance_serializer = self.createUpdate_serializer_class(
+            data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
             return Response({
@@ -343,3 +350,16 @@ class PatientUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mix
         except ObjectDoesNotExist:
             raise Http404(
                 "No existe un perfil de paciente para el usuario autenticado.")
+
+
+class DoctorReportView(APIView):
+    """
+    API view to retrieve the logged in doctor's id, the ids of the insurances they work with, 
+    the ids of the branches they work with, and the name of their specialty.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        doctor = DoctorProfile.objects.get(user=request.user)
+        serializer = DoctorReportSerializer(doctor)
+        return Response(serializer.data)

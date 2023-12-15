@@ -68,9 +68,9 @@ export class ListInsurancePatientComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  insurancePatientEdit(insurance:InsurancePlanPatient){
-    this.router.navigate(['Dashboard/insurances/insurance/edit'], {
-      state: { insurance },
+  insurancePatientEdit(insurancePlanPatient:InsurancePlanPatient){
+    this.router.navigate(['Dashboard/insurances/patient/edit'], {
+      state: { insurancePlanPatient },
     });
   }
   insuranceDelete(id:number){

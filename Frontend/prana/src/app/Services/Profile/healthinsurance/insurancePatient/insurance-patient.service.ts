@@ -21,5 +21,7 @@ export class InsurancePatientService {
   create(data:InsurancePlanPatient): Observable<any> {
     return this.http.post(`${this.url}`, data);
   }
-  update(id:number, data:InsurancePlanPatient){}
+  update(id: number, data: InsurancePlanPatient): Observable<any> {
+    return this.http.put(`${this.url}${id}/`, data);
+  }
 }

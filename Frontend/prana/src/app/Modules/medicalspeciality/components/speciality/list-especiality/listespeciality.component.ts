@@ -4,7 +4,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Medicalspeciality } from 'src/app/Models/Profile/medicalspeciality.interface';
-import { User } from 'src/app/Models/user/user.interface';
 import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
@@ -70,25 +69,25 @@ export class ListespecialityComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  especialityEdit(especiality:Medicalspeciality){
-    this.router.navigate(['Dashboard/insurances/insurance/edit'], {
-      state: { especiality },
+  especialityEdit(speciality:Medicalspeciality){
+    this.router.navigate(['Dashboard/speciality/speciality/edit'], {
+      state: { speciality },
     });
   }
   especialityDelete(id:number){
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar esta Obra Social?'
+      '¿Estás seguro de que deseas desactivar esta Especialidad?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      console.log('eliminar Obra Social');
+      
       if (confirmResult) {
         this.specialityService.deleteSpeciality(id).subscribe({
           next: () => {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
             this.dialogService.showSuccessDialog(
-              'Obra Social Desactivado con éxito'
+              'Especialidad Desactivada con éxito'
             );
 
             // Aquí podrías, por ejemplo, recargar la lista de usuarios
@@ -96,7 +95,7 @@ export class ListespecialityComponent {
           error: (error) => {
             // Manejo de errores
             this.dialogService.showErrorDialog(
-              'Hubo un error al Desactivar la Obra Social'
+              'Hubo un error al Desactivar la Especialidad'
             );
           },
         });

@@ -17,7 +17,7 @@ export class EditInsuranceComponent {
     private router: Router,
     private insuranceService: HealthinsuranceService,
     private dialogService: DialogService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -28,9 +28,9 @@ export class EditInsuranceComponent {
 
   private initForm() {
     this.insuranceForm = this.fb.group({
-      
+
       name: ['', Validators.required],
-     
+
     });
   }
 
@@ -39,6 +39,10 @@ export class EditInsuranceComponent {
       // Obtén el ID del usuario que se está editando
       const insuranceId = history.state.insurance ? history.state.insurance.id : null;
       if (insuranceId) {
+        const nameInUpperCase = this.insuranceForm.get('name')?.value.toUpperCase();
+
+        // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
+        this.insuranceForm.get('name')?.setValue(nameInUpperCase);
         this.insuranceService.update(insuranceId, this.insuranceForm.value).subscribe({
           next: () => {
             console.log('Obra Social actualizada con éxito');

@@ -17,12 +17,14 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { EditEspecialityComponent } from './components/speciality/edit-especiality/edit-especiality.component';
 
 
 @NgModule({
   declarations: [
     ListespecialityComponent,
-    CreateespecialityComponent
+    CreateespecialityComponent,
+    EditEspecialityComponent
   ],
   imports: [
     CommonModule,

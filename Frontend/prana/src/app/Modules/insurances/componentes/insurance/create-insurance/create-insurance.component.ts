@@ -21,6 +21,10 @@ export class CreateInsuranceComponent {
 
   onSubmit(): void {
     if (this.insuranceForm.valid) {
+      const nameInUpperCase = this.insuranceForm.get('name')?.value.toUpperCase();
+
+    // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
+      this.insuranceForm.get('name')?.setValue(nameInUpperCase);
       this.insuranceService.create(this.insuranceForm.value).subscribe({
         next: (response) => {
           this.dialog.showSuccessDialog("Obra Social creada correctamente");

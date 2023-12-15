@@ -82,6 +82,7 @@ export class DoctorCreateComponent {
   onSubmit(): void {
     if (this.doctorForm.valid) {
       const userid =this.doctorForm.value.user.id
+      
       this.doctorForm.value.user=userid;
       this.doctorProfileService.createDoctor(this.doctorForm.value).subscribe({
         next: (response) => {

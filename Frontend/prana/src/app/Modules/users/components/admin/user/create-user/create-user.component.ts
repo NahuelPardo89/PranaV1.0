@@ -25,6 +25,12 @@ export class CreateUserComponent {
 
   onSubmit(): void {
     if (this.userForm.valid) {
+      const nameInUpperCase = this.userForm.get('name')?.value.toUpperCase();
+      const lastNameInUpperCase = this.userForm.get('last_name')?.value.toUpperCase();
+
+    // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
+      this.userForm.get('name')?.setValue(nameInUpperCase);
+      this.userForm.get('last_name')?.setValue(lastNameInUpperCase);
       this.userService.createUser(this.userForm.value).subscribe({
         next: (response) => {
           this.dialog.showSuccessDialog("Usuario creado correctamente");

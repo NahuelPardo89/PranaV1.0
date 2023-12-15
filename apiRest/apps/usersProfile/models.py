@@ -19,6 +19,7 @@ class HealthInsurance(models.Model):
 
 class MedicalSpeciality(models.Model):
     name = models.CharField(max_length=100)
+    is_active=models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Especialidad'

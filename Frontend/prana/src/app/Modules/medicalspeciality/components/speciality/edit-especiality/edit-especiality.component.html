@@ -1,7 +1,7 @@
 <div class="container mt-3">
     <div class="card">
       <div class="card-header bg-info text-white text-center">
-        <h2>Crear Especialidad</h2>
+        <h2 class="text-center">Editar Especialidad</h2>
       </div>
       <div class="card-body">
         <form
@@ -9,7 +9,6 @@
           (ngSubmit)="onSubmit()"
           class="create-user-form"
         >
-        <!-- Campo Nombre -->
         <mat-form-field appearance="outline">
             <mat-label>Nombre</mat-label>
             <input matInput formControlName="name" />
@@ -17,13 +16,12 @@
               >El campo Nombre es obligatorio</mat-error
             >
           </mat-form-field>
-
           <button
           class="btn btn-primary"
           type="submit"
           [disabled]="!specialityForm.valid"
         >
-          Crear Especialidad
+          Guardar
         </button>
         <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
       </form>

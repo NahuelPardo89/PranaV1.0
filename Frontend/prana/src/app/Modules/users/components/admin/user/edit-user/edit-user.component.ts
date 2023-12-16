@@ -17,7 +17,7 @@ export class EditUserComponent {
     private router: Router,
     private userService: UserService,
     private dialogService: DialogService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -43,6 +43,10 @@ export class EditUserComponent {
       // Obtén el ID del usuario que se está editando
       const userId = history.state.user ? history.state.user.id : null;
       if (userId) {
+        const nameInUpperCase = this.userForm.get('name')?.value.toUpperCase();
+        const lastNameInUpperCase = this.userForm.get('last_name')?.value.toUpperCase();
+        this.userForm.get('name')?.setValue(nameInUpperCase);
+        this.userForm.get('last_name')?.setValue(lastNameInUpperCase);
         this.userService.updateUser(userId, this.userForm.value).subscribe({
           next: () => {
             console.log('Usuario actualizado con éxito');

@@ -3,33 +3,31 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Medicalspeciality } from 'src/app/Models/Profile/medicalspeciality.interface';
-import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
+import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
+import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-listespeciality',
-  templateUrl: './listespeciality.component.html',
-  styleUrls: ['./listespeciality.component.css']
+  selector: 'app-list-speciality-branch',
+  templateUrl: './list-speciality-branch.component.html',
+  styleUrls: ['./list-speciality-branch.component.css']
 })
-export class ListespecialityComponent {
-  specialities: Medicalspeciality[] = [];
+export class ListSpecialityBranchComponent {
   displayedColumns: string[] = [
     'id',
     'name',
+    'speciality',
     'is_active',
     'actions',
-    
   ];
-  dataSource!: MatTableDataSource<Medicalspeciality>;
+  dataSource!: MatTableDataSource<SpecialityBranch>;
+  showInactive: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  showInactive: boolean = false;
-
   constructor(
-    private specialityService: SpecialityService,
+    private specialityBranchService: BranchService,
     private dialogService: DialogService,
     private router: Router
   ) {}
@@ -39,11 +37,11 @@ export class ListespecialityComponent {
   }
 
   setDataTable() {
-    this.specialityService.getSpecialities().subscribe((data) => {
+    this.specialityBranchService.getSpecialityBranches().subscribe((data) => {
       const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
       
       this.dataSource = new MatTableDataSource(filteredData);
-      
+     
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
       this.paginator._intl.lastPageLabel = 'última página';
@@ -51,14 +49,8 @@ export class ListespecialityComponent {
       this.paginator._intl.previousPageLabel = 'página anterior';
 
       this.dataSource.paginator = this.paginator;
-      this.sort.active = 'name'; // El nombre de la columna por la que quieres ordenar inicialmente
-      this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
-       // Puede ser 'asc' o 'desc'
     });
-  }
-  onShowInactiveChange() {
-    this.setDataTable();
   }
 
   applyFilter(event: Event) {
@@ -69,52 +61,50 @@ export class ListespecialityComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  especialityEdit(speciality:Medicalspeciality){
-    this.router.navigate(['Dashboard/speciality/speciality/edit'], {
-      state: { speciality },
+  onShowInactiveChange() {
+    this.setDataTable();
+  }
+
+  editBranch(branch: SpecialityBranch) {
+    this.router.navigate(['Dashboard/speciality/branch/edit'], {
+      state: { branch },
     });
   }
-  especialityDelete(id:number){
+
+  deleteBranch(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar esta Especialidad?'
+      '¿Estás seguro de que deseas desactivar esta Rama de Especialidad?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
       
       if (confirmResult) {
-        this.specialityService.deleteSpeciality(id).subscribe({
+        this.specialityBranchService.deleteSpecialityBranch(id).subscribe({
           next: () => {
-            // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
             this.dialogService.showSuccessDialog(
-              'Especialidad Desactivada con éxito'
+              'Rama Desactivado con éxito'
             );
-
-            // Aquí podrías, por ejemplo, recargar la lista de usuarios
           },
           error: (error) => {
-            // Manejo de errores
             this.dialogService.showErrorDialog(
-              'Hubo un error al Desactivar la Especialidad'
+              'Hubo un error al Desactivar el Rama'
             );
           },
         });
       }
     });
   }
-  activeEspeciality(especiality:Medicalspeciality){
-    especiality.is_active = true;
 
-    this.specialityService.updateSpeciality(especiality.id, especiality).subscribe({
+  activeBranch(branch: SpecialityBranch) {
+    branch.is_active = true;
+    this.specialityBranchService.updateSpecialityBranch(branch.id, branch).subscribe({
       next: () => {
-        console.log('Obra Social actualizado con éxito');
-        this.dialogService.showSuccessDialog('Obra Social Activada con éxito');
-
+        this.dialogService.showSuccessDialog('Rama Activado con éxito');
         this.setDataTable();
       },
       error: (error) => {
-        console.error('Error al actualizar obra social', error);
-        this.dialogService.showErrorDialog('Error al Activar Obra Social');
+        this.dialogService.showErrorDialog('Error al Activar el Rama');
         // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
       },
     });

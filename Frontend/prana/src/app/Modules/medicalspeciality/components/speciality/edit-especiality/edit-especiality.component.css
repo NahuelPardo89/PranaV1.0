@@ -8,4 +8,7 @@
     width: 100%; /* Asegura que los campos ocupen todo el ancho disponible */
   }
   
-  
+  mat-card {
+    margin: 20px; 
+    
+  }

@@ -9,65 +9,61 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-create-speciality-branch',
   templateUrl: './create-speciality-branch.component.html',
-  styleUrls: ['./create-speciality-branch.component.css']
+  styleUrls: ['./create-speciality-branch.component.css'],
 })
 export class CreateSpecialityBranchComponent {
   specialties: Medicalspeciality[] = [];
- 
-  
+
   branchForm: FormGroup;
-  
- 
+
   constructor(
     private branchService: BranchService,
     private specialtyService: SpecialityService,
     private fb: FormBuilder,
     private dialog: DialogService,
-    private router: Router,
+    private router: Router
   ) {
     this.branchForm = this.fb.group({
       name: ['', Validators.required],
       speciality: ['', Validators.required],
     });
-    
   }
 
   ngOnInit(): void {
     this.loadSpecialties();
-    
-    
   }
-  
-  loadSpecialties(): void {    this.specialtyService.getSpecialities().subscribe(data => {
+
+  loadSpecialties(): void {
+    this.specialtyService.getSpecialities().subscribe((data) => {
       this.specialties = data;
     });
   }
-  
-  
-
-  
 
   onSubmit(): void {
     if (this.branchForm.valid) {
-      console.log(this.branchForm.value)
-      this.branchService.createSpecialityBranch(this.branchForm.value).subscribe({
-        next: (response) => {
-              this.dialog.showSuccessDialog("Rama de Especialidad creada correctamente");
-              this.router.navigate(['/Dashboard/speciality/branch']);
-              
-            },
-            error: (error) => {
-              console.log(error);
-              this.dialog.showErrorDialog("Hubo un error al crear la rama de especialidad ");
-            }
-           
-          });
-        
-    } 
+      const nameInUpperCase = this.branchForm.get('name')?.value.toUpperCase();
+
+      // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
+      this.branchForm.get('name')?.setValue(nameInUpperCase);
+      this.branchService
+        .createSpecialityBranch(this.branchForm.value)
+        .subscribe({
+          next: (response) => {
+            this.dialog.showSuccessDialog(
+              'Rama de Especialidad creada correctamente'
+            );
+            this.router.navigate(['/Dashboard/speciality/branch']);
+          },
+          error: (error) => {
+            console.log(error);
+            this.dialog.showErrorDialog(
+              'Hubo un error al crear la rama de especialidad '
+            );
+          },
+        });
+    }
   }
   onCancel() {
     this.router.navigate(['/Dashboard/speciality/branch']);
   }
- 
-  
 }

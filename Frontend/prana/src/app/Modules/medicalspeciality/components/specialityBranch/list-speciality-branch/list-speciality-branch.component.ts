@@ -10,7 +10,7 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-list-speciality-branch',
   templateUrl: './list-speciality-branch.component.html',
-  styleUrls: ['./list-speciality-branch.component.css']
+  styleUrls: ['./list-speciality-branch.component.css'],
 })
 export class ListSpecialityBranchComponent {
   displayedColumns: string[] = [
@@ -38,10 +38,12 @@ export class ListSpecialityBranchComponent {
 
   setDataTable() {
     this.specialityBranchService.getSpecialityBranches().subscribe((data) => {
-      const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
-      
+      const filteredData = this.showInactive
+        ? data
+        : data.filter((d) => d.is_active);
+
       this.dataSource = new MatTableDataSource(filteredData);
-     
+
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
       this.paginator._intl.lastPageLabel = 'última página';
@@ -77,14 +79,11 @@ export class ListSpecialityBranchComponent {
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      
       if (confirmResult) {
         this.specialityBranchService.deleteSpecialityBranch(id).subscribe({
           next: () => {
             this.setDataTable();
-            this.dialogService.showSuccessDialog(
-              'Rama Desactivado con éxito'
-            );
+            this.dialogService.showSuccessDialog('Rama Desactivado con éxito');
           },
           error: (error) => {
             this.dialogService.showErrorDialog(
@@ -98,15 +97,17 @@ export class ListSpecialityBranchComponent {
 
   activeBranch(branch: SpecialityBranch) {
     branch.is_active = true;
-    this.specialityBranchService.updateSpecialityBranch(branch.id, branch).subscribe({
-      next: () => {
-        this.dialogService.showSuccessDialog('Rama Activado con éxito');
-        this.setDataTable();
-      },
-      error: (error) => {
-        this.dialogService.showErrorDialog('Error al Activar el Rama');
-        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-      },
-    });
+    this.specialityBranchService
+      .updateSpecialityBranch(branch.id, branch)
+      .subscribe({
+        next: () => {
+          this.dialogService.showSuccessDialog('Rama Activado con éxito');
+          this.setDataTable();
+        },
+        error: (error) => {
+          this.dialogService.showErrorDialog('Error al Activar el Rama');
+          // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
+        },
+      });
   }
 }

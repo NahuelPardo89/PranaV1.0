@@ -7,7 +7,7 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-edit-especiality',
   templateUrl: './edit-especiality.component.html',
-  styleUrls: ['./edit-especiality.component.css']
+  styleUrls: ['./edit-especiality.component.css'],
 })
 export class EditEspecialityComponent {
   specialityForm!: FormGroup;
@@ -28,36 +28,41 @@ export class EditEspecialityComponent {
 
   private initForm() {
     this.specialityForm = this.fb.group({
-      
       name: ['', Validators.required],
-     
     });
   }
 
   onSubmit(): void {
     if (this.specialityForm.valid) {
       // Obtén el ID del usuario que se está editando
-      const specialityId = history.state.speciality ? history.state.speciality.id : null;
+      const specialityId = history.state.speciality
+        ? history.state.speciality.id
+        : null;
       if (specialityId) {
-        const nameInUpperCase = this.specialityForm.get('name')?.value.toUpperCase();
+        const nameInUpperCase = this.specialityForm
+          .get('name')
+          ?.value.toUpperCase();
 
-    // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
-      this.specialityForm.get('name')?.setValue(nameInUpperCase);
-        this.specialityService.updateSpeciality(specialityId, this.specialityForm.value).subscribe({
-          next: () => {
-            
-            this.dialogService.showSuccessDialog('Especialidad Editada con éxito');
+        // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
+        this.specialityForm.get('name')?.setValue(nameInUpperCase);
+        this.specialityService
+          .updateSpeciality(specialityId, this.specialityForm.value)
+          .subscribe({
+            next: () => {
+              this.dialogService.showSuccessDialog(
+                'Especialidad Editada con éxito'
+              );
 
-            this.router.navigate(['Dashboard/speciality/speciality']); // Ajusta la ruta según sea necesario
-          },
-          error: (error) => {
-            console.error('Error al actualizar Especialidad', error);
-            this.dialogService.showErrorDialog(
-              'Error al actualizar Especialidad',
-            );
-            // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-          },
-        });
+              this.router.navigate(['Dashboard/speciality/speciality']); // Ajusta la ruta según sea necesario
+            },
+            error: (error) => {
+              console.error('Error al actualizar Especialidad', error);
+              this.dialogService.showErrorDialog(
+                'Error al actualizar Especialidad'
+              );
+              // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
+            },
+          });
       } else {
         console.error(
           'Error: No se pudo obtener el ID Obra Social para la actualización.'

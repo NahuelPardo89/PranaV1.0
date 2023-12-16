@@ -19,7 +19,7 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
 from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
                           DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
                           InsurancePlanPatientSerializer,InsurancePlanPatientListSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer,   SpecialityBranchSerializer,DoctorCreateUpdateProfileSerializer)
+                          DoctorProfileShortSerializer,   SpecialityBranchListSerializer,SpecialityBranchCreateSerializer,DoctorCreateUpdateProfileSerializer)
 
 from apps.permission import IsAdminOrReadOnly
 
@@ -124,10 +124,24 @@ class MedicalSpecialityAdminViewSet(BaseAdminViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
-class SpecialityBranchAdminViewSet(viewsets.ModelViewSet):
-    queryset = SpecialityBranch.objects.all()
-    serializer_class = SpecialityBranchSerializer
+class SpecialityBranchAdminViewSet(BaseAdminViewSet):
+    model=SpecialityBranch
+    serializer_class = SpecialityBranchListSerializer
+    create_serializer_class=SpecialityBranchCreateSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+    def create(self, request):
+    
+        instance_serializer = self.create_serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Profile',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DoctorBranchesView(APIView):

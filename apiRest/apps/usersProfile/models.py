@@ -33,6 +33,7 @@ class MedicalSpeciality(models.Model):
 class SpecialityBranch(models.Model):
     name = models.CharField(max_length=100)
     speciality = models.ForeignKey(MedicalSpeciality, on_delete=models.CASCADE)
+    is_active=models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Rama'

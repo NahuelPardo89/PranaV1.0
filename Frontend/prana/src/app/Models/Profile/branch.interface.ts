@@ -1,5 +1,6 @@
 export interface SpecialityBranch {
-    id?: number;
+    id: number;
     name: string;
     speciality: number; 
+    is_active: boolean;
   }

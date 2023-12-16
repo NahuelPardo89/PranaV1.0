@@ -16,7 +16,7 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
                                       PatientProfile, SpecialityBranch)
 
-from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
+from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorListSerializer,
                           DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
                           InsurancePlanPatientSerializer,InsurancePlanPatientListSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
                           DoctorProfileShortSerializer,   SpecialityBranchListSerializer,SpecialityBranchCreateSerializer,DoctorCreateUpdateProfileSerializer)
@@ -292,11 +292,21 @@ class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
             }, status=status.HTTP_404_NOT_FOUND)
 
 
-class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):
-    queryset = InsurancePlanDoctor.objects.all()
-    serializer_class = InsurancePlanDoctorSerializer
+class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
+    model=InsurancePlanDoctor
+    serializer_class = InsurancePlanDoctorListSerializer
     permission_classes = [IsAdminOrReadOnly]
-
+    def destroy(self, request, pk=None):
+        try:
+            instance_to_destroy = self.get_object(pk)
+            instance_to_destroy.delete()
+            return Response({
+                'message': 'Profile eliminado correctamente'
+            }, status=status.HTTP_204_NO_CONTENT)
+        except self.model.DoesNotExist:
+            return Response({
+                'message': 'No existe el Profile que desea eliminar'
+            }, status=status.HTTP_404_NOT_FOUND)
 
 class PatientProfileAdminViewSet(BaseAdminViewSet):
     model = PatientProfile

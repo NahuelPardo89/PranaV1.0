@@ -20,10 +20,12 @@ import { EditInsuranceComponent } from './componentes/insurance/edit-insurance/e
 import { ListInsurancePatientComponent } from './componentes/insurancePlanPratient/list-insurance-patient/list-insurance-patient.component';
 import { CreateInsurancePatientComponent } from './componentes/insurancePlanPratient/create-insurance-patient/create-insurance-patient.component';
 import { EditInsurancePatientComponent } from './componentes/insurancePlanPratient/edit-insurance-patient/edit-insurance-patient.component';
-
+import { CreateInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/create-insurance-doctor/create-insurance-doctor.component';
+import { EditInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/edit-insurance-doctor/edit-insurance-doctor.component';
+import { ListInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/list-insurance-doctor/list-insurance-doctor.component';
 
 @NgModule({
-  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent, ListInsurancePatientComponent, CreateInsurancePatientComponent, EditInsurancePatientComponent],
+  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent, ListInsurancePatientComponent, CreateInsurancePatientComponent, EditInsurancePatientComponent, CreateInsuranceDoctorComponent, EditInsuranceDoctorComponent, ListInsuranceDoctorComponent, ],
   imports: [
     CommonModule,
     InsurancesRoutingModule,

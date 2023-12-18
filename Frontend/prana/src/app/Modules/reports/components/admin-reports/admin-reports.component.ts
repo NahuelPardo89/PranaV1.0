@@ -100,6 +100,7 @@ export class AdminReportsComponent implements OnInit {
       appointments: []
     };
   }
+
   ngOnInit(): void {
     // Initialize data
     this.loadDoctors();

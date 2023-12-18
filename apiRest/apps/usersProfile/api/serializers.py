@@ -27,8 +27,15 @@ class MedicalSpecialitySerializer(serializers.ModelSerializer):
         return speciality
 
 
-class SpecialityBranchSerializer(serializers.ModelSerializer):
+class SpecialityBranchListSerializer(serializers.ModelSerializer):
     speciality = serializers.StringRelatedField()
+
+    class Meta:
+        model = SpecialityBranch
+        fields = '__all__'
+
+class SpecialityBranchCreateSerializer(serializers.ModelSerializer):
+    
 
     class Meta:
         model = SpecialityBranch
@@ -49,6 +56,13 @@ class InsurancePlanDoctorSerializer(serializers.ModelSerializer):
 
 
 class InsurancePlanPatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InsurancePlanPatient
+        fields = '__all__'
+
+class InsurancePlanPatientListSerializer(serializers.ModelSerializer):
+    patient=serializers.StringRelatedField()
+    insurance=serializers.StringRelatedField()
     class Meta:
         model = InsurancePlanPatient
         fields = '__all__'
@@ -112,7 +126,7 @@ class PatientShortProfileSerializer(serializers.ModelSerializer):
 
 class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
     insurance = HealthInsuranceSerializer(read_only=True)
-    branch = SpecialityBranchSerializer(read_only=True)
+    branch = SpecialityBranchListSerializer(read_only=True)
 
     class Meta:
         model = InsurancePlanDoctor

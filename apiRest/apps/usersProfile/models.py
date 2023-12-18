@@ -7,6 +7,7 @@ from apps.users.models import User
 
 class HealthInsurance(models.Model):
     name = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Obra Social'
@@ -18,6 +19,7 @@ class HealthInsurance(models.Model):
 
 class MedicalSpeciality(models.Model):
     name = models.CharField(max_length=100)
+    is_active=models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Especialidad'
@@ -31,6 +33,7 @@ class MedicalSpeciality(models.Model):
 class SpecialityBranch(models.Model):
     name = models.CharField(max_length=100)
     speciality = models.ForeignKey(MedicalSpeciality, on_delete=models.CASCADE)
+    is_active=models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Rama'

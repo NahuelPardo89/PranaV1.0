@@ -10,7 +10,7 @@ import { User } from 'src/app/Models/user/user.interface';
 export class UserService {
   private apiUrl = 'http://127.0.0.1:8000/account/admin/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
@@ -23,18 +23,19 @@ export class UserService {
         return throwError(() => new Error(error));
       })
     );
-    
+
   }
 
   createUser(user: User): Observable<void> {
     ; // Ajusta esta URL según la API
     return this.http.post<void>(this.apiUrl, user).pipe(
       catchError(error => {
-        
+
         return throwError(() => new Error(error));
       })
     );
   }
+
   updateUser(userId: number, userData: User): Observable<void> {
     const url = `${this.apiUrl}${userId}/`;
     return this.http.put<void>(url, userData).pipe(

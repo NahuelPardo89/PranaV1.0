@@ -153,16 +153,16 @@ class DoctorBranchesView(APIView):
     def get(self, request):
         doctor_id = request.GET.get('doctor_id')
 
-        # Filtra los planes de seguro del doctor
+        # FIlter doctors insurances
         doctor_insurances = InsurancePlanDoctor.objects.filter(
             doctor_id=doctor_id)
 
-        # Obtiene las ramas
+        # Get branches
         doctor_branches = list(
             set(insurance.branch for insurance in doctor_insurances))
 
-        # Serializa la respuesta
-        serializer = SpecialityBranchSerializer(doctor_branches, many=True)
+        # Response
+        serializer = SpecialityBranchListSerializer(doctor_branches, many=True)
 
         return Response(serializer.data)
 
@@ -244,7 +244,7 @@ class DoctorScheduleAvailableTimesView(APIView):
                     # Check if the start time is not in the past
                     if date.date() > datetime.today().date() or start_time.time() >= now:
                         available_times.append(
-                            f"{start_time.time().strftime('%H:%M:%S')} - {end_time_slot.time().strftime('%H:%M:%S')}")
+                            f"{start_time.time().strftime('%H:%M')} - {end_time_slot.time().strftime('%H:%M')}")
 
                 start_time = end_time_slot
 

@@ -34,8 +34,8 @@ class SpecialityBranchListSerializer(serializers.ModelSerializer):
         model = SpecialityBranch
         fields = '__all__'
 
+
 class SpecialityBranchCreateSerializer(serializers.ModelSerializer):
-    
 
     class Meta:
         model = SpecialityBranch
@@ -60,9 +60,11 @@ class InsurancePlanPatientSerializer(serializers.ModelSerializer):
         model = InsurancePlanPatient
         fields = '__all__'
 
+
 class InsurancePlanPatientListSerializer(serializers.ModelSerializer):
-    patient=serializers.StringRelatedField()
-    insurance=serializers.StringRelatedField()
+    patient = serializers.StringRelatedField()
+    insurance = serializers.StringRelatedField()
+
     class Meta:
         model = InsurancePlanPatient
         fields = '__all__'
@@ -165,33 +167,8 @@ class DoctorReportSerializer(serializers.ModelSerializer):
     def get_branches(self, obj):
         insurance_plans = InsurancePlanDoctor.objects.filter(doctor=obj)
         branches = list(set(plan.branch for plan in insurance_plans))
-        return SpecialityBranchSerializer(branches, many=True).data
+        return SpecialityBranchListSerializer(branches, many=True).data
 
     def get_specialty(self, obj):
         specialty = obj.specialty.first()
         return MedicalSpecialitySerializer(specialty).data if specialty else None
-
-
-# class DoctorReportSerializer(serializers.ModelSerializer):
-#     insurances = serializers.SerializerMethodField()
-#     branches = serializers.SerializerMethodField()
-#     specialty = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = DoctorProfile
-#         fields = ('id', 'insurances', 'branches', 'specialty')
-
-#     def get_insurances(self, obj):
-#         insurance_plans = InsurancePlanDoctor.objects.filter(doctor=obj)
-#         unique_insurances = list(
-#             set(plan.insurance for plan in insurance_plans))
-#         return HealthInsuranceSerializer(unique_insurances, many=True).data
-
-#     def get_branches(self, obj):
-#         insurance_plans = InsurancePlanDoctor.objects.filter(doctor=obj)
-#         branches = list(set(plan.branch for plan in insurance_plans))
-#         return SpecialityBranchSerializer(branches, many=True).data
-
-#     def get_specialty(self, obj):
-#         specialty = obj.specialty.first()
-#         return MedicalSpecialitySerializer(specialty).data if specialty else None

@@ -1,10 +1,9 @@
-<div class="container mt-5">
+<div class="container mt-5 ">
     <h2 class="text-center">Actualizar Turno</h2>
     <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="mt-4">
         <div class="row justify-content-center">
             <div class="col-md-6">
 
-                <!-- Patient is the unique visible field since is required and is not afected by the specialty -->
                 <div class="mb-3 row align-items-center">
                     <label for="patient" class="col-md-4 col-form-label text-end">Paciente * :</label>
                     <div class="col-md-8">
@@ -24,7 +23,6 @@
                     </div>
                 </div>
 
-                <!-- First of all, we need to define the specialty, in order to filter doctors, schedules and free apointments -->
                 <div *ngIf="selectedPatient" class="mb-3 row align-items-center">
                     <label for="specialty" class="col-md-4 col-form-label text-end">Especialidad * :</label>
                     <div class="col-md-8">
@@ -98,15 +96,6 @@
                         </mat-form-field>
                     </div>
                 </div>
-
-                <!-- Let's avoid this for now -->
-                <!-- <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
-          <label for="duration" class="col-md-4 col-form-label text-end">Duración de la consulta:</label>
-          <div class="col-md-8">
-            <input type="time" id="duration" class="form-control input-field" formControlName="duration"
-              placeholder="Campo Opcional" required>
-          </div>
-        </div> -->
 
                 <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
                     <label for="branch" class="col-md-4 col-form-label text-end">Rama:</label>
@@ -184,7 +173,7 @@
         </div>
 
         <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary">Actualizar Turno</button>
+            <button type="submit" class="btn btn-primary me-3">Actualizar Turno</button>
             <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
         </div>
     </form>

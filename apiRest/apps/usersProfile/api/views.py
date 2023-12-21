@@ -16,10 +16,11 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
                                       PatientProfile, SpecialityBranch)
 
-from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
-                          DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
-                          InsurancePlanPatientSerializer,InsurancePlanPatientListSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer,   SpecialityBranchListSerializer,SpecialityBranchCreateSerializer,DoctorCreateUpdateProfileSerializer)
+from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
+                          DoctoListProfileSerializer, DoctorScheduleSerializer, PatientListProfileSerializer,
+                          InsurancePlanPatientSerializer, InsurancePlanPatientListSerializer, DoctorProfileAllSerializer, PatientShortProfileSerializer,
+                          DoctorProfileShortSerializer, SpecialityBranchListSerializer, SpecialityBranchCreateSerializer, DoctorCreateUpdateProfileSerializer,
+                          DoctorReportSerializer, )
 
 from apps.permission import IsAdminOrReadOnly
 
@@ -61,7 +62,7 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
         return Response(instance_serializer.data)
 
     def update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
         instance_serializer = self.serializer_class(
             instance, data=request.data)
@@ -88,7 +89,7 @@ class BaseAdminViewSet(viewsets.GenericViewSet):
 
 
 class HealthInsuranceAdminViewSet(BaseAdminViewSet):
-    model=HealthInsurance
+    model = HealthInsurance
     serializer_class = HealthInsuranceSerializer
     permission_classes = [IsAdminOrReadOnly]
 
@@ -119,19 +120,19 @@ class DoctorPatientCommonInsurancesView(APIView):
 
 
 class MedicalSpecialityAdminViewSet(BaseAdminViewSet):
-    model=MedicalSpeciality
+    model = MedicalSpeciality
     serializer_class = MedicalSpecialitySerializer
     permission_classes = [IsAdminOrReadOnly]
 
 
 class SpecialityBranchAdminViewSet(BaseAdminViewSet):
-    model=SpecialityBranch
+    model = SpecialityBranch
     serializer_class = SpecialityBranchListSerializer
-    create_serializer_class=SpecialityBranchCreateSerializer
+    create_serializer_class = SpecialityBranchCreateSerializer
     permission_classes = [IsAdminOrReadOnly]
 
     def create(self, request):
-    
+
         instance_serializer = self.create_serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
@@ -152,16 +153,16 @@ class DoctorBranchesView(APIView):
     def get(self, request):
         doctor_id = request.GET.get('doctor_id')
 
-        # Filtra los planes de seguro del doctor
+        # FIlter doctors insurances
         doctor_insurances = InsurancePlanDoctor.objects.filter(
             doctor_id=doctor_id)
 
-        # Obtiene las ramas
+        # Get branches
         doctor_branches = list(
             set(insurance.branch for insurance in doctor_insurances))
 
-        # Serializa la respuesta
-        serializer = SpecialityBranchSerializer(doctor_branches, many=True)
+        # Response
+        serializer = SpecialityBranchListSerializer(doctor_branches, many=True)
 
         return Response(serializer.data)
 
@@ -243,7 +244,7 @@ class DoctorScheduleAvailableTimesView(APIView):
                     # Check if the start time is not in the past
                     if date.date() > datetime.today().date() or start_time.time() >= now:
                         available_times.append(
-                            f"{start_time.time().strftime('%H:%M:%S')} - {end_time_slot.time().strftime('%H:%M:%S')}")
+                            f"{start_time.time().strftime('%H:%M')} - {end_time_slot.time().strftime('%H:%M')}")
 
                 start_time = end_time_slot
 
@@ -251,11 +252,11 @@ class DoctorScheduleAvailableTimesView(APIView):
 
 
 class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
-    model=InsurancePlanPatient
+    model = InsurancePlanPatient
     serializer_class = InsurancePlanPatientListSerializer
-    create_serializer_class= InsurancePlanPatientSerializer
+    create_serializer_class = InsurancePlanPatientSerializer
     permission_classes = [IsAdminOrReadOnly]
-    
+
     def create(self, request):
         print(request.data)
         instance_serializer = self.create_serializer_class(data=request.data)
@@ -278,7 +279,7 @@ class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
                 'message': 'Hay errores en el registro de Profile',
                 'errors': errors
             }, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def destroy(self, request, pk=None):
         try:
             instance_to_destroy = self.get_object(pk)
@@ -301,10 +302,11 @@ class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):
 class PatientProfileAdminViewSet(BaseAdminViewSet):
     model = PatientProfile
     serializer_class = PatientListProfileSerializer
-    update_serializer_class=PatientShortProfileSerializer
+    update_serializer_class = PatientShortProfileSerializer
     queryset = None
+
     def update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
         instance_serializer = self.update_serializer_class(
             instance, data=request.data)
@@ -322,7 +324,7 @@ class PatientProfileAdminViewSet(BaseAdminViewSet):
 class DoctorProfileAdminViewSet(BaseAdminViewSet):
     model = DoctorProfile
     serializer_class = DoctoListProfileSerializer
-    createUpdate_serializer_class= DoctorCreateUpdateProfileSerializer
+    createUpdate_serializer_class = DoctorCreateUpdateProfileSerializer
     queryset = None
 
     def get_queryset(self):
@@ -331,9 +333,9 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
         if speciality is not None:
             queryset = queryset.filter(specialty__name=speciality)
         return queryset
-    
+
     def update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
         instance_serializer = self.createUpdate_serializer_class(
             instance, data=request.data)
@@ -346,18 +348,23 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
             'message': 'Hay errores en la actualización',
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
     def partial_update(self, request, pk=None):
-        
+
         instance = self.get_object(pk)
-        serializer = self.createUpdate_serializer_class(instance, data=request.data, partial=True) # partial=True permite la actualización parcial
+        # partial=True permite la actualización parcial
+        serializer = self.createUpdate_serializer_class(
+            instance, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def create(self, request):
         print(request.data)
-        instance_serializer = self.createUpdate_serializer_class(data=request.data)
+        instance_serializer = self.createUpdate_serializer_class(
+            data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
             return Response({
@@ -393,3 +400,16 @@ class PatientUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mix
         except ObjectDoesNotExist:
             raise Http404(
                 "No existe un perfil de paciente para el usuario autenticado.")
+
+
+class DoctorReportView(APIView):
+    """
+    API view to retrieve the logged in doctor's id, the ids of the insurances they work with, 
+    the ids of the branches they work with, and the name of their specialty.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        doctor = DoctorProfile.objects.get(user=request.user)
+        serializer = DoctorReportSerializer(doctor)
+        return Response(serializer.data)

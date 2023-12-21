@@ -56,6 +56,12 @@ class InsurancePlanDoctorListSerializer(serializers.ModelSerializer):
         model = InsurancePlanDoctor
         fields = ('id','doctor', 'insurance', 'branch', 'price')
 
+class InsurancePlanDoctorCreateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = InsurancePlanDoctor
+        fields = ('id','doctor', 'insurance', 'branch', 'price')
+
 
 class InsurancePlanPatientSerializer(serializers.ModelSerializer):
     class Meta:

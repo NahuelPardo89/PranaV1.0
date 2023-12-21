@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
@@ -9,6 +9,8 @@ import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 export class BranchService {
 
   private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/speciality-branch/';
+  private baseUrl2: string = 'http://127.0.0.1:8000/profile/admin/';
+  
 
   constructor(private http: HttpClient) { }
 
@@ -26,7 +28,9 @@ export class BranchService {
     const url = 'http://127.0.0.1:8000/profile/admin/doctor-branches/';
     return this.http.get<SpecialityBranch[]>(url + '?doctor_id=' + doctor_id);
   }
-
+  getDoctorBranchesBySpeciality(doctorId: number): Observable<SpecialityBranch[]> {
+    return this.http.get<SpecialityBranch[]>(this.baseUrl2 + `doctor-branches-by-speciality/?doctor_id=${doctorId}`);
+  }
   // Create a new speciality branch
   createSpecialityBranch(data: SpecialityBranch): Observable<SpecialityBranch> {
     return this.http.post<SpecialityBranch>(this.baseUrl, data);

@@ -5,7 +5,7 @@ from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet,
                     InsurancePlanDoctorAdminViewSet, InsurancePlanPatientAdminViewSet,
                     PatientProfileAdminViewSet, DoctorUserViewSet, PatientUserViewSet,
                     SpecialityBranchAdminViewSet, DoctorScheduleAvailableTimesView,
-                    DoctorPatientCommonInsurancesView, DoctorBranchesView,)
+                    DoctorPatientCommonInsurancesView, DoctorBranchesView,DoctorSpecialityBranchViewSet)
 
 routerAdmin = DefaultRouter()
 routerAdmin.register(r'health-insurances',
@@ -24,6 +24,7 @@ routerAdmin.register(r'insurance-plans-patient',
                      InsurancePlanPatientAdminViewSet, basename='insurance-plans-patient')
 routerAdmin.register(r'patient', PatientProfileAdminViewSet,
                      basename='patient-profiles')
+routerAdmin.register(r'doctor-branches-by-speciality', DoctorSpecialityBranchViewSet, basename='doctor-branches-by-speciality')                     
 
 
 urlpatterns = [

@@ -40,7 +40,7 @@ class SpecialityBranch(models.Model):
         verbose_name_plural = 'Ramas'
 
     def __str__(self):
-        return  self.name
+        return f'{self.speciality.name} - {self.name}'
 
 
 class DoctorProfile(models.Model):

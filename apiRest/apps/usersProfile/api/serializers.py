@@ -119,11 +119,13 @@ class PatientListProfileSerializer(serializers.ModelSerializer):
 
 
 class PatientShortProfileSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(required=False)
+
     class Meta:
         model = PatientProfile
-        fields = ('id', 'facebook', 'instagram',
+        fields = ('id', 'user', 'facebook', 'instagram',
                   'address', 'insurances', 'is_active')
-        read_only_fields = ('insurances',)
+        read_only_fields = ('id', 'user', 'insurances',)
 
 
 class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):

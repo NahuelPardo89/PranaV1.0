@@ -61,7 +61,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
   // ];
   //FormControls
   doctorControl = new FormControl();
-  patientControl = new FormControl();
+  patientControl = new FormControl({ value: 0, disabled: true });
   specialtyControl = new FormControl();
   // Observables to reactive filter
   filteredSpecialties: Observable<Medicalspeciality[]> = of([]);
@@ -125,7 +125,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
   ngOnInit(): void {
     this.loadDoctors();
     this.loadSpecialties();
-    this.loadPatients();
+    this.loadPatient();
   }
 
   /***** INIT DATA SECTION *****/
@@ -165,19 +165,26 @@ export class AppointmentPatientCreateComponent implements OnInit {
   }
 
   /**
-  * Fetches a list of patients from the patient service, sorts them alphabetically by user, 
-  * assigns them to the 'patients' property, and filters them.
+  * Fetches the currently logged patient from the patient service,  
+  * and assign to the dorm control .
   * @author Alvaro Olguin
   * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
   * @returns {void}
   */
-  loadPatients(): void {
-    this.patientService.getAllPatients().subscribe(data => {
+  loadPatient(): void {
+    this.patientService.getCurrentPatient().subscribe(data => {
       // Filter active specialties and sort them
-      let activePatients = data.filter(patient => patient.is_active)
-      activePatients.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
-      this.patients = activePatients;
-      this.filterPatients()
+      if (data.is_active) {
+        this.patients.push(data);
+        this.patientControl.patchValue(data.id);
+        this.selectedPatient = data.id;
+        this.patientName = data.user.toString();
+      }
+      else {
+        // Acá va un dialog avisando que el paciente no está activo, solo por si las dudas
+        this.dialogService.showErrorDialog('Su perfil de "Paciente" está desactivado, por favor contacte al administrador');
+        this.router.navigate(['Dashboard/'])
+      }
     })
   }
 
@@ -324,7 +331,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
     this.filteredPatients = this.patientControl.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value ? value.name : ''),
+        map(value => typeof value === 'string' ? value : value && typeof value === 'object' ? (value as any).name : ''),
         map(name => name ? this.filterPatientsByName(name) : this.patients.slice())
       );
   }

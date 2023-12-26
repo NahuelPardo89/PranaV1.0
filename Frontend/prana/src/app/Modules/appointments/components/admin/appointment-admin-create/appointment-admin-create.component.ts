@@ -580,6 +580,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
       form.patchValue({
         day: ''
       });
+      this.formattedDates = [];
       this.finalJsonDate = '';
     }
 

@@ -12,8 +12,7 @@
                             <mat-label>Seleccionar Paciente</mat-label>
                             <input type="text" matInput [formControl]="patientControl" [matAutocomplete]="auto"
                                 required>
-                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPatientFn"
-                                (optionSelected)="onPatientSelect($event.option.value)">
+                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPatientFn">
                                 <mat-option *ngFor="let patient of patients" [value]="patient.id">
                                     {{ patient.user }}
                                 </mat-option>

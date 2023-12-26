@@ -54,7 +54,7 @@ export class AppointmentService {
   }
 
   /**
-  * Get all appointments of a particular doctor with admin JSON format response (all fields).
+  * Get today's appointments (all).
   * @param doctor_id The ID of the doctor.
   * @author Alvaro Olguin
   * @returns {Observable<AppointmentAdminGetInterface[]>} An observable of the doctor's appointments.
@@ -74,12 +74,23 @@ export class AppointmentService {
   }
 
   /**
-  * Get the patient's appointments.
+  * Get all the patient's appointments.
   * @author Alvaro Olguin
   * @returns {Observable<AppointmentPatientGetInterface[]>} An observable of the patient's appointments.
   */
   getPatientAppointments(): Observable<AppointmentPatientGetInterface[]> {
     return this.http.get<AppointmentPatientGetInterface[]>(this.baseUrl + 'patient/');
+  }
+
+  /**
+  * Get today's patient appointments.
+  * @param doctor_id The ID of the doctor.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentAdminGetInterface[]>} An observable of the doctor's appointments.
+  */
+  getPatientTodayAppointments(day: string): Observable<AppointmentAdminGetInterface[]> {
+    const url = this.baseUrl + 'patient/?day=' + day;
+    return this.http.get<AppointmentAdminGetInterface[]>(url);
   }
 
   /**
@@ -120,6 +131,17 @@ export class AppointmentService {
   */
   deleteAdminAppointment(appointment_id: number): Observable<any> {
     const url = this.baseUrl + 'admin/' + appointment_id + '/';
+    return this.http.delete<any>(url)
+  }
+
+  /**
+  * Delete a patient appointment.
+  * @param appointment_id The id of the appointment to delete.
+  * @author Alvaro Olguin
+  * @returns {Observable<any>} An observable of the deleted appointment.
+  */
+  deletePatientAppointment(appointment_id: number): Observable<any> {
+    const url = this.baseUrl + 'patient/' + appointment_id + '/';
     return this.http.delete<any>(url)
   }
 

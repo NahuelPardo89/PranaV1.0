@@ -36,7 +36,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
   patients: Patient[] = [];
   doctors: DoctorProfile[] = [];
   specialties: Medicalspeciality[] = [];
-  //!! methods: PaymentMethod[] = [];
   insurances: HealthInsurance[] = [];
   // Filtered Data
   doctorSchedule: DoctorScheduleInterface[] = [];
@@ -48,17 +47,10 @@ export class AppointmentPatientCreateComponent implements OnInit {
   selectedPatient: number = 0;
   selectedDoctor: number = 0;
   // Auxiliar Variables
-  //!! isPaid: boolean | null = null;
   formattedDates: string[] = [];
   availableTimes: string[] = [];
   finalJsonDate: string = "";
   finalJsonHour: string = "";
-  //!!! states = [
-  //   { value: 1, viewValue: 'Pendiente' },
-  //   { value: 2, viewValue: 'Confirmado' },
-  //   { value: 3, viewValue: 'Adeuda' },
-  //   { value: 4, viewValue: 'Pagado' },
-  // ];
   //FormControls
   doctorControl = new FormControl();
   patientControl = new FormControl({ value: 0, disabled: true });
@@ -66,7 +58,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
   // Observables to reactive filter
   filteredSpecialties: Observable<Medicalspeciality[]> = of([]);
   filteredDoctors: Observable<DoctorProfile[]> = of([]);
-  filteredPatients: Observable<Patient[]> = of([]);
   // Preview Variables
   patientName: string = ''
   doctorName: string = ''
@@ -80,7 +71,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
     private specialtyService: SpecialityService,
     private appointmentService: AppointmentService,
     private patientService: PatientService,
-    private paymentmethodservice: PaymentmethodService,
     private insuranceService: HealthinsuranceService,
     private specialtyFilterService: SpecialtyFilterService,
     private doctorScheduleService: DoctorscheduleService,
@@ -93,11 +83,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
       doctor: [null, Validators.required],
       day: ['', Validators.required],
       hour: ['', Validators.required],
-      //!!duration: [null],
       branch: [null],
-      //!! state: [null],
-      //!! payment_method: [null],
-      //!! full_cost: [null],
       health_insurance: [null],
     });
     this.appointmentResponse = {
@@ -166,7 +152,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
 
   /**
   * Fetches the currently logged patient from the patient service,  
-  * and assign to the dorm control .
+  * and assign to the form control .
   * @author Alvaro Olguin
   * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
   * @returns {void}
@@ -181,7 +167,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
         this.patientName = data.user.toString();
       }
       else {
-        // Acá va un dialog avisando que el paciente no está activo, solo por si las dudas
+        // Redirect to dashboard in case the patient is not active
         this.dialogService.showErrorDialog('Su perfil de "Paciente" está desactivado, por favor contacte al administrador');
         this.router.navigate(['Dashboard/'])
       }
@@ -277,28 +263,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
   }
 
   /**
-  * Handles the event when a patient is selected. 
-  * Resets the form and loads the common insurances for the selected patient.
-  * @param patientId The selected patient's ID.
-  * @author Alvaro Olguin
-  * @throws {Error} If there is an error in resetting the form or loading the common insurances.
-  * @returns {void}
-  */
-  onPatientSelect(patientId: number): void {
-    // Save the patient to calculate common insurances
-    this.selectedPatient = patientId
-    if (!this.selectedPatient) {
-      // reset all 
-      this.resetForm(this.appointmentForm, { specialty: true });
-    }
-    else if (this.selectedDoctor && this.selectedBranch) {
-      // So far, patient isn't null, and we check that doctor and branch have a value
-      // Recalculate common insurances value
-      this.loadCommonInsurances(this.selectedDoctor, this.selectedPatient, this.selectedBranch);
-    }
-  }
-
-  /**
   * Handles the event when a branch is selected. Loads the common insurances for the selected branch.
   * @param branchId The selected branch's ID.
   * @author Alvaro Olguin
@@ -320,37 +284,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
   }
 
   /***** FILTER SECTION *****/
-
-  //Patients
-  /**
-  * Filters the patients based on the value changes of the patient control.
-  * @author Alvaro Olguin
-  * @returns {void}
-  */
-  filterPatients(): void {
-    this.filteredPatients = this.patientControl.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' ? value : value && typeof value === 'object' ? (value as any).name : ''),
-        map(name => name ? this.filterPatientsByName(name) : this.patients.slice())
-      );
-  }
-
-  /**
-  * Filters the patients by name.
-  * @param name The name to filter by.
-  * @author Alvaro Olguin
-  * @returns {Patient[]} The filtered patients.
-  */
-  filterPatientsByName(name: string): Patient[] {
-    if (name) {
-      const filterValue = name.toLowerCase();
-      return this.patients.filter(patient => patient.user.toString().toLowerCase().includes(filterValue));
-    }
-    else {
-      return this.patients
-    }
-  }
 
   // Doctors
   /**
@@ -555,6 +488,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
       form.patchValue({
         day: ''
       });
+      this.formattedDates = [];
       this.finalJsonDate = '';
     }
 
@@ -578,12 +512,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
       });
     }
 
-    // Reset the remaining fields
-    form.patchValue({
-      state: null,
-      payment_method: null,
-      full_cost: null,
-    });
   }
 
   /**
@@ -794,22 +722,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
         filteredBody.branch = formValues.branch;
       }
 
-      if (formValues.payment_method !== undefined && formValues.payment_method !== null) {
-        filteredBody.payment_method = formValues.payment_method;
-      }
-
-      if (formValues.full_cost !== undefined && formValues.full_cost !== null) {
-        filteredBody.full_cost = formValues.full_cost;
-      }
-
-      if (formValues.duration !== undefined && formValues.duration !== null) {
-        filteredBody.duration = formValues.duration;
-      }
-
-      if (formValues.state !== undefined && formValues.state !== null) {
-        filteredBody.state = formValues.state;
-      }
-
       if (formValues.health_insurance !== undefined && formValues.health_insurance !== null) {
         filteredBody.health_insurance = formValues.health_insurance;
       }
@@ -851,12 +763,10 @@ export class AppointmentPatientCreateComponent implements OnInit {
                     window.location.reload();
                   } else {
                     // Redirect to apointment list
-                    this.router.navigate(['Dashboard/appointments/admin/list'])
+                    this.router.navigate(['Dashboard/appointments/patient/list'])
                   }
                 });
               })
-
-
             });
         }
       });

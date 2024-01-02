@@ -1,9 +1,9 @@
 import { formatDate } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
 import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
@@ -21,10 +21,7 @@ export class AppointmentAdminListComponent {
     'patient',
     'doctor',
     'specialty',
-    //'branch',
     'health_insurance',
-    //'payment_method',
-    //'full_cost',
     'patient_copayment',
     'hi_copayment',
     'state',
@@ -101,7 +98,7 @@ export class AppointmentAdminListComponent {
             // Checks "non_field_errors"
             if (error.error && error.error.non_field_errors) {
               const errorMessage = error.error.non_field_errors[0];
-              this.dialogService.showErrorDialog('Error al generar el turno: ' + errorMessage);
+              this.dialogService.showErrorDialog('Error al eliminar el turno: ' + errorMessage);
             } else {
               // Show a general error
               this.dialogService.showErrorDialog('Ha ocurrido un error en la solicitud.');
@@ -111,7 +108,7 @@ export class AppointmentAdminListComponent {
           })
         ).subscribe((data: any) => {
           this.setDataTable();
-          this.dialogService.showSuccessDialog("Turno eliminado con éxito" + data)
+          this.dialogService.showSuccessDialog("Turno eliminado con éxito");
         })
 
       }

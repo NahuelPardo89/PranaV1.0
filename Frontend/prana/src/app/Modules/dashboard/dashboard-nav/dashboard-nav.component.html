@@ -19,22 +19,26 @@
                 <i class="material-symbols-outlined btn-icon">patient_list</i> Gestionar Talleristas
             </button>
         </div>
-        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleDoctorEspecialityOptions()">
+        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'"
+            (click)="toggleDoctorEspecialityOptions()">
             <i class="material-symbols-outlined btn-icon">medical_information</i> Gestionar Especialidades
         </button>
 
-                <div *ngIf="showDoctorEspecialityOptions"class="toggle">
-                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="speciality/speciality/"><i class="material-symbols-outlined btn-icon">medical_services</i>
-                      Especialidades
-                    </button>
-                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="speciality/branch/"><i class="material-symbols-outlined btn-icon">medical_services</i>
-                      Ramas de atención
-                    </button>
-                    
-                </div>
+        <div *ngIf="showDoctorEspecialityOptions" class="toggle">
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'"
+                routerLink="speciality/speciality/"><i class="material-symbols-outlined btn-icon">medical_services</i>
+                Especialidades
+            </button>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="speciality/branch/"><i
+                    class="material-symbols-outlined btn-icon">medical_services</i>
+                Ramas de atención
+            </button>
+
+        </div>
         <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleInsuranceOptions()">
             <i class="material-symbols-outlined btn-icon">medical_services</i> Gestionar Obras Sociales
         </button>
+
 
                 <div *ngIf="showInsuranceOptions"class="toggle">
                     <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="insurances/insurance/"><i class="material-symbols-outlined btn-icon">medical_services</i>
@@ -52,6 +56,7 @@
                 </div>
         
             
+
 
         <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleSeminarOptions()">
             <i class="material-symbols-outlined btn-icon">self_improvement</i> Gestionar Talleres
@@ -82,12 +87,13 @@
             Turnos
         </button>
         <div *ngIf="showAppoimentPatientOptions" class="toggle">
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink=""><i
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'"
+                routerLink="appointments/patient/create"><i
                     class="material-symbols-outlined btn-icon">calendar_month</i>
                 Solicitar Turno
             </button>
-            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink=""><i
-                    class="material-symbols-outlined btn-icon">list</i>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'"
+                routerLink="appointments/patient/list"><i class="material-symbols-outlined btn-icon">list</i>
                 Mis Turnos
             </button>
 
@@ -137,7 +143,8 @@
 
         </div>
 
-        <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" routerLink=""><i
+        <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'"
+            routerLink="reports/copayment/appointment/doctor/list"><i
                 class="material-symbols-outlined btn-icon">account_balance</i>
             Gestionar Contabilidad
         </button>

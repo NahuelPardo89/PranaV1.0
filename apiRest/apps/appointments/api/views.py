@@ -1,4 +1,5 @@
 from datetime import date
+import datetime
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -132,7 +133,11 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
         """
         try:
             patient = self.request.user.patientProfile
-            return Appointment.objects.filter(patient=patient, state=1)
+            day = self.request.query_params.get('day', None)
+            if day is not None:
+                return Appointment.objects.filter(patient=patient, state=1, day=day).order_by('-day', 'hour')
+            else:
+                return Appointment.objects.filter(patient=patient).order_by('-day', 'hour')
         except PatientProfile.DoesNotExist:
             raise Http404()
 

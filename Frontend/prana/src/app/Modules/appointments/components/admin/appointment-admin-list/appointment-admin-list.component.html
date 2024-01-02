@@ -1,5 +1,4 @@
 <div>
-
     <div class="title bg-info text-center text-bold border border-dark rounded-top mb-4">
         <h1 class="">Listado de Turnos</h1>
     </div>
@@ -17,15 +16,14 @@
             </button>
         </div>
 
-
-        <!-- Campo de filtrado -->
+        <!-- Filter -->
         <mat-form-field class="example-form-field">
             <mat-label>Filtro Múltiple</mat-label>
             <input matInput (keyup)="applyFilter($event)" #input>
         </mat-form-field>
         <div class="table-responsive">
 
-            <!-- Tabla de Angular Material -->
+            <!-- Angular Material Table -->
             <table mat-table [dataSource]="dataSource" matSort>
 
                 <!-- Date Column -->
@@ -58,23 +56,11 @@
                     <td mat-cell *matCellDef="let row">{{ row.specialty }}</td>
                 </ng-container>
 
-                <!-- Branch Column -->
-                <!-- <ng-container matColumnDef="branch">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rama</th>
-                    <td mat-cell *matCellDef="let row">{{ row.branch }}</td>
-                </ng-container> -->
-
                 <!-- HI Column -->
                 <ng-container matColumnDef="health_insurance">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Obra Social</th>
                     <td mat-cell *matCellDef="let row">{{ row.health_insurance }}</td>
                 </ng-container>
-
-                <!-- Full Cost Column -->
-                <!-- <ng-container matColumnDef="full_cost">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Total</th>
-                    <td mat-cell *matCellDef="let row">{{ row.full_cost }}</td>
-                </ng-container> -->
 
                 <!-- Patient Copayment Column -->
                 <ng-container matColumnDef="patient_copayment">
@@ -93,13 +79,6 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
                     <td mat-cell *matCellDef="let row">{{row.state }}</td>
                 </ng-container>
-
-                <!-- Payment Method Column -->
-                <!-- <ng-container matColumnDef="payment_method">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Forma de Pago</th>
-                    <td mat-cell *matCellDef="let row">{{ row.payment_method }}</td>
-                </ng-container> -->
-
 
                 <!-- Actions Column -->
                 <ng-container matColumnDef="actions">

@@ -36,7 +36,6 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   patients: Patient[] = [];
   doctors: DoctorProfile[] = [];
   specialties: Medicalspeciality[] = [];
-  branches: SpecialityBranch[] = [];
   methods: PaymentMethod[] = [];
   insurances: HealthInsurance[] = [];
   // Filtered Data
@@ -131,10 +130,8 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       await Promise.all([
         firstValueFrom(this.loadDoctors()),
         firstValueFrom(this.loadSpecialties()),
-        firstValueFrom(this.loadBranches()),
         firstValueFrom(this.loadPatients()),
         firstValueFrom(this.loadPaymentMethods()),
-        firstValueFrom(this.loadInsurances())
       ]).then(() => {
         this.initForm(history.state.appointment);
       });
@@ -191,9 +188,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   */
   loadDoctors(): Observable<DoctorProfile[]> {
     return this.doctorService.getDoctors().pipe(tap(data => {
+      // Filter active doctors
+      let activeDoctors = data.filter(doctor => doctor.is_active);
       //Sort doctors
-      data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
-      this.doctors = data;
+      activeDoctors.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
+      this.doctors = activeDoctors;
     }));
   }
 
@@ -204,8 +203,10 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   */
   loadSpecialties(): Observable<Medicalspeciality[]> {
     return this.specialtyService.getSpecialities().pipe(tap(data => {
-      data.sort((a, b) => a.name.localeCompare(b.name));
-      this.specialties = data;
+      // Filter active specialties and sort them
+      let activeSpecialties = data.filter(specialty => specialty.is_active);
+      activeSpecialties.sort((a, b) => a.name.localeCompare(b.name));
+      this.specialties = activeSpecialties;
       this.filterSpecialties()
     }));
   }
@@ -217,10 +218,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   */
   loadPatients(): Observable<Patient[]> {
     return this.patientService.getAllPatients().pipe(tap(data => {
-      // Sort the patients
-      data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
-      this.patients = data;
-      this.filterPatients()
+      // Filter active specialties and sort them
+      let activePatients = data.filter(patient => patient.is_active)
+      activePatients.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
+      this.patients = activePatients;
+      this.filterPatients();
     }));
   }
 
@@ -233,33 +235,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     return this.paymentmethodservice.getPaymentMethods().pipe(tap(data => {
       //Sort
       data.sort((a, b) => a.name.localeCompare(b.name));
-      this.methods = data
-    }));
-  }
-
-  /**
-  * Loads the branches from the service.
-  * @author Alvaro Olguin
-  * @returns {Observable<SpecialityBranch[]>} An observable of the branches.
-  */
-  loadBranches(): Observable<SpecialityBranch[]> {
-    return this.branchService.getSpecialityBranches().pipe(tap(data => {
-      //Sort
-      data.sort((a, b) => a.name.localeCompare(b.name));
-      this.branches = data
-    }));
-  }
-
-  /**
-  * Loads the insurances from the service.
-  * @author Alvaro Olguin
-  * @returns {Observable<HealthInsurance[]>} An observable of the insurances.
-  */
-  loadInsurances(): Observable<HealthInsurance[]> {
-    return this.insuranceService.getAll().pipe(tap(data => {
-      //Sort
-      data.sort((a, b) => a.name.localeCompare(b.name));
-      this.insurances = data
+      this.methods = data;
     }));
   }
 
@@ -386,7 +362,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   onBranchSelect(branchId: number): void {
     // Save the BRANCH to calculate common insurances
     this.selectedBranch = branchId
-    let branch = this.branches.find(branch => branch.id === branchId);
+    let branch = this.specialtyFilteredBranches.find(branch => branch.id === branchId);
     // its neccesary to reset full_cost, state and health insurances fields, since on branch selection could change the cost of the appointment
     this.resetForm(this.appointmentForm, { hi: true });
     if (branch) {
@@ -529,7 +505,10 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   */
   loadfilteredBranches(doctorId: number): void {
     this.branchService.getDoctorBranches(doctorId).subscribe(data => {
-      this.specialtyFilteredBranches = data;
+      // Filter active branches and sort them
+      let activeBranches = data.filter(branch => branch.is_active);
+      activeBranches.sort((a, b) => a.name.localeCompare(b.name))
+      this.specialtyFilteredBranches = activeBranches;
       this.loadCommonInsurances(doctorId, this.selectedPatient, this.selectedBranch)
     });
   }
@@ -546,9 +525,9 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   */
   loadCommonInsurances(doctorId: number, patientId: number, branchId: number): void {
     this.insuranceService.getDoctorPatientCommonHI(doctorId, patientId, branchId).subscribe(data => {
-      //Sort
-      data.sort((a, b) => a.name.localeCompare(b.name));
-      this.insurances = data
+      let activeInsurances = data.filter(insurance => insurance.is_active);
+      activeInsurances.sort((a, b) => a.name.localeCompare(b.name));
+      this.insurances = activeInsurances;
     })
   }
 
@@ -588,11 +567,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
         const dayOfMonth = date.getDate();
         const monthName = monthsSpanish[month];
 
-        const formattedDate = `${dayOfWeek} ${dayOfMonth} de ${monthName}`;
+        const formattedDate = `${dayOfWeek} ${dayOfMonth} de ${monthName} de ${year}`; // Agrega el año aquí
 
         // Format day (mon, tue, wed...)
         const englishShortDay = date.toDateString().toLocaleLowerCase().slice(0, 3);
-        // Find the actual day on the dosctor schedule
+        // Find the actual day on the doctor schedule
         const matchingDay = doctorSchedule.find((day: DoctorScheduleInterface) => day.day === englishShortDay);
         if (matchingDay) {
           // If match with the schedule, add the date 
@@ -621,8 +600,9 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     const dayOfWeek = daysOfWeekSpanish[realDate.getDay()];
     const dayOfMonth = realDate.getDate();
     const monthName = monthsSpanish[realDate.getMonth()];
+    const year = realDate.getFullYear();
 
-    return `${dayOfWeek} ${dayOfMonth} de ${monthName}`;
+    return `${dayOfWeek} ${dayOfMonth} de ${monthName} de ${year}`;
   }
 
   /**
@@ -634,20 +614,28 @@ export class AppointmentAdminUpdateComponent implements OnInit {
  * @returns {string} The start and end hour in 'HH:mm:ss - HH:mm:ss' format.
  */
   recoveryHourFormat(startHour: string, duration: string): string {
+    console.log("Recovery start: ", startHour);
+    console.log("Recovery duration: ", duration);
+
     // parse startHour and duration to date objects
     let startTime = new Date(`1970-01-01T${startHour}Z`);
     let durationTime = new Date(`1970-01-01T${duration}Z`);
 
+    console.log("Recovery start 2: ", startHour);
+    console.log("Recovery duration 2: ", duration);
     // Calculate end time
     let endTime = new Date(startTime.getTime() + durationTime.getTime());
-
+    console.log("Recovery end: ", startHour);
     // Format
     let startHourStr = startTime.toISOString().slice(11, 16);
     let endHourStr = endTime.toISOString().slice(11, 16);
 
+    console.log("Recovery start formateada: ", startHourStr);
+    console.log("Recovery end formateada: ", endHourStr);
     // return string
     let formattedHour = `${startHourStr} - ${endHourStr}`;
 
+    console.log("Recovery response: ", formattedHour);
     // add the hour to availables times 
     //this.availableTimes.push(formattedHour);
 
@@ -682,6 +670,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       form.patchValue({
         day: ''
       });
+      this.formattedDates = [];
       this.finalJsonDate = '';
     }
 
@@ -760,8 +749,8 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     // Get words in string
     const words = dateString.split(' ');
 
-    if (words.length < 4) {
-      throw new Error('Cadena de fecha incorrecta. Debe tener el formato "Día número de Mes".');
+    if (words.length < 6) {
+      throw new Error('Cadena de fecha incorrecta. Debe tener el formato "Día número de Mes de Año".');
     }
 
     const months: { [key: string]: string } = {
@@ -779,19 +768,16 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       'Diciembre': '12',
     };
 
-    // Get the current year
-    const currentYear = new Date().getFullYear();
-
-    // Get day, number and month 
-    const day = words[0];
+    // Get number, month and year
     const number = words[1];
     const month = words[3];
+    const year = words[5];
 
     // Parse month
     const monthNumber = months[month];
 
     // Parse date
-    const formattedDate = `${currentYear}-${monthNumber}-${number}`;
+    const formattedDate = `${year}-${monthNumber}-${number}`;
 
     return formattedDate;
   }

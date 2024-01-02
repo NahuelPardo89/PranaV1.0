@@ -1,6 +1,6 @@
 export interface InsurancePlanDoctor {
-    doctorId: number; 
-    insuranceId: number;
-    branchId: number | null; 
+    doctor: number; 
+    insurance: number;
+    branch: number | null; 
     price: number; 
   }

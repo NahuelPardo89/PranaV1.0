@@ -10,17 +10,11 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-listespeciality',
   templateUrl: './listespeciality.component.html',
-  styleUrls: ['./listespeciality.component.css']
+  styleUrls: ['./listespeciality.component.css'],
 })
 export class ListespecialityComponent {
   specialities: Medicalspeciality[] = [];
-  displayedColumns: string[] = [
-    'id',
-    'name',
-    'is_active',
-    'actions',
-    
-  ];
+  displayedColumns: string[] = ['id', 'name', 'is_active', 'actions'];
   dataSource!: MatTableDataSource<Medicalspeciality>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -40,10 +34,12 @@ export class ListespecialityComponent {
 
   setDataTable() {
     this.specialityService.getSpecialities().subscribe((data) => {
-      const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
-      
+      const filteredData = this.showInactive
+        ? data
+        : data.filter((d) => d.is_active);
+
       this.dataSource = new MatTableDataSource(filteredData);
-      
+
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
       this.paginator._intl.lastPageLabel = 'última página';
@@ -54,7 +50,7 @@ export class ListespecialityComponent {
       this.sort.active = 'name'; // El nombre de la columna por la que quieres ordenar inicialmente
       this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
-       // Puede ser 'asc' o 'desc'
+      // Puede ser 'asc' o 'desc'
     });
   }
   onShowInactiveChange() {
@@ -69,18 +65,17 @@ export class ListespecialityComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  especialityEdit(speciality:Medicalspeciality){
+  especialityEdit(speciality: Medicalspeciality) {
     this.router.navigate(['Dashboard/speciality/speciality/edit'], {
       state: { speciality },
     });
   }
-  especialityDelete(id:number){
+  especialityDelete(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Estás seguro de que deseas desactivar esta Especialidad?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      
       if (confirmResult) {
         this.specialityService.deleteSpeciality(id).subscribe({
           next: () => {
@@ -102,21 +97,25 @@ export class ListespecialityComponent {
       }
     });
   }
-  activeEspeciality(especiality:Medicalspeciality){
+  activeEspeciality(especiality: Medicalspeciality) {
     especiality.is_active = true;
 
-    this.specialityService.updateSpeciality(especiality.id, especiality).subscribe({
-      next: () => {
-        console.log('Obra Social actualizado con éxito');
-        this.dialogService.showSuccessDialog('Obra Social Activada con éxito');
+    this.specialityService
+      .updateSpeciality(especiality.id, especiality)
+      .subscribe({
+        next: () => {
+          console.log('Obra Social actualizado con éxito');
+          this.dialogService.showSuccessDialog(
+            'Obra Social Activada con éxito'
+          );
 
-        this.setDataTable();
-      },
-      error: (error) => {
-        console.error('Error al actualizar obra social', error);
-        this.dialogService.showErrorDialog('Error al Activar Obra Social');
-        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-      },
-    });
+          this.setDataTable();
+        },
+        error: (error) => {
+          console.error('Error al actualizar obra social', error);
+          this.dialogService.showErrorDialog('Error al Activar Obra Social');
+          // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
+        },
+      });
   }
 }

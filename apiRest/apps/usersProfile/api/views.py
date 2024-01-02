@@ -16,11 +16,13 @@ from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  Docto
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
                                       PatientProfile, SpecialityBranch)
 
-from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, InsurancePlanDoctorSerializer,
-                          DoctoListProfileSerializer, DoctorScheduleSerializer, PatientListProfileSerializer,
-                          InsurancePlanPatientSerializer, InsurancePlanPatientListSerializer, DoctorProfileAllSerializer, PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer, SpecialityBranchListSerializer, SpecialityBranchCreateSerializer, DoctorCreateUpdateProfileSerializer,
-                          DoctorReportSerializer, )
+
+from .serializers import (HealthInsuranceSerializer,      MedicalSpecialitySerializer, InsurancePlanDoctorListSerializer,InsurancePlanDoctorCreateSerializer,
+                          DoctoListProfileSerializer,        DoctorScheduleSerializer,    PatientListProfileSerializer,
+                          InsurancePlanPatientSerializer,InsurancePlanPatientListSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
+                          DoctorProfileShortSerializer,   SpecialityBranchListSerializer,SpecialityBranchCreateSerializer,DoctorCreateUpdateProfileSerializer)
+
+
 
 from apps.permission import IsAdminOrReadOnly
 
@@ -130,7 +132,13 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
     serializer_class = SpecialityBranchListSerializer
     create_serializer_class = SpecialityBranchCreateSerializer
     permission_classes = [IsAdminOrReadOnly]
-
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        specialities = self.request.query_params.getlist('speciality')
+        if specialities:
+            queryset = queryset.filter(speciality__in=specialities)
+        return queryset
+    
     def create(self, request):
 
         instance_serializer = self.create_serializer_class(data=request.data)
@@ -144,6 +152,29 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+class DoctorSpecialityBranchViewSet(viewsets.ViewSet):
+    """
+    ViewSet para obtener las ramas de especialidades de un doctor específico.
+    """
+
+    def list(self, request):
+        doctor_id = request.query_params.get('doctor_id')
+        if not doctor_id:
+            return Response({"message": "Doctor ID no proporcionado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            doctor = DoctorProfile.objects.get(pk=doctor_id)
+            # Obtener todas las especialidades del doctor
+            doctor_specialities = doctor.specialty.all()
+
+            # Filtrar las ramas que pertenecen a las especialidades del doctor
+            branches = SpecialityBranch.objects.filter(speciality__in=doctor_specialities, is_active=True)
+            
+            serializer = SpecialityBranchListSerializer(branches, many=True)
+            return Response(serializer.data)
+
+        except DoctorProfile.DoesNotExist:
+            return Response({"message": "Doctor no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
 class DoctorBranchesView(APIView):
     """
@@ -161,8 +192,12 @@ class DoctorBranchesView(APIView):
         doctor_branches = list(
             set(insurance.branch for insurance in doctor_insurances))
 
+
+        
+
         # Response
         serializer = SpecialityBranchListSerializer(doctor_branches, many=True)
+
 
         return Response(serializer.data)
 
@@ -293,11 +328,36 @@ class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
             }, status=status.HTTP_404_NOT_FOUND)
 
 
-class InsurancePlanDoctorAdminViewSet(viewsets.ModelViewSet):
-    queryset = InsurancePlanDoctor.objects.all()
-    serializer_class = InsurancePlanDoctorSerializer
+class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
+    model=InsurancePlanDoctor
+    serializer_class = InsurancePlanDoctorListSerializer
+    serializer_create_class=InsurancePlanDoctorCreateSerializer
     permission_classes = [IsAdminOrReadOnly]
-
+    
+    def create(self, request):
+        instance_serializer = self.serializer_create_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Profile',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    def destroy(self, request, pk=None):
+        try:
+            instance_to_destroy = self.get_object(pk)
+            instance_to_destroy.delete()
+            return Response({
+                'message': 'Profile eliminado correctamente'
+            }, status=status.HTTP_204_NO_CONTENT)
+        except self.model.DoesNotExist:
+            return Response({
+                'message': 'No existe el Profile que desea eliminar'
+            }, status=status.HTTP_404_NOT_FOUND)
 
 class PatientProfileAdminViewSet(BaseAdminViewSet):
     model = PatientProfile

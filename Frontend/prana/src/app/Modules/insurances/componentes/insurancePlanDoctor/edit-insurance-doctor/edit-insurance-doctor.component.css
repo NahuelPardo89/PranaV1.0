@@ -1,4 +1,4 @@
-.create-user-form {
+create-user-form {
     display: flex;
     flex-direction: column;
     gap: 16px; /* Espaciado entre campos */
@@ -8,7 +8,7 @@
     width: 100%; /* Asegura que los campos ocupen todo el ancho disponible */
   }
   
-  mat-card {
-    margin: 20px; 
-    
-  }
+button{
+    width: 100%;
+    margin-top: 10px;
+}

@@ -3,33 +3,35 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
-import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
+import { InsurancePlanDoctor } from 'src/app/Models/Profile/insurancePlanDoctor.interface';
+import { InsuranceDoctorService } from 'src/app/Services/Profile/healthinsurance/insuranceDoctor/insurance-doctor.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-doctor-list',
-  templateUrl: './doctor-list.component.html',
-  styleUrls: ['./doctor-list.component.css'],
+  selector: 'app-list-insurance-doctor',
+  templateUrl: './list-insurance-doctor.component.html',
+  styleUrls: ['./list-insurance-doctor.component.css']
 })
-export class DoctorListComponent {
+export class ListInsuranceDoctorComponent {
+  
+  
+
   displayedColumns: string[] = [
-    
-    'user',
-    'medicLicence',
-    'specialty',
-    
-    'appointment_duration',
-    'is_active',
+    'id',
+    'doctor',
+    'insurance',
+    'branch',
+    'price',
     'actions',
+    
   ];
-  dataSource!: MatTableDataSource<DoctorProfile>;
+  dataSource!: MatTableDataSource<InsurancePlanDoctor>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private doctorService: DoctorprofileService,
+    private insuranceDoctorService:InsuranceDoctorService,
     private dialogService: DialogService,
     private router: Router
   ) {}
@@ -39,9 +41,11 @@ export class DoctorListComponent {
   }
 
   setDataTable() {
-    this.doctorService.getDoctors().subscribe((data) => {
-      console.log(data);
+    this.insuranceDoctorService.getAll().subscribe((data) => {
+      //const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
+      console.log(data)
       this.dataSource = new MatTableDataSource(data);
+      
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
       this.paginator._intl.lastPageLabel = 'última página';
@@ -49,9 +53,13 @@ export class DoctorListComponent {
       this.paginator._intl.previousPageLabel = 'página anterior';
 
       this.dataSource.paginator = this.paginator;
+      this.sort.active = 'name'; // El nombre de la columna por la que quieres ordenar inicialmente
+      this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
+       // Puede ser 'asc' o 'desc'
     });
   }
+  
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -61,49 +69,37 @@ export class DoctorListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  editDoctor(doctor: DoctorProfile) {
-    this.router.navigate(['Dashboard/accounts/doctores/edit'], {
-      state: { doctor },
+  insuranceDoctorEdit(insurancePlanDoctor:InsurancePlanDoctor){
+    this.router.navigate(['Dashboard/insurances/doctor/edit'], {
+      state: { insurancePlanDoctor },
     });
   }
-
-  deleteDoctor(id: number) {
+  insuranceDelete(id:number){
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar este Profesional?'
+      '¿Estás seguro de que deseas Eliminar esta Obra Social del Profesional?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      console.log('eliminar usuario');
+      console.log('eliminar Obra Social');
       if (confirmResult) {
-        this.doctorService.deleteDoctor(id).subscribe({
+        this.insuranceDoctorService.delete(id).subscribe({
           next: () => {
+            // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
             this.dialogService.showSuccessDialog(
-              'Profesional Desactivado con éxito'
+              'Obra Social Eliminada con éxito'
             );
+
+            // Aquí podrías, por ejemplo, recargar la lista de usuarios
           },
           error: (error) => {
+            // Manejo de errores
             this.dialogService.showErrorDialog(
-              'Hubo un error al Desactivar el Profesional'
+              'Hubo un error al Eliminar la Obra Social'
             );
           },
         });
       }
-    });
-  }
-
-  activeDoctor(doctor: DoctorProfile) {
-    const dataToUpdate = { is_active: true };
-    this.doctorService.partialupdateDoctor(doctor.id, dataToUpdate).subscribe({
-      next: () => {
-        this.dialogService.showSuccessDialog('Profesional Activado con éxito');
-        this.setDataTable();
-      },
-      error: (error) => {
-        this.dialogService.showErrorDialog('Error al Activar el Profesional');
-        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-      },
     });
   }
 }

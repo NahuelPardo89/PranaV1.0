@@ -7,6 +7,7 @@ import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-
 import { AppointmentDoctorGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentDoctorGet.interface';
 import { AppointmentPatientCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentPatientCreate.interface';
 import { AppointmentAdminCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentAdminCreate.interface';
+import { AppointmentDoctorCreateComponent } from 'src/app/Modules/appointments/components/doctor/appointment-doctor-create/appointment-doctor-create.component';
 
 @Injectable({
   providedIn: 'root'
@@ -69,8 +70,18 @@ export class AppointmentService {
   * @author Alvaro Olguin
   * @returns {Observable<AppointmentDoctorGetInterface[]>} An observable of the doctor's appointments.
   */
-  getDoctorAppointments(): Observable<AppointmentDoctorGetInterface[]> {
+  getDoctorAllAppointments(): Observable<AppointmentDoctorGetInterface[]> {
     return this.http.get<AppointmentDoctorGetInterface[]>(this.baseUrl + 'doctor/');
+  }
+
+  /**
+  * Get the doctor's appointments for today.
+  * @author Alvaro Olguin
+  * @returns {Observable<AppointmentDoctorGetInterface[]>} An observable of the doctor's appointments.
+  */
+  getDoctorsTodayAppointments(day: string): Observable<AppointmentDoctorGetInterface[]> {
+    const url = this.baseUrl + 'doctor/?day=' + day;
+    return this.http.get<AppointmentDoctorGetInterface[]>(url);
   }
 
   /**
@@ -109,7 +120,7 @@ export class AppointmentService {
   * @author Alvaro Olguin
   * @returns {Observable<any>} An observable of the created appointment.
   */
-  createDoctorAppointment(appointment: AppointmentDoctorGetInterface): Observable<any> {
+  createDoctorAppointment(appointment: any): Observable<any> {
     return this.http.post<any>(this.baseUrl + 'doctor/', appointment);
   }
 
@@ -131,6 +142,17 @@ export class AppointmentService {
   */
   deleteAdminAppointment(appointment_id: number): Observable<any> {
     const url = this.baseUrl + 'admin/' + appointment_id + '/';
+    return this.http.delete<any>(url)
+  }
+
+  /**
+  * Delete a Doctor appointment.
+  * @param appointment_id The id of the appointment to delete.
+  * @author Alvaro Olguin
+  * @returns {Observable<any>} An observable of the deleted appointment.
+  */
+  deleteDoctorAppointment(appointment_id: number): Observable<any> {
+    const url = this.baseUrl + 'doctor/' + appointment_id + '/';
     return this.http.delete<any>(url)
   }
 

@@ -40,22 +40,26 @@
         </button>
 
 
-                <div *ngIf="showInsuranceOptions"class="toggle">
-                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="insurances/insurance/"><i class="material-symbols-outlined btn-icon">medical_services</i>
-                      Obras Sociales
-                    </button>
-                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="insurances/patient/"><i class="material-symbols-outlined btn-icon">medical_services</i>
-                      Obras Sociales Pacientes
-                    </button>
-                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="insurances/doctor/"><i class="material-symbols-outlined btn-icon">medical_services</i>
-                      Obras Sociales Profesionales
-                    </button>
-                    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i class="material-symbols-outlined btn-icon">medical_services</i>
-                        Obras Sociales Talleristas
-                    </button>
-                </div>
-        
-            
+        <div *ngIf="showInsuranceOptions" class="toggle">
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'"
+                routerLink="insurances/insurance/"><i class="material-symbols-outlined btn-icon">medical_services</i>
+                Obras Sociales
+            </button>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'"
+                routerLink="insurances/patient/"><i class="material-symbols-outlined btn-icon">medical_services</i>
+                Obras Sociales Pacientes
+            </button>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="insurances/doctor/"><i
+                    class="material-symbols-outlined btn-icon">medical_services</i>
+                Obras Sociales Profesionales
+            </button>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
+                    class="material-symbols-outlined btn-icon">medical_services</i>
+                Obras Sociales Talleristas
+            </button>
+        </div>
+
+
 
 
         <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleSeminarOptions()">
@@ -115,7 +119,7 @@
 
         </div>
 
-        <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'"><i
+        <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" routerLink="appointments/doctor/list"><i
                 class="material-symbols-outlined btn-icon">calendar_month</i>
             Gestionar Turnos
         </button>

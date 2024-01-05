@@ -20,7 +20,8 @@ export class AppointmentAdminListComponent {
     'hour',
     'patient',
     'doctor',
-    'specialty',
+    //'specialty',
+    'branch',
     'health_insurance',
     'patient_copayment',
     'hi_copayment',
@@ -38,10 +39,20 @@ export class AppointmentAdminListComponent {
     private router: Router,
   ) { }
 
+  /**
+  * Initializes the component and sets the data table.
+  * @author Alvaro Olguin
+  */
   ngOnInit(): void {
     this.setDataTable()
   }
 
+  /**
+  * Sets the data table with appointments. If a day is provided, it gets the appointments for that day. 
+  * Otherwise, it gets all appointments.
+  * @param {string} day - The day for which to get the appointments.
+  * @author Alvaro Olguin
+  */
   setDataTable(day?: string) {
     let observable: Observable<AppointmentAdminGetInterface[]>;
     if (day) {
@@ -61,15 +72,28 @@ export class AppointmentAdminListComponent {
     });
   }
 
+  /**
+  * Sets the data table with all the appointments.
+  * @author Alvaro Olguin
+  */
   showAll() {
     this.setDataTable();
   }
 
+  /**
+  * Filters the appointments for the current day and sets the data table.
+  * @author Alvaro Olguin
+  */
   filterToday() {
     const today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
     this.setDataTable(today);
   }
 
+  /**
+  * Applies a filter to the data source when an event is triggered.
+  * @param {Event} event - The event that triggered the filter.
+  * @author Alvaro Olguin
+  */
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim();
@@ -79,10 +103,21 @@ export class AppointmentAdminListComponent {
     }
   }
 
+  /**
+  * Edits an appointment.
+  * @param {number} appointment_id - The ID of the appointment to delete.
+  * @author Alvaro Olguin
+  */
   onEdit(appointment: AppointmentAdminGetInterface): void {
     this.router.navigate(['Dashboard/appointments/admin/update'], { state: { appointment } });
   }
 
+  /**
+  * Deletes an appointment when its ID is provided. It opens a confirmation dialog before deleting the appointment. 
+  * If the deletion is confirmed, it sends a request to delete the appointment and updates the data table.
+  * @param {number} appointment_id - The ID of the appointment to delete.
+  * @author Alvaro Olguin
+  */
   onDelete(appointment_id: number): void {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Confirma la eliminación de este turno?'

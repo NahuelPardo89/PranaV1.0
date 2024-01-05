@@ -5,7 +5,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Observable, catchError } from 'rxjs';
-import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentPatientGet.interface';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
@@ -21,7 +20,7 @@ export class AppointmentPatientListComponent {
     'hour',
     'patient',
     'doctor',
-    'specialty',
+    //'specialty',
     'branch',
     'health_insurance',
     'actions'
@@ -37,10 +36,20 @@ export class AppointmentPatientListComponent {
     private router: Router,
   ) { }
 
+  /**
+  * Initializes the component and sets the data table.
+  * @author Alvaro Olguin
+  */
   ngOnInit(): void {
     this.setDataTable()
   }
 
+  /**
+  * Sets the data table with appointments. If a day is provided, it gets the patient's appointments for that day. 
+  * Otherwise, it gets all the patient's appointments.
+  * @param {string} day - The day for which to get the patient's appointments.
+  * @author Alvaro Olguin
+  */
   setDataTable(day?: string) {
     let observable: Observable<AppointmentPatientGetInterface[]>;
     if (day) {
@@ -60,15 +69,28 @@ export class AppointmentPatientListComponent {
     });
   }
 
+  /**
+  * Sets the data table with all the patient's appointments.
+  * @author Alvaro Olguin
+  */
   showAll() {
     this.setDataTable();
   }
 
+  /**
+  * Filters the patient's appointments for the current day and sets the data table.
+  * @author Alvaro Olguin
+  */
   filterToday() {
     const today = formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
     this.setDataTable(today);
   }
 
+  /**
+  * Applies a filter to the data source when an event is triggered.
+  * @param {Event} event - The event that triggered the filter.
+  * @author Alvaro Olguin
+  */
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim();
@@ -78,6 +100,24 @@ export class AppointmentPatientListComponent {
     }
   }
 
+  /**
+  * Determines whether an appointment can be deleted. An appointment can be deleted if its state is not 'Pagado' and its day is later than today.
+  * @param {any} row - The row representing the appointment in the data table.
+  * @returns {boolean} - Returns true if the appointment can be deleted, false otherwise.
+  * @author Alvaro Olguin
+  */
+  canDelete(row: any): boolean {
+    let dateParts = row.day.split("-");
+    let formattedDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+    return row.state.toUpperCase() != 'PAGADO' && formattedDate > new Date();
+  }
+
+  /**
+  * Deletes an appointment when its ID is provided. It opens a confirmation dialog before deleting the appointment. 
+  * If the deletion is confirmed, it sends a request to delete the appointment and updates the data table.
+  * @param {number} appointment_id - The ID of the appointment to delete.
+  * @author Alvaro Olguin
+  */
   onDelete(appointment_id: number): void {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Confirma la eliminación de este turno?'

@@ -59,7 +59,7 @@
 
                 <!-- Branch Column -->
                 <ng-container matColumnDef="branch">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rama</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Especialidad - Rama</th>
                     <td mat-cell *matCellDef="let row">{{ row.branch }}</td>
                 </ng-container>
 
@@ -73,11 +73,15 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Acciones</th>
                     <td mat-cell *matCellDef="let row">
-                        <!-- Botones cuando el usuario está activo -->
-                        <div style="display: flex;">
-                            <button class="btn btn-danger ms-3" aria-label="Eliminar turno" (click)="onDelete(row.id)">
+                        <div style="display: flex; align-items: center;">
+                            <!-- Muestra el botón de eliminar solo si el estado no es 'pagado' y la fecha no es anterior a la actual -->
+                            <button *ngIf="canDelete(row)" class="btn btn-danger ms-3" aria-label="Eliminar turno"
+                                (click)="onDelete(row.id)">
                                 <i class="material-symbols-outlined">delete</i>
                             </button>
+                            <!-- Muestra un mensaje si el estado es 'pagado' o la fecha es anterior a la actual -->
+                            <mat-icon *ngIf="!canDelete(row)" style="color:yellow"
+                                matTooltip="Este turno se encuentra en estado pagado o su fecha es anterior al día corriente">warning</mat-icon>
                         </div>
                     </td>
                 </ng-container>

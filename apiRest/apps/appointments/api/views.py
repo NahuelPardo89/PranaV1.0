@@ -129,7 +129,7 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
 
     def get_queryset(self):
         """
-        Define the appointments for the currently authenticated patient with state = 'Pendiente'.
+        Define the appointments for the currently authenticated patient.
         """
         try:
             patient = self.request.user.patientProfile
@@ -200,13 +200,18 @@ class DoctorAppointmentListView(APIView):
         Retrieve a list of appointments filtered by state.
         """
         doctor = self.request.user.doctorProfile
-        start_date = request.query_params.get('start_date', str(date.today()))
-        end_date = request.query_params.get('end_date', str(date.today()))
-        appointments = Appointment.objects.filter(
-            doctor=doctor,
-            day__range=[start_date, end_date],
-            state__in=[1, 2, 4]
-        )
+        day = request.query_params.get('day', None)
+        if day is not None:
+            appointments = Appointment.objects.filter(
+                doctor=doctor,
+                day=day,
+                state__in=[1, 2, 4]
+            ).order_by('-day', 'hour')
+        else:
+            appointments = Appointment.objects.filter(
+                doctor=doctor,
+                state__in=[1, 2, 4]
+            ).order_by('-day', 'hour')
         serializer = self.serializer_class_list(appointments, many=True)
         return Response(serializer.data)
 
@@ -214,7 +219,6 @@ class DoctorAppointmentListView(APIView):
         """
         Create a new appointment.
         """
-        request.data['doctor'] = request.user.doctorProfile.id
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -260,3 +264,11 @@ class DoctorAppointmentDetailView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        """
+        Delete an appointment.
+        """
+        appointment = self.get_object(pk)
+        appointment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

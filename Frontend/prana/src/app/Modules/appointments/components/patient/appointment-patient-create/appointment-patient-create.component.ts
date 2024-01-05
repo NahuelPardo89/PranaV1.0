@@ -10,7 +10,6 @@ import { Medicalspeciality } from 'src/app/Models/Profile/medicalspeciality.inte
 import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentAdminCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentAdminCreate.interface';
-import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interface';
 import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/doctorschedule.service';
@@ -20,7 +19,6 @@ import { SpecialityService } from 'src/app/Services/Profile/speciality/specialit
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
-import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 
 @Component({
   selector: 'app-appointment-patient-create',
@@ -731,7 +729,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
       );
       confirmAppointment.afterClosed().subscribe(confirmResult => {
         if (confirmResult) {
-          this.appointmentService.createAdminAppointment(filteredBody)
+          this.appointmentService.createPatientAppointment(filteredBody)
             .pipe(
               catchError(error => {
                 console.error('Error en la solicitud:', error);

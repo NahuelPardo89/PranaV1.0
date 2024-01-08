@@ -65,10 +65,17 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'seminar',
+        path: 'semniar',
         loadChildren: () =>
           import('src/app/Modules/semniar/semniar.module').then(
             (m) => m.SemniarModule
+          ),
+      },
+      {
+        path: 'seminar',
+        loadChildren: () =>
+          import('src/app/Modules/seminar/seminar.module').then(
+            (m) => m.SeminarModule
           ),
       },
     ],

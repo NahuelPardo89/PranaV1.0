@@ -1,241 +1,384 @@
 <div class="container mt-5">
-    <h2 class="text-center">Generar Reporte</h2>
-    <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="mt-4">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="mb-3 row align-items-center">
-                    <label for="start_date" class="col-md-4 col-form-label text-end">Fecha de inicio:</label>
-                    <div class="col-md-8">
-                        <input type="date" id="start_date" class="form-control input-field" formControlName="start_date"
-                            required>
-                    </div>
-                    <mat-error *ngIf="reportForm.controls['start_date'].errors?.['required']">Este campo es
-                        requerido</mat-error>
-                </div>
-
-                <div class="mb-3 row align-items-center">
-                    <label for="end_date" class="col-md-4 col-form-label text-end">Fecha de fin:</label>
-                    <div class="col-md-8">
-                        <input type="date" id="end_date" class="form-control input-field" formControlName="end_date"
-                            required>
-                    </div>
-                    <mat-error *ngIf="reportForm.controls['end_date'].errors?.['required']">Este campo es
-                        requerido</mat-error>
-                </div>
-
-                <div class="mb-3 row align-items-center">
-                    <label for="specialty" class="col-md-4 col-form-label text-end">Especialidad:</label>
-                    <div class="col-md-8">
-                        <mat-form-field appearance="outline" class="input-field">
-                            <mat-label>Seleccionar Especialidad</mat-label>
-                            <input type="text" matInput [formControl]="specialtyControl" [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaySpecialtyFn"
-                                (optionSelected)="onSpecialtySelect($event.option.value)">
-                                <mat-option [value]="null">Sin Solicitar</mat-option>
-                                <mat-option *ngFor="let specialty of filteredSpecialties | async"
-                                    [value]="specialty.id">
-                                    {{ specialty.name }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
-                    <label for="branch" class="col-md-4 col-form-label text-end">Rama:</label>
-                    <div class="col-md-8">
-                        <mat-form-field appearance="outline" class="input-field">
-                            <mat-label>Seleccionar Rama</mat-label>
-                            <mat-select formControlName="branch" class="input-field">
-                                <mat-option [value]="null">Sin Solicitar</mat-option>
-                                <mat-option *ngFor="let branch of specialtyFilteredBranches" [value]="branch.id">
-                                    {{ branch.name }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
-                    <label for="doctor" class="col-md-4 col-form-label text-end">Profesional:</label>
-                    <div class="col-md-8">
-                        <mat-form-field appearance="outline" class="input-field">
-                            <mat-label>Seleccionar Profesional</mat-label>
-                            <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayDoctorFn"
-                                (optionSelected)="onDoctorSelect($event.option.value)">
-                                <mat-option [value]="null">Sin Solicitar</mat-option>
-                                <mat-option *ngFor="let doctor of filteredDoctors | async" [value]="doctor">
-                                    {{ doctor.user }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <!-- Strange i know but the unique solution founded to resolve observable troubles  -->
-                <div *ngIf="!selectedSpecialty" class="mb-3 row align-items-center">
-                    <label for="doctor" class="col-md-4 col-form-label text-end">Profesional:</label>
-                    <div class="col-md-8">
-                        <mat-form-field appearance="outline" class="input-field">
-                            <mat-label>Seleccionar Profesional</mat-label>
-                            <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayDoctorFn"
-                                (optionSelected)="onDoctorSelect($event.option.value)">
-                                <mat-option [value]="null">Sin Solicitar</mat-option>
-                                <mat-option *ngFor="let doctor of filteredDoctors | async" [value]="doctor">
-                                    {{ doctor.user }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div *ngIf="filteredPatients" class="mb-3 row align-items-center">
-                    <label for="patient" class="col-md-4 col-form-label text-end">Paciente:</label>
-                    <div class="col-md-8">
-                        <mat-form-field appearance="outline" class="input-field">
-                            <mat-label>Seleccionar Paciente</mat-label>
-                            <input type="text" matInput [formControl]="patientControl" [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPatientFn"
-                                (optionSelected)="onPatientSelect($event.option.value)">
-                                <mat-option [value]="null">Sin Solicitar</mat-option>
-                                <mat-option *ngFor="let patient of filteredPatients | async" [value]="patient.id">
-                                    {{ patient.user }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div *ngIf="filteredInsurances" class="mb-3 row align-items-center">
-                    <label for="health_insurance" class="col-md-4 col-form-label text-end">Obra Social:</label>
-                    <div class="col-md-8">
-                        <mat-form-field appearance="outline" class="input-field">
-                            <mat-label>Seleccionar Obra Social</mat-label>
-                            <input type="text" matInput [formControl]="insuranceControl" [matAutocomplete]="auto">
-                            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayInsuranceFn"
-                                (optionSelected)="onInsuranceSelect($event.option.value)">
-                                <mat-option [value]="null">Sin Solicitar</mat-option>
-                                <mat-option *ngFor="let insurance of filteredInsurances | async" [value]="insurance.id">
-                                    {{ insurance.name }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div class="mb-3 row align-items-center">
-                    <label for="payment_method" class="col-md-4 col-form-label text-end">Metodo de pago:</label>
-                    <div class="col-md-8">
-                        <mat-form-field appearance="outline" class="input-field">
-                            <mat-label>Seleccionar metodo de pago</mat-label>
-                            <mat-select formControlName="payment_method" class="input-field">
-                                <mat-option [value]="null">Sin Solicitar</mat-option>
-                                <mat-option *ngFor="let method of methods" [value]="method.id">
-                                    {{ method.name }}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-            </div>
+  <h2 class="text-center">Generar Reporte - Administrador</h2>
+  <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" class="mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="mb-3 row align-items-center">
+          <label for="start_date" class="col-md-4 col-form-label text-end"
+            >Fecha de inicio:</label
+          >
+          <div class="col-md-8">
+            <input
+              type="date"
+              id="start_date"
+              class="form-control input-field"
+              formControlName="start_date"
+              required
+            />
+          </div>
+          <mat-error
+            *ngIf="reportForm.controls['start_date'].errors?.['required']"
+            >Este campo es requerido</mat-error
+          >
         </div>
 
-        <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary">Generar Reporte</button>
+        <div class="mb-3 row align-items-center">
+          <label for="end_date" class="col-md-4 col-form-label text-end"
+            >Fecha de fin:</label
+          >
+          <div class="col-md-8">
+            <input
+              type="date"
+              id="end_date"
+              class="form-control input-field"
+              formControlName="end_date"
+              required
+            />
+          </div>
+          <mat-error
+            *ngIf="reportForm.controls['end_date'].errors?.['required']"
+            >Este campo es requerido</mat-error
+          >
         </div>
-    </form>
+
+        <div class="mb-3 row align-items-center">
+          <label for="specialty" class="col-md-4 col-form-label text-end"
+            >Especialidad:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Seleccionar Especialidad (Filtro Opcional)</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="specialtyControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displaySpecialtyFn"
+                (optionSelected)="onSpecialtySelect($event.option.value)"
+              >
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let specialty of filteredSpecialties | async"
+                  [value]="specialty.id"
+                >
+                  {{ specialty.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+          <label for="branch" class="col-md-4 col-form-label text-end"
+            >Rama:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Seleccionar Rama (Filtro Opcional)</mat-label>
+              <mat-select formControlName="branch" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let branch of specialtyFilteredBranches"
+                  [value]="branch.id"
+                >
+                  {{ branch.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
+          <label for="doctor" class="col-md-4 col-form-label text-end"
+            >Profesional:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Seleccionar Profesional (Filtro Opcional)</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="doctorControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayDoctorFn"
+                (optionSelected)="onDoctorSelect($event.option.value)"
+              >
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let doctor of filteredDoctors | async"
+                  [value]="doctor"
+                >
+                  {{ doctor.user }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Strange i know but the unique solution founded to resolve observable troubles  -->
+        <div *ngIf="!selectedSpecialty" class="mb-3 row align-items-center">
+          <label for="doctor" class="col-md-4 col-form-label text-end"
+            >Profesional:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Seleccionar Profesional (Filtro Opcional)</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="doctorControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayDoctorFn"
+                (optionSelected)="onDoctorSelect($event.option.value)"
+              >
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let doctor of filteredDoctors | async"
+                  [value]="doctor"
+                >
+                  {{ doctor.user }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div *ngIf="filteredPatients" class="mb-3 row align-items-center">
+          <label for="patient" class="col-md-4 col-form-label text-end"
+            >Paciente:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Seleccionar Paciente (Filtro Opcional)</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="patientControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayPatientFn"
+                (optionSelected)="onPatientSelect($event.option.value)"
+              >
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let patient of filteredPatients | async"
+                  [value]="patient.id"
+                >
+                  {{ patient.user }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div *ngIf="filteredInsurances" class="mb-3 row align-items-center">
+          <label for="health_insurance" class="col-md-4 col-form-label text-end"
+            >Obra Social:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Seleccionar Obra Social (Filtro Opcional)</mat-label>
+              <input
+                type="text"
+                matInput
+                [formControl]="insuranceControl"
+                [matAutocomplete]="auto"
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayInsuranceFn"
+                (optionSelected)="onInsuranceSelect($event.option.value)"
+              >
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let insurance of filteredInsurances | async"
+                  [value]="insurance.id"
+                >
+                  {{ insurance.name }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="mb-3 row align-items-center">
+          <label for="payment_method" class="col-md-4 col-form-label text-end"
+            >Metodo de pago:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label
+                >Seleccionar metodo de pago (Filtro Opcional)</mat-label
+              >
+              <mat-select formControlName="payment_method" class="input-field">
+                <mat-option [value]="null">Sin Solicitar</mat-option>
+                <mat-option *ngFor="let method of methods" [value]="method.id">
+                  {{ method.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn btn-primary">Generar Reporte</button>
+    </div>
+  </form>
 </div>
 
 <div *ngIf="reportData">
-    <h2>Reporte Generado</h2>
-    <h3>Resumen</h3>
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Profesional</th>
-                <th>Especialidad</th>
-                <th>Rama</th>
-                <th>Forma de Pago</th>
-                <th>Cantidad de Pacientes</th>
-                <th>Cantidad de Turnos</th>
-                <th>Total Copago Paciente</th>
-                <th>Total Copago Obra Social</th>
-                <th>Cantidad de Doctores</th>
-                <th>Cantidad de Obras Sociales 'Particular'</th>
-                <th>Cantidad de Otras Obras Sociales</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ reportData.summary.doctor !== null ? getDoctorName(reportData.summary.doctor) : 'Sin Solicitar'
-                    }}
-                </td>
-                <td>{{ reportData.summary.specialty !== null ? getSpecialtyName(reportData.summary.specialty) : 'Sin
-                    Solicitar' }}</td>
-                <td>{{ reportData.summary.branch !== null ? getBranchName(reportData.summary.branch) : 'Sin Solicitar'
-                    }}
-                </td>
-                <td>{{ reportData.summary.payment_method !== null ? reportData.summary.payment_method : 'Sin Solicitar'
-                    }}
-                </td>
-                <td>{{ reportData.summary.num_patients !== null ? reportData.summary.num_patients : 'Sin Solicitar' }}
-                </td>
-                <td>{{ reportData.summary.num_appointments !== null ? reportData.summary.num_appointments : 'Sin
-                    Solicitar'
-                    }}</td>
-                <td>{{ reportData.summary.total_patient_copayment !== null ? reportData.summary.total_patient_copayment
-                    :
-                    'Sin Solicitar' }}</td>
-                <td>{{ reportData.summary.total_hi_copayment !== null ? reportData.summary.total_hi_copayment : 'Sin
-                    Solicitar' }}</td>
-                <td>{{ reportData.summary.num_doctors !== null ? reportData.summary.num_doctors : 'Sin Solicitar' }}
-                </td>
-                <td>{{ reportData.summary.num_particular_insurances !== null ?
-                    reportData.summary.num_particular_insurances
-                    : 'Sin Solicitar' }}</td>
-                <td>{{ reportData.summary.num_other_insurances !== null ? reportData.summary.num_other_insurances : 'Sin
-                    Solicitar' }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <h3>Detalle de turnos</h3>
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Profesional</th>
-                <th>Obra Social</th>
-                <th>Paciente</th>
-                <th>Rama</th>
-                <th>Especialidad</th>
-                <th>Forma de Pago</th>
-                <th>Fecha</th>
-                <th>Hora</th>
-                <th>Duración</th>
-                <th>Costo Total</th>
-                <th>Copago Paciente</th>
-                <th>Copago Obra Social</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let appointment of reportData.appointments">
-                <td>{{ appointment.doctor }}</td>
-                <td>{{ appointment.health_insurance }}</td>
-                <td>{{ appointment.patient }}</td>
-                <td>{{ appointment.branch }}</td>
-                <td>{{ appointment.specialty }}</td>
-                <td>{{ appointment.payment_method }}</td>
-                <td>{{ appointment.day }}</td>
-                <td>{{ appointment.hour }}</td>
-                <td>{{ appointment.duration }}</td>
-                <td>{{ appointment.full_cost }}</td>
-                <td>{{ appointment.patient_copayment }}</td>
-                <td>{{ appointment.hi_copayment }}</td>
-                <td>{{ appointment.state }}</td>
-            </tr>
-        </tbody>
-    </table>
+  <h2>Reporte Generado</h2>
+  <h3>Resumen</h3>
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>Profesional</th>
+        <th>Especialidad</th>
+        <th>Rama</th>
+        <th>Forma de Pago</th>
+        <th>Cantidad de Pacientes</th>
+        <th>Cantidad de Turnos</th>
+        <th>Total Copago Paciente</th>
+        <th>Total Copago Obra Social</th>
+        <th>Cantidad de Doctores</th>
+        <th>Cantidad de Obras Sociales 'Particular'</th>
+        <th>Cantidad de Otras Obras Sociales</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          {{
+            reportData.summary.doctor !== null
+              ? getDoctorName(reportData.summary.doctor)
+              : "Sin Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.specialty !== null
+              ? getSpecialtyName(reportData.summary.specialty)
+              : "Sin
+                    Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.branch !== null
+              ? getBranchName(reportData.summary.branch)
+              : "Sin Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.payment_method !== null
+              ? reportData.summary.payment_method
+              : "Sin Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.num_patients !== null
+              ? reportData.summary.num_patients
+              : "Sin Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.num_appointments !== null
+              ? reportData.summary.num_appointments
+              : "Sin
+                    Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.total_patient_copayment !== null
+              ? reportData.summary.total_patient_copayment
+              : "Sin Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.total_hi_copayment !== null
+              ? reportData.summary.total_hi_copayment
+              : "Sin
+                    Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.num_doctors !== null
+              ? reportData.summary.num_doctors
+              : "Sin Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.num_particular_insurances !== null
+              ? reportData.summary.num_particular_insurances
+              : "Sin Solicitar"
+          }}
+        </td>
+        <td>
+          {{
+            reportData.summary.num_other_insurances !== null
+              ? reportData.summary.num_other_insurances
+              : "Sin
+                    Solicitar"
+          }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Detalle de turnos</h3>
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>Profesional</th>
+        <th>Obra Social</th>
+        <th>Paciente</th>
+        <th>Rama</th>
+        <th>Especialidad</th>
+        <th>Forma de Pago</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Duración</th>
+        <th>Costo Total</th>
+        <th>Copago Paciente</th>
+        <th>Copago Obra Social</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let appointment of reportData.appointments">
+        <td>{{ appointment.doctor }}</td>
+        <td>{{ appointment.health_insurance }}</td>
+        <td>{{ appointment.patient }}</td>
+        <td>{{ appointment.branch }}</td>
+        <td>{{ appointment.specialty }}</td>
+        <td>{{ appointment.payment_method }}</td>
+        <td>{{ appointment.day }}</td>
+        <td>{{ appointment.hour }}</td>
+        <td>{{ appointment.duration }}</td>
+        <td>{{ appointment.full_cost }}</td>
+        <td>{{ appointment.patient_copayment }}</td>
+        <td>{{ appointment.hi_copayment }}</td>
+        <td>{{ appointment.state }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>

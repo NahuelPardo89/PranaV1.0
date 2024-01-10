@@ -1,32 +1,38 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Seminar } from 'src/app/Models/seminar/seminar.interface';
-
+import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterface.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SeminarService {
   private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminars/'; // Ajusta la URL según tu configuración
 
   constructor(private http: HttpClient) {}
 
-  getSeminars(): Observable<Seminar[]> {
-    
-    return this.http.get<Seminar[]>(this.apiUrl);
+  getSeminars(): Observable<SeminarAdminInterface[]> {
+    return this.http.get<SeminarAdminInterface[]>(this.apiUrl);
   }
 
-  getSeminarById(id: number): Observable<Seminar> {
-    return this.http.get<Seminar>(`${this.apiUrl}${id}/`);
+  getSeminarById(id: number): Observable<SeminarAdminInterface> {
+    return this.http.get<SeminarAdminInterface>(`${this.apiUrl}${id}/`);
   }
 
-  createSeminar(seminar: Seminar): Observable<Seminar> {
-    return this.http.post<Seminar>(this.apiUrl, seminar);
+  createSeminar(
+    seminar: SeminarAdminInterface
+  ): Observable<SeminarAdminInterface> {
+    return this.http.post<SeminarAdminInterface>(this.apiUrl, seminar);
   }
 
-  updateSeminar(id: number, seminar: Seminar): Observable<Seminar> {
-    return this.http.put<Seminar>(`${this.apiUrl}${id}/`, seminar);
+  updateSeminar(
+    id: number,
+    seminar: SeminarAdminInterface
+  ): Observable<SeminarAdminInterface> {
+    return this.http.put<SeminarAdminInterface>(
+      `${this.apiUrl}${id}/`,
+      seminar
+    );
   }
 
   deleteSeminar(id: number): Observable<void> {

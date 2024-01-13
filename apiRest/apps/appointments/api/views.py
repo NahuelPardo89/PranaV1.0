@@ -1,5 +1,3 @@
-from datetime import date
-import datetime
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,22 +21,25 @@ class AppointmentListCreateView(APIView):
 
     def get(self, request):
         """
-        Retrieve a list of appointments filtered by state.
+        Retrieve a list of appointments filtered by state | doctor | day.
         """
-        # Find the states to list
-        state = request.query_params.get('state')
+        # Find the params
+        appointment_status = request.query_params.get('appointment_status')
+        payment_status = request.query_params.get('payment_status')
         doctor_id = request.query_params.get('doctor_id')
         day = request.query_params.get('day')
 
-        # Filter the appointments by state, if any
-        if state is not None:
-            appointments = Appointment.objects.filter(state=state)
-        elif doctor_id is not None:
-            appointments = Appointment.objects.filter(doctor=doctor_id)
-        elif day is not None:
-            appointments = Appointment.objects.filter(day=day)
-        else:
-            appointments = Appointment.objects.all()
+        appointments = Appointment.objects.all()
+
+        # Filter appointments
+        if appointment_status:
+            appointments.filter(appointment_status=appointment_status)
+        if payment_status:
+            appointments.filter(payment_status=payment_status)
+        if doctor_id:
+            appointments.filter(doctor=doctor_id)
+        if day:
+            appointments.filter(day=day)
 
         appointments = appointments.order_by('-day', 'hour')
 
@@ -135,7 +136,7 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
             patient = self.request.user.patientProfile
             day = self.request.query_params.get('day', None)
             if day is not None:
-                return Appointment.objects.filter(patient=patient, state=1, day=day).order_by('-day', 'hour')
+                return Appointment.objects.filter(patient=patient, appointment_status=1, day=day).order_by('-day', 'hour')
             else:
                 return Appointment.objects.filter(patient=patient).order_by('-day', 'hour')
         except PatientProfile.DoesNotExist:
@@ -205,12 +206,10 @@ class DoctorAppointmentListView(APIView):
             appointments = Appointment.objects.filter(
                 doctor=doctor,
                 day=day,
-                state__in=[1, 2, 4]
             ).order_by('-day', 'hour')
         else:
             appointments = Appointment.objects.filter(
                 doctor=doctor,
-                state__in=[1, 2, 4]
             ).order_by('-day', 'hour')
         serializer = self.serializer_class_list(appointments, many=True)
         return Response(serializer.data)

@@ -34,10 +34,12 @@ class Appointment(models.Model):
         verbose_name = 'Turno'
         verbose_name_plural = 'Turnos'
 
-    CHOICES_STATE = [(1, 'Pendiente'),
-                     (2, 'Confirmado'),
-                     (3, 'Adeuda'),
-                     (4, 'Pagado')]
+    CHOICES_APPOINTMENT_STATUS = [(1, 'PENDIENTE'),
+                                  (2, 'CONFIRMADO')]
+
+    CHOICES_PAYMENT_STATUS = [(1, 'ADEUDA'),
+                              (2, 'PAGADO')]
+
     doctor = models.ForeignKey(
         DoctorProfile, on_delete=models.PROTECT)
     specialty = models.ForeignKey(
@@ -58,7 +60,10 @@ class Appointment(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True)
     payment_method = models.ForeignKey(
         PaymentMethod, on_delete=models.SET_NULL, blank=True, null=True)
-    state = models.IntegerField(choices=CHOICES_STATE, default=1)
+    appointment_status = models.IntegerField(
+        choices=CHOICES_APPOINTMENT_STATUS, default=1)
+    payment_status = models.IntegerField(
+        choices=CHOICES_PAYMENT_STATUS, default=1)
 
     def find_common_hi(self):
         """
@@ -69,8 +74,6 @@ class Appointment(models.Model):
         """
         return set(self.doctor.insurances.all()) & set(
             self.patient.insurances.all())
-        # return set(self.doctor.insurances.all()) & set(
-        #     self.patient.insurances.all())
 
     def set_branch(self):
         """

@@ -51,7 +51,10 @@ def perform_update(instance: Appointment, validated_data: dict) -> Appointment:
         'full_cost', instance.full_cost)
     instance.payment_method = validated_data.get(
         'payment_method', instance.payment_method)
-    instance.state = validated_data.get('state', instance.state)
+    instance.appointment_status = validated_data.get(
+        'appointment_status', instance.appointment_status)
+    instance.payment_status = validated_data.get(
+        'payment_status', instance.payment_status)
     instance.set_cost()
     instance.save()
     return instance
@@ -327,7 +330,7 @@ def validate_base_hi():
     """
 
     base_hi = HealthInsurance.objects.filter(
-        name='PARTICULAR').first()
+        name__iexact='PARTICULAR').first()
     if base_hi is None:
         raise serializers.ValidationError(
             "Debido a que todos los profesionales atienden de manera particular, por favor cargue la obra social: 'PARTICULAR' ")
@@ -369,17 +372,17 @@ def validate_base_hi_branch(attrs):
 
 def validate_state_branch(attrs, instance):
     """
-    Validate that a branch is assigned when the appointment state is 'Paid'.
+    Validate that a branch is assigned when the appointment payment_status is 'Pagado'.
 
     Args:
-        attrs (dict): Dictionary containing appointment attributes, including 'state', 'branch'.
+        attrs (dict): Dictionary containing appointment attributes, including 'payment_status', 'branch'.
         instance (Appointment): The appointment instance being updated.
 
     Raises:
-        serializers.ValidationError: If a branch is not assigned for an appointment with the state 'Paid'.
+        serializers.ValidationError: If a branch is not assigned for an appointment with the payment_status 'Pagado'.
     """
 
-    if not instance and attrs.get('state') == 4 and attrs.get('branch') is None:
+    if not instance and attrs.get('payment_status') == 2 and attrs.get('branch') is None:
         raise serializers.ValidationError(
             "Se debe asignar una rama para un turno con estado 'Pagado'.")
     return attrs
@@ -387,29 +390,27 @@ def validate_state_branch(attrs, instance):
 
 def validate_payment_state(attrs, instance):
     """
-    Validate the assignment of payment method based on the appointment state.
+    Validate the assignment of payment method based on the appointment payment_status.
 
     Args:
-        attrs (dict): Dictionary containing appointment attributes, including 'state', 'payment_method'.
+        attrs (dict): Dictionary containing appointment attributes, including 'payment_status', 'payment_method'.
         instance (Appointment): The appointment instance being updated.
 
     Raises:
-        serializers.ValidationError: If a payment method is not assigned for an appointment with the state 'Paid', or if a payment method is assigned to an appointment with a state other than 'Paid'.
+        serializers.ValidationError: If a payment method is not assigned for an appointment with the payment_status 'Pagado', 
+        or if a payment method is assigned to an appointment with a payment_status other than 'Pagado'.
     """
     # Refactor here
-    if not instance and attrs.get('state') == 4 and attrs.get('payment_method') is None:
+    if not instance and attrs.get('payment_status') == 2 and attrs.get('payment_method') is None:
         raise serializers.ValidationError(
             "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
-    elif not instance and attrs.get('state') != 4 and attrs.get('payment_method'):
+    elif not instance and attrs.get('payment_status') != 2 and attrs.get('payment_method'):
         raise serializers.ValidationError(
             "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
-    elif instance and attrs.get('state') != 4 and attrs.get('payment_method'):
+    elif instance and attrs.get('payment_status') != 2 and attrs.get('payment_method'):
         raise serializers.ValidationError(
             "No se puede asignar un método de pago a un turno con estado DISTINTO de 'Pagado'.")
-    elif instance and instance.state == 4 and attrs.get('state') != 4:
-        raise serializers.ValidationError(
-            "Este turno se ha registrado como pagado, no es posible cambiar el estado de este turno.")
-    elif instance and instance.state != 4 and attrs.get('state') == 4 and attrs.get('payment_method') is None:
+    elif instance and instance.payment_status != 2 and attrs.get('payment_status') == 2 and attrs.get('payment_method') is None:
         raise serializers.ValidationError(
             "Se debe asignar un método de pago para un turno con estado 'Pagado'.")
 
@@ -454,7 +455,7 @@ class AppointmentSerializerList(serializers.ModelSerializer):
 
     This serializer formats the data retrieved from the Appointment model
     to represent appointments in a list format. It customizes the serialization
-    of various fields and adds representations for state, date, cost, copayments,
+    of various fields and adds representations for status, date, cost, copayments,
     hour, and duration in a human-readable format.
     """
     doctor = serializers.StringRelatedField()
@@ -477,11 +478,12 @@ class AppointmentSerializerList(serializers.ModelSerializer):
 
         Returns:
         - rep: A dictionary representing the serialized Appointment instance
-          with customized fields like state, date, cost, copayments, hour, and duration.
+          with customized fields like status, date, cost, copayments, hour, and duration.
         """
         rep = super().to_representation(instance)
-        # State
-        rep['state'] = instance.get_state_display()
+        # Status
+        rep['appointment_status'] = instance.get_appointment_status_display()
+        rep['payment_status'] = instance.get_payment_status_display()
         # Date format
         day = instance.day
         rep['day'] = day.strftime('%d-%m-%Y')
@@ -584,9 +586,9 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ('day', 'hour', 'patient', 'specialty', 'branch',
-                  'doctor', 'health_insurance', 'duration', 'state', )
+                  'doctor', 'health_insurance', 'duration', 'appointment_status', 'payment_status', )
         read_only_fields = ('health_insurance', 'specialty', 'full_cost',
-                            'duration', 'state')
+                            'duration', 'appointment_status', 'payment_status',)
 
     def create(self, validated_data):
         """
@@ -630,7 +632,7 @@ class DoctorAppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = ('day', 'hour', 'duration', 'full_cost', 'state', 'doctor', 'specialty',
+        fields = ('day', 'hour', 'duration', 'full_cost', 'appointment_status', 'payment_status', 'doctor', 'specialty',
                   'branch', 'patient', 'health_insurance', 'payment_method')
         read_only_fields = ('specialty', 'full_cost', 'health_insurance',)
 

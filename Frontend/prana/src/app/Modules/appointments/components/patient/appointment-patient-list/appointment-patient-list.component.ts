@@ -23,8 +23,8 @@ export class AppointmentPatientListComponent {
     //'specialty',
     'branch',
     'health_insurance',
-    //'appointment_status',
-    //'payment_status',
+    'appointment_status',
+    'payment_status',
     'actions',
   ];
 
@@ -60,7 +60,6 @@ export class AppointmentPatientListComponent {
       observable = this.appointmentService.getPatientAppointments();
     }
     observable.subscribe((data: AppointmentPatientGetInterface[]) => {
-      console.log('DATA ------- ', data);
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';

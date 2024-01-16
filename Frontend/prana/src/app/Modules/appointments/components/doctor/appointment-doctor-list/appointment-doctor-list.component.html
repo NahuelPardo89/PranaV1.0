@@ -90,12 +90,20 @@
           <td mat-cell *matCellDef="let row">{{ row.hi_copayment }}</td>
         </ng-container>
 
-        <!-- State Column -->
-        <ng-container matColumnDef="state">
+        <!-- Appointment Status Column -->
+        <ng-container matColumnDef="appointment_status">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Estado del Turno
           </th>
-          <td mat-cell *matCellDef="let row">{{ row.state }}</td>
+          <td mat-cell *matCellDef="let row">{{ row.appointment_status }}</td>
+        </ng-container>
+
+        <!-- Payment Status Column -->
+        <ng-container matColumnDef="payment_status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Estado del Turno
+          </th>
+          <td mat-cell *matCellDef="let row">{{ row.payment_status }}</td>
         </ng-container>
 
         <!-- Actions Column -->
@@ -103,7 +111,7 @@
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let row">
             <div style="display: flex; align-items: center">
-              <!-- Muestra el botón de eliminar solo si el estado no es 'pagado' y la fecha no es anterior a la actual -->
+              <!-- No longer used, replace this feature -->
               <button
                 *ngIf="canDelete(row)"
                 class="btn btn-danger ms-3"
@@ -112,7 +120,7 @@
               >
                 <i class="material-symbols-outlined">delete</i>
               </button>
-              <!-- Muestra un mensaje si el estado es 'pagado' o la fecha es anterior a la actual -->
+              <!-- No longer used, replace this feature -->
               <mat-icon
                 *ngIf="!canDelete(row)"
                 style="color: yellow"
@@ -128,7 +136,7 @@
         <tr
           mat-row
           *matRowDef="let row; columns: displayedColumns"
-          [ngClass]="{ highlight: row.state === 'Confirmado' }"
+          [ngClass]="{ highlight: row.appointment_status === 'CONFIRMADO' }"
         ></tr>
       </table>
     </div>

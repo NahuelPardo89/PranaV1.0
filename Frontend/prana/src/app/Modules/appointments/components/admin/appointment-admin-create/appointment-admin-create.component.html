@@ -1,97 +1,166 @@
 <div class="container mt-5">
-  <h2 class="text-center">Generar Turno</h2>
+  <h2 class="text-center">Generar Turno - Administrador</h2>
   <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="mt-4">
     <div class="row justify-content-center">
       <div class="col-md-6">
-
         <!-- Patient is the unique visible field since is required and is not afected by the specialty -->
         <div class="mb-3 row align-items-center">
-          <label for="patient" class="col-md-4 col-form-label text-end">Paciente * :</label>
+          <label for="patient" class="col-md-4 col-form-label text-end"
+            >Paciente * :</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar Paciente</mat-label>
-              <input type="text" matInput [formControl]="patientControl" [matAutocomplete]="auto" required>
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPatientFn"
-                (optionSelected)="onPatientSelect($event.option.value)">
-                <mat-option *ngFor="let patient of filteredPatients | async" [value]="patient.id">
+              <input
+                type="text"
+                matInput
+                [formControl]="patientControl"
+                [matAutocomplete]="auto"
+                required
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayPatientFn"
+                (optionSelected)="onPatientSelect($event.option.value)"
+              >
+                <mat-option
+                  *ngFor="let patient of filteredPatients | async"
+                  [value]="patient.id"
+                >
                   {{ patient.user }}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="appointmentForm.controls['patient'].errors?.['required']">Este campo es
-                requerido</mat-error>
+              <mat-error
+                *ngIf="appointmentForm.controls['patient'].errors?.['required']"
+                >Este campo es requerido</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
 
         <!-- First of all, we need to define the specialty, in order to filter doctors, schedules and free apointments -->
         <div *ngIf="selectedPatient" class="mb-3 row align-items-center">
-          <label for="specialty" class="col-md-4 col-form-label text-end">Especialidad * :</label>
+          <label for="specialty" class="col-md-4 col-form-label text-end"
+            >Especialidad * :</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar Especialidad</mat-label>
-              <input type="text" matInput [formControl]="specialtyControl" [matAutocomplete]="auto" required>
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displaySpecialtyFn"
-                (optionSelected)="onSpecialtySelect($event.option.value)">
+              <input
+                type="text"
+                matInput
+                [formControl]="specialtyControl"
+                [matAutocomplete]="auto"
+                required
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displaySpecialtyFn"
+                (optionSelected)="onSpecialtySelect($event.option.value)"
+              >
                 <mat-option [value]="null">Sin Solicitar</mat-option>
-                <mat-option *ngFor="let specialty of filteredSpecialties | async" [value]="specialty.name">
+                <mat-option
+                  *ngFor="let specialty of filteredSpecialties | async"
+                  [value]="specialty.name"
+                >
                   {{ specialty.name }}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="appointmentForm.controls['specialty'].errors?.['specialty']">Este campo es
-                requerido</mat-error>
+              <mat-error
+                *ngIf="appointmentForm.controls['specialty'].errors?.['specialty']"
+                >Este campo es requerido</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
 
         <div *ngIf="selectedSpecialty" class="mb-3 row align-items-center">
-          <label for="doctor" class="col-md-4 col-form-label text-end">Profesional * :</label>
+          <label for="doctor" class="col-md-4 col-form-label text-end"
+            >Profesional * :</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar Profesional</mat-label>
-              <input type="text" matInput [formControl]="doctorControl" [matAutocomplete]="auto" required>
-              <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayDoctorFn"
-                (optionSelected)="onDoctorSelect($event.option.value)">
+              <input
+                type="text"
+                matInput
+                [formControl]="doctorControl"
+                [matAutocomplete]="auto"
+                required
+              />
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                [displayWith]="displayDoctorFn"
+                (optionSelected)="onDoctorSelect($event.option.value)"
+              >
                 <!-- <mat-option [value]="null">Sin Solicitar</mat-option> -->
-                <mat-option *ngFor="let doctor of filteredDoctors | async" [value]="doctor.id">
+                <mat-option
+                  *ngFor="let doctor of filteredDoctors | async"
+                  [value]="doctor.id"
+                >
                   {{ doctor.user }}
                 </mat-option>
               </mat-autocomplete>
-              <mat-error *ngIf="appointmentForm.controls['doctor'].errors?.['doctor']">Este campo es
-                requerido</mat-error>
+              <mat-error
+                *ngIf="appointmentForm.controls['doctor'].errors?.['doctor']"
+                >Este campo es requerido</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
-          <label for="day" class="col-md-4 col-form-label text-end">Día * :</label>
+        <div
+          *ngIf="selectedSpecialty && selectedDoctor"
+          class="mb-3 row align-items-center"
+        >
+          <label for="day" class="col-md-4 col-form-label text-end"
+            >Día * :</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar Día</mat-label>
-              <mat-select formControlName="day" (ngModelChange)="onDaySelect($event)" required>
+              <mat-select
+                formControlName="day"
+                (ngModelChange)="onDaySelect($event)"
+                required
+              >
                 <mat-option [value]="">Selecciona un Día</mat-option>
                 <mat-option *ngFor="let day of formattedDates" [value]="day">
                   {{ day }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="appointmentForm.controls['day'].errors?.['required']">Este campo es
-                requerido</mat-error>
+              <mat-error
+                *ngIf="appointmentForm.controls['day'].errors?.['required']"
+                >Este campo es requerido</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
-          <label for="hour" class="col-md-4 col-form-label text-end">Horario * :</label>
+        <div
+          *ngIf="selectedSpecialty && selectedDoctor"
+          class="mb-3 row align-items-center"
+        >
+          <label for="hour" class="col-md-4 col-form-label text-end"
+            >Horario * :</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar Horario</mat-label>
-              <mat-select formControlName="hour" (ngModelChange)="onHourSelect($event)" required>
+              <mat-select
+                formControlName="hour"
+                (ngModelChange)="onHourSelect($event)"
+                required
+              >
                 <mat-option [value]="">Selecciona un Horario</mat-option>
                 <mat-option *ngFor="let hour of availableTimes" [value]="hour">
                   {{ hour }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="appointmentForm.controls['hour'].errors?.['required']">Este campo es
-                requerido</mat-error>
+              <mat-error
+                *ngIf="appointmentForm.controls['hour'].errors?.['required']"
+                >Este campo es requerido</mat-error
+              >
             </mat-form-field>
           </div>
         </div>
@@ -105,14 +174,26 @@
           </div>
         </div> -->
 
-        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
-          <label for="branch" class="col-md-4 col-form-label text-end">Rama:</label>
+        <div
+          *ngIf="selectedSpecialty && selectedDoctor"
+          class="mb-3 row align-items-center"
+        >
+          <label for="branch" class="col-md-4 col-form-label text-end"
+            >Rama:</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar Rama (opcional) </mat-label>
-              <mat-select formControlName="branch" class="input-field" (ngModelChange)="onBranchSelect($event)">
+              <mat-select
+                formControlName="branch"
+                class="input-field"
+                (ngModelChange)="onBranchSelect($event)"
+              >
                 <!-- <mat-option [value]="null">Sin Solicitar</mat-option> -->
-                <mat-option *ngFor="let branch of specialtyFilteredBranches" [value]="branch.id">
+                <mat-option
+                  *ngFor="let branch of specialtyFilteredBranches"
+                  [value]="branch.id"
+                >
                   {{ branch.name }}
                 </mat-option>
               </mat-select>
@@ -120,33 +201,88 @@
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
-          <label for="full_cost" class="col-md-4 col-form-label text-end">Costo:</label>
+        <div
+          *ngIf="selectedSpecialty && selectedDoctor"
+          class="mb-3 row align-items-center"
+        >
+          <label for="full_cost" class="col-md-4 col-form-label text-end"
+            >Costo:</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Campo Opcional</mat-label>
-              <input matInput type="number" id="full_cost" formControlName="full_cost">
+              <input
+                matInput
+                type="number"
+                id="full_cost"
+                formControlName="full_cost"
+              />
             </mat-form-field>
           </div>
         </div>
 
-        <div *ngIf="selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
-          <label for="state" class="col-md-4 col-form-label text-end">Estado del turno:</label>
+        <div
+          *ngIf="selectedSpecialty && selectedDoctor"
+          class="mb-3 row align-items-center"
+        >
+          <label
+            for="appointment_status"
+            class="col-md-4 col-form-label text-end"
+            >Estado del turno:</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar un estado (Opcional) </mat-label>
-              <mat-select formControlName="state" class="input-field" (ngModelChange)="updatePaymentVisibility($event)">
-                <mat-option [value]=1>Sin Solicitar</mat-option>
-                <mat-option *ngFor="let state of states" [value]="state.value">
-                  {{ state.viewValue }}
+              <mat-select
+                formControlName="appointment_status"
+                class="input-field"
+              >
+                <mat-option [value]="1">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let app_status of appointment_status_choices"
+                  [value]="app_status.value"
+                >
+                  {{ app_status.viewValue }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
 
-        <div *ngIf="isPaid && selectedSpecialty && selectedDoctor" class="mb-3 row align-items-center">
-          <label for="payment_method" class="col-md-4 col-form-label text-end">Metodo de pago:</label>
+        <div
+          *ngIf="selectedSpecialty && selectedDoctor"
+          class="mb-3 row align-items-center"
+        >
+          <label for="payment_status" class="col-md-4 col-form-label text-end"
+            >Estado del Pago:</label
+          >
+          <div class="col-md-8">
+            <mat-form-field appearance="outline" class="input-field">
+              <mat-label>Seleccionar un estado (Opcional) </mat-label>
+              <mat-select
+                formControlName="payment_status"
+                class="input-field"
+                (ngModelChange)="updatePaymentVisibility($event)"
+              >
+                <mat-option [value]="1">Sin Solicitar</mat-option>
+                <mat-option
+                  *ngFor="let pay_status of payment_status_choices"
+                  [value]="pay_status.value"
+                >
+                  {{ pay_status.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div
+          *ngIf="isPaid && selectedSpecialty && selectedDoctor"
+          class="mb-3 row align-items-center"
+        >
+          <label for="payment_method" class="col-md-4 col-form-label text-end"
+            >Metodo de pago:</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar metodo de pago</mat-label>
@@ -160,21 +296,31 @@
           </div>
         </div>
 
-        <div *ngIf="selectedBranch && selectedDoctor && selectedPatient" class="mb-3 row align-items-center">
-          <label for="health_insurance" class="col-md-4 col-form-label text-end">Obra Social:</label>
+        <div
+          *ngIf="selectedBranch && selectedDoctor && selectedPatient"
+          class="mb-3 row align-items-center"
+        >
+          <label for="health_insurance" class="col-md-4 col-form-label text-end"
+            >Obra Social:</label
+          >
           <div class="col-md-8">
             <mat-form-field appearance="outline" class="input-field">
               <mat-label>Seleccionar obra social (Opcional) </mat-label>
-              <mat-select formControlName="health_insurance" class="input-field">
+              <mat-select
+                formControlName="health_insurance"
+                class="input-field"
+              >
                 <mat-option [value]="null">Sin Solicitar</mat-option>
-                <mat-option *ngFor="let insurance of insurances" [value]="insurance.id">
+                <mat-option
+                  *ngFor="let insurance of insurances"
+                  [value]="insurance.id"
+                >
                   {{ insurance.name }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
-
       </div>
     </div>
 

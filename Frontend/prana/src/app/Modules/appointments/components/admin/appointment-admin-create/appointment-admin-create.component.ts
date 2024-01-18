@@ -58,11 +58,14 @@ export class AppointmentAdminCreateComponent implements OnInit {
   availableTimes: string[] = [];
   finalJsonDate: string = '';
   finalJsonHour: string = '';
-  states = [
+  appointment_status_choices = [
     { value: 1, viewValue: 'Pendiente' },
     { value: 2, viewValue: 'Confirmado' },
-    { value: 3, viewValue: 'Adeuda' },
-    { value: 4, viewValue: 'Pagado' },
+    { value: 3, viewValue: 'Finalizado' },
+  ];
+  payment_status_choices = [
+    { value: 1, viewValue: 'Adeuda' },
+    { value: 2, viewValue: 'Pagado' },
   ];
   //FormControls
   doctorControl = new FormControl();
@@ -147,9 +150,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
    */
   loadDoctors(): void {
     this.doctorService.getDoctors().subscribe((data) => {
-      // Filter active doctors
+      // Filter active doctors and sort them
       let activeDoctors = data.filter((doctor) => doctor.is_active);
-      // Sort doctors
       activeDoctors.sort((a, b) =>
         a.user.toString().localeCompare(b.user.toString())
       );
@@ -183,7 +185,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
    */
   loadPatients(): void {
     this.patientService.getAllPatients().subscribe((data) => {
-      // Filter active specialties and sort them
+      // Filter active patients and sort them
       let activePatients = data.filter((patient) => patient.is_active);
       activePatients.sort((a, b) =>
         a.user.toString().localeCompare(b.user.toString())
@@ -325,6 +327,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
       // reset all
       this.resetForm(this.appointmentForm, { specialty: true });
     } else if (this.selectedDoctor && this.selectedBranch) {
+      // Reset hi, and status
+      this.resetForm(this.appointmentForm, { hi: true });
       // So far, patient isn't null, and we check that doctor and branch have a value
       // Recalculate common insurances value
       this.loadCommonInsurances(
@@ -349,7 +353,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
     let branch = this.specialtyFilteredBranches.find(
       (branch) => branch.id === branchId
     );
-    // its neccesary to reset full_cost, state and health insurances fields, since on branch selection could change the cost of the appointment
+    // its neccesary to reset full_cost, status and health insurances fields, since on branch selection could change the cost of the appointment
     this.resetForm(this.appointmentForm, { hi: true });
     if (branch) {
       this.branchName = branch.name;
@@ -369,7 +373,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
    * @returns {void}
    */
   updatePaymentVisibility(selectedValue: number | null): void {
-    this.isPaid = selectedValue === 4;
+    this.isPaid = selectedValue === 2;
     if (!this.isPaid) {
       this.appointmentForm.patchValue({
         payment_method: null,
@@ -703,7 +707,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
 
     // Reset the remaining fields
     form.patchValue({
-      state: null,
+      appointment_status: null,
+      payment_status: null,
       payment_method: null,
       full_cost: null,
     });
@@ -876,17 +881,18 @@ export class AppointmentAdminCreateComponent implements OnInit {
    */
   displayPreviewAppointment(): string {
     let preview = `Desea confirmar el turno con los siguientes datos?: <br>
-    <strong> Paciente: </strong> ${this.patientName}<br>
-    <strong> Profesional: </strong> ${this.doctorName}<br>
-    <strong> Día: </strong> ${this.appointmentForm.get('day')?.value}<br>
-    <strong> Hora: </strong> ${this.appointmentForm.get('hour')?.value}<br>
-    <strong> Especialidad: </strong> ${this.specialtytName}<br>
-    <strong> Rama: </strong> ${this.branchName}<br>
-    <strong>Obra Social: </strong> ${this.findFormHi()}<br>
-    <strong>Estado del Turno: </strong> ${this.findFormState()}<br>
-    <strong>Costo: </strong> ${this.findFormFullCost()}<br>
-    <strong> Método de Pago: </strong> ${this.findFormPaymentMethod()}<br>`;
-    return preview.replace(/\n/g, '');
+    <strong>Paciente:</strong> ${this.patientName} <br>
+    <strong>Profesional:</strong> ${this.doctorName} <br>
+    <strong>Día:</strong> ${this.appointmentForm.get('day')?.value} <br>
+    <strong>Hora:</strong> ${this.appointmentForm.get('hour')?.value} <br>
+    <strong>Especialidad:</strong> ${this.specialtytName} <br>
+    <strong>Rama:</strong> ${this.branchName} <br>
+    <strong>Obra Social:</strong> ${this.findFormHi()} <br>
+    <strong>Estado del Turno:</strong> ${this.findFormAppointmentStatus()} <br>
+    <strong>Estado del Pago:</strong> ${this.findFormPaymentStatus()} <br>
+    <strong>Costo:</strong> ${this.findFormFullCost()} <br>
+    <strong>Método de Pago:</strong> ${this.findFormPaymentMethod()} <br>`;
+    return preview;
   }
 
   /**
@@ -904,17 +910,36 @@ export class AppointmentAdminCreateComponent implements OnInit {
   }
 
   /**
-   * Finds the state from the form.
+   * Finds the appointment status from the form.
    * @author Alvaro Olguin
-   * @returns {string} The state view value or 'Pendiente' if not found.
+   * @returns {string} The appointment status view value or 'Pendiente' if not found.
    */
-  findFormState(): string {
-    const formState = this.appointmentForm.get('state')?.value;
-    if (formState) {
-      const state = this.states.find((state) => state.value === formState);
-      return state ? state.viewValue : 'Pendiente';
+  findFormAppointmentStatus(): string {
+    const formAppointmentStatus =
+      this.appointmentForm.get('appointment_status')?.value;
+    if (formAppointmentStatus) {
+      const app_status = this.appointment_status_choices.find(
+        (app_status) => app_status.value === formAppointmentStatus
+      );
+      return app_status ? app_status.viewValue : 'Pendiente';
     }
     return 'Pendiente';
+  }
+
+  /**
+   * Finds the payment status from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The payment status view value or 'Pendiente' if not found.
+   */
+  findFormPaymentStatus(): string {
+    const formPaymentStatus = this.appointmentForm.get('payment_status')?.value;
+    if (formPaymentStatus) {
+      const pay_status = this.payment_status_choices.find(
+        (pay_status) => pay_status.value === formPaymentStatus
+      );
+      return pay_status ? pay_status.viewValue : 'Adeuda';
+    }
+    return 'Adeuda';
   }
 
   /**
@@ -986,12 +1011,26 @@ export class AppointmentAdminCreateComponent implements OnInit {
       }
 
       if (
+        formValues.appointment_status !== undefined &&
+        formValues.appointment_status !== null
+      ) {
+        filteredBody.appointment_status = formValues.appointment_status;
+      }
+
+      if (
+        formValues.payment_status !== undefined &&
+        formValues.payment_status !== null
+      ) {
+        filteredBody.payment_status = formValues.payment_status;
+      }
+
+      if (
         formValues.health_insurance !== undefined &&
         formValues.health_insurance !== null
       ) {
         filteredBody.health_insurance = formValues.health_insurance;
       }
-      //console.log("BODY: ", filteredBody)
+      //console.log('BODY: ', filteredBody);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );

@@ -6,7 +6,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, catchError, map, of, startWith } from 'rxjs';
+import {
+  Observable,
+  catchError,
+  firstValueFrom,
+  map,
+  of,
+  startWith,
+  tap,
+} from 'rxjs';
 import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
 import { DoctorScheduleInterface } from 'src/app/Models/Profile/doctorschedule.interface';
@@ -15,6 +23,8 @@ import { Medicalspeciality } from 'src/app/Models/Profile/medicalspeciality.inte
 import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
 import { AppointmentAdminCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentAdminCreate.interface';
+import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interface';
+import { ReportAppDoctorResponseInterface } from 'src/app/Models/reports/reportAppDoctorResponse.interface';
 import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/doctorschedule.service';
@@ -24,6 +34,7 @@ import { SpecialityService } from 'src/app/Services/Profile/speciality/specialit
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
+import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 
 @Component({
   selector: 'app-appointment-doctor-create',
@@ -40,30 +51,35 @@ export class AppointmentDoctorCreateComponent implements OnInit {
   doctors: DoctorProfile[] = [];
   specialties: Medicalspeciality[] = [];
   insurances: HealthInsurance[] = [];
+  methods: PaymentMethod[] = [];
   // Filtered Data
   doctorSchedule: DoctorScheduleInterface[] = [];
   specialtyFilteredDoctors: DoctorProfile[] = [];
   specialtyFilteredBranches: SpecialityBranch[] = [];
   //Selections
-  selectedSpecialty: number = 0;
+  selectedSpecialty: string = '';
   selectedBranch: number = 0;
   selectedPatient: number = 0;
   selectedDoctor: number = 0;
   // Auxiliar Variables
+  isPaid: boolean | null = null;
   formattedDates: string[] = [];
   availableTimes: string[] = [];
   finalJsonDate: string = '';
   finalJsonHour: string = '';
-  states = [
+  appointment_status_choices = [
     { value: 1, viewValue: 'Pendiente' },
     { value: 2, viewValue: 'Confirmado' },
-    { value: 3, viewValue: 'Adeuda' },
-    { value: 4, viewValue: 'Pagado' },
+    { value: 3, viewValue: 'Finalizado' },
+  ];
+  payment_status_choices = [
+    { value: 1, viewValue: 'Adeuda' },
+    { value: 2, viewValue: 'Pagado' },
   ];
   //FormControls
-  doctorControl = new FormControl();
   patientControl = new FormControl();
-  specialtyControl = new FormControl();
+  doctorControl = new FormControl({ value: 0, disabled: true });
+  specialtyControl = new FormControl({ value: '', disabled: true });
   // Observables to reactive filter
   filteredSpecialties: Observable<Medicalspeciality[]> = of([]);
   filteredDoctors: Observable<DoctorProfile[]> = of([]);
@@ -84,6 +100,7 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     private insuranceService: HealthinsuranceService,
     private specialtyFilterService: SpecialtyFilterService,
     private doctorScheduleService: DoctorscheduleService,
+    private paymentmethodservice: PaymentmethodService,
     private dialogService: DialogService,
     private router: Router
   ) {
@@ -96,6 +113,9 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       specialty: [null, Validators.required],
       branch: [null],
       health_insurance: [null],
+      appointment_status: [null],
+      payment_status: [null],
+      payment_method: [null],
     });
     this.appointmentResponse = {
       id: 0,
@@ -119,68 +139,82 @@ export class AppointmentDoctorCreateComponent implements OnInit {
   /**
    * Initializes the component.
    * @author Alvaro Olguin
+   * @returns {Promise<void>} A promise that resolves when the initialization is complete.
    */
-  ngOnInit(): void {
-    this.loadPatients();
-    this.loadSpecialties();
-    this.loadDoctors();
+  async ngOnInit(): Promise<void> {
+    await Promise.all([
+      firstValueFrom(this.loadPatients()),
+      firstValueFrom(this.loadPaymentMethods()),
+    ]).then(() => {
+      this.initForm();
+    });
   }
 
   /***** INIT DATA SECTION *****/
 
   /**
-   * Fetches a list of patients from the patient service, sorts them alphabetically by user,
-   * assigns them to the 'patients' property, and filters them.
+   * Initializes the form with the given doctor data.
    * @author Alvaro Olguin
-   * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
-   * @returns {void}
    */
-  loadPatients(): void {
-    this.patientService.getAllPatients().subscribe((data) => {
-      // Filter active specialties and sort them
-      let activePatients = data.filter((patient) => patient.is_active);
-      activePatients.sort((a, b) =>
-        a.user.toString().localeCompare(b.user.toString())
-      );
-      this.patients = activePatients;
-      this.filterPatients();
-    });
+  initForm(): void {
+    this.doctorService
+      .getMyDoctorReportProfile()
+      .subscribe((data: ReportAppDoctorResponseInterface) => {
+        // Specialty
+        if (data.specialty.id) {
+          console.log(
+            'id: ',
+            data.specialty.id,
+            'full:',
+            data.specialty,
+            'name:',
+            data.specialty.name
+          );
+          this.specialties.push(data.specialty);
+          this.specialtyControl.patchValue(data.specialty.name);
+          this.selectedSpecialty = data.specialty.name;
+          console.log('Control', this.specialtyControl.value);
+        }
+
+        // Branches
+        this.specialtyFilteredBranches = data.branches;
+
+        // Doctor
+        this.doctors.push(data.doctor);
+        this.doctorControl.patchValue(data.doctor.id);
+        this.onDoctorSelect(data.doctor.id);
+      });
   }
 
   /**
-   * Fetches a list of specialties from the specialty service, sorts them alphabetically by name,
-   * assigns them to the 'specialties' property, and filters them.
+   * Loads the patients from the service.
    * @author Alvaro Olguin
-   * @throws {Error} If there is an error in fetching, sorting, or filtering the data.
-   * @returns {void}
+   * @returns {Observable<Patient[]>} An observable of the patients.
    */
-  loadSpecialties(): void {
-    this.specialtyService.getSpecialities().subscribe((data) => {
-      // Filter active specialties and sort them
-      let activeSpecialties = data.filter((specialty) => specialty.is_active);
-      activeSpecialties.sort((a, b) => a.name.localeCompare(b.name));
-      this.specialties = activeSpecialties;
-      this.filterSpecialties();
-    });
+  loadPatients(): Observable<Patient[]> {
+    return this.patientService.getAllPatients().pipe(
+      tap((data) => {
+        // Sort the patients
+        data.sort((a, b) => a.user.toString().localeCompare(b.user.toString()));
+        this.patients = data;
+        this.filterPatients();
+      })
+    );
   }
 
   /**
-   * Fetches a list of doctors from the doctor service, sorts them alphabetically by user,
-   * and assigns them to the 'doctors' property.
+   * Loads the payment methods from the service.
    * @author Alvaro Olguin
-   * @throws {Error} If there is an error in fetching or sorting the data.
-   * @returns {void}
+   * @returns {Observable<PaymentMethod[]>} An observable of the payment methods.
    */
-  loadDoctors(): void {
-    this.doctorService.getDoctors().subscribe((data) => {
-      // Filter active doctors
-      let activeDoctors = data.filter((doctor) => doctor.is_active);
-      // Sort doctors
-      activeDoctors.sort((a, b) =>
-        a.user.toString().localeCompare(b.user.toString())
-      );
-      this.doctors = activeDoctors;
-    });
+  loadPaymentMethods(): Observable<PaymentMethod[]> {
+    return this.paymentmethodservice.getPaymentMethods().pipe(
+      tap((data) => {
+        //Sort
+        data.sort((a, b) => a.name.localeCompare(b.name));
+        this.methods = data;
+      })
+    );
   }
 
   /***** ON SELECT SECTION *****/
@@ -200,6 +234,8 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       // reset all
       this.resetForm(this.appointmentForm, { specialty: true });
     } else if (this.selectedDoctor && this.selectedBranch) {
+      // Reset hi, and status
+      this.resetForm(this.appointmentForm, { hi: true });
       // So far, patient isn't null, and we check that doctor and branch have a value
       // Recalculate common insurances value
       this.loadCommonInsurances(
@@ -207,34 +243,6 @@ export class AppointmentDoctorCreateComponent implements OnInit {
         this.selectedPatient,
         this.selectedBranch
       );
-    }
-  }
-
-  /**
-   * Handles the event when a specialty is selected.
-   * Resets the form and loads the doctors for the selected specialty.
-   * @param selectedValue The selected specialty.
-   * @author Alvaro Olguin
-   * @throws {Error} If there is an error in resetting the form or loading the doctors.
-   * @returns {void}
-   */
-  onSpecialtySelect(selectedValue: number): void {
-    this.selectedSpecialty = selectedValue;
-    if (selectedValue !== null) {
-      this.resetForm(this.appointmentForm, {
-        doctor: true,
-        day: true,
-        branch: true,
-      });
-      this.loadfilteredDoctors(this.selectedSpecialty);
-      this.filterDoctors();
-    } else {
-      //Reset doctor, and in consecuence day and hour
-      this.resetForm(this.appointmentForm, {
-        doctor: true,
-        day: true,
-        branch: true,
-      });
     }
   }
 
@@ -324,7 +332,7 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     let branch = this.specialtyFilteredBranches.find(
       (branch) => branch.id === branchId
     );
-    // its neccesary to reset full_cost, state and health insurances fields, since on branch selection could change the cost of the appointment
+    // its neccesary to reset full_cost, status and health insurances fields, since on branch selection could change the cost of the appointment
     this.resetForm(this.appointmentForm, { hi: true });
     if (branch) {
       this.branchName = branch.name;
@@ -335,6 +343,21 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       this.selectedPatient,
       this.selectedBranch
     );
+  }
+
+  /**
+   * Updates the visibility of the payment method based on the selected value.
+   * @param selectedValue The selected value.
+   * @author Alvaro Olguin
+   * @returns {void}
+   */
+  updatePaymentVisibility(selectedValue: number | null): void {
+    this.isPaid = selectedValue === 2;
+    if (!this.isPaid) {
+      this.appointmentForm.patchValue({
+        payment_method: null,
+      });
+    }
   }
 
   /***** FILTER SECTION *****/
@@ -372,99 +395,6 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     } else {
       return this.patients;
     }
-  }
-
-  //Specialties
-  /**
-   * Filters the specialties based on the value changes of the specialty control.
-   * @author Alvaro Olguin
-   * @returns {void}
-   */
-  filterSpecialties(): void {
-    this.filteredSpecialties = this.specialtyControl.valueChanges.pipe(
-      startWith(''),
-      map((value) =>
-        typeof value === 'string' ? value : value ? value.name : ''
-      ),
-      map((name) =>
-        name ? this.filterSpecialtiesByName(name) : this.specialties.slice()
-      )
-    );
-  }
-
-  /**
-   * Filters the specialties by name.
-   * @param name The name to filter by.
-   * @author Alvaro Olguin
-   * @returns {Medicalspeciality[]} The filtered specialties.
-   */
-  filterSpecialtiesByName(name: string): Medicalspeciality[] {
-    if (name) {
-      const filterValue = name.toLowerCase();
-      const isSpecialtyName = this.specialties.some(
-        (specialty) => specialty.name.toLowerCase() === filterValue
-      );
-      if (isSpecialtyName) {
-        return this.specialties;
-      } else {
-        return this.specialties.filter((option) =>
-          option.name.toString().toLowerCase().includes(filterValue)
-        );
-      }
-    } else {
-      return this.specialties;
-    }
-  }
-
-  // Doctors
-  /**
-   * Filters the doctors based on the value changes of the doctor control.
-   * @author Alvaro Olguin
-   * @returns {void}
-   */
-  filterDoctors(): void {
-    this.filteredDoctors = this.doctorControl.valueChanges.pipe(
-      startWith(''),
-      map((value) =>
-        typeof value === 'string' ? value : value ? value.name : ''
-      ),
-      map((name) =>
-        name
-          ? this.filterDoctorsBySpecialty(name)
-          : this.specialtyFilteredDoctors.slice()
-      )
-    );
-  }
-
-  /**
-   * Filters the doctors by specialty.
-   * @param name The specialty to filter by.
-   * @author Alvaro Olguin
-   * @returns {DoctorProfile[]} The filtered doctors.
-   */
-  filterDoctorsBySpecialty(name: string): DoctorProfile[] {
-    if (name) {
-      const filterValue = name.toLowerCase();
-      return this.specialtyFilteredDoctors.filter((option) =>
-        option.user.toString().toLowerCase().includes(filterValue)
-      );
-    } else {
-      return this.specialtyFilteredDoctors;
-    }
-  }
-
-  /**
-   * Loads the doctors filtered by specialty.
-   * @param specialtyId The specialty to filter by.
-   * @author Alvaro Olguin
-   * @returns {void}
-   */
-  loadfilteredDoctors(specialtyId: number): void {
-    this.specialtyFilteredDoctors =
-      this.specialtyFilterService.filterDoctorsBySpecialty(
-        this.doctors,
-        specialtyId
-      );
   }
 
   // Branches
@@ -660,6 +590,13 @@ export class AppointmentDoctorCreateComponent implements OnInit {
         health_insurance: null,
       });
     }
+
+    // Reset the remaining fields
+    form.patchValue({
+      appointment_status: null,
+      payment_status: null,
+      payment_method: null,
+    });
   }
 
   /**
@@ -826,15 +763,17 @@ export class AppointmentDoctorCreateComponent implements OnInit {
    * @returns {string} The appointment preview.
    */
   displayPreviewAppointment(): string {
-    let preview = `Desea confirmar el turno con los siguientes datos?:\n
-    Paciente: ${this.patientName}\n
-    Profesional: ${this.doctorName}\n
-    Día: ${this.appointmentForm.get('day')?.value}\n
-    Hora: ${this.appointmentForm.get('hour')?.value}\n
-    Especialidad: ${this.specialtytName}\n
-    Rama: ${this.branchName}\n
-    Obra Social: ${this.findFormHi()}\n
-    Estado del Turno: ${this.findFormState()}\n`;
+    let preview = `Desea confirmar el turno con los siguientes datos?: <br>
+    <strong> Paciente:</strong> ${this.patientName} <br>
+    <strong> Profesional:</strong> ${this.doctorName} <br>
+    <strong> Día:</strong> ${this.appointmentForm.get('day')?.value} <br>
+    <strong> Hora:</strong> ${this.appointmentForm.get('hour')?.value} <br>
+    <strong> Especialidad:</strong> ${this.specialtytName} <br>
+    <strong> Rama:</strong> ${this.branchName}<br>
+    <strong> Obra Social:</strong> ${this.findFormHi()} <br>
+    <strong> Estado del Turno:</strong> ${this.findFormAppointmentStatus()} <br>
+    <strong> Estado de Pago:</strong> ${this.findFormPaymentStatus()} <br>
+    <strong> Método de Pago:</strong> ${this.findFormPaymentMethod()} `;
     return preview;
   }
 
@@ -853,17 +792,52 @@ export class AppointmentDoctorCreateComponent implements OnInit {
   }
 
   /**
-   * Finds the state from the form.
+   * Finds the appointment status from the form.
    * @author Alvaro Olguin
-   * @returns {string} The state view value or 'Pendiente' if not found.
+   * @returns {string} The appointment status view value or 'Pendiente' if not found.
    */
-  findFormState(): string {
-    const formState = this.appointmentForm.get('state')?.value;
-    if (formState) {
-      const state = this.states.find((state) => state.value === formState);
-      return state ? state.viewValue : 'Pendiente';
+  findFormAppointmentStatus(): string {
+    const formAppointmentStatus =
+      this.appointmentForm.get('appointment_status')?.value;
+    if (formAppointmentStatus) {
+      const app_status = this.appointment_status_choices.find(
+        (app_status) => app_status.value === formAppointmentStatus
+      );
+      return app_status ? app_status.viewValue : 'Pendiente';
     }
     return 'Pendiente';
+  }
+
+  /**
+   * Finds the payment status from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The payment status view value or 'Pendiente' if not found.
+   */
+  findFormPaymentStatus(): string {
+    const formPaymentStatus = this.appointmentForm.get('payment_status')?.value;
+    if (formPaymentStatus) {
+      const pay_status = this.payment_status_choices.find(
+        (pay_status) => pay_status.value === formPaymentStatus
+      );
+      return pay_status ? pay_status.viewValue : 'Adeuda';
+    }
+    return 'Adeuda';
+  }
+
+  /**
+   * Finds the payment method from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The payment method name or 'Sin Especificar' if not found.
+   */
+  findFormPaymentMethod(): string {
+    const formPaymentMethod = this.appointmentForm.get('payment_method')?.value;
+    if (formPaymentMethod) {
+      const method = this.methods.find(
+        (method) => method.id === formPaymentMethod
+      );
+      return method ? method.name : 'Sin Especificar';
+    }
+    return 'Sin Especificar';
   }
 
   /* FORM ACTIONS SECTION */
@@ -889,8 +863,25 @@ export class AppointmentDoctorCreateComponent implements OnInit {
         filteredBody.branch = formValues.branch;
       }
 
-      if (formValues.state !== undefined && formValues.state !== null) {
-        filteredBody.state = formValues.state;
+      if (
+        formValues.appointment_status !== undefined &&
+        formValues.appointment_status !== null
+      ) {
+        filteredBody.appointment_status = formValues.appointment_status;
+      }
+
+      if (
+        formValues.payment_status !== undefined &&
+        formValues.payment_status !== null
+      ) {
+        filteredBody.payment_status = formValues.payment_status;
+      }
+
+      if (
+        formValues.payment_method !== undefined &&
+        formValues.payment_method !== null
+      ) {
+        filteredBody.payment_method = formValues.payment_method;
       }
 
       if (
@@ -899,7 +890,7 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       ) {
         filteredBody.health_insurance = formValues.health_insurance;
       }
-      //console.log("BODY: ", filteredBody)
+      console.log('BODY: ', filteredBody);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );

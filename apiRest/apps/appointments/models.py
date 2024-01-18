@@ -35,7 +35,8 @@ class Appointment(models.Model):
         verbose_name_plural = 'Turnos'
 
     CHOICES_APPOINTMENT_STATUS = [(1, 'PENDIENTE'),
-                                  (2, 'CONFIRMADO')]
+                                  (2, 'CONFIRMADO'),
+                                  (3, 'FINALIZADO')]
 
     CHOICES_PAYMENT_STATUS = [(1, 'ADEUDA'),
                               (2, 'PAGADO')]

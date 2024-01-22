@@ -4,30 +4,47 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Router } from '@angular/router';
-import { Seminar } from 'src/app/Models/seminar/seminar.interface';
+import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterface.interface';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 import { SeminarService } from 'src/app/Services/seminar/seminar.service';
 
 @Component({
   selector: 'app-seminar-list',
   templateUrl: './seminar-list.component.html',
-  styleUrls: ['./seminar-list.component.css']
+  styleUrls: ['./seminar-list.component.css'],
 })
 export class SeminarListComponent {
-  displayedColumns: string[] = ['name',  'year','month', 'weekday', 'hour', 'meetingNumber', 'maxInscription', 'price','rooms','seminarist', 'is_active', 'actions'];
-  dataSource!: MatTableDataSource<Seminar>;
+  displayedColumns: string[] = [
+    'name',
+    'year',
+    'month',
+    'weekday',
+    'hour',
+    'meetingNumber',
+    'maxInscription',
+    'price',
+    'rooms',
+    'seminarist',
+    'is_active',
+    'actions',
+  ];
+  dataSource!: MatTableDataSource<SeminarAdminInterface>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private seminarService: SeminarService, private dialogService: DialogService, private router: Router) {}
+  constructor(
+    private seminarService: SeminarService,
+    private dialogService: DialogService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.setDataTable();
   }
 
   setDataTable() {
-    this.seminarService.getSeminars().subscribe(data => {
+    this.seminarService.getSeminars().subscribe((data) => {
       console.log(data);
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
@@ -46,12 +63,11 @@ export class SeminarListComponent {
 
   // Aquí agregarás métodos para editar, eliminar y activar seminarios
   // Por ejemplo:
-  editSeminar(seminar: Seminar) {
+  editSeminar(seminar: SeminarAdminInterface) {
     // Lógica para editar un seminario
   }
 
   deleteSeminar(id: number) {
     // Lógica para eliminar un seminario
   }
-
 }

@@ -7,6 +7,8 @@ import { Observable, catchError } from 'rxjs';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 import { AppointmentDoctorGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentDoctorGet.interface';
+import { AppointmentAdminGetInterface } from 'src/app/Models/appointments/appointmentAdmin.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-appointment-doctor-list',
@@ -37,7 +39,8 @@ export class AppointmentDoctorListComponent {
 
   constructor(
     private appointmentService: AppointmentService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private router: Router
   ) {}
 
   /**
@@ -102,6 +105,17 @@ export class AppointmentDoctorListComponent {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  /**
+   * Edits an appointment.
+   * @param {number} appointment - The ID of the appointment to delete.
+   * @author Alvaro Olguin
+   */
+  onEdit(appointment: AppointmentAdminGetInterface): void {
+    this.router.navigate(['Dashboard/appointments/doctor/update'], {
+      state: { appointment },
+    });
   }
 
   /**

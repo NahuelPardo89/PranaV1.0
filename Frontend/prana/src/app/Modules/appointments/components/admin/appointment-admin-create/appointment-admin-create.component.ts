@@ -1006,10 +1006,6 @@ export class AppointmentAdminCreateComponent implements OnInit {
         filteredBody.duration = formValues.duration;
       }
 
-      if (formValues.state !== undefined && formValues.state !== null) {
-        filteredBody.state = formValues.state;
-      }
-
       if (
         formValues.appointment_status !== undefined &&
         formValues.appointment_status !== null

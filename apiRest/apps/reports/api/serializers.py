@@ -6,6 +6,9 @@ from apps.usersProfile.models import DoctorProfile, MedicalSpeciality, Specialit
 class CopaymentReportSerializer(serializers.Serializer):
     """
     Serializer for generating copayment reports based on date range, doctor, and specialty.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>   
     """
     start_date = serializers.DateField()
     end_date = serializers.DateField()
@@ -28,7 +31,11 @@ class CopaymentReportSerializer(serializers.Serializer):
 
         Raises:
             serializers.ValidationError: If the validation fails.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>          
         """
+
         start_date = data.get('start_date')
         end_date = data.get('end_date')
         doctor = data.get('doctor')
@@ -44,7 +51,7 @@ class CopaymentReportSerializer(serializers.Serializer):
                 "La fecha de inicio debe ser anterior o igual a la fecha de fin")
 
         appointments = Appointment.objects.filter(
-            day__range=[start_date, end_date], state=4)
+            day__range=[start_date, end_date], appointment_status=2)
 
         # Checks if the doctor exists
         if doctor:

@@ -94,11 +94,9 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     private fb: FormBuilder,
     private doctorService: DoctorprofileService,
     private branchService: BranchService,
-    private specialtyService: SpecialityService,
     private appointmentService: AppointmentService,
     private patientService: PatientService,
     private insuranceService: HealthinsuranceService,
-    private specialtyFilterService: SpecialtyFilterService,
     private doctorScheduleService: DoctorscheduleService,
     private paymentmethodservice: PaymentmethodService,
     private dialogService: DialogService,
@@ -162,18 +160,9 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       .subscribe((data: ReportAppDoctorResponseInterface) => {
         // Specialty
         if (data.specialty.id) {
-          console.log(
-            'id: ',
-            data.specialty.id,
-            'full:',
-            data.specialty,
-            'name:',
-            data.specialty.name
-          );
           this.specialties.push(data.specialty);
           this.specialtyControl.patchValue(data.specialty.name);
           this.selectedSpecialty = data.specialty.name;
-          console.log('Control', this.specialtyControl.value);
         }
 
         // Branches
@@ -890,7 +879,7 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       ) {
         filteredBody.health_insurance = formValues.health_insurance;
       }
-      console.log('BODY: ', filteredBody);
+      //console.log('BODY: ', filteredBody);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );

@@ -111,9 +111,14 @@
           <th mat-header-cell *matHeaderCellDef>Acciones</th>
           <td mat-cell *matCellDef="let row">
             <div style="display: flex; align-items: center">
-              <!-- No longer used, replace this feature -->
               <button
-                *ngIf="canDelete(row)"
+                class="btn btn-primary"
+                aria-label="Editar turno"
+                (click)="onEdit(row)"
+              >
+                <i class="material-symbols-outlined">edit</i>
+              </button>
+              <button
                 class="btn btn-danger ms-3"
                 aria-label="Eliminar turno"
                 (click)="onDelete(row.id)"
@@ -121,12 +126,12 @@
                 <i class="material-symbols-outlined">delete</i>
               </button>
               <!-- No longer used, replace this feature -->
-              <mat-icon
+              <!-- <mat-icon
                 *ngIf="!canDelete(row)"
                 style="color: yellow"
                 matTooltip="Este turno se encuentra en estado pagado o su fecha es anterior al día corriente"
                 >warning</mat-icon
-              >
+              > -->
             </div>
           </td>
         </ng-container>

@@ -16,13 +16,20 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class AppointmentListCreateView(APIView):
     """
     API view for listing and creating appointments.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>     
     """
     permission_classes = [IsAdminOrReadOnly, ]
 
     def get(self, request):
         """
         Retrieve a list of appointments filtered by state | doctor | day.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
         """
+
         # Find the params
         appointment_status = request.query_params.get('appointment_status')
         payment_status = request.query_params.get('payment_status')
@@ -60,6 +67,9 @@ class AppointmentListCreateView(APIView):
 class AppointmentDetailView(APIView):
     """
     API view for retrieving, updating, and deleting an appointment.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     # permission_classes = [permissions.IsAuthenticated, ]
 
@@ -105,6 +115,9 @@ class AppointmentDetailView(APIView):
 class PaymentMethodListCreateView(generics.ListCreateAPIView):
     """
     API view for listing payment methods.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
@@ -113,6 +126,9 @@ class PaymentMethodListCreateView(generics.ListCreateAPIView):
 class PaymentMethodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     API view for updating, and deleting a payment method.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
@@ -121,6 +137,9 @@ class PaymentMethodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVi
 class PatientAppointmentsView(viewsets.GenericViewSet):
     """
     API view for listing appointments for the currently authenticated patient.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     model = Appointment
     queryset = None
@@ -190,6 +209,9 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
 class DoctorAppointmentListView(APIView):
     """
     API view for listing a doctor appointments.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     model = Appointment
     serializer_class = DoctorAppointmentSerializer
@@ -228,6 +250,9 @@ class DoctorAppointmentListView(APIView):
 class DoctorAppointmentDetailView(APIView):
     """
     API view for retrieving, updating, and deleting an appointment.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     model = Appointment
     serializer_class = DoctorAppointmentSerializer

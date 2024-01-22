@@ -103,6 +103,28 @@ export class AppointmentPatientListComponent {
   }
 
   /**
+   * Checks if there are less than 24 hours left for the appointment.
+   * @param {any} row - The object representing the medical appointment.
+   * @returns {boolean} - Returns `true` if there are less than 24 hours left for the appointment. Otherwise, it returns `false`.
+   * @author Alvaro Olguin
+   */
+  lessThan24Hours(row: any): boolean {
+    let dateParts = row.day.split('-');
+    let timeParts = row.hour.split(':');
+    let appointmentDate = new Date(
+      +dateParts[2],
+      dateParts[1] - 1,
+      +dateParts[0],
+      +timeParts[0],
+      +timeParts[1]
+    );
+    let currentDate = new Date();
+    let differenceInHours =
+      (appointmentDate.getTime() - currentDate.getTime()) / 1000 / 60 / 60;
+    return differenceInHours < 24;
+  }
+
+  /**
    * Determines whether an appointment can be deleted. An appointment can be deleted if its state is not 'Pagado' and its day is later than today.
    * @param {any} row - The row representing the appointment in the data table.
    * @returns {boolean} - Returns true if the appointment can be deleted, false otherwise.

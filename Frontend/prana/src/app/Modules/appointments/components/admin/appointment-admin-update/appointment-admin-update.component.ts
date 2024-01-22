@@ -66,11 +66,14 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   availableTimes: string[] = [];
   finalJsonDate: string = '';
   finalJsonHour: string = '';
-  states = [
+  appointment_status_choices = [
     { value: 1, viewValue: 'Pendiente' },
     { value: 2, viewValue: 'Confirmado' },
-    { value: 3, viewValue: 'Adeuda' },
-    { value: 4, viewValue: 'Pagado' },
+    { value: 3, viewValue: 'Finalizado' },
+  ];
+  payment_status_choices = [
+    { value: 1, viewValue: 'Adeuda' },
+    { value: 2, viewValue: 'Pagado' },
   ];
   recoveredHour: string = '';
   recoveredDate: string = '';
@@ -389,6 +392,8 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       // reset all
       this.resetForm(this.appointmentForm, { specialty: true });
     } else if (this.selectedDoctor && this.selectedBranch) {
+      // Reset hi, and status
+      this.resetForm(this.appointmentForm, { hi: true });
       // So far, patient isn't null, and we check that doctor and branch have a value
       // Recalculate common insurances value
       this.loadCommonInsurances(
@@ -412,7 +417,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
     let branch = this.specialtyFilteredBranches.find(
       (branch) => branch.id === branchId
     );
-    // its neccesary to reset full_cost, state and health insurances fields, since on branch selection could change the cost of the appointment
+    // its neccesary to reset full_cost, status and health insurances fields, since on branch selection could change the cost of the appointment
     this.resetForm(this.appointmentForm, { hi: true });
     if (branch) {
       this.branchName = branch.name;
@@ -426,13 +431,25 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   }
 
   /**
+   * Resets (for now) the cost field when health insurance changes.
+   * Since the health Insurance have direct impact on cost and copayments calculation, should reset cost field
+   * Maybe this can be done in html, but having the method could be useful in the future
+   * @param selectedValue The selected value.
+   * @author Alvaro Olguin
+   * @returns {void}
+   */
+  onHISelect(healtInsuranceId: number): void {
+    this.resetForm(this.appointmentForm);
+  }
+
+  /**
    * Updates the visibility of the payment method based on the selected value.
    * @param selectedValue The selected value.
    * @author Alvaro Olguin
    * @returns {void}
    */
   updatePaymentVisibility(selectedValue: number | null): void {
-    this.isPaid = selectedValue === 4;
+    this.isPaid = selectedValue === 2;
     if (!this.isPaid) {
       this.appointmentForm.patchValue({
         payment_method: null,
@@ -750,30 +767,19 @@ export class AppointmentAdminUpdateComponent implements OnInit {
    * @returns {string} The start and end hour in 'HH:mm:ss - HH:mm:ss' format.
    */
   recoveryHourFormat(startHour: string, duration: string): string {
-    console.log('Recovery start: ', startHour);
-    console.log('Recovery duration: ', duration);
-
     // parse startHour and duration to date objects
     let startTime = new Date(`1970-01-01T${startHour}Z`);
     let durationTime = new Date(`1970-01-01T${duration}Z`);
 
-    console.log('Recovery start 2: ', startHour);
-    console.log('Recovery duration 2: ', duration);
     // Calculate end time
     let endTime = new Date(startTime.getTime() + durationTime.getTime());
-    console.log('Recovery end: ', startHour);
+
     // Format
     let startHourStr = startTime.toISOString().slice(11, 16);
     let endHourStr = endTime.toISOString().slice(11, 16);
 
-    console.log('Recovery start formateada: ', startHourStr);
-    console.log('Recovery end formateada: ', endHourStr);
     // return string
     let formattedHour = `${startHourStr} - ${endHourStr}`;
-
-    console.log('Recovery response: ', formattedHour);
-    // add the hour to availables times
-    //this.availableTimes.push(formattedHour);
 
     return formattedHour;
   }
@@ -834,9 +840,10 @@ export class AppointmentAdminUpdateComponent implements OnInit {
 
     // Reset the remaining fields
     form.patchValue({
-      state: null,
       payment_method: null,
       full_cost: null,
+      appointment_status: 1,
+      payment_status: 1,
     });
   }
 
@@ -1007,17 +1014,18 @@ export class AppointmentAdminUpdateComponent implements OnInit {
    */
   displayPreviewAppointment(): string {
     let preview = `Desea confirmar el turno con los siguientes datos?: <br>
-    <strong> Paciente: </strong> ${this.patientName}<br>
-    <strong> Profesional: </strong> ${this.doctorName}<br>
-    <strong> Día: </strong> ${this.appointmentForm.get('day')?.value}<br>
-    <strong> Hora: </strong> ${this.appointmentForm.get('hour')?.value}<br>
-    <strong> Especialidad: </strong> ${this.specialtytName}<br>
-    <strong> Rama: </strong> ${this.branchName}<br>
-    <strong>Obra Social: </strong> ${this.findFormHi()}<br>
-    <strong>Estado del Turno: </strong> ${this.findFormState()}<br>
-    <strong>Costo: </strong> ${this.findFormFullCost()}<br>
-    <strong> Método de Pago: </strong> ${this.findFormPaymentMethod()}<br>`;
-    return preview.replace(/\n/g, '');
+    <strong> Paciente: </strong> ${this.patientName} <br>
+    <strong> Profesional: </strong> ${this.doctorName} <br>
+    <strong> Día: </strong> ${this.appointmentForm.get('day')?.value} <br>
+    <strong> Hora: </strong> ${this.appointmentForm.get('hour')?.value} <br>
+    <strong> Especialidad: </strong> ${this.specialtytName} <br>
+    <strong> Rama: </strong> ${this.branchName} <br>
+    <strong> Obra Social: </strong> ${this.findFormHi()} <br>
+    <strong> Estado del Turno: </strong> ${this.findFormAppointmentStatus()} <br>
+    <strong> Estado de Pago: </strong> ${this.findFormPaymentStatus()} <br>
+    <strong> Costo: </strong> ${this.findFormFullCost()} <br>
+    <strong> Método de Pago: </strong> ${this.findFormPaymentMethod()} <br>`;
+    return preview;
   }
 
   /**
@@ -1035,17 +1043,36 @@ export class AppointmentAdminUpdateComponent implements OnInit {
   }
 
   /**
-   * Finds the state from the form.
+   * Finds the appointment status from the form.
    * @author Alvaro Olguin
-   * @returns {string} The state view value or 'Pendiente' if not found.
+   * @returns {string} The appointment status view value or 'Pendiente' if not found.
    */
-  findFormState(): string {
-    const formState = this.appointmentForm.get('state')?.value;
-    if (formState) {
-      const state = this.states.find((state) => state.value === formState);
-      return state ? state.viewValue : 'Pendiente';
+  findFormAppointmentStatus(): string {
+    const formAppointmentStatus =
+      this.appointmentForm.get('appointment_status')?.value;
+    if (formAppointmentStatus) {
+      const app_status = this.appointment_status_choices.find(
+        (app_status) => app_status.value === formAppointmentStatus
+      );
+      return app_status ? app_status.viewValue : 'Pendiente';
     }
     return 'Pendiente';
+  }
+
+  /**
+   * Finds the payment status from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The payment status view value or 'Pendiente' if not found.
+   */
+  findFormPaymentStatus(): string {
+    const formPaymentStatus = this.appointmentForm.get('payment_status')?.value;
+    if (formPaymentStatus) {
+      const pay_status = this.payment_status_choices.find(
+        (pay_status) => pay_status.value === formPaymentStatus
+      );
+      return pay_status ? pay_status.viewValue : 'Adeuda';
+    }
+    return 'Adeuda';
   }
 
   /**
@@ -1112,8 +1139,18 @@ export class AppointmentAdminUpdateComponent implements OnInit {
         filteredBody.duration = formValues.duration;
       }
 
-      if (formValues.state !== undefined && formValues.state !== null) {
-        filteredBody.state = formValues.state;
+      if (
+        formValues.appointment_status !== undefined &&
+        formValues.appointment_status !== null
+      ) {
+        filteredBody.appointment_status = formValues.appointment_status;
+      }
+
+      if (
+        formValues.payment_status !== undefined &&
+        formValues.payment_status !== null
+      ) {
+        filteredBody.payment_status = formValues.payment_status;
       }
 
       if (
@@ -1122,7 +1159,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       ) {
         filteredBody.health_insurance = formValues.health_insurance;
       }
-      //console.log("BODY: ", filteredBody)
+      console.log('BODY: ', filteredBody);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );

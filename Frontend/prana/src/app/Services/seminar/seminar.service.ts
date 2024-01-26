@@ -7,9 +7,19 @@ import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterf
   providedIn: 'root',
 })
 export class SeminarService {
-  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminars/'; // Ajusta la URL según tu configuración
+  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminars/';
 
   constructor(private http: HttpClient) {}
+
+  /**
+   * Get all seminars with admin permissions and detailed JSON format response (all fields).
+   * @author Alvaro Olguin
+   * @returns {Observable<SeminarAdminInterface[]>} An observable of the seminars.
+   */
+  getSeminarsList(): Observable<SeminarAdminInterface[]> {
+    const url = this.apiUrl + '?display=true';
+    return this.http.get<SeminarAdminInterface[]>(url);
+  }
 
   getSeminars(): Observable<SeminarAdminInterface[]> {
     return this.http.get<SeminarAdminInterface[]>(this.apiUrl);

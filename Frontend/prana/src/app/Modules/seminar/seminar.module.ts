@@ -18,6 +18,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SeminarAdminUpdateComponent } from './components/admin/seminar-admin-update/seminar-admin-update.component';
+import { SeminarInscriptionAdminListComponent } from './components/admin/seminar-inscription-admin-list/seminar-inscription-admin-list.component';
+import { SeminarService } from 'src/app/Services/seminar/seminar.service';
+import { SeminarInscriptionService } from 'src/app/Services/seminar/seminar-inscription.service';
 
 @NgModule({
   declarations: [
@@ -25,6 +28,7 @@ import { SeminarAdminUpdateComponent } from './components/admin/seminar-admin-up
     SeminarPatientListComponent,
     SeminarAdminListComponent,
     SeminarAdminUpdateComponent,
+    SeminarInscriptionAdminListComponent,
   ],
   imports: [
     CommonModule,
@@ -43,5 +47,6 @@ import { SeminarAdminUpdateComponent } from './components/admin/seminar-admin-up
     MatSelectModule,
     MatAutocompleteModule,
   ],
+  providers: [SeminarService, SeminarInscriptionService],
 })
 export class SeminarModule {}

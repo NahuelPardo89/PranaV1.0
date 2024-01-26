@@ -132,7 +132,10 @@
         <tr
           mat-row
           *matRowDef="let row; columns: displayedColumns"
-          [ngClass]="{ highlight: row.appointment_status === 'CONFIRMADO' }"
+          [class.bg-danger]="isPendingAndOverdueAppointment(row)"
+          [class.bg-success]="
+            row.appointment_status.toUpperCase() === 'CONFIRMADO'
+          "
         ></tr>
       </table>
     </div>

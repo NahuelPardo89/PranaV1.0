@@ -3,8 +3,7 @@ export interface SeminarAdminInterface {
   name: string;
   month: string;
   year: number;
-  weekday: string;
-  hour: string; // Formato 'HH:mm:ss'
+  schedule: number[];
   meetingNumber: number;
   maxInscription: number;
   price: number;

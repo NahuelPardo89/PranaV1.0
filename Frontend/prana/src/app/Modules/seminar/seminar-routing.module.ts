@@ -4,6 +4,7 @@ import { SeminarAdminCreateComponent } from './components/admin/seminar-admin-cr
 import { SeminarAdminListComponent } from './components/admin/seminar-admin-list/seminar-admin-list.component';
 import { SeminarPatientListComponent } from './components/patient/seminar-patient-list/seminar-patient-list.component';
 import { SeminarAdminUpdateComponent } from './components/admin/seminar-admin-update/seminar-admin-update.component';
+import { SeminarInscriptionAdminListComponent } from './components/admin/seminar-inscription-admin-list/seminar-inscription-admin-list.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,13 @@ const routes: Routes = [
       { path: 'create', component: SeminarAdminCreateComponent },
       { path: 'list', component: SeminarAdminListComponent },
       { path: 'update', component: SeminarAdminUpdateComponent },
+      {
+        path: 'seminar-inscription',
+        children: [
+          { path: 'list', component: SeminarInscriptionAdminListComponent },
+          // Pending to add Create and Update
+        ],
+      },
     ],
   },
   {

@@ -4,36 +4,36 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
+import { SeminarInscriptionAdminGetDetailInterface } from 'src/app/Models/seminar-inscription/admin/seminarInscriptionAdminGetDetailInterface.interface';
 import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterface.interface';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
-import { SeminarService } from 'src/app/Services/seminar/seminar.service';
+import { SeminarInscriptionService } from 'src/app/Services/seminar/seminar-inscription.service';
 
 @Component({
-  selector: 'app-seminar-admin-list',
-  templateUrl: './seminar-admin-list.component.html',
-  styleUrls: ['./seminar-admin-list.component.css'],
+  selector: 'app-seminar-inscription-admin-list',
+  templateUrl: './seminar-inscription-admin-list.component.html',
+  styleUrls: ['./seminar-inscription-admin-list.component.css'],
 })
-export class SeminarAdminListComponent {
+export class SeminarInscriptionAdminListComponent {
   displayedColumns: string[] = [
-    'name',
-    'year',
-    'month',
-    'schedule',
+    'seminar',
+    'patient',
+    'seminar_status',
     'meetingNumber',
-    'maxInscription',
-    'price',
-    'rooms',
-    'seminarist',
-    'is_active',
+    'insurance',
+    'patient_copayment',
+    'hi_copayment',
+    'payment_status',
+    'payment_method',
     'actions',
   ];
-  dataSource!: MatTableDataSource<SeminarAdminInterface>;
+  dataSource!: MatTableDataSource<SeminarInscriptionAdminGetDetailInterface>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private seminarService: SeminarService,
+    private seminarInscriptionService: SeminarInscriptionService,
     private router: Router,
     private dialogService: DialogService
   ) {}
@@ -47,15 +47,17 @@ export class SeminarAdminListComponent {
   }
 
   /**
-   * Sets the data table with seminars detailed list.
+   * Sets the data table with the inscriptions data of a seminar.
    * @author Alvaro Olguin
    */
   setDataTable() {
-    this.seminarService.getSeminarsList().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    this.seminarInscriptionService
+      .getSeminarInscriptionsDetailById(history.state.seminar.id)
+      .subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
   }
 
   /**
@@ -72,11 +74,9 @@ export class SeminarAdminListComponent {
     }
   }
 
-  activeSeminar(seminar: SeminarAdminInterface) {}
-
   /**
-   * Edits a seminar.
-   * @param {number} seminar - The seminar to edit
+   * Edits an inscription.
+   * @param {number} seminar - The inscription to edit
    * @author Alvaro Olguin
    */
   onEdit(seminar: SeminarAdminInterface) {
@@ -87,34 +87,32 @@ export class SeminarAdminListComponent {
 
   /**
    * Redirects to the seminar inscription screen
-   * @param {number} seminar - The ID of the seminar to view.
+   * @param {number} seminar_id - The ID of the seminar to view.
    * @author Alvaro Olguin
    */
-  onView(seminar: SeminarAdminInterface) {
+  onView(seminar_id: SeminarAdminInterface) {
     this.router.navigate(['Dashboard/seminar/admin/seminar-inscription/list'], {
-      state: { seminar },
+      state: { seminar_id },
     });
   }
 
   /**
-   * Deletes a seminar when its ID is provided. It opens a confirmation dialog before deleting.
-   * If the deletion is confirmed, it sends a request to delete the seminar and updates the data table.
-   * @param {number} seminar_id - The ID of the seminar to delete.
+   * Deletes a seminar inscription when its ID is provided. It opens a confirmation dialog before deleting.
+   * If the deletion is confirmed, it sends a request to delete the seminar inscription and updates the data table.
+   * @param {number} inscription_id - The ID of the seminar to delete.
    * @author Alvaro Olguin
    */
-  onDelete(seminar_id: number) {
+  onDelete(inscription_id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Confirma la desactivación de este Taller?'
+      '¿Confirma la eliminación de esta Inscripción? esta acción es irreversible'
     );
-
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
       if (confirmResult) {
-        this.seminarService
-          .deleteSeminar(seminar_id)
+        this.seminarInscriptionService
+          .deleteInscription(inscription_id)
           .pipe(
             catchError((error) => {
               console.error('Error en la solicitud:', error);
-
               // Checks "non_field_errors"
               if (error.error && error.error.non_field_errors) {
                 const errorMessage = error.error.non_field_errors[0];
@@ -127,14 +125,13 @@ export class SeminarAdminListComponent {
                   'Ha ocurrido un error en la solicitud.'
                 );
               }
-
               throw error;
             })
           )
           .subscribe((data: any) => {
             this.setDataTable();
             this.dialogService.showSuccessDialog(
-              'Seminario desactivado con éxito'
+              'Inscripción eliminada con éxito'
             );
           });
       }

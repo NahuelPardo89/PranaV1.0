@@ -48,14 +48,17 @@
   text-align: center;
   line-height: 300px;
   
+  
 }
 .carrousel-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  visibility: hidden;
+  
+  border: 2px solid  #502c36;
   transition: opacity 0.5s ease, visibility 0.5s ease; /* Agrega esta línea para la transición */
+
 }
 
 .carrousel-item img:not(.hidden-image) {

@@ -9,6 +9,7 @@ import { User } from 'src/app/Models/user/user.interface';
 })
 export class UserService {
   private apiUrl = 'http://127.0.0.1:8000/account/admin/';
+  private meUrl ='http://127.0.0.1:8000/account/me/';
 
   constructor(private http: HttpClient) { }
 
@@ -52,5 +53,8 @@ export class UserService {
         return throwError(() => new Error(error));
       })
     );
+  }
+  getLoggedUser(): Observable<User> {
+    return this.http.get<User>(this.meUrl);
   }
 }

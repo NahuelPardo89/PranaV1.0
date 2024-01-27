@@ -146,12 +146,12 @@ class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
 
 
 class DoctorProfileShortSerializer(serializers.ModelSerializer):
-    insurances = InsurancePlanDoctorSerializer2(many=True, read_only=True)
+    insurances = serializers.StringRelatedField(many=True)
     specialty = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = DoctorProfile
-        fields = ('medicLicence', 'specialty', 'insurances', 'is_active')
+        fields = ('medicLicence', 'specialty', 'insurances', 'is_active','appointment_duration')
         read_only_fields = ('is_active',)
 
 

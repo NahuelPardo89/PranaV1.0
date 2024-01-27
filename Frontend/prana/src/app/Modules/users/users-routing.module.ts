@@ -8,6 +8,7 @@ import { PatientEditComponent } from './components/admin/patient/patient-edit/pa
 import { DoctorListComponent } from './components/admin/doctor/doctor-list/doctor-list.component';
 import { DoctorEditComponent } from './components/admin/doctor/doctor-edit/doctor-edit.component';
 import { DoctorCreateComponent } from './components/admin/doctor/doctor-create/doctor-create.component';
+import { MyaccountComponent } from './components/myaccount/myaccount.component';
 
 const routes: Routes = [
   { 
@@ -34,6 +35,7 @@ const routes: Routes = [
       { path: 'edit', component: DoctorEditComponent },
     ]
   },
+  {path:'myaccount', component: MyaccountComponent}
  
 ];
 

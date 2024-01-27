@@ -23,6 +23,8 @@ import { DoctorEditComponent } from './components/admin/doctor/doctor-edit/docto
 import { DoctorCreateComponent } from './components/admin/doctor/doctor-create/doctor-create.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MyaccountComponent } from './components/myaccount/myaccount.component';
+import {MatListModule} from '@angular/material/list';
 @NgModule({
   declarations: [
    
@@ -34,6 +36,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     DoctorListComponent,
     DoctorEditComponent,
     DoctorCreateComponent,
+    MyaccountComponent,
     
   ],
   imports: [
@@ -51,7 +54,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     ReactiveFormsModule,
     MatIconModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatListModule
   ]
 })
 export class UsersModule { }

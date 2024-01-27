@@ -444,10 +444,13 @@ class DoctorUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixi
 
     def get_object(self):
         try:
-            return self.request.user.doctorProfile
+            doctor_profile = self.request.user.doctorProfile
+            if doctor_profile.is_active:
+                return doctor_profile
+            else:
+                raise Http404("El perfil de Profesional no está activo.")
         except ObjectDoesNotExist:
-            raise Http404(
-                "No existe un perfil de Profesional para el usuario autenticado.")
+            raise Http404("No existe un perfil de Profesional para el usuario autenticado.")
 
 
 class PatientUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):

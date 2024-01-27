@@ -20,10 +20,15 @@ import { AuthInterceptor } from './Services/auth/auth.interceptor';
 import { MatSelectModule } from '@angular/material/select';
 import { ReportsModule } from './Modules/reports/reports.module';
 
+
+
+
+
 // import { AgmCoreModule } from '@agm/core';
 
 import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
+
 
 // Registrar la localización española (Argentina)
 registerLocaleData(localeEsAr);
@@ -49,6 +54,8 @@ registerLocaleData(localeEsAr);
     DashboardModule,
     BrowserAnimationsModule,
     ReportsModule,
+   
+    
     // AgmCoreModule.forRoot({
     //   apiKey: 'AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM'
     // })

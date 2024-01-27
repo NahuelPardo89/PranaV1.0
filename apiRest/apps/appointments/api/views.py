@@ -1,4 +1,3 @@
-from datetime import date
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -17,32 +16,40 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class AppointmentListCreateView(APIView):
     """
     API view for listing and creating appointments.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>     
     """
     permission_classes = [IsAdminOrReadOnly, ]
 
     def get(self, request):
         """
-        Retrieve a list of appointments filtered by state.
+        Retrieve a list of appointments filtered by state | doctor | day.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
         """
-        # Find the states to list
-        state = request.query_params.get(
-            'state')
 
-        # Filter the appointments by state, if any
-        if state is not None:
-            appointments = Appointment.objects.filter(state=state)
-        else:
-            appointments = Appointment.objects.all()
+        # Find the params
+        appointment_status = request.query_params.get('appointment_status')
+        payment_status = request.query_params.get('payment_status')
+        doctor_id = request.query_params.get('doctor_id')
+        day = request.query_params.get('day')
 
-        # Find the doctor's to list
-        doctor_id = request.query_params.get(
-            'doctor_id')
+        appointments = Appointment.objects.all()
 
-        # Filter the appointments by state, if any
-        if doctor_id is not None:
-            appointments = Appointment.objects.filter(doctor=doctor_id)
+        # Filter appointments
+        if appointment_status:
+            appointments.filter(appointment_status=appointment_status)
+        if payment_status:
+            appointments.filter(payment_status=payment_status)
+        if doctor_id:
+            appointments.filter(doctor=doctor_id)
+        if day:
+            appointments.filter(day=day)
 
-        # serializer = AppointmentSerializer(appointments, many=True)
+        appointments = appointments.order_by('-day', 'hour')
+
         serializer = AppointmentSerializerList(appointments, many=True)
         return Response(serializer.data)
 
@@ -60,6 +67,9 @@ class AppointmentListCreateView(APIView):
 class AppointmentDetailView(APIView):
     """
     API view for retrieving, updating, and deleting an appointment.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     # permission_classes = [permissions.IsAuthenticated, ]
 
@@ -105,6 +115,9 @@ class AppointmentDetailView(APIView):
 class PaymentMethodListCreateView(generics.ListCreateAPIView):
     """
     API view for listing payment methods.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
@@ -113,6 +126,9 @@ class PaymentMethodListCreateView(generics.ListCreateAPIView):
 class PaymentMethodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     """
     API view for updating, and deleting a payment method.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     queryset = PaymentMethod.objects.all()
     serializer_class = PaymentMethodSerializer
@@ -121,6 +137,9 @@ class PaymentMethodRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIVi
 class PatientAppointmentsView(viewsets.GenericViewSet):
     """
     API view for listing appointments for the currently authenticated patient.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     model = Appointment
     queryset = None
@@ -130,11 +149,15 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
 
     def get_queryset(self):
         """
-        Define the appointments for the currently authenticated patient with state = 'Pendiente'.
+        Define the appointments for the currently authenticated patient.
         """
         try:
             patient = self.request.user.patientProfile
-            return Appointment.objects.filter(patient=patient, state=1)
+            day = self.request.query_params.get('day', None)
+            if day is not None:
+                return Appointment.objects.filter(patient=patient, appointment_status=1, day=day).order_by('-day', 'hour')
+            else:
+                return Appointment.objects.filter(patient=patient).order_by('-day', 'hour')
         except PatientProfile.DoesNotExist:
             raise Http404()
 
@@ -186,6 +209,9 @@ class PatientAppointmentsView(viewsets.GenericViewSet):
 class DoctorAppointmentListView(APIView):
     """
     API view for listing a doctor appointments.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     model = Appointment
     serializer_class = DoctorAppointmentSerializer
@@ -197,13 +223,16 @@ class DoctorAppointmentListView(APIView):
         Retrieve a list of appointments filtered by state.
         """
         doctor = self.request.user.doctorProfile
-        start_date = request.query_params.get('start_date', str(date.today()))
-        end_date = request.query_params.get('end_date', str(date.today()))
-        appointments = Appointment.objects.filter(
-            doctor=doctor,
-            day__range=[start_date, end_date],
-            state__in=[1, 2, 4]
-        )
+        day = request.query_params.get('day', None)
+        if day is not None:
+            appointments = Appointment.objects.filter(
+                doctor=doctor,
+                day=day,
+            ).order_by('-day', 'hour')
+        else:
+            appointments = Appointment.objects.filter(
+                doctor=doctor,
+            ).order_by('-day', 'hour')
         serializer = self.serializer_class_list(appointments, many=True)
         return Response(serializer.data)
 
@@ -211,7 +240,6 @@ class DoctorAppointmentListView(APIView):
         """
         Create a new appointment.
         """
-        request.data['doctor'] = request.user.doctorProfile.id
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -222,6 +250,9 @@ class DoctorAppointmentListView(APIView):
 class DoctorAppointmentDetailView(APIView):
     """
     API view for retrieving, updating, and deleting an appointment.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     model = Appointment
     serializer_class = DoctorAppointmentSerializer
@@ -257,3 +288,11 @@ class DoctorAppointmentDetailView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        """
+        Delete an appointment.
+        """
+        appointment = self.get_object(pk)
+        appointment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

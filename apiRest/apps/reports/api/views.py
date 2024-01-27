@@ -23,7 +23,11 @@ def perform_report(serializer, request):
     the data provided by the serializer. It then calculates various aspects of
     the report, such as the number of patients, number of appointments,
     and sums of copayments for patients and health insurances.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>   
     """
+
     start_date = serializer.validated_data['start_date']
     end_date = serializer.validated_data['end_date']
     doctor = serializer.validated_data.get('doctor')
@@ -34,7 +38,7 @@ def perform_report(serializer, request):
     patient = serializer.validated_data.get('patient')
 
     appointments = Appointment.objects.filter(
-        day__range=[start_date, end_date], state=4)
+        day__range=[start_date, end_date], appointment_status=2)
 
     if doctor:
         appointments = appointments.filter(doctor=doctor)
@@ -58,7 +62,7 @@ def perform_report(serializer, request):
     num_doctors = appointments.values('doctor').distinct().count()
     # HI
     num_particular_insurances = appointments.filter(
-        health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
+        health_insurance__name__iexact='particular').values('health_insurance').count()
     num_other_insurances = appointments.exclude(
         health_insurance__name__iexact='particular').values('health_insurance').distinct().count()
     # Appointments
@@ -91,13 +95,17 @@ def perform_report(serializer, request):
 class AdminAppointmentReportView(APIView):
     """
     API view for generating copayment reports based on a date range, doctor, and specialty.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>   
     """
+
     serializer_class = CopaymentReportSerializer
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         """
-
+        API view for generating copayment reports based on a date range.
         """
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -109,13 +117,17 @@ class AdminAppointmentReportView(APIView):
 class DoctorAppointmentReportView(APIView):
     """
     API view for generating copayment reports based on a date range, doctor, and specialty.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>   
     """
+
     serializer_class = CopaymentReportSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         """
-
+        API view for generating copayment reports based on a date range.
         """
         request.data['doctor'] = request.user.doctorProfile.id
         request.data['specialty'] = request.user.doctorProfile.specialty.first().id

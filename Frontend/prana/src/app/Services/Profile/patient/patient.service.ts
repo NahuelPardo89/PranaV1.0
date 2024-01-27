@@ -10,13 +10,23 @@ import { catchError } from 'rxjs/operators';
 })
 export class PatientService {
   private apiUrl = 'http://127.0.0.1:8000/profile/admin/patient/';
+  private currentPatientUrl = 'http://127.0.0.1:8000/profile/patient/';
 
   constructor(private httpClient: HttpClient) { }
 
   getAllPatients(): Observable<Patient[]> {
     return this.httpClient.get<Patient[]>(this.apiUrl)
   }
-  
+
+  /**
+ * This function retrieves the current (logged) patient information.
+ * @author Alvaro Olguin
+ * @returns {Observable<Patient>} An Observable that contains the patient profile.
+ */
+  getCurrentPatient(): Observable<Patient> {
+    return this.httpClient.get<Patient>(this.currentPatientUrl);
+  }
+
   // Función para calcular el campo fullName a partir del campo user
   private calculateFullName(userId: number): string {
     // Lógica para calcular el nombre y apellido a partir del userId
@@ -27,30 +37,12 @@ export class PatientService {
     const lastName = 'Doe';   // Reemplaza con la lógica real
     return `${firstName} ${lastName}`;
   }
-  
 
   getPatientById(id: number): Observable<Patient> {
     const url = `${this.apiUrl}${id}/`;
     return this.httpClient.get<Patient>(url);
   }
 
-
-
-
-  // CREATE PATIENT NO SE USA PORQUE EL REGISTRO LE OTORGA AUTOMÁTICAMENTE ESE PERFIL
-
-
-  // createPatient(patientData: Patient): Observable<Patient> {
-  //   return this.httpClient.post<Patient>(this.apiUrl, patientData).pipe(
-  //     catchError((error: any) => {
-  //       console.error('Error al crear el paciente:', error);
-  //       throw error; // Lanza el error para que el componente pueda manejarlo
-  //     })
-  //   );
-  // }
-
-
-  
   updatePatient(id: number, patientData: Patient): Observable<Patient> {
     const url = `${this.apiUrl}${id}/`;
     return this.httpClient.put<Patient>(url, patientData);
@@ -66,6 +58,5 @@ export class PatientService {
     const url = `${this.apiUrl}${id}/`;
     return this.httpClient.get<Patient>(url);
   }
-
 
 }

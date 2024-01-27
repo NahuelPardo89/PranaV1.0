@@ -24,7 +24,7 @@ const routes: Routes = [
       { path: 'list/create', component: AppointmentAdminCreateComponent },
       { path: 'list', component: AppointmentAdminListComponent },
       { path: 'detail/id', component: AppointmentAdminDetailComponent },
-      { path: 'update/:id', component: AppointmentAdminUpdateComponent },
+      { path: 'update', component: AppointmentAdminUpdateComponent },
       { path: 'delete/:id', component: AppointmentAdminDeleteComponent },
     ],
   },
@@ -34,7 +34,7 @@ const routes: Routes = [
       { path: 'create', component: AppointmentDoctorCreateComponent },
       { path: 'list', component: AppointmentDoctorListComponent },
       { path: 'detail/:id', component: AppointmentDoctorDetailComponent },
-      { path: 'update/:id', component: AppointmentDoctorUpdateComponent },
+      { path: 'update', component: AppointmentDoctorUpdateComponent },
       { path: 'delete/:id', component: AppointmentDoctorDeleteComponent },
     ],
   },
@@ -52,6 +52,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppointmentsRoutingModule { }
+export class AppointmentsRoutingModule {}

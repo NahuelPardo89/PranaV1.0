@@ -1,4 +1,5 @@
 export interface Medicalspeciality {
-    id?: number;
+    id: number;
     name: string;
+    is_active: boolean;
 }

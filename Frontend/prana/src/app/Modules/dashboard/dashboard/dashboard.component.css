@@ -1,6 +1,7 @@
 .container-fluid {
     display: flex;
     flex-direction: row;
+    width: 100%;
 }
 
 app-dashboard-nav {
@@ -21,7 +22,7 @@ app-dashboard-body {
     
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     
-    margin-bottom: 5px;
+    
 }
 
 @media screen and (max-width: 1024px) {
@@ -30,11 +31,12 @@ app-dashboard-body {
         align-items: center;
     }
     app-dashboard-nav {
-        width: 90%;
+        width: 100%;
+        min-height: 30vh; 
         height: fit-content;
     } 
     app-dashboard-body {
-        width: 90%;
+        width: 100%;
         min-height: 450px;
     }
 }

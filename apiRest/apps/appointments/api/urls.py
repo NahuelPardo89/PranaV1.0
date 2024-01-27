@@ -19,6 +19,6 @@ urlpatterns = [
     path('patient/', include(router.urls)),
     path('doctor/', DoctorAppointmentListView.as_view(),
          name='doctor-appointment-list'),
-    path('doctor/<int:pk>', DoctorAppointmentDetailView.as_view(),
+    path('doctor/<int:pk>/', DoctorAppointmentDetailView.as_view(),
          name='doctors-specific-appointment-list-update')
 ]

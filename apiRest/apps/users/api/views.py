@@ -29,7 +29,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         if self.queryset is None:
             self.queryset = self.model.objects\
                 .filter()\
-                .values('id', 'dni', 'email', 'name', 'last_name', 'phone','password','is_active', 'is_staff')
+                .values('id', 'dni', 'email', 'name', 'last_name', 'phone', 'password', 'is_active', 'is_staff')
         return self.queryset
 
     def list(self, request):
@@ -38,7 +38,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         return Response(users_serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
-        
+
         user_serializer = self.serializer_class(data=request.data)
         if user_serializer.is_valid():
             user = user_serializer.save()
@@ -61,24 +61,65 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         print(request.data)
         user_serializer = self.serializer_class(user, data=request.data)
         if user_serializer.is_valid():
+            # Check if is_active has changed
+            if 'is_active' in request.data and request.data['is_active'] != user.is_active:
+                new_is_active = request.data['is_active']
+
+                # Update the patient profile if it exists
+                if hasattr(user, 'patientProfile'):
+                    user.patientProfile.is_active = new_is_active
+                    user.patientProfile.save()
+
+                # If is_active is false, update the doctor and seminarist profiles
+                if not new_is_active:
+                    # Update the doctor profile if it exists
+                    if hasattr(user, 'doctorProfile'):
+                        user.doctorProfile.is_active = new_is_active
+                        user.doctorProfile.save()
+
+                    # Update the seminarist profile if it exists
+                    if hasattr(user, 'seminaristProfile'):
+                        user.seminaristProfile.is_active = new_is_active
+                        user.seminaristProfile.save()
+
             user_serializer.save()
             return Response({
                 'message': 'Usuario actualizado correctamente'
             }, status=status.HTTP_200_OK)
-        return Response({
-            'message': 'Hay errores en la actualización',
-            'errors': user_serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({
+                'message': 'Hay errores en la actualización',
+                'errors': user_serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None):
-        user_destroy = self.model.objects.filter(id=pk).update(is_active=False)
-        if user_destroy == 1:
+        user = self.model.objects.filter(id=pk).first()
+        if user:
+            # Update the user
+            user.is_active = False
+            user.save()
+            # Update the doctor profile if it exists
+            if hasattr(user, 'doctorProfile'):
+                user.doctorProfile.is_active = False
+                user.doctorProfile.save()
+
+            # Update the patient profile if it exists
+            if hasattr(user, 'patientProfile'):
+                user.patientProfile.is_active = False
+                user.patientProfile.save()
+
+            # Update the seminarist profile if it exists
+            if hasattr(user, 'seminaristProfile'):
+                user.seminaristProfile.is_active = False
+                user.seminaristProfile.save()
+
             return Response({
                 'message': 'Usuario eliminado correctamente'
-            },status=status.HTTP_204_NO_CONTENT)
-        return Response({
-            'message': 'No existe el usuario que desea eliminar'
-        }, status=status.HTTP_404_NOT_FOUND)
+            }, status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response({
+                'message': 'No existe el usuario que desea eliminar'
+            }, status=status.HTTP_404_NOT_FOUND)
 
     @action(detail=True, methods=['post'])
     def reset_password(self, request, pk=None):

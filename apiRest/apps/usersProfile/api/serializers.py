@@ -27,8 +27,15 @@ class MedicalSpecialitySerializer(serializers.ModelSerializer):
         return speciality
 
 
-class SpecialityBranchSerializer(serializers.ModelSerializer):
+class SpecialityBranchListSerializer(serializers.ModelSerializer):
     speciality = serializers.StringRelatedField()
+
+    class Meta:
+        model = SpecialityBranch
+        fields = '__all__'
+
+
+class SpecialityBranchCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SpecialityBranch
@@ -41,14 +48,31 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class InsurancePlanDoctorSerializer(serializers.ModelSerializer):
-
+class InsurancePlanDoctorListSerializer(serializers.ModelSerializer):
+    doctor=serializers.StringRelatedField()
+    insurance=serializers.StringRelatedField()
+    branch=serializers.StringRelatedField()
     class Meta:
         model = InsurancePlanDoctor
-        fields = ('doctor', 'insurance', 'branch', 'price')
+        fields = ('id','doctor', 'insurance', 'branch', 'price')
+
+class InsurancePlanDoctorCreateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = InsurancePlanDoctor
+        fields = ('id','doctor', 'insurance', 'branch', 'price')
 
 
 class InsurancePlanPatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InsurancePlanPatient
+        fields = '__all__'
+
+
+class InsurancePlanPatientListSerializer(serializers.ModelSerializer):
+    patient = serializers.StringRelatedField()
+    insurance = serializers.StringRelatedField()
+
     class Meta:
         model = InsurancePlanPatient
         fields = '__all__'
@@ -81,6 +105,7 @@ class DoctoListProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'medicLicence', 'specialty',
                   'insurances', 'is_active', 'appointment_duration')
 
+
 class DoctorCreateUpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorProfile
@@ -88,27 +113,32 @@ class DoctorCreateUpdateProfileSerializer(serializers.ModelSerializer):
                   'insurances', 'is_active', 'appointment_duration')
         read_only_fields = ('insurances',)
 
+
 class PatientListProfileSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(required=False)
     user = serializers.StringRelatedField(required=False)
-    insurances=serializers.StringRelatedField(many=True,required=False)
+    insurances = serializers.StringRelatedField(many=True, required=False)
 
     class Meta:
         model = PatientProfile
         fields = ('id', 'user', 'facebook', 'instagram',
                   'address', 'insurances', 'is_active')
-        read_only_fields = ('id','user','insurances')
-        
+        read_only_fields = ('id', 'user', 'insurances')
+
+
 class PatientShortProfileSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(required=False)
+
     class Meta:
         model = PatientProfile
-        fields = ('id','facebook', 'instagram', 'address', 'insurances','is_active')
-        read_only_fields = ('insurances',)
+        fields = ('id', 'user', 'facebook', 'instagram',
+                  'address', 'insurances', 'is_active')
+        read_only_fields = ('id', 'user', 'insurances',)
 
 
 class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
     insurance = HealthInsuranceSerializer(read_only=True)
-    branch = SpecialityBranchSerializer(read_only=True)
+    branch = SpecialityBranchListSerializer(read_only=True)
 
     class Meta:
         model = InsurancePlanDoctor
@@ -116,10 +146,39 @@ class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
 
 
 class DoctorProfileShortSerializer(serializers.ModelSerializer):
-    insurances = InsurancePlanDoctorSerializer2(many=True, read_only=True)
+    insurances = serializers.StringRelatedField(many=True)
     specialty = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = DoctorProfile
-        fields = ('medicLicence', 'specialty', 'insurances', 'is_active')
+        fields = ('medicLicence', 'specialty', 'insurances', 'is_active','appointment_duration')
         read_only_fields = ('is_active',)
+
+
+class DoctorReportSerializer(serializers.ModelSerializer):
+    doctor = serializers.SerializerMethodField()
+    insurances = serializers.SerializerMethodField()
+    branches = serializers.SerializerMethodField()
+    specialty = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DoctorProfile
+        fields = ('doctor', 'insurances', 'branches', 'specialty')
+
+    def get_doctor(self, obj):
+        return DoctoListProfileSerializer(obj).data
+
+    def get_insurances(self, obj):
+        insurance_plans = InsurancePlanDoctor.objects.filter(doctor=obj)
+        unique_insurances = list(
+            set(plan.insurance for plan in insurance_plans))
+        return HealthInsuranceSerializer(unique_insurances, many=True).data
+
+    def get_branches(self, obj):
+        insurance_plans = InsurancePlanDoctor.objects.filter(doctor=obj)
+        branches = list(set(plan.branch for plan in insurance_plans))
+        return SpecialityBranchListSerializer(branches, many=True).data
+
+    def get_specialty(self, obj):
+        specialty = obj.specialty.first()
+        return MedicalSpecialitySerializer(specialty).data if specialty else None

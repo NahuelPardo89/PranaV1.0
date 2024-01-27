@@ -8,6 +8,9 @@ class PaymentMethod(models.Model):
 
     Attributes:
         name (str): The name of the payment method.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
     name = models.CharField(max_length=100, unique=True)
 
@@ -21,6 +24,9 @@ class PaymentMethod(models.Model):
 
         Returns:
             str: The string representation of the payment method.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>    
         """
         return self.name
 
@@ -28,16 +34,22 @@ class PaymentMethod(models.Model):
 class Appointment(models.Model):
     """
     Model representing an appointment between a doctor and a patient.
+
+    Author:
+        Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
     """
 
     class Meta:
         verbose_name = 'Turno'
         verbose_name_plural = 'Turnos'
 
-    CHOICES_STATE = [(1, 'Pendiente'),
-                     (2, 'Confirmado'),
-                     (3, 'Adeuda'),
-                     (4, 'Pagado')]
+    CHOICES_APPOINTMENT_STATUS = [(1, 'PENDIENTE'),
+                                  (2, 'CONFIRMADO'),
+                                  (3, 'FINALIZADO')]
+
+    CHOICES_PAYMENT_STATUS = [(1, 'ADEUDA'),
+                              (2, 'PAGADO')]
+
     doctor = models.ForeignKey(
         DoctorProfile, on_delete=models.PROTECT)
     specialty = models.ForeignKey(
@@ -58,7 +70,10 @@ class Appointment(models.Model):
         max_digits=10, decimal_places=2, blank=True, null=True)
     payment_method = models.ForeignKey(
         PaymentMethod, on_delete=models.SET_NULL, blank=True, null=True)
-    state = models.IntegerField(choices=CHOICES_STATE, default=1)
+    appointment_status = models.IntegerField(
+        choices=CHOICES_APPOINTMENT_STATUS, default=1)
+    payment_status = models.IntegerField(
+        choices=CHOICES_PAYMENT_STATUS, default=1)
 
     def find_common_hi(self):
         """
@@ -66,11 +81,13 @@ class Appointment(models.Model):
 
         Returns:
             set: A set containing the common HealthInsurance objects.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>    
         """
+
         return set(self.doctor.insurances.all()) & set(
             self.patient.insurances.all())
-        # return set(self.doctor.insurances.all()) & set(
-        #     self.patient.insurances.all())
 
     def set_branch(self):
         """
@@ -82,57 +99,75 @@ class Appointment(models.Model):
 
         Returns:
             None
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>    
         """
+
         if not self.branch:
             # static branch assignment
             self.branch = SpecialityBranch.objects.get(
-                name='GENERAL', speciality=self.doctor.specialty.first())
+                name__iexact='GENERAL', speciality=self.doctor.specialty.first())
 
-    def set_full_cost(self):
+    def set_full_cost(self, update=False):
         """
         Set the full cost of the appointment.
 
-        If the full cost is not already assigned, it will be calculated based on the particular cost of a professional.
+        If the full cost is not already assigned or the `update` parameter is True, it will be calculated
+        based on the particular cost of a professional.
 
         This method is used to ensure that an appointment has a valid full cost.
 
+        Args:
+            update (bool): If True, the full cost will be recalculated even if it is already assigned.
+
         Returns:
             None
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>        
         """
+
         # initialize variables as "Particular" health insurance to find the full cost
         base_hi = HealthInsurance.objects.filter(
-            name='PARTICULAR').first()
+            name__iexact='PARTICULAR').first()
 
         # Static cost assignment
-        if not self.full_cost:
+        if (not self.full_cost) or update:
             # Set the full cost based on the particular cost of a professional (checked in serializer)
             self.full_cost = InsurancePlanDoctor.objects.get(
                 doctor=self.doctor, insurance=base_hi, branch=self.branch).price
 
-    def set_hi(self):
+    def set_hi(self, update=False):
         """
-        Set the health insurance for the appointment based on doctor and patient common insurances.
+        Set the health insurance for the appointment based on professional and patient common insurances.
 
-        This method searches for common insurances between the doctor and the patient and selects the one with the
-        lowest cost. If the doctor and patient do not have any common insurances, the appointment's health insurance
-        will be set to "Particular."
+        This method searches for common insurances between the professional and the patient and selects the one with the
+        lowest cost. If there is no insurance set or the `update` parameter is True,
+        the appointment's health insurance will be calculated automatically to prioritize the lower cost.
+
+        Args:
+            update (bool): If True, the health insurance will be recalculated even if it is already assigned.
 
         Returns:
-            int: The ID of the selected HealthInsurance object.
+            None.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>       
         """
 
-        if not self.health_insurance:
+        if (not self.health_insurance) or update:
             # find the common insurances between the doctor and the patient
             common_insurance = self.find_common_hi()
 
             # Aux variables
             max_coverage_insurance = HealthInsurance.objects.filter(
-                name='PARTICULAR').first()
+                name__iexact='PARTICULAR').first()
             # max_coverage_price = float('inf')
             max_coverage_price = 0
 
             for insurance in common_insurance:
-                if insurance.name == 'PARTICULAR':
+                if insurance.name.upper() == 'PARTICULAR':
                     # Skip since is by default
                     continue
                 # Check if the professional works with the branch for that specific shared hi
@@ -148,11 +183,15 @@ class Appointment(models.Model):
 
     def set_specialty(self):
         """
-        Set the specialty of the appointment based on the doctor's specialty.
+        Set the specialty of the appointment based on the professional's specialty.
 
         Returns:
             None
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>        
         """
+
         self.specialty = self.doctor.specialty.first()
 
     def set_cost(self):
@@ -160,10 +199,18 @@ class Appointment(models.Model):
         Set the patient copayment and health insurance copayment based on the health insurance.
 
         Calculate the copayment amounts based on the doctor's insurance price and the appointment's full cost.
+
+        Returns:
+            None.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
         """
+
         insurance_plan = InsurancePlanDoctor.objects.get(
             doctor=self.doctor, insurance=self.health_insurance, branch=self.branch)
-        if self.health_insurance.name == "PARTICULAR":
+
+        if self.health_insurance.name.upper() == "PARTICULAR":
             # For "PARTICULAR" insurance, patient pays the full cost
             self.patient_copayment = self.full_cost
             self.hi_copayment = 0
@@ -177,7 +224,13 @@ class Appointment(models.Model):
         """
         This method initializes specialty, branch, full cost, health insurance, and cost-related fields
         for the appointment based on the doctor, patient, and other appointment details.
+
+        Returns:
+            None.
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
         """
+
         self.set_specialty()
         self.set_branch()
         self.set_full_cost()
@@ -190,7 +243,11 @@ class Appointment(models.Model):
 
         Returns:
             str: A formatted string containing appointment information.
+
+        Author:
+            Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>                
         """
+
         return f"""Turno del día: {self.day} , Horario: {self.hour} \n 
             Paciente: {self.patient.user.last_name}, {self.patient.user.name} \n 
             Profesional: {self.doctor.user.last_name}, {self.doctor.user.name} \n

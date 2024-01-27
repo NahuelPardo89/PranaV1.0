@@ -1,32 +1,48 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Seminar } from 'src/app/Models/seminar/seminar.interface';
-
+import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterface.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SeminarService {
-  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminars/'; // Ajusta la URL según tu configuración
+  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminars/';
 
   constructor(private http: HttpClient) {}
 
-  getSeminars(): Observable<Seminar[]> {
-    
-    return this.http.get<Seminar[]>(this.apiUrl);
+  /**
+   * Get all seminars with admin permissions and detailed JSON format response (all fields).
+   * @author Alvaro Olguin
+   * @returns {Observable<SeminarAdminInterface[]>} An observable of the seminars.
+   */
+  getSeminarsList(): Observable<SeminarAdminInterface[]> {
+    const url = this.apiUrl + '?display=true';
+    return this.http.get<SeminarAdminInterface[]>(url);
   }
 
-  getSeminarById(id: number): Observable<Seminar> {
-    return this.http.get<Seminar>(`${this.apiUrl}${id}/`);
+  getSeminars(): Observable<SeminarAdminInterface[]> {
+    return this.http.get<SeminarAdminInterface[]>(this.apiUrl);
   }
 
-  createSeminar(seminar: Seminar): Observable<Seminar> {
-    return this.http.post<Seminar>(this.apiUrl, seminar);
+  getSeminarById(id: number): Observable<SeminarAdminInterface> {
+    return this.http.get<SeminarAdminInterface>(`${this.apiUrl}${id}/`);
   }
 
-  updateSeminar(id: number, seminar: Seminar): Observable<Seminar> {
-    return this.http.put<Seminar>(`${this.apiUrl}${id}/`, seminar);
+  createSeminar(
+    seminar: SeminarAdminInterface
+  ): Observable<SeminarAdminInterface> {
+    return this.http.post<SeminarAdminInterface>(this.apiUrl, seminar);
+  }
+
+  updateSeminar(
+    id: number,
+    seminar: SeminarAdminInterface
+  ): Observable<SeminarAdminInterface> {
+    return this.http.put<SeminarAdminInterface>(
+      `${this.apiUrl}${id}/`,
+      seminar
+    );
   }
 
   deleteSeminar(id: number): Observable<void> {

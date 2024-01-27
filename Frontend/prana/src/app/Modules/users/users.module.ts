@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 import { UsersRoutingModule } from './users-routing.module';
 
-import { CreateUserComponent } from './components/create-user/create-user.component';
-import { ListUserComponent } from './components/list-user/list-user.component';
+import { CreateUserComponent } from './components/admin/user/create-user/create-user.component';
+import { ListUserComponent } from './components/admin/user/list-user/list-user.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
@@ -15,14 +15,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
-import { EditUserComponent } from './components/edit-user/edit-user.component';
-import { PatientListComponent } from './components/patient-list/patient-list.component';
-import { PatientEditComponent } from './components/patient-edit/patient-edit.component';
-import { DoctorListComponent } from './components/doctor-list/doctor-list.component';
-import { DoctorEditComponent } from './components/doctor-edit/doctor-edit.component';
-import { DoctorCreateComponent } from './components/doctor-create/doctor-create.component';
+import { EditUserComponent } from './components/admin/user/edit-user/edit-user.component';
+import { PatientListComponent } from './components/admin/patient/patient-list/patient-list.component';
+import { PatientEditComponent } from './components/admin/patient/patient-edit/patient-edit.component';
+import { DoctorListComponent } from './components/admin/doctor/doctor-list/doctor-list.component';
+import { DoctorEditComponent } from './components/admin/doctor/doctor-edit/doctor-edit.component';
+import { DoctorCreateComponent } from './components/admin/doctor/doctor-create/doctor-create.component';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MyaccountComponent } from './components/myaccount/myaccount.component';
+import {MatListModule} from '@angular/material/list';
 @NgModule({
   declarations: [
    
@@ -34,6 +36,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     DoctorListComponent,
     DoctorEditComponent,
     DoctorCreateComponent,
+    MyaccountComponent,
     
   ],
   imports: [
@@ -51,7 +54,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     ReactiveFormsModule,
     MatIconModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatListModule
   ]
 })
 export class UsersModule { }

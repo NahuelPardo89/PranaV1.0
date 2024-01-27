@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; //Check ChangeDetectorRef
+import { Component, OnInit } from '@angular/core';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReportAppAdminPostInterface } from 'src/app/Models/reports/reportAppAdminPost.interface';
@@ -13,10 +13,11 @@ import { BranchService } from 'src/app/Services/Profile/branch/branch.service';
 import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interface';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
-import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/healthinsurance.service';
+import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { HealthInsurance } from 'src/app/Models/Profile/healthinsurance.interface';
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
+import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({
   selector: 'app-admin-reports',
@@ -69,6 +70,7 @@ export class AdminReportsComponent implements OnInit {
     private insuranceService: HealthinsuranceService,
     private specialtyFilterService: SpecialtyFilterService,
     private paymentmethodservice: PaymentmethodService,
+    private dialogService: DialogService
   ) {
     // Init form
     this.reportForm = this.fb.group({
@@ -98,6 +100,7 @@ export class AdminReportsComponent implements OnInit {
       appointments: []
     };
   }
+
   ngOnInit(): void {
     // Initialize data
     this.loadDoctors();
@@ -576,7 +579,7 @@ export class AdminReportsComponent implements OnInit {
             if (error.error && error.error.non_field_errors) {
               // Get and display the error
               const errorMessage = error.error.non_field_errors[0];
-              alert('Error: ' + errorMessage);
+              this.dialogService.showErrorDialog('Error: ' + errorMessage);
               this.reportData = {
                 summary: {
                   doctor: 0,
@@ -595,7 +598,7 @@ export class AdminReportsComponent implements OnInit {
               };
             } else {
               // Generic error
-              alert('Ha ocurrido un error en la solicitud.');
+              this.dialogService.showErrorDialog('Ha ocurrido un error en la solicitud.');
               this.reportData = {
                 summary: {
                   doctor: 0,
@@ -620,13 +623,13 @@ export class AdminReportsComponent implements OnInit {
         .subscribe((data: ReportAppAdminResponseInterface) => {
           this.reportData = data;
           console.log(data);
-          alert(`Reporte generado con éxito!\n
-Visualice los resultados en las tablas "Resumen" y "Detalle de turnos" en la parte inferior de la aplicación `);
+          this.dialogService.showSuccessDialog(`Reporte generado con éxito! <br>
+            Visualice los resultados en las tablas "Resumen" y "Detalle de turnos" en la parte inferior de la aplicación`);
         });
 
     }
     else {
-      alert("Ingrese un rango de fechas para poder generar un reporte")
+      this.dialogService.showErrorDialog("Ingrese un rango de fechas para poder generar un reporte");
     }
   }
 }

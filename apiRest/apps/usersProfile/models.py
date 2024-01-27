@@ -7,6 +7,7 @@ from apps.users.models import User
 
 class HealthInsurance(models.Model):
     name = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Obra Social'
@@ -18,6 +19,7 @@ class HealthInsurance(models.Model):
 
 class MedicalSpeciality(models.Model):
     name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Especialidad'
@@ -31,13 +33,14 @@ class MedicalSpeciality(models.Model):
 class SpecialityBranch(models.Model):
     name = models.CharField(max_length=100)
     speciality = models.ForeignKey(MedicalSpeciality, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Rama'
         verbose_name_plural = 'Ramas'
 
     def __str__(self):
-        return  self.name
+        return f'{self.speciality.name} - {self.name}'
 
 
 class DoctorProfile(models.Model):
@@ -131,7 +134,7 @@ class PatientProfile(models.Model):
         verbose_name_plural = 'Pacientes'
 
     def __str__(self):
-        return f' {self.user.last_name}, {self.user.name}'
+        return f'{self.user.last_name}, {self.user.name}'
 
 
 class InsurancePlanPatient(models.Model):
@@ -147,27 +150,28 @@ class InsurancePlanPatient(models.Model):
 
 
 class SeminaristProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='seminaristProfile')
-    insurances = models.ManyToManyField(HealthInsurance, through='InsurancePlanSeminarist')
-    is_active = models.BooleanField(default = True)
-    
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='seminaristProfile')
+    insurances = models.ManyToManyField(
+        HealthInsurance, through='InsurancePlanSeminarist')
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Tallerista'
         verbose_name_plural = 'Talleristas'
-    
+
     def __str__(self):
         return f'{self.user.last_name}, {self.user.name}'
 
+
 class InsurancePlanSeminarist(models.Model):
-    
+
     seminarist = models.ForeignKey(SeminaristProfile, on_delete=models.CASCADE)
     insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
     coverage = models.DecimalField(max_digits=10, decimal_places=2)
-    
+
     class Meta:
         unique_together = ('seminarist', 'insurance')
-    
+
     def __str__(self):
         return f'Tallerista: {self.seminarist.user.last_name}, {self.seminarist.user.name}, Mutual: {self.insurance.name}, Covertura: {self.coverage}'
-

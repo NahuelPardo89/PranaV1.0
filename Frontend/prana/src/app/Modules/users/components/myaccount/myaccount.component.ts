@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
 import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { User } from 'src/app/Models/user/user.interface';
@@ -9,46 +10,62 @@ import { UserService } from 'src/app/Services/users/user.service';
 @Component({
   selector: 'app-myaccount',
   templateUrl: './myaccount.component.html',
-  styleUrls: ['./myaccount.component.css']
+  styleUrls: ['./myaccount.component.css'],
 })
 export class MyaccountComponent {
   user!: User;
-  doctor!:DoctorProfile
-  patient!:Patient
-  showUser: boolean = false
-  showPatient: boolean = false
-  showDoctor: boolean = false
+  doctor!: DoctorProfile;
+  patient!: Patient;
+  showUser: boolean = false;
+  showPatient: boolean = false;
+  showDoctor: boolean = false;
 
-  constructor(private userService: UserService, private doctorService: DoctorprofileService, private patientService:PatientService) {
-    this.userService.getLoggedUser().subscribe(user =>{
-      
+  constructor(
+    private userService: UserService,
+    private doctorService: DoctorprofileService,
+    private patientService: PatientService,
+    private router:Router
+  ) {
+    this.userService.getLoggedUser().subscribe((user) => {
       this.user = user;
       console.log(this.user);
-    })
-
-    this.doctorService.getMyDoctorProfile().subscribe(doctor=>{
-      this.doctor =doctor
-      console.log(this.doctor)
-    });
-    this.patientService.getCurrentPatient().subscribe(patient=>{
-      this.patient = patient
-      console.log(this.patient)
     });
 
-    
-    
+    this.doctorService.getMyDoctorProfile().subscribe((doctor) => {
+      this.doctor = doctor;
+      console.log(this.doctor);
+    });
+    this.patientService.getCurrentPatient().subscribe((patient) => {
+      this.patient = patient;
+      console.log(this.patient);
+    });
   }
-  showUserdata(){
+  showUserdata() {
     this.showUser = !this.showUser;
   }
 
-  showPatientdata(){
+  showPatientdata() {
     this.showPatient = !this.showPatient;
   }
 
-  showDoctordata(){
+  showDoctordata() {
     this.showDoctor = !this.showDoctor;
   }
 
+  editUser(user: User) {
+    this.router.navigate(['Dashboard/accounts/myaccount/edituser'], {
+      state: { user },
+    });
+  }
 
+  editpassword() {
+    this.router.navigate(['Dashboard/accounts/myaccount/editpassword'], 
+    );
+  }
+
+  editPatient(patient: Patient) {
+    this.router.navigate(['Dashboard/accounts/myaccount/editpatient'], {
+      state: { patient },
+    });
+  }
 }

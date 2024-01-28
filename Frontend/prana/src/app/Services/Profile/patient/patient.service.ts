@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { catchError } from 'rxjs/operators';
@@ -57,6 +57,15 @@ export class PatientService {
   getPatientDetailsById(id: number): Observable<Patient> {
     const url = `${this.apiUrl}${id}/`;
     return this.httpClient.get<Patient>(url);
+  }
+
+  updateLoggedPatient(patient: Patient): Observable<void> {
+    const url = this.currentPatientUrl; // Solo el endpoint a LoggedUserViewSet
+    return this.httpClient.put<void>(url, patient).pipe(
+      catchError(error => {
+        return throwError(() => new Error(error));
+      })
+    );
   }
 
 }

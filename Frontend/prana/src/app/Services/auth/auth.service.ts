@@ -30,7 +30,8 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<UserShort | null> =
     new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
-  private currentRole = new BehaviorSubject<string>(''); // Inicializa con un rol predeterminado o vacío
+  private currentRole = new BehaviorSubject<string>('');
+  public readonly currentRoleSubject=this.currentRole.asObservable()  // Inicializa con un rol predeterminado o vacío
   private isloggedIn = new BehaviorSubject<boolean>(false); // Inicializa
 
   constructor(
@@ -152,7 +153,7 @@ export class AuthService {
   setCurrentRole(role: string): void {
     this.currentRole.next(role);
     this.storeService.setCurrentRole(role); // Guarda el rol actual en localStorage
-    window.location.reload(); // Opcional: recarga la página
+    //window.location.reload(); // Opcional: recarga la página
   }
   get getCurrentUser(): Observable<UserShort | null> {
     return this.currentUserSubject.asObservable();

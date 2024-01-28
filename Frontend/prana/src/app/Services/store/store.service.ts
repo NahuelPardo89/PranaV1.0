@@ -47,5 +47,6 @@ export class StoreService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
     localStorage.removeItem('roles');
+    localStorage.removeItem('currentRole');
   }
 }

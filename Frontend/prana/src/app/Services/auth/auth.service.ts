@@ -184,6 +184,7 @@ export class AuthService {
   handleLogout(): void {
     this.storeService.clearSesionStorage();
     this.currentUserSubject.next(null);
+    this.currentRole.next('Paciente');
     this.isloggedIn.next(false);
     this.router.navigate(['/Home']);
   }

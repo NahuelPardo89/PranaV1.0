@@ -25,6 +25,7 @@ export class DashboardNavComponent {
     this.availableRoles = this.authService.getUserRoles();
     this.authService.currentRoleSubject.subscribe((role: string) => {
       this.currentRole = role;
+      
     });
   }
 

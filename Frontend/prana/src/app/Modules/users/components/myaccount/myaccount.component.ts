@@ -5,6 +5,7 @@ import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { User } from 'src/app/Models/user/user.interface';
 import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
+import { AuthService } from 'src/app/Services/auth/auth.service';
 import { UserService } from 'src/app/Services/users/user.service';
 
 @Component({
@@ -19,26 +20,37 @@ export class MyaccountComponent {
   showUser: boolean = false;
   showPatient: boolean = false;
   showDoctor: boolean = false;
+  hasDoctorProfile: boolean = false;
+  roles: string[] =[]
 
   constructor(
     private userService: UserService,
     private doctorService: DoctorprofileService,
     private patientService: PatientService,
-    private router:Router
+    private router:Router,
+    private authService: AuthService
   ) {
+    this.roles=this.authService.getUserRoles()
+    
     this.userService.getLoggedUser().subscribe((user) => {
       this.user = user;
       console.log(this.user);
     });
 
-    this.doctorService.getMyDoctorProfile().subscribe((doctor) => {
-      this.doctor = doctor;
-      console.log(this.doctor);
-    });
+    
+  
     this.patientService.getCurrentPatient().subscribe((patient) => {
       this.patient = patient;
       console.log(this.patient);
     });
+
+    if (this.roles.includes('Profesional')) {
+      this.hasDoctorProfile = true;
+      this.doctorService.getMyDoctorProfile().subscribe((doctor) => {
+        this.doctor = doctor;
+        console.log(this.doctor);
+      });
+    }
   }
   showUserdata() {
     this.showUser = !this.showUser;
@@ -66,6 +78,12 @@ export class MyaccountComponent {
   editPatient(patient: Patient) {
     this.router.navigate(['Dashboard/accounts/myaccount/editpatient'], {
       state: { patient },
+    });
+  }
+
+  editDoctor(doctor: DoctorProfile) {
+    this.router.navigate(['Dashboard/accounts/myaccount/editdoctor'], {
+      state: { doctor },
     });
   }
 }

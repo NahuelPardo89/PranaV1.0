@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
 import { ReportAppDoctorResponseInterface } from 'src/app/Models/reports/reportAppDoctorResponse.interface';
 
@@ -56,6 +56,15 @@ export class DoctorprofileService {
   // Delete a doctor profile
   deleteDoctor(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}/`);
+  }
+
+  updateLoggedDoctor(doctor: DoctorProfile): Observable<void> {
+    const url = this.meUrl; // Solo el endpoint a LoggedUserViewSet
+    return this.http.put<void>(url, doctor).pipe(
+      catchError(error => {
+        return throwError(() => new Error(error));
+      })
+    );
   }
 
 }

@@ -12,6 +12,7 @@ import { MyaccountComponent } from './components/myaccount/myaccount.component';
 import { EditmyuserComponent } from './components/myaccount/editmyuser/editmyuser.component';
 import { EditmypasswordComponent } from './components/myaccount/editmypassword/editmypassword.component';
 import { EditmypatientComponent } from './components/myaccount/editmypatient/editmypatient.component';
+import { EditmydoctorComponent } from './components/myaccount/editmydoctor/editmydoctor.component';
 
 const routes: Routes = [
   { 
@@ -46,6 +47,7 @@ const routes: Routes = [
       { path: 'edituser', component: EditmyuserComponent },
       { path: 'editpassword', component: EditmypasswordComponent },
       { path: 'editpatient', component: EditmypatientComponent },
+      { path: 'editdoctor', component: EditmydoctorComponent },
     ]
   },
   

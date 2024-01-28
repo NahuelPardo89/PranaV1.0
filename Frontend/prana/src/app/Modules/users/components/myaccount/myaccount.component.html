@@ -38,7 +38,7 @@
         <span matListItemTitle>INSTAGRAM</span>
         <span>{{patient.instagram}}</span>
       </mat-list-item>
-      <mat-list-item>
+      <mat-list-item >
         <span matListItemTitle>DIRECCIÓN</span>
         <span>{{patient.address}}</span>
       </mat-list-item>
@@ -46,7 +46,7 @@
       <button class="btn btn-secondary"(click)="editPatient(patient)">Editar datos</button>  
     </mat-list>
 
-    <button class="btn btn-primary mt-2 large" (click)="showDoctordata()">Perfil de Profesional</button>
+    <button class="btn btn-primary mt-2 large" (click)="showDoctordata()" *ngIf="hasDoctorProfile">Perfil de Profesional</button>
     <mat-list *ngIf="showDoctor">
       <mat-list-item>
         <span matListItemTitle>LICENCIA MÉDICA</span>
@@ -61,7 +61,7 @@
         <span>{{doctor.appointment_duration}}</span>
       </mat-list-item>
       
-      <button class="btn btn-secondary">Editar datos</button>  
+      <button class="btn btn-secondary"(click)="editDoctor(doctor)">Editar datos</button>  
     </mat-list>
     
 

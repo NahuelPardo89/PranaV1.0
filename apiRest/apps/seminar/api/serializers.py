@@ -7,11 +7,23 @@ from apps.usersProfile.models import InsurancePlanSeminarist
 class SeminarScheduleSerializer(serializers.ModelSerializer):
     """
     Serializer class for handling SeminarSchedule model instances.
+
+    Author:
+        Alvaro Olguin Armendariz    
     """
 
     class Meta:
         model = SeminarSchedule
-        fields = ['weekday', 'start_hour', 'end_hour']
+        fields = ['id', 'weekday', 'start_hour', 'end_hour']
+
+    def to_representation(self, instance):
+        """
+        Convert `start_hour` and `end_hour` to strings and remove milliseconds.
+        """
+        representation = super().to_representation(instance)
+        representation['start_hour'] = str(instance.start_hour)[:-3]
+        representation['end_hour'] = str(instance.end_hour)[:-3]
+        return representation
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -19,6 +31,23 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         fields = ['id', 'name', 'capacity', 'cost',
                   'created_at', 'updated_at', 'created_by']
+
+    def to_representation(self, instance):
+        """
+        Custom representation method to remove decimal .00 from cost.
+
+        Parameters:
+            instance (Room): The Room instance.
+
+        Returns:
+            dict: The modified representation of the SeminarInscription instance.
+
+        """
+
+        rep = super().to_representation(instance)
+        if rep['cost'].endswith('.00'):
+            rep['cost'] = rep['cost'][:-3]
+            return rep
 
 
 class SeminarRoomUsageSerializer(serializers.ModelSerializer):

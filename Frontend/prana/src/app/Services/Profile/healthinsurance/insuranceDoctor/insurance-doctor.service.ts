@@ -37,6 +37,6 @@ export class InsuranceDoctorService {
     return this.http.post(`${this.meUrl}`, data);
   }
   updateMeDoctorInsurance(id: number, data: InsurancePlanDoctor): Observable<any> {
-    return this.http.put(`${this.meUrl}${id}/`, data);
+    return this.http.patch(`${this.meUrl}${id}/`, data);
   }
 }

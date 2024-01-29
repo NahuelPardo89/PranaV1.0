@@ -45,4 +45,16 @@ export class DoctorscheduleService {
     return this.http.get<DoctorAvailableTimes>(url)
   }
 
+  deleteDoctor(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}${id}/`);
+  }
+
+  createSchedule(data: DoctorScheduleInterface): Observable<DoctorScheduleInterface> {
+    return this.http.post<DoctorScheduleInterface>(this.baseUrl, data);
+  }
+
+  updateSchedule(id: number, data: DoctorScheduleInterface): Observable<DoctorScheduleInterface> {
+    return this.http.patch<DoctorScheduleInterface>(`${this.baseUrl}${id}/`, data);
+  }
+
 }

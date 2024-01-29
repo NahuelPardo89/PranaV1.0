@@ -29,6 +29,9 @@ import { EditmyuserComponent } from './components/myaccount/editmyuser/editmyuse
 import { EditmypatientComponent } from './components/myaccount/editmypatient/editmypatient.component';
 import { EditmydoctorComponent } from './components/myaccount/editmydoctor/editmydoctor.component';
 import { EditmypasswordComponent } from './components/myaccount/editmypassword/editmypassword.component';
+import { ScheduleListComponent } from './components/admin/doctor/schedule/schedule-list/schedule-list.component';
+import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
+import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
 @NgModule({
   declarations: [
    
@@ -45,6 +48,9 @@ import { EditmypasswordComponent } from './components/myaccount/editmypassword/e
     EditmypatientComponent,
     EditmydoctorComponent,
     EditmypasswordComponent,
+    ScheduleListComponent,
+    ScheduleEditComponent,
+    ScheduleCreateComponent,
     
   ],
   imports: [

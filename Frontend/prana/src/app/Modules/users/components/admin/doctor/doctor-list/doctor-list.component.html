@@ -78,6 +78,13 @@
                 <i class="material-symbols-outlined">edit</i>
               </button>
               <button
+                class="btn btn-info me-2 shadow"
+                aria-label="Editar Horario"
+                (click)="doctorSchedule(row)"
+              >
+                <i class="material-symbols-outlined">schedule</i>
+              </button>
+              <button
                 class="btn btn-danger me-2 shadow"
                 aria-label="Eliminar usuario"
                 (click)="deleteDoctor(row.id)"
@@ -85,6 +92,7 @@
                 <i class="material-symbols-outlined">delete</i>
               </button>
             </ng-container>
+
 
             <!-- Plantilla para cuando el usuario no está activo -->
             <ng-template #activatePatientTemplate>

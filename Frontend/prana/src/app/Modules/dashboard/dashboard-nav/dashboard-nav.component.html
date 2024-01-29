@@ -62,32 +62,36 @@
 
     </div>
 
-
-
-
-    <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleSeminarOptions()">
-      <i class="material-symbols-outlined btn-icon">self_improvement</i> Gestionar Talleres
-    </button>
-    <div *ngIf="showSeminarOptions" class="toggle">
-      <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="seminar/"><i
-          class="material-symbols-outlined btn-icon">self_improvement</i>
-        Gestionar Talleres
-      </button>
-      <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
-          class="material-symbols-outlined btn-icon">self_improvement</i>
-        Gestionar Inscripciones
-      </button>
-    </div>
     <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink="appointments/admin/list"><i
         class="material-symbols-outlined btn-icon">calendar_month</i>
       Gestionar Turnos
     </button>
-
+    <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleSeminarOptions()">
+      <i class="material-symbols-outlined btn-icon">self_improvement</i>
+      Gestionar Talleres
+    </button>
+    <div *ngIf="showSeminarOptions" class="toggle">
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="seminar/admin/list">
+        <i class="material-symbols-outlined btn-icon">self_improvement</i>
+        Gestionar Talleres
+      </button>
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="room/admin/list">
+        <i class="material-symbols-outlined btn-icon">self_improvement</i>
+        Gestionar Salas
+      </button>
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="schedule/admin/list">
+        <i class="material-symbols-outlined btn-icon">self_improvement</i>
+        Gestionar Horarios
+      </button>
+    </div>
     <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'"
       routerLink="reports/copayment/appointment/admin/list"><i
         class="material-symbols-outlined btn-icon">account_balance</i>
       Gestionar Contabilidad
     </button>
+
+
+
 
     <button class="btn btn-primary" *ngIf="currentRole === 'Paciente'" (click)="toggleAppoimentPatientOptions()"><i
         class="material-symbols-outlined btn-icon">calendar_month</i>
@@ -120,9 +124,8 @@
       </button>
 
     </div>
-
-    <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'"><i
-        class="material-symbols-outlined btn-icon">calendar_month</i>
+    <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" routerLink="appointments/doctor/list">
+      <i class="material-symbols-outlined btn-icon">calendar_month</i>
       Gestionar Turnos
     </button>
 
@@ -131,140 +134,69 @@
       Gestionar Obras Sociales
     </button>
 
-  
-
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleSeminarOptions()">
-    <i class="material-symbols-outlined btn-icon">self_improvement</i>
-    Gestionar Talleres
-  </button>
-  <div *ngIf="showSeminarOptions" class="toggle">
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="seminar/admin/list">
-      <i class="material-symbols-outlined btn-icon">self_improvement</i>
-      Gestionar Talleres
-    </button>
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="room/admin/list">
-      <i class="material-symbols-outlined btn-icon">self_improvement</i>
-      Gestionar Salas
-    </button>
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="schedule/admin/list">
-      <i class="material-symbols-outlined btn-icon">self_improvement</i>
-      Gestionar Horarios
-    </button>
-  </div>
-  <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink="appointments/admin/list">
-    <i class="material-symbols-outlined btn-icon">calendar_month</i>
-    Gestionar Turnos
-  </button>
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'"
-    routerLink="reports/copayment/appointment/admin/list">
-    <i class="material-symbols-outlined btn-icon">account_balance</i>
-    Gestionar Contabilidad
-  </button>
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Paciente'" (click)="toggleAppoimentPatientOptions()">
-    <i class="material-symbols-outlined btn-icon">calendar_month</i>
-    Turnos
-  </button>
-  <div *ngIf="showAppoimentPatientOptions" class="toggle">
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink="appointments/patient/create">
-      <i class="material-symbols-outlined btn-icon">calendar_month</i>
-      Solicitar Turno
-    </button>
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink="appointments/patient/list">
-      <i class="material-symbols-outlined btn-icon">list</i>
-      Mis Turnos
-    </button>
-  </div>
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Paciente'" (click)="toggleSeminarPatientOptions()">
-    <i class="material-symbols-outlined btn-icon">self_improvement</i>
-    Talleres
-  </button>
-  <div *ngIf="showSeminarPatientOptions" class="toggle">
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink="">
-      <i class="material-symbols-outlined btn-icon">check_box</i>
-      Inscripción a Talleres
-    </button>
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink="">
-      <i class="material-symbols-outlined btn-icon">list</i>
-      Mis Inscripciones
-    </button>
-  </div>
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" routerLink="appointments/doctor/list">
-    <i class="material-symbols-outlined btn-icon">calendar_month</i>
-    Gestionar Turnos
-  </button>
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" routerLink="">
-    <i class="material-symbols-outlined btn-icon">medical_services</i>
-    Gestionar Obras Sociales
-  </button>
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" (click)="toggleDoctorEspecialityOptions()">
-    <i class="material-symbols-outlined btn-icon">medical_information</i>
-    Gestionar Especialidades
-  </button>
-
-  <div *ngIf="showDoctorEspecialityOptions" class="toggle">
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="">
+    <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" (click)="toggleDoctorEspecialityOptions()">
       <i class="material-symbols-outlined btn-icon">medical_information</i>
       Gestionar Especialidades
     </button>
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="">
-      <i class="material-symbols-outlined btn-icon">medical_information</i>
-      Gestionar Ramas de Especialidad
+
+    <div *ngIf="showDoctorEspecialityOptions" class="toggle">
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="">
+        <i class="material-symbols-outlined btn-icon">medical_information</i>
+        Gestionar Especialidades
+      </button>
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="">
+        <i class="material-symbols-outlined btn-icon">medical_information</i>
+        Gestionar Ramas de Especialidad
+      </button>
+    </div>
+
+    <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'"
+      routerLink="reports/copayment/appointment/doctor/list">
+      <i class="material-symbols-outlined btn-icon">account_balance</i>
+      Gestionar Contabilidad
     </button>
-  </div>
 
-  <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'"
-    routerLink="reports/copayment/appointment/doctor/list">
-    <i class="material-symbols-outlined btn-icon">account_balance</i>
-    Gestionar Contabilidad
-  </button>
-
-  <button class="btn btn-primary" *ngIf="currentRole === 'Tallerista'" (click)="toggleSeminarSeminaristOptions()">
-    <i class="material-symbols-outlined btn-icon">self_improvement</i>
-    Gestionar Talleres
-  </button>
-  <div *ngIf="showSeminarSeminaristOptions" class="toggle">
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Tallerista'" routerLink="">
+    <button class="btn btn-primary" *ngIf="currentRole === 'Tallerista'" (click)="toggleSeminarSeminaristOptions()">
       <i class="material-symbols-outlined btn-icon">self_improvement</i>
       Gestionar Talleres
     </button>
-    <button class="btn btn-secondary" *ngIf="currentRole === 'Tallerista'" routerLink="">
-      <i class="material-symbols-outlined btn-icon">self_improvement</i>
-      Gestionar Inscripciones
+    <div *ngIf="showSeminarSeminaristOptions" class="toggle">
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Tallerista'" routerLink="">
+        <i class="material-symbols-outlined btn-icon">self_improvement</i>
+        Gestionar Talleres
+      </button>
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Tallerista'" routerLink="">
+        <i class="material-symbols-outlined btn-icon">self_improvement</i>
+        Gestionar Inscripciones
+      </button>
+    </div>
+    <button class="btn btn-primary" *ngIf="currentRole === 'Tallerista'" routerLink="">
+      <i class="material-symbols-outlined btn-icon">medical_services</i>
+      Gestionar Obras Sociales
+    </button>
+    <button class="btn btn-primary" *ngIf="currentRole === 'Tallerista'" routerLink="">
+      <i class="material-symbols-outlined btn-icon">account_balance</i>
+      Gestionar Contabilidad
+    </button>
+
+    <button class="btn btn-primary" routerLink="accounts/myaccount">
+      <i class="material-symbols-outlined btn-icon">manage_accounts</i> Mi
+      cuenta
     </button>
   </div>
-  <button class="btn btn-primary" *ngIf="currentRole === 'Tallerista'" routerLink="">
-    <i class="material-symbols-outlined btn-icon">medical_services</i>
-    Gestionar Obras Sociales
-  </button>
-  <button class="btn btn-primary" *ngIf="currentRole === 'Tallerista'" routerLink="">
-    <i class="material-symbols-outlined btn-icon">account_balance</i>
-    Gestionar Contabilidad
-  </button>
+  <div class="selector-rol mt-4">
+    <div class="rol-actual" (click)="toggleRoleSelector()">
+      Rol: <span class="rol-color">{{ currentRole | titlecase }}</span>
+      <i class="material-icons">swap_horiz</i>
+      <!-- Ícono Autorenew -->
+    </div>
 
-  <button class="btn btn-primary" routerLink="accounts/myaccount">
-    <i class="material-symbols-outlined btn-icon">manage_accounts</i> Mi
-    cuenta
-  </button>
-</div>
-<div class="selector-rol mt-4">
-  <div class="rol-actual" (click)="toggleRoleSelector()">
-    Rol: <span class="rol-color">{{ currentRole | titlecase }}</span>
-    <i class="material-icons">swap_horiz</i>
-    <!-- Ícono Autorenew -->
+    <select class="select-role form-control" *ngIf="showRoleSelector" (change)="changeRole($event)"
+      [value]="currentRole">
+      <option *ngFor="let role of availableRoles" [value]="role" [selected]="role === currentRole">
+        {{ role | titlecase }}
+      </option>
+    </select>
   </div>
-
-  <select class="select-role form-control" *ngIf="showRoleSelector" (change)="changeRole($event)" [value]="currentRole">
-    <option *ngFor="let role of availableRoles" [value]="role" [selected]="role === currentRole">
-      {{ role | titlecase }}
-    </option>
-  </select>
-</div>
 
 </div>

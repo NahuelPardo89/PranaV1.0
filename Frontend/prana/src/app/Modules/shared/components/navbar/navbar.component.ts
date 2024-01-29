@@ -1,11 +1,13 @@
 
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { LoginUser } from 'src/app/Models/user/loginUser.interface';
 import { UserShort } from 'src/app/Models/user/userShort.interface';
 import { AuthService } from 'src/app/Services/auth/auth.service';
+
+declare const window: any;
 
 @Component({
   selector: 'app-navbar',
@@ -18,14 +20,12 @@ export class NavbarComponent implements OnInit {
   isLogged: boolean = false;
   currentRole: string = "";
 
-  isMenuOpen: boolean = true;
-
+  isMenuOpen: boolean = window.innerWidth > 991;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -34,19 +34,25 @@ export class NavbarComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
 
-    // También suscríbete al estado de autenticación aquí
     this.authService.isLogged.subscribe(logged => {
       this.isLogged = logged;
     });
     this.authService.getCurrentUser.subscribe(user => {
       this.currentUser = user;
     });
-    this.authService.getUserRole2().subscribe(role=>{
+    this.authService.getUserRole2().subscribe(role => {
       this.currentRole = role;
-      
-    })
+    });
   }
- 
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.updateIsMenuOpen();
+  }
+
+  private updateIsMenuOpen(): void {
+    this.isMenuOpen = window.innerWidth > 991;
+  }
 
   login(): void {
     if (this.loginForm.valid) {
@@ -64,7 +70,8 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    if (window.innerWidth <= 991) {
+      this.isMenuOpen = !this.isMenuOpen;
+    }
   }
-
 }

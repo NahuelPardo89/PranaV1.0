@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from apps.users.models import User
 from apps.usersProfile.models import PatientProfile, HealthInsurance
-
+from django.contrib.auth.hashers import check_password
 
 class UserShortSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +16,7 @@ class UserShortSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('dni', 'email', 'name', 'last_name', 'phone')
+        fields = ('id','dni', 'email', 'name', 'last_name', 'phone')
 
 
 class UserAdminSerializer(serializers.ModelSerializer):
@@ -48,9 +48,18 @@ class UserAdminSerializer(serializers.ModelSerializer):
 
 
 class PasswordSerializer(serializers.Serializer):
-    password = serializers.CharField(
-        max_length=128, min_length=6, write_only=True)
+    old_password = serializers.CharField(max_length=128, write_only=True)
+    new_password = serializers.CharField(max_length=128, min_length=6, write_only=True)
 
+    def validate_old_password(self, value):
+        user = self.context['request'].user
+        if not check_password(value, user.password):
+            raise serializers.ValidationError("La contraseña antigua no es correcta.")
+        return value
+
+    def validate(self, data):
+        # Puedes agregar aquí cualquier validación adicional que necesites
+        return data
 
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:

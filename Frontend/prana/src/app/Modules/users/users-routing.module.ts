@@ -9,6 +9,13 @@ import { DoctorListComponent } from './components/admin/doctor/doctor-list/docto
 import { DoctorEditComponent } from './components/admin/doctor/doctor-edit/doctor-edit.component';
 import { DoctorCreateComponent } from './components/admin/doctor/doctor-create/doctor-create.component';
 import { MyaccountComponent } from './components/myaccount/myaccount.component';
+import { EditmyuserComponent } from './components/myaccount/editmyuser/editmyuser.component';
+import { EditmypasswordComponent } from './components/myaccount/editmypassword/editmypassword.component';
+import { EditmypatientComponent } from './components/myaccount/editmypatient/editmypatient.component';
+import { EditmydoctorComponent } from './components/myaccount/editmydoctor/editmydoctor.component';
+import { ScheduleListComponent } from './components/admin/doctor/schedule/schedule-list/schedule-list.component';
+import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
+import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
 
 const routes: Routes = [
   { 
@@ -33,9 +40,25 @@ const routes: Routes = [
       { path: '', component: DoctorListComponent },
       { path: 'create', component: DoctorCreateComponent },
       { path: 'edit', component: DoctorEditComponent },
+      { path: 'schedule',children: [
+        { path: '', component: ScheduleListComponent },
+        { path: 'edit', component: ScheduleEditComponent },
+        { path: 'create', component: ScheduleCreateComponent }
+      ]},
     ]
   },
-  {path:'myaccount', component: MyaccountComponent}
+  { 
+    path: 'myaccount', 
+    children: [
+      
+      { path: '', component: MyaccountComponent },
+      { path: 'edituser', component: EditmyuserComponent },
+      { path: 'editpassword', component: EditmypasswordComponent },
+      { path: 'editpatient', component: EditmypatientComponent },
+      { path: 'editdoctor', component: EditmydoctorComponent },
+    ]
+  },
+  
  
 ];
 

@@ -25,6 +25,13 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MyaccountComponent } from './components/myaccount/myaccount.component';
 import {MatListModule} from '@angular/material/list';
+import { EditmyuserComponent } from './components/myaccount/editmyuser/editmyuser.component';
+import { EditmypatientComponent } from './components/myaccount/editmypatient/editmypatient.component';
+import { EditmydoctorComponent } from './components/myaccount/editmydoctor/editmydoctor.component';
+import { EditmypasswordComponent } from './components/myaccount/editmypassword/editmypassword.component';
+import { ScheduleListComponent } from './components/admin/doctor/schedule/schedule-list/schedule-list.component';
+import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
+import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
 @NgModule({
   declarations: [
    
@@ -37,6 +44,13 @@ import {MatListModule} from '@angular/material/list';
     DoctorEditComponent,
     DoctorCreateComponent,
     MyaccountComponent,
+    EditmyuserComponent,
+    EditmypatientComponent,
+    EditmydoctorComponent,
+    EditmypasswordComponent,
+    ScheduleListComponent,
+    ScheduleEditComponent,
+    ScheduleCreateComponent,
     
   ],
   imports: [

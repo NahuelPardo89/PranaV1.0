@@ -57,4 +57,17 @@ export class UserService {
   getLoggedUser(): Observable<User> {
     return this.http.get<User>(this.meUrl);
   }
+
+  updateLoggedUser(userData: User): Observable<void> {
+    const url = this.meUrl; // Solo el endpoint a LoggedUserViewSet
+    return this.http.put<void>(url, userData).pipe(
+      catchError(error => {
+        return throwError(() => new Error(error));
+      })
+    );
+  }
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const url = `${this.meUrl}set_password/`; // URL del endpoint
+    return this.http.post(url, { old_password: oldPassword, new_password: newPassword });
+  }
 }

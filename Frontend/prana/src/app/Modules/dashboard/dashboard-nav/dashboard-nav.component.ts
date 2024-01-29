@@ -23,7 +23,10 @@ export class DashboardNavComponent {
 
   ngOnInit() {
     this.availableRoles = this.authService.getUserRoles();
-    this.currentRole = this.authService.getCurrentRole();
+    this.authService.currentRoleSubject.subscribe((role: string) => {
+      this.currentRole = role;
+      
+    });
   }
 
   changeRole(event: Event): void {

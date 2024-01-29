@@ -68,6 +68,13 @@ export class DoctorListComponent {
     });
   }
 
+  doctorSchedule(doctor: DoctorProfile) {
+    this.router.navigate(['Dashboard/accounts/doctores/schedule/'], {
+      state: { doctor },
+    });
+
+  }
+
   deleteDoctor(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Estás seguro de que deseas desactivar este Profesional?'

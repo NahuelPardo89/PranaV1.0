@@ -78,6 +78,18 @@ const routes: Routes = [
             (m) => m.SeminarModule
           ),
       },
+      {
+        path: 'room',
+        loadChildren: () =>
+          import('src/app/Modules/room/room.module').then((m) => m.RoomModule),
+      },
+      {
+        path: 'schedule',
+        loadChildren: () =>
+          import('src/app/Modules/schedule/schedule.module').then(
+            (m) => m.ScheduleModule
+          ),
+      },
     ],
   },
 ];

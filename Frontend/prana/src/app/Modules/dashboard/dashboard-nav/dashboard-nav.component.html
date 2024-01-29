@@ -110,7 +110,81 @@
       <!-- <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i class="material-symbols-outlined btn-icon">medical_services</i>
                         Obras Sociales Talleristas
                     </button> -->
+
+                </div>
+        
+            
+
+
+        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleSeminarOptions()">
+            <i class="material-symbols-outlined btn-icon">self_improvement</i> Gestionar Talleres
+        </button>
+        <div *ngIf="showSeminarOptions" class="toggle">
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="seminar/"><i
+                    class="material-symbols-outlined btn-icon">self_improvement</i>
+                Gestionar Talleres
+            </button>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink=""><i
+                    class="material-symbols-outlined btn-icon">self_improvement</i>
+                Gestionar Inscripciones
+            </button>
+        </div>
+        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink="appointments/admin/list"><i
+                class="material-symbols-outlined btn-icon">calendar_month</i>
+            Gestionar Turnos
+        </button>
+
+        <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'"
+            routerLink="reports/copayment/appointment/admin/list"><i
+                class="material-symbols-outlined btn-icon">account_balance</i>
+            Gestionar Contabilidad
+        </button>
+
+        <button class="btn btn-primary" *ngIf="currentRole === 'Paciente'" (click)="toggleAppoimentPatientOptions()"><i
+                class="material-symbols-outlined btn-icon">calendar_month</i>
+            Turnos
+        </button>
+        <div *ngIf="showAppoimentPatientOptions" class="toggle">
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'"
+                routerLink="appointments/patient/create"><i
+                    class="material-symbols-outlined btn-icon">calendar_month</i>
+                Solicitar Turno
+            </button>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'"
+                routerLink="appointments/patient/list"><i class="material-symbols-outlined btn-icon">list</i>
+                Mis Turnos
+            </button>
+
+        </div>
+
+        <button class="btn btn-primary" *ngIf="currentRole === 'Paciente'" (click)="toggleSeminarPatientOptions()"><i
+                class="material-symbols-outlined btn-icon">self_improvement</i>
+            Talleres
+        </button>
+        <div *ngIf="showSeminarPatientOptions" class="toggle">
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink=""><i
+                    class="material-symbols-outlined btn-icon">check_box</i>
+                Inscripción a Talleres
+            </button>
+            <button class="btn btn-secondary" *ngIf="currentRole === 'Paciente'" routerLink=""><i
+                    class="material-symbols-outlined btn-icon">list</i>
+                Mis Inscripciones
+            </button>
+
+        </div>
+
+        <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'"><i
+                class="material-symbols-outlined btn-icon">calendar_month</i>
+            Gestionar Turnos
+        </button>
+
+        <button class="btn btn-primary" *ngIf="currentRole === 'Profesional'" routerLink="insurances/doctor/me"><i
+                class="material-symbols-outlined btn-icon">medical_services</i>
+            Gestionar Obras Sociales
+        </button>
+
     </div>
+
 
     <button
       class="btn btn-primary"

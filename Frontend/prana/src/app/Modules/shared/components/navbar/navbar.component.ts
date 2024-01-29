@@ -18,7 +18,7 @@ export class NavbarComponent implements OnInit {
   isLogged: boolean = false;
   currentRole: string = "";
 
-  isMenuOpen: boolean = false;
+  isMenuOpen: boolean = true;
 
 
   constructor(

@@ -137,6 +137,7 @@ class PatientShortProfileSerializer(serializers.ModelSerializer):
 
 
 class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
+    
     insurance = HealthInsuranceSerializer(read_only=True)
     branch = SpecialityBranchListSerializer(read_only=True)
 
@@ -146,13 +147,14 @@ class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
 
 
 class DoctorProfileShortSerializer(serializers.ModelSerializer):
-    insurances = InsurancePlanDoctorSerializer2(many=True, read_only=True)
-    specialty = serializers.StringRelatedField(many=True)
+    user = serializers.StringRelatedField(required=False)
+    insurances = serializers.StringRelatedField(many=True,required=False)
+    specialty = serializers.StringRelatedField(many=True,required=False)
 
     class Meta:
         model = DoctorProfile
-        fields = ('medicLicence', 'specialty', 'insurances', 'is_active')
-        read_only_fields = ('is_active',)
+        fields = ('id','user','medicLicence', 'specialty', 'insurances', 'is_active','appointment_duration')
+        read_only_fields = ('id','is_active','specialty', 'insurance','user')
 
 
 class DoctorReportSerializer(serializers.ModelSerializer):

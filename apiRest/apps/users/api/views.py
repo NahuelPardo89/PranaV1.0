@@ -143,11 +143,14 @@ class LoggedUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixi
     @action(detail=False, methods=['post'])
     def set_password(self, request):
         user = request.user
-        password_serializer = PasswordSerializer(data=request.data)
+        password_serializer = PasswordSerializer(data=request.data, context={'request': request})
+        
         if password_serializer.is_valid():
-            user.set_password(password_serializer.validated_data['password'])
+            new_password = password_serializer.validated_data['new_password']
+            user.set_password(new_password)
             user.save()
             return Response({'message': 'Contraseña actualizada correctamente'})
+        
         return Response({'message': 'Hay errores en la información enviada', 'errors': password_serializer.errors},
                         status=status.HTTP_400_BAD_REQUEST)
 

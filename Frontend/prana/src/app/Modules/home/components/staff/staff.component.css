@@ -1,261 +1,445 @@
+/* color violeta #502c36 */
 
 ::-webkit-scrollbar {
     width: 10px;
 }
 
-/* profesionales */
-/* profesionales */
-.introduccion {
-    display: flex;
-    width: 80%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-}
-.nuestrosProfesionales {
-    font-size: 2.5rem;
-    text-align: center;
-    color: #ae71a3;
-    padding: 20px;
-    margin-top: 20px;
-    font-family: 'Lora';
-
-    width: 60%;
-
-}
-
-.subtituloIntro{
-    font-size: 1rem;
-    padding: 15px;
-}
-.textIntro {
-    width: 80%;
-    text-align: center;
-    text-wrap: balance;
-    margin-bottom: 20px;
-
-    font-size: 1.12rem;
-}
-
-.contenedorStaff {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 80%;
-    
-    
-    
-    margin: auto;
-
-    
-    
-}
-
-.staff {
-    width: 100%;
-    background-color: #f9f9f9;
-}
-
-
-.info > img {
-    border: none;
-}
-
-.tarjeta {
-    width: 15%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 10px;
-    
-    
-}
-
-.tarjetaCuerpo {
-    display: flex;
-    flex-direction: column;
-    
-
-    width: 100%;
-    height: 80px;
-    border: none;
-    
-    
-    overflow-x: hidden;
-    overflow-y: scroll;
-
-    font-family: 'Lora', "Helvetica Neue", sans-serif;
-   
-    
-
-    
-}
-.tarjetaNombre {
-    font-size: 1rem;
-    color: #ae71a3;
-}
-.tarjetaTitulo {
-    font-size: 0.8rem;
-    color: #888;
-}
-    
-    
-
-
-
-.foto {
-    
-    width: 100%;
-    height: 200px;
-}
-.tarjetaImagen {
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 100%;
-}
-p {
-    text-align: flex-start;
-    font-size: 1rem;
-}
-.tarjetaTexto {
-    display: none;
-    padding: 5px;
-}
-
-
-
-
-
 
 /* home */
 /* home */
 .bgFull {
-    /* background: rgb(211,146,202);
-    background: linear-gradient(0deg, rgba(211,146,202,1) 11%, rgba(255,255,255,1) 92%); */
+  /* background: rgb(211,146,202);
+  background: linear-gradient(0deg, rgba(211,146,202,1) 11%, rgba(255,255,255,1) 92%); */
 
-
-    /* background-image: url(../../../../../assets/img/bg_bggenerator_com.png); */
-    background-color: #f9f9f9;
+  overflow: hidden;
+  background-image: url(../../../../../assets/img/foto4Blur.jpg);
+  background-size: cover;
+  position: relative;
+  backdrop-filter: blur(10px);
+  margin-top: -15px;
+  /* background-color: #f9f9f9; */
 
 }
+/* Media queries para tabletas y móviles */
+
+/* Carrousel */
+
+:root {
+  --slide-transform: 0;
+  --transition: transform 1s;
+}
+.carrousel-container {
+  width: 450px;
+  margin-right: auto;
+  margin-left: auto;
+  
+  overflow: hidden;
+  
+}
+.carrousel {
+  display: flex;
+  transform: translateX(var(--slide-transform));
+  transition: transform 0.5s ease;
+}
+.carrousel-item {
+  min-width: 100%;
+  height: 300px;
+  font-size: 3rem;
+  text-align: center;
+  line-height: 300px;
+  
+  
+}
+.carrousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  
+  border: 2px solid  #502c36;
+  transition: opacity 0.5s ease, visibility 0.5s ease; /* Agrega esta línea para la transición */
+
+}
+
+.carrousel-item img:not(.hidden-image) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.carrousel-controls {
+  margin-top: 5px;
+  width: 100px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.css-button-sliding-to-right--blue {
+  
+  min-width: 2%;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  z-index: 0;
+  background: #fff;
+  overflow: hidden;
+  border: 2px solid #502c36;
+  color: #502c36;
+}
+.css-button-sliding-to-right--blue:hover {
+  color: #fff;
+}
+.css-button-sliding-to-right--blue:hover:after {
+  width: 100%;
+}
+.css-button-sliding-to-right--blue:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  transition: all 0.3s ease;
+  right: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background: #502c36;
+}
+.css-button-sliding-to-left--blue {
+  
+  min-width: 2%;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  z-index: 0;
+  background: #fff;
+  overflow: hidden;
+  border: 2px solid #502c36;
+  color: #502c36;
+}
+.css-button-sliding-to-left--blue:hover {
+  color: #fff;
+}
+.css-button-sliding-to-left--blue:hover:after {
+  width: 100%;
+}
+.css-button-sliding-to-left--blue:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  transition: all 0.3s ease;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 100%;
+  background: #502c36;
+}
+/* Carrousel */
+
 .main {
-    margin: auto;
-    width: 90%;
-    height: 94vh;
-    
-    
+  margin: auto;
+  width: 90%;
+  height: 93vh;
+  
+  
+  
 
 
-    
-    
+  
+  
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .titlePrana {
-   
-    width: 65%;
-    padding: 10px;
-    
-    display: flex;
-    
-    justify-content: center;
-    
+ 
+  width: 50%;
+  padding: 10px;
+  
+  display: flex;
+  
+  justify-content: center;
+  
 
-    
+  
 }
 .prana{
-    color: #68335a;
-    padding: 1rem;
-    font-size: 10rem;
-    font-weight: 500;
-    font-family: 'Lora', "Helvetica Neue", sans-serif;
+  color: #502c36;
+  padding: 1rem;
+  font-size: 9rem;
+  font-weight: 500;
+  font-family: 'Lora', "Helvetica Neue", sans-serif;
 }
 .logo{
-    width: 20%;
-    padding: 1rem;
+  width: 250px;
+  padding: 1rem;
 }
 
-.css-button-sharp--green {
-    
-    margin-top: 25px;
-   
-    
-
-
-    min-width: 130px;
-    width: 8%;
-    height: 7%;
-    color: #ae71a3;
-    
-    padding: 5px 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    
-    display: inline-block;
-    outline: none;
-    border-color: #888;
-    border-radius: 5%;
+.css-button-sliding-to-bottom--blue {
+  margin-top: 4%;
+  min-width: 130px;
+  height: 40px;
+  color: #fff;
+  padding: 5px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  border-radius: 5px;
+  z-index: 0;
+  background: #fff;
+  overflow: hidden;
+  border: 2px solid #502c36;
+  color: #502c36;
 }
-  a{
-    font-family: 'Lora', "Helvetica Neue", sans-serif;
-    font-size: 1rem;
-    text-decoration: none;
-    color: WHITE;
-  }
-  
-  .css-button-sharp--green:hover {
-    
-    background: #fff;
-    
-  }
+.css-button-sliding-to-bottom--blue:hover {
+  color: #fff;
+}
+.css-button-sliding-to-bottom--blue:hover:after {
+  height: 100%;
+}
+.css-button-sliding-to-bottom--blue:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  transition: all 0.3s ease;
+  left: 0;
+  top: 0;
+  height: 0;
+  width: 100%;
+  background: #502c36;
+}
+a{
+  font-family: 'Lora', "Helvetica Neue", sans-serif;
+  font-size: 1rem;
+  text-decoration: none;
+  color: WHITE;
+}
+
+
 
 .homeDerecha {
-    box-shadow: -7px 0px 65px 0px #68335a;
-    padding: 5px;
-    width:30%;
-    height: 65%;
-    border-radius: 0.5%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    
-    
+  box-shadow: -7px 0px 65px 0px #68335a;
+  padding: 5px;
+  width:500px;
+  height: 600px;
+  border-radius: 0.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f9f9f980;
+  
+  
+  
 
-    
-    
+  
+  
 
 }
 .subtitulo {
-    color: #ae71a3;
-    padding: 1rem;
-    font-size: 3.4rem;
-    font-family: Lora, "Helvetica Neue", sans-serif;
+  color: #502c36;
+  padding: 1rem;
+  font-size: 3.4rem;
+  font-family: Lora, "Helvetica Neue", sans-serif;
 }
 .ciudad {
-    width: 100%;
-   
-    color: #ae71a3;
-    padding:1rem;
-    font-family: Lora, "Helvetica Neue", sans-serif;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    text-align: start;
+  width: 100%;
+ 
+  color: #ae71a3;
+  padding:1rem;
+  font-family: Lora, "Helvetica Neue", sans-serif;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: start;
 }
 .description{
-    color: #888;
-    padding: 1rem;
-    font-family: Lora, "Helvetica Neue", sans-serif;
-    font-size: 1.2rem;
+  color: #888;
+  padding: 1rem;
+  font-family: Lora, "Helvetica Neue", sans-serif;
+  font-size: 1.2rem;
 
 }
+
+@media screen and (max-width: 1700px) {
+  
+  .main {
+    
+    
+    display: flex;
+    flex-direction: column;
+    
+      
+  }
+  .logo {
+    display: none;
+  }
+  .prana {
+    font-size: 6.8rem;
+  }
+  
+}
+
+@media screen and (max-width: 768px) {
+  .prana {
+    font-size: 6.4rem;
+  }
+  .homeDerecha {
+    width: 460px;
+  }
+  .carrousel-container {
+    width: 420px;
+  }
+  .subtitulo {
+    font-size: 3rem;
+  }
+}
+
+
+
+/* profesionales */
+.introduccion {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.nuestrosProfesionales {
+  font-size: 2.5rem;
+  text-align: center;
+  color: #ae71a3;
+  padding: 20px;
+  margin-top: 20px;
+  font-family: 'Lora';
+  width: 80%;
+}
+
+.subtituloIntro {
+  font-size: 1rem;
+  padding: 15px;
+  text-align: center;
+}
+
+.textIntro {
+  width: 80%;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.12rem;
+  line-height: 1.5; /* Añadido: Mejora la legibilidad con un espacio de línea adecuado */
+}
+
+.contenedorStaff {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* Añadido: Distribuye uniformemente los elementos */
+  width: 80%;
+  margin: auto;
+}
+
+.staff {
+  width: 100%;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Añadido: Sutil sombra para destacar el contenedor */
+  margin-bottom: 20px; /* Añadido: Espacio entre los elementos del staff */
+  border-radius: 8px; /* Añadido: Bordes redondeados */
+}
+
+.info > img {
+  border: none;
+}
+
+.tarjeta {
+  width: 200px; /* Modificado: Ajusta el ancho para tabletas */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+  transition: transform 300ms ease; /* Añadido: Efecto de transición al hacer hover */
+}
+
+.tarjeta:hover {
+  transform: scale(1.05); /* Añadido: Efecto de escala al hacer hover */
+}
+
+.tarjetaCuerpo {
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+  height: 80px;
+  border: none;
+  overflow: hidden; /* Modificado: Evita la barra de desplazamiento horizontal */
+  font-family: 'Lora', "Helvetica Neue", sans-serif;
+}
+
+.tarjetaNombre {
+  font-size: 1rem;
+  color: #ae71a3;
+}
+
+.tarjetaTitulo {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.foto {
+  width: 100%;
+  height: 200px;
+  overflow: hidden; /* Añadido: Evita que las imágenes se salgan del contenedor */
+  border-radius: 50%;
+}
+
+.tarjetaImagen {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%; /* Modificado: Bordes redondeados del 50% para hacer un círculo */
+}
+
+p {
+  text-align: left; /* Modificado: Alinea el texto a la izquierda */
+  font-size: 1rem;
+}
+
+.tarjetaTexto {
+  display: none;
+  padding: 5px;
+}
+
+/* Media queries para tabletas y móviles */
+@media screen and (max-width: 1024px) {
+  .tarjeta {
+      width: 30%; /* Modificado: Ajusta el ancho para tabletas */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .tarjeta {
+      width: 30%; /* Modificado: Ajusta el ancho para móviles */
+      min-width: 200px;
+  }
+}
+
+
+
+
 
 
 
@@ -300,6 +484,7 @@ p {
 .mid{
     border-radius: 2%;
     box-shadow: 0px 0px 100px -14px #68335a;
+    text-align: center;
 }
 .bodyNav-container p {
     font-family: 'Open Sans', "Helvetica Neue", sans-serif;
@@ -311,6 +496,7 @@ p {
 
 .bodyNav-container img {
     width: 60%;
+    min-width: 200px;
     border-radius: 50%;
     aspect-ratio: 1/1;
     object-fit: cover;
@@ -323,91 +509,131 @@ p {
     border-bottom: 1px solid #ccc;
     padding: 10px;
 }
-/* ¿Cómo encontrarnos? */
-/* ¿Cómo encontrarnos? */
-/* ¿Cómo encontrarnos? */
+@media screen and (max-width: 1024px) {
+  .bodyNav {
+      flex-direction: column;
+      font-size: 0.8rem;
+  }
 
-.comoEncontrarnos {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color:  #f9f9f9;
-    
+  .bodyNav-container {
+      width: 48%;
+      margin-bottom: 20px; /* Espacio entre los contenedores */
+  }
 }
+
+/* Media queries para móviles */
+@media screen and (max-width: 480px) {
+  .bodyNav-container {
+      width: 100%;
+  }
+}
+/* ¿Cómo encontrarnos? */
+/* ¿Cómo encontrarnos? */
+/* ¿Cómo encontrarnos? */
+.comoEncontrarnos {
+  margin: auto;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+  
+}
+
 .contenedorUbicacion {
-    width: 40%;
+  width: 80%; /* Modificado: Ajusta el ancho para tabletas y móviles */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 10px;
+}
+
+.ubicacionTitle {
+  width: 90%;
+  padding: 15px;
+  font-family: 'Lora';
+  font-size: 2rem;
+  color: #68335a;
+}
+
+.listaEncontrarnos {
+  list-style: none;
+  margin: 20px 0; /* Modificado: Reduce el margen superior e inferior */
+  font-family: 'Lora';
+  font-size: 1.2rem;
+}
+
+.listaEncontrarnos li {
+  margin-top: 10px;
+  color: #68335a;
+}
+
+.listaEncontrarnos li img {
+  margin-right: 10px;
+}
+
+.maps {
+  
+  max-width: 100%; /* Modificado: Evita que el mapa se desborde en pantallas pequeñas */
+}
+.embedIg {
+  width: 80%;
+  margin: auto;
+}
+
+
+
+/* Media queries para tabletas y móviles */
+@media screen and (max-width: 1024px) {
+  .contenedorUbicacion {
+      width: 100%; /* Modificado: Ajusta el ancho para tabletas */
+      
+      
+      padding: 10px;
+      align-items: center;
+  }
+  .comoEncontrarnos{
+    width: 100%;
+    flex-direction: column;
+    padding: 0;
+    margin: auto;
+  }
+  .maps {
+    width: 80%;
+    
+    text-align: center;
+  }
+  .mapa {
+
+    width: 80%;
+  }
+  .ubicacionTitle {
+    margin-left: 15px;
+    text-align: center;
+    text-wrap: balance;
+    
+  }
+  .contenedorIg{
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    
+    align-items: center;
+  }
 }
 
-.bodyUbi{   
-    width: 100%;
-    height: 100%;
-    padding: 10px;
-    
-
-    
-}
-.ubicacionTitle {
-    width: 90%;
-    padding: 15px;
-
-    font-family: 'Lora';
-    font-size: 2rem;
-    color: #68335a;
-    
-}
-.listaEncontrarnos {
-    list-style: none;
-    margin:30px ;
-    font-family: 'Lora';
-    font-size: 1.2rem;
-    
-    
-}
-.listaEncontrarnos li {
-    margin-top: 10px;
-    color: #68335a;
-}
-.listaEncontrarnos li img {
-    
-    margin-right: 10px;
-}
-.maps {
-    margin: auto;
+@media screen and (max-width: 768px) {
+  .contenedorUbicacion {
+      width: 100%; /* Modificado: Ajusta el ancho para móviles */
+      
+  }
+  .comoEncontrarnos{
+    flex-direction: column;
+  }
+  .embedIg {
+    width: 80%;
+  }
 }
 
-
-
-.contenedorIg {
-    width: 30%;
-    
-    background-color: white;
-    height: 560px;
-
-    box-shadow: 0px 0px 100px -14px #68335a;
-
-    border-radius: 1%;
-
-    
-    
-
-    text-align: flex-start;
-
-
-
-
-    
-}
-.contenedorIg h2 {
-    font-family: 'Open-sans';
-    font-size: 1.4rem;
-    color: #68335a;
-}
 
 /* ANIMACIONES */
 
@@ -537,4 +763,5 @@ p {
       opacity: 1;
     }
   }
-  
+
+ 

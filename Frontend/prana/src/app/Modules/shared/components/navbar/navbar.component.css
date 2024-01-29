@@ -56,35 +56,30 @@ li > a {
     
 }
 
-/* ANIMACIONES */
-/* 
-.slide-in-top {
-	-webkit-animation: slide-in-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
-	        animation: slide-in-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.2s both;
+#navbarNav {
+    background-color: #f9f9f9;;
+    z-index: 500;
 }
 
-@-webkit-keyframes slide-in-top {
-    0% {
-      -webkit-transform: translateY(-1000px);
-              transform: translateY(-1000px);
-      opacity: 0;
-    }
-    100% {
-      -webkit-transform: translateY(0);
-              transform: translateY(0);
-      opacity: 1;
-    }
+.nav-item {
+    border-radius: 14px;
+    padding: 10px;
+}
+
+
+@media screen and (max-width: 991px) {
+  
+   #navbarNav {
+    min-width: 30%;
+    display: inline;
+    position: absolute;
+    right: 10px;
+    top: 100%;
+    border-radius: 14px;
+    
+    
+   }
+
+   
+    
   }
-  @keyframes slide-in-top {
-    0% {
-      -webkit-transform: translateY(-1000px);
-              transform: translateY(-1000px);
-      opacity: 0;
-    }
-    100% {
-      -webkit-transform: translateY(0);
-              transform: translateY(0);
-      opacity: 1;
-    }
-  }
-   */

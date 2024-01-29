@@ -18,10 +18,14 @@ export class NavbarComponent implements OnInit {
   isLogged: boolean = false;
   currentRole: string = "";
 
+  isMenuOpen: boolean = false;
+
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    
   ) {}
 
   ngOnInit(): void {
@@ -58,4 +62,9 @@ export class NavbarComponent implements OnInit {
   logout(): void {
     this.authService.logout();
   }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
 }

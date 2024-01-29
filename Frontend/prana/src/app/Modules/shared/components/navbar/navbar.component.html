@@ -6,13 +6,12 @@
     </a>
 
     <!-- Botón para versiones móviles -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <!-- Contenido del Navbar -->
-    <div class="collapse navbar-collapse" id="navbarNav">
+    <div class="collapse navbar-collapse" *ngIf="isMenuOpen" id="navbarNav">
       <!-- Botones del lado izquierdo -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">

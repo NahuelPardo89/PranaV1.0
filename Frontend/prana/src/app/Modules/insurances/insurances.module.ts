@@ -20,12 +20,15 @@ import { EditInsuranceComponent } from './componentes/insurance/edit-insurance/e
 import { ListInsurancePatientComponent } from './componentes/insurancePlanPratient/list-insurance-patient/list-insurance-patient.component';
 import { CreateInsurancePatientComponent } from './componentes/insurancePlanPratient/create-insurance-patient/create-insurance-patient.component';
 import { EditInsurancePatientComponent } from './componentes/insurancePlanPratient/edit-insurance-patient/edit-insurance-patient.component';
-import { CreateInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/create-insurance-doctor/create-insurance-doctor.component';
-import { EditInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/edit-insurance-doctor/edit-insurance-doctor.component';
-import { ListInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/list-insurance-doctor/list-insurance-doctor.component';
+import { CreateInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/admin/create-insurance-doctor/create-insurance-doctor.component';
+import { EditInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/admin/edit-insurance-doctor/edit-insurance-doctor.component';
+import { ListInsuranceDoctorComponent } from './componentes/insurancePlanDoctor/admin/list-insurance-doctor/list-insurance-doctor.component';
+import { CreateInsuranceDoctorUserComponent } from './componentes/insurancePlanDoctor/doctor/create-insurance-doctor-user/create-insurance-doctor-user.component';
+import { EditInsuranceDoctorUserComponent } from './componentes/insurancePlanDoctor/doctor/edit-insurance-doctor-user/edit-insurance-doctor-user.component';
+import { ListInsuranceDoctorUserComponent } from './componentes/insurancePlanDoctor/doctor/list-insurance-doctor-user/list-insurance-doctor-user.component';
 
 @NgModule({
-  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent, ListInsurancePatientComponent, CreateInsurancePatientComponent, EditInsurancePatientComponent, CreateInsuranceDoctorComponent, EditInsuranceDoctorComponent, ListInsuranceDoctorComponent, ],
+  declarations: [ListInsuranceComponent, CreateInsuranceComponent, EditInsuranceComponent, ListInsurancePatientComponent, CreateInsurancePatientComponent, EditInsurancePatientComponent, CreateInsuranceDoctorComponent, EditInsuranceDoctorComponent, ListInsuranceDoctorComponent, CreateInsuranceDoctorUserComponent, EditInsuranceDoctorUserComponent, ListInsuranceDoctorUserComponent, ],
   imports: [
     CommonModule,
     InsurancesRoutingModule,

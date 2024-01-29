@@ -178,6 +178,30 @@ class DoctorSpecialityBranchViewSet(viewsets.ViewSet):
         except DoctorProfile.DoesNotExist:
             return Response({"message": "Doctor no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
+class MeDoctorSpecialityBranchViewSet(viewsets.ViewSet):
+    """
+    ViewSet para obtener las ramas de especialidades de un doctor específico.
+    """
+
+    def list(self, request):
+        doctor_id = request.user.doctorProfile.id
+        
+
+        try:
+            doctor = DoctorProfile.objects.get(pk=doctor_id)
+            # Obtener todas las especialidades del doctor
+            doctor_specialities = doctor.specialty.all()
+
+            # Filtrar las ramas que pertenecen a las especialidades del doctor
+            branches = SpecialityBranch.objects.filter(
+                speciality__in=doctor_specialities, is_active=True)
+
+            serializer = SpecialityBranchListSerializer(branches, many=True)
+            return Response(serializer.data)
+
+        except DoctorProfile.DoesNotExist:
+            return Response({"message": "Doctor no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
 
 class DoctorBranchesView(APIView):
     """
@@ -356,6 +380,33 @@ class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
             return Response({
                 'message': 'No existe el Profile que desea eliminar'
             }, status=status.HTTP_404_NOT_FOUND)
+
+class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
+    serializer_class = InsurancePlanDoctorListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        # Filtra los InsurancePlanDoctor por el doctor logueado
+        user = self.request.user.doctorProfile
+        return InsurancePlanDoctor.objects.filter(doctor=user)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data.copy()
+
+        # Agregar el doctorProfile del usuario logueado al data
+        doctor_profile = request.user.doctorProfile
+        data['doctor'] = doctor_profile.id
+        serializer = InsurancePlanDoctorCreateSerializer(data=data, context={'request': request})
+        if serializer.is_valid():
+            # Asignar el doctorProfile del usuario logueado al InsurancePlanDoctor creado
+            serializer.save(doctor=request.user.doctorProfile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def destroy(self, request, pk=None, *args, **kwargs):
+        instance = get_object_or_404(InsurancePlanDoctor, pk=pk, doctor__user=request.user)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PatientProfileAdminViewSet(BaseAdminViewSet):

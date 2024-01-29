@@ -9,6 +9,7 @@ import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 export class BranchService {
 
   private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/speciality-branch/';
+  private meUrl: string = 'http://127.0.0.1:8000/profile/admin/me-speciality-branch/';
   private baseUrl2: string = 'http://127.0.0.1:8000/profile/admin/';
   
 
@@ -44,5 +45,9 @@ export class BranchService {
   // Delete a speciality branch
   deleteSpecialityBranch(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}/`);
+  }
+
+  getMeSpecialityBranches(): Observable<SpecialityBranch[]> {
+    return this.http.get<SpecialityBranch[]>(this.meUrl);
   }
 }

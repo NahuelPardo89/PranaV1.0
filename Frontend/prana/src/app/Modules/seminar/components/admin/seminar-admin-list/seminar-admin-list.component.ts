@@ -72,7 +72,45 @@ export class SeminarAdminListComponent {
     }
   }
 
-  activeSeminar(seminar: SeminarAdminInterface) {}
+  /**
+   * Activates a seminar by updating its 'is_active' status to true.
+   *
+   * @param {SeminarAdminInterface} seminar - The seminar to be activated.
+   * @throws {Error} Throws an error if the activation process fails.
+   * @returns {void}
+   * @author Alvaro Olguin Armendariz
+   */
+  activateSeminar(seminar: SeminarAdminInterface): void {
+    const data = { is_active: true };
+    if (seminar.id) {
+      this.seminarService
+        .partialUpdateSeminar(seminar.id, data)
+        .pipe(
+          catchError((error) => {
+            console.error('Error en la solicitud:', error);
+
+            // Checks "non_field_errors"
+            if (error.error && error.error.non_field_errors) {
+              const errorMessage = error.error.non_field_errors[0];
+              this.dialogService.showErrorDialog(
+                'Error al activar el seminario: ' + errorMessage
+              );
+            } else {
+              // Show a general error
+              this.dialogService.showErrorDialog(
+                'Ha ocurrido un error en la solicitud.'
+              );
+            }
+
+            throw error;
+          })
+        )
+        .subscribe((data: any) => {
+          this.setDataTable();
+          this.dialogService.showSuccessDialog('Seminario activado con éxito');
+        });
+    }
+  }
 
   /**
    * Edits a seminar.
@@ -87,7 +125,7 @@ export class SeminarAdminListComponent {
 
   /**
    * Redirects to the seminar inscription screen
-   * @param {number} seminar - The ID of the seminar to view.
+   * @param {SeminarAdminInterface} seminar - The ID of the seminar to view.
    * @author Alvaro Olguin
    */
   onView(seminar: SeminarAdminInterface) {

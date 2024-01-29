@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterface.interface';
 
@@ -42,6 +42,23 @@ export class SeminarService {
     return this.http.put<SeminarAdminInterface>(
       `${this.apiUrl}${id}/`,
       seminar
+    );
+  }
+
+  /**
+   * Partially updates a seminar with the provided data.
+   * @param {number} seminarId - The ID of the seminar to update.
+   * @param {Partial<SeminarAdminInterface>} data - The data to update the seminar with.
+   * @returns {Observable<SeminarAdminInterface>} An observable of the updated seminar.
+   * @author Alvaro Olguin
+   */
+  partialUpdateSeminar(
+    seminarId: number,
+    data: Partial<SeminarAdminInterface>
+  ): Observable<SeminarAdminInterface> {
+    return this.http.patch<SeminarAdminInterface>(
+      this.apiUrl + seminarId + '/',
+      data
     );
   }
 

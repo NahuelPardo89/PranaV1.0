@@ -24,7 +24,7 @@ DAY_CHOICES = [
     ("Miércoles", "Miércoles"),
     ("Jueves", "Jueves"),
     ("Viernes", "Viernes"),
-    ("Sabado", "Sabado"),
+    ("Sábado", "Sábado"),
     ("Domingo", "Domingo"),]
 
 SEMINAR_STATUS_CHOICES = [

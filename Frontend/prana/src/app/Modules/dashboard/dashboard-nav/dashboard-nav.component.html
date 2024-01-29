@@ -137,10 +137,18 @@
       <button
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
-        routerLink=""
+        routerLink="room/admin/list"
       >
         <i class="material-symbols-outlined btn-icon">self_improvement</i>
-        Gestionar Inscripciones
+        Gestionar Salas
+      </button>
+      <button
+        class="btn btn-secondary"
+        *ngIf="currentRole === 'Administrador'"
+        routerLink="schedule/admin/list"
+      >
+        <i class="material-symbols-outlined btn-icon">self_improvement</i>
+        Gestionar Horarios
       </button>
     </div>
     <button

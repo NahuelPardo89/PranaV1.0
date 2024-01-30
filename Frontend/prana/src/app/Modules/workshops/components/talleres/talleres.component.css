@@ -1,5 +1,5 @@
 .contenedor-principal {
-    background-color: #78c2ad;
+    background-color: #f9f9f9;
 }
 
 #contenedor-tarjetas {
@@ -15,8 +15,30 @@
 
 h1 {
     margin: 40px 0;
+    color: #502c36;
+    font-size: 3.4rem;
 }
 
 #img {
     object-fit: cover;
+}
+.card-header {
+    color: #502c36;
+}
+
+.descripcion-talleres {
+    font-size: 1.2rem;
+    width: 80%;
+    margin: auto;
+    
+}
+.titulo {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
+    justify-content: center;
+    
+    text-align: center;
+    padding: 20px;
 }

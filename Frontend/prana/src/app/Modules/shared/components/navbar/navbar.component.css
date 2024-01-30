@@ -76,10 +76,43 @@ li > a {
     right: 10px;
     top: 100%;
     border-radius: 14px;
-    
+    padding: 20px;
     
    }
+   .under {
+    border-bottom: 1px solid #78c2ad ;
+   }
 
-   
+   .slide-in-top {
+	-webkit-animation: slide-in-top 0.2s both;
+	        animation: slide-in-top 0.2s both;
+    }
+    @-webkit-keyframes slide-in-top {
+        0% {
+          -webkit-transform: translateY(-1000px);
+                  transform: translateY(-1000px);
+          opacity: 0;
+        }
+        100% {
+          -webkit-transform: translateY(0);
+                  transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slide-in-top {
+        0% {
+          -webkit-transform: translateY(-1000px);
+                  transform: translateY(-1000px);
+          opacity: 0;
+        }
+        100% {
+          -webkit-transform: translateY(0);
+                  transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    .slide-in-top {
+        z-index: 500;
+    }
     
   }

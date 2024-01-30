@@ -7,15 +7,15 @@ from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet,
                     SpecialityBranchAdminViewSet, DoctorScheduleAvailableTimesView,
 
                     DoctorPatientCommonInsurancesView, DoctorBranchesView,DoctorSpecialityBranchViewSet,DoctorReportView,DoctorInsurancePlanViewSet,
-                    MeDoctorSpecialityBranchViewSet)
+                    MeDoctorSpecialityBranchViewSet,MeMedicalSpecialityViewSet)
 
 
 
 routerAdmin = DefaultRouter()
 routerAdmin.register(r'health-insurances',
                      HealthInsuranceAdminViewSet, basename='health-insurances')
-routerAdmin.register(
-    r'specialities', MedicalSpecialityAdminViewSet, basename='medical-specialities')
+routerAdmin.register(r'specialities', MedicalSpecialityAdminViewSet, basename='specialities')
+
 routerAdmin.register(r'speciality-branch',
                      SpecialityBranchAdminViewSet, basename='speciality-branch')
 routerAdmin.register(r'me-speciality-branch',
@@ -47,6 +47,8 @@ urlpatterns = [
          DoctorReportView.as_view(), name='doctor-report-data'),
     path('doctor/', DoctorUserViewSet.as_view(
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
+    path('me-speciality/', MeMedicalSpecialityViewSet.as_view(
+        {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),    
     path('patient/', PatientUserViewSet.as_view(
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
 ]

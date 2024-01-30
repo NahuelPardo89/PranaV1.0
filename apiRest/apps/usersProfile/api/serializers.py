@@ -2,7 +2,8 @@ from rest_framework import serializers
 from apps.users.api.serializers import UserShortSerializer
 from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality, DoctorProfile,
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
-                                      PatientProfile, SpecialityBranch)
+                                      PatientProfile, SpecialityBranch, SeminaristProfile)
+from apps.users.models import User
 
 
 class HealthInsuranceSerializer(serializers.ModelSerializer):
@@ -49,18 +50,20 @@ class DoctorScheduleSerializer(serializers.ModelSerializer):
 
 
 class InsurancePlanDoctorListSerializer(serializers.ModelSerializer):
-    doctor=serializers.StringRelatedField()
-    insurance=serializers.StringRelatedField()
-    branch=serializers.StringRelatedField()
+    doctor = serializers.StringRelatedField()
+    insurance = serializers.StringRelatedField()
+    branch = serializers.StringRelatedField()
+
     class Meta:
         model = InsurancePlanDoctor
-        fields = ('id','doctor', 'insurance', 'branch', 'price')
+        fields = ('id', 'doctor', 'insurance', 'branch', 'price')
+
 
 class InsurancePlanDoctorCreateSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = InsurancePlanDoctor
-        fields = ('id','doctor', 'insurance', 'branch', 'price')
+        fields = ('id', 'doctor', 'insurance', 'branch', 'price')
 
 
 class InsurancePlanPatientSerializer(serializers.ModelSerializer):
@@ -137,7 +140,7 @@ class PatientShortProfileSerializer(serializers.ModelSerializer):
 
 
 class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
-    
+
     insurance = HealthInsuranceSerializer(read_only=True)
     branch = SpecialityBranchListSerializer(read_only=True)
 
@@ -148,13 +151,15 @@ class InsurancePlanDoctorSerializer2(serializers.ModelSerializer):
 
 class DoctorProfileShortSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField(required=False)
-    insurances = serializers.StringRelatedField(many=True,required=False)
-    specialty = serializers.StringRelatedField(many=True,required=False)
+    insurances = serializers.StringRelatedField(many=True, required=False)
+    specialty = serializers.StringRelatedField(many=True, required=False)
 
     class Meta:
         model = DoctorProfile
-        fields = ('id','user','medicLicence', 'specialty', 'insurances', 'is_active','appointment_duration')
-        read_only_fields = ('id','is_active','specialty', 'insurance','user')
+        fields = ('id', 'user', 'medicLicence', 'specialty',
+                  'insurances', 'is_active', 'appointment_duration')
+        read_only_fields = ('id', 'is_active', 'specialty',
+                            'insurance', 'user')
 
 
 class DoctorReportSerializer(serializers.ModelSerializer):
@@ -184,3 +189,49 @@ class DoctorReportSerializer(serializers.ModelSerializer):
     def get_specialty(self, obj):
         specialty = obj.specialty.first()
         return MedicalSpecialitySerializer(specialty).data if specialty else None
+
+
+class SeminaristProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for handling SeminaristProfile model instances.
+
+    This serializer provides representation logic for SeminaristProfile objects.
+
+    Methods:
+        to_representation(instance): Custom representation method for displaying detailed information.
+
+    Author:
+        Alvaro Olguin Armendariz.
+    """
+
+    class Meta:
+        model = SeminaristProfile
+        fields = ['id', 'user', 'insurances', 'is_active']
+
+    def to_representation(self, instance):
+        """
+        Custom representation method for displaying detailed information.
+
+        Parameters:
+            instance (SeminaristProfile): The SeminaristProfile instance.
+
+        Returns:
+            dict: A dictionary representing the serialized SeminaristProfile.
+
+        """
+
+        representation = super().to_representation(instance)
+        display = self.context['request'].query_params.get('display', None)
+
+        if display:
+            # Get the user's name instead of id
+            user = User.objects.get(id=representation['user'])
+            representation['user'] = f'{user.last_name}, {user.name}'
+
+            # Get the insurance names instead of ids
+            insurances = HealthInsurance.objects.filter(
+                id__in=representation['insurances'])
+            representation['insurances'] = [
+                insurance.name for insurance in insurances]
+
+        return representation

@@ -14,13 +14,13 @@ from rest_framework.views import APIView
 
 from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  DoctorProfile,
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
-                                      PatientProfile, SpecialityBranch)
+                                      PatientProfile, SpecialityBranch, SeminaristProfile)
 
 
 from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer, InsurancePlanDoctorListSerializer, InsurancePlanDoctorCreateSerializer,
                           DoctoListProfileSerializer, DoctorScheduleSerializer, PatientListProfileSerializer,
                           InsurancePlanPatientSerializer, InsurancePlanPatientListSerializer, DoctorProfileAllSerializer,  PatientShortProfileSerializer,
-                          DoctorProfileShortSerializer, SpecialityBranchListSerializer, SpecialityBranchCreateSerializer, DoctorCreateUpdateProfileSerializer, DoctorReportSerializer)
+                          DoctorProfileShortSerializer, SpecialityBranchListSerializer, SpecialityBranchCreateSerializer, DoctorCreateUpdateProfileSerializer, DoctorReportSerializer, SeminaristProfileSerializer)
 
 
 from apps.permission import IsAdminOrReadOnly
@@ -449,7 +449,8 @@ class DoctorUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixi
             else:
                 raise Http404("El perfil de Profesional no está activo.")
         except ObjectDoesNotExist:
-            raise Http404("No existe un perfil de Profesional para el usuario autenticado.")
+            raise Http404(
+                "No existe un perfil de Profesional para el usuario autenticado.")
 
 
 class PatientUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
@@ -475,3 +476,34 @@ class DoctorReportView(APIView):
         doctor = DoctorProfile.objects.get(user=request.user)
         serializer = DoctorReportSerializer(doctor)
         return Response(serializer.data)
+
+
+class SeminaristProfileAdminViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for the SeminaristProfile model.
+
+    Attributes:
+        queryset: A QuerySet that represents a collection of database records.
+        serializer_class: The serializer class to be used.
+
+    Author: Alvaro Olguin Armendariz
+    """
+
+    queryset = SeminaristProfile.objects.all()
+    serializer_class = SeminaristProfileSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Overridden destroy method for soft delete.
+
+        Returns:
+            A Response object with a status code of 204, indicating that the
+            SeminaristProfile object has been successfully soft deleted.
+
+        Author: Alvaro Olguin Armendariz         
+        """
+
+        seminarist_profile = self.get_object()
+        seminarist_profile.is_active = False
+        seminarist_profile.save()
+        return Response(status=204)

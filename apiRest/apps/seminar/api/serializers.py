@@ -415,40 +415,78 @@ class SeminarSerializer(serializers.ModelSerializer):
 
     def validate_year(self, value):
         """
-        Custom validation method for the 'year' field.
+        Validate the 'year' field.
 
         Parameters:
-            value (int): The 'year' value to be validated.
+            value (int): The value of the 'year' field.
 
         Returns:
-            int: The validated 'year' value.
+            int: The validated value.
 
         Raises:
-            serializers.ValidationError: If the 'year' is outside the valid range.
+            serializers.ValidationError: If the value is less than 2024.
 
         """
-        current_year = datetime.now().year
-        if value < 2000 or value > current_year + 10:
+        if value < 2024:
             raise serializers.ValidationError(
-                f"El año debe estar entre 2000 y {current_year + 10}.")
+                "El año debe ser igual o mayor a 2024.")
         return value
 
     def validate_meetingNumber(self, value):
-        if value <= 0:
+        """
+        Validate the 'meetingNumber' field.
+
+        Parameters:
+            value (int): The value of the 'meetingNumber' field.
+
+        Returns:
+            int: The validated value.
+
+        Raises:
+            serializers.ValidationError: If the value is less than 1 or greater than 30.
+
+        """
+        if value < 1 or value > 30:
             raise serializers.ValidationError(
-                "El número de reuniones debe ser un valor positivo.")
+                "El número de encuentros debe estar entre 1 y 30.")
         return value
 
     def validate_maxInscription(self, value):
-        if value < 0:
+        """
+        Validate the 'maxInscription' field.
+
+        Parameters:
+            value (int): The value of the 'maxInscription' field.
+
+        Returns:
+            int: The validated value.
+
+        Raises:
+            serializers.ValidationError: If the value is less than 1.
+
+        """
+        if value < 1:
             raise serializers.ValidationError(
-                "El número máximo de inscripciones no puede ser negativo.")
+                "El cupo debe ser igual o mayor a 1.")
         return value
 
     def validate_price(self, value):
-        if value <= 0:
+        """
+        Validate the 'price' field.
+
+        Parameters:
+            value (int): The value of the 'price' field.
+
+        Returns:
+            int: The validated value.
+
+        Raises:
+            serializers.ValidationError: If the value is less than 0.
+
+        """
+        if value < 0:
             raise serializers.ValidationError(
-                "El precio debe ser un valor positivo.")
+                "El precio debe ser igual o mayor a 0.")
         return value
 
     def to_representation(self, instance):

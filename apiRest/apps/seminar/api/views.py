@@ -192,9 +192,19 @@ class SeminarViewSet(viewsets.GenericViewSet):
 
         serializer = SeminarSerializer(data=request.data)
         if serializer.is_valid():
+            # Extract the IDs
+            schedule_ids = request.data.get('schedule', [])
+            seminarist_ids = request.data.get('seminarist', [])
+            rooms_ids = request.data.get('rooms', [])
+
             seminar = serializer.save()
             seminar.created_by = request.user
             seminar.save()
+
+            seminar.schedule.set(schedule_ids)
+            seminar.seminarist.set(seminarist_ids)
+            seminar.rooms.set(rooms_ids)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -210,13 +220,31 @@ class SeminarViewSet(viewsets.GenericViewSet):
             rest_framework.response.Response: The serialized data or error messages.
 
         """
-
         seminar = self.get_object()
         serializer = SeminarSerializer(seminar, data=request.data)
         if serializer.is_valid():
+            # Extract the IDs
+            schedule_ids = request.data.get('schedule', [])
+            seminarist_ids = request.data.get('seminarist', [])
+            rooms_ids = request.data.get('rooms', [])
+
+            # Update seminar fields
             serializer.save()
+
+            # Apply the updated relationships
+            seminar.schedule.set(schedule_ids)
+            seminar.seminarist.set(seminarist_ids)
+            seminar.rooms.set(rooms_ids)
+
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        # seminar = self.get_object()
+        # serializer = SeminarSerializer(seminar, data=request.data)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(serializer.data)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, pk=None):
         """

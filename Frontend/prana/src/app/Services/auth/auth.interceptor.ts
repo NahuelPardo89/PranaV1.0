@@ -45,7 +45,7 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap(response => {
           if (response.status === 200 && response.body) {
             // La actualización del localStorage y el manejo de los tokens se hacen en refreshToken2
-            console.log("hola mundo");
+            
             this.isRefreshing = false;
             this.refreshTokenSubject.next(response.body.access);
             return next.handle(this.addAuthenticationToken(request));

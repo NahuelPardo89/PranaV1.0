@@ -1,6 +1,13 @@
 <div class="contenedor-principal">
 <hr>
-<h1 class="text-center">Nuestros Talleres</h1>
+<div class="titulo">
+  <h1 class="text-center">Nuestros Talleres</h1>
+  <p class="descripcion-talleres">
+    Te invitamos a descubrir una amplia gama de talleres diseñados para nutrir tu cuerpo, mente y espíritu.
+    En el corazón de nuestra oferta, encontrarás una variedad de clases de yoga que van más allá de la práctica convencional,
+      brindándote experiencias únicas y transformadoras.
+  </p>
+</div>
 <div class="row" id="contenedor-tarjetas">
 <div *ngFor="let taller of talleres" class="col-lg-4 card mb-3" id="tarjeta" st>
     <h3 class="card-header">{{taller.titulo}}</h3>

@@ -16,15 +16,16 @@ export class TalleresComponent {
     imagen: '../../../assets/img/talleres/yoga.jpg',
     texto: 'Este taller te invita a desconectar del bullicio de la vida cotidiana y sumergirte en un espacio tranquilo donde podrás cultivar la armonía entre tu cuerpo, mente y espíritu.'},
     
-    {titulo: 'Taller infantil - Alimentación saludable',
-    subtitulo: '¡Qué Ricas Aventuras!',
-    imagen:'../../../assets/img/talleres/ninos-divirtiendose-cocinando-cocina-casa.jpg',
-    texto: 'Nuestro taller fomenta hábitos alimentarios positivos desde temprana edad, promoviendo un estilo de vida saludable y activo. ¡Únete a nosotros y enseña a tus hijos a disfrutar de una alimentación saludable de manera divertida y educativa!'},
     
     {titulo: 'Yoga para embarazadas',
     subtitulo: 'Nutre tu cuerpo y alma',
     imagen: '../../../assets/img/talleres/yoga-embarazada.jpg',
     texto: 'Diseñado específicamente para mujeres en esta etapa especial de sus vidas, este taller te ofrece una experiencia suave y segura para fortalecer tu cuerpo, relajar tu mente y cultivar un vínculo amoroso con tu bebé en crecimiento.'},
+    
+    {titulo: 'Taller infantil - Alimentación saludable',
+    subtitulo: '¡Qué Ricas Aventuras!',
+    imagen:'../../../assets/img/talleres/ninos-divirtiendose-cocinando-cocina-casa.jpg',
+    texto: 'Nuestro taller fomenta hábitos alimentarios positivos desde temprana edad, promoviendo un estilo de vida saludable y activo. ¡Únete a nosotros y enseña a tus hijos a disfrutar de una alimentación saludable de manera divertida y educativa!'},
     
     {titulo: 'Cuerpos en movimiento',
     subtitulo: 'Descubre la alegría de moverte',

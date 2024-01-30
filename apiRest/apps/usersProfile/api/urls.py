@@ -5,23 +5,29 @@ from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet,
                     InsurancePlanDoctorAdminViewSet, InsurancePlanPatientAdminViewSet,
                     PatientProfileAdminViewSet, DoctorUserViewSet, PatientUserViewSet,
                     SpecialityBranchAdminViewSet, DoctorScheduleAvailableTimesView,
-                    DoctorPatientCommonInsurancesView, DoctorBranchesView, DoctorSpecialityBranchViewSet,
-                    DoctorReportView, SeminaristProfileAdminViewSet)
+
+                    DoctorPatientCommonInsurancesView, DoctorBranchesView, DoctorSpecialityBranchViewSet, DoctorReportView, DoctorInsurancePlanViewSet,
+                    MeDoctorSpecialityBranchViewSet, MeMedicalSpecialityViewSet)
 
 
 routerAdmin = DefaultRouter()
 routerAdmin.register(r'health-insurances',
                      HealthInsuranceAdminViewSet, basename='health-insurances')
 routerAdmin.register(
-    r'specialities', MedicalSpecialityAdminViewSet, basename='medical-specialities')
+    r'specialities', MedicalSpecialityAdminViewSet, basename='specialities')
+
 routerAdmin.register(r'speciality-branch',
                      SpecialityBranchAdminViewSet, basename='speciality-branch')
+routerAdmin.register(r'me-speciality-branch',
+                     MeDoctorSpecialityBranchViewSet, basename='me-speciality-branch')
 routerAdmin.register(r'doctor', DoctorProfileAdminViewSet,
                      basename='doctor-profiles')
 routerAdmin.register(r'doctor-schedules',
                      DoctorScheduleAdminViewSet, basename='doctor-schedules')
 routerAdmin.register(r'insurance-plans-doctor',
                      InsurancePlanDoctorAdminViewSet, basename='insurance-plans-doctor')
+routerAdmin.register(r'me-insurance-plans-doctor',
+                     DoctorInsurancePlanViewSet, basename='me-insurance-plans-doctor')
 routerAdmin.register(r'insurance-plans-patient',
                      InsurancePlanPatientAdminViewSet, basename='insurance-plans-patient')
 routerAdmin.register(r'patient', PatientProfileAdminViewSet,
@@ -43,6 +49,8 @@ urlpatterns = [
     path('admin/doctor-report-data/',
          DoctorReportView.as_view(), name='doctor-report-data'),
     path('doctor/', DoctorUserViewSet.as_view(
+        {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
+    path('me-speciality/', MeMedicalSpecialityViewSet.as_view(
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
     path('patient/', PatientUserViewSet.as_view(
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),

@@ -27,6 +27,7 @@ export class AuthService {
   private registerUrl = 'http://127.0.0.1:8000/account/singin/';
   private logoutUrl = 'http://127.0.0.1:8000/account/logout/';
   private refreshTokenUrl = 'http://127.0.0.1:8000/account/refresh/';
+  private resetPasswordUrl = 'http://127.0.0.1:8000/account/request-password-reset/'
   private currentUserSubject: BehaviorSubject<UserShort | null> =
     new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
@@ -187,5 +188,16 @@ export class AuthService {
     this.currentRole.next('Paciente');
     this.isloggedIn.next(false);
     this.router.navigate(['/Home']);
+  }
+
+  requestPasswordReset(email:string): void {
+    this.http.post(this.resetPasswordUrl, { email: email })
+      .subscribe((response) => {
+        console.log(response);
+        // Mostrar mensaje de éxito
+      }, error => {
+        console.error(error);
+        // Mostrar mensaje de error
+      });
   }
 }

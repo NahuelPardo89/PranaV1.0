@@ -5,7 +5,6 @@ from rest_framework import viewsets, permissions, status, generics, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from apps.users.models import User
 from apps.users.api.serializers import (
     UserSerializer, UserListSerializer, LoginSerializer,
@@ -233,3 +232,34 @@ class RegisterAPI(generics.GenericAPIView):
         else:
             print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+
+@api_view(['POST'])
+@permission_classes([])
+def request_password_reset(request):
+    UserModel = get_user_model()
+    email = request.data.get('email')
+    user = UserModel.objects.filter(email=email).first()
+
+    if user:
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        password_reset_url = f'http://localhost:4200/reset-password/{uid}/{token}'
+
+        send_mail(
+            'Restablecimiento de Contraseña',
+            f'Usa este enlace para restablecer tu contraseña: {password_reset_url}',
+            'no-reply@tudominio.com',
+            [user.email],
+            fail_silently=False,
+        )
+        return Response({'message': 'Se ha enviado un email para restablecer tu contraseña.'})
+    
+    return Response({'message': 'No se encontró un usuario con ese email.'}, status=status.HTTP_400_BAD_REQUEST)

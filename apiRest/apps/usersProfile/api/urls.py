@@ -5,16 +5,16 @@ from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet,
                     InsurancePlanDoctorAdminViewSet, InsurancePlanPatientAdminViewSet,
                     PatientProfileAdminViewSet, DoctorUserViewSet, PatientUserViewSet,
                     SpecialityBranchAdminViewSet, DoctorScheduleAvailableTimesView,
-
-                    DoctorPatientCommonInsurancesView, DoctorBranchesView,DoctorSpecialityBranchViewSet,DoctorReportView,DoctorInsurancePlanViewSet,
-                    MeDoctorSpecialityBranchViewSet,MeMedicalSpecialityViewSet)
-
+                    DoctorPatientCommonInsurancesView, DoctorBranchesView, DoctorSpecialityBranchViewSet,
+                    DoctorReportView, DoctorInsurancePlanViewSet,
+                    MeDoctorSpecialityBranchViewSet, MeMedicalSpecialityViewSet, SeminaristProfileAdminViewSet)
 
 
 routerAdmin = DefaultRouter()
 routerAdmin.register(r'health-insurances',
                      HealthInsuranceAdminViewSet, basename='health-insurances')
-routerAdmin.register(r'specialities', MedicalSpecialityAdminViewSet, basename='specialities')
+routerAdmin.register(
+    r'specialities', MedicalSpecialityAdminViewSet, basename='specialities')
 
 routerAdmin.register(r'speciality-branch',
                      SpecialityBranchAdminViewSet, basename='speciality-branch')
@@ -32,7 +32,10 @@ routerAdmin.register(r'insurance-plans-patient',
                      InsurancePlanPatientAdminViewSet, basename='insurance-plans-patient')
 routerAdmin.register(r'patient', PatientProfileAdminViewSet,
                      basename='patient-profiles')
-routerAdmin.register(r'doctor-branches-by-speciality', DoctorSpecialityBranchViewSet, basename='doctor-branches-by-speciality')                     
+routerAdmin.register(r'seminarist', SeminaristProfileAdminViewSet,
+                     basename='seminarist-profiles')
+routerAdmin.register(r'doctor-branches-by-speciality',
+                     DoctorSpecialityBranchViewSet, basename='doctor-branches-by-speciality')
 
 
 urlpatterns = [
@@ -48,7 +51,7 @@ urlpatterns = [
     path('doctor/', DoctorUserViewSet.as_view(
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
     path('me-speciality/', MeMedicalSpecialityViewSet.as_view(
-        {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),    
+        {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
     path('patient/', PatientUserViewSet.as_view(
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
 ]

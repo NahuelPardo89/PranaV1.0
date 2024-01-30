@@ -174,4 +174,4 @@ class InsurancePlanSeminarist(models.Model):
         unique_together = ('seminarist', 'insurance')
 
     def __str__(self):
-        return f'Tallerista: {self.seminarist.user.last_name}, {self.seminarist.user.name}, Mutual: {self.insurance.name}, Covertura: {self.coverage}'
+        return f'Tallerista: {self.seminarist.user.last_name}, {self.seminarist.user.name}, Obra Social: {self.insurance.name}, Cobertura: {self.coverage}'

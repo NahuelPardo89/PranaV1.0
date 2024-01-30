@@ -140,11 +140,11 @@
     </button>
 
     <div *ngIf="showDoctorEspecialityOptions" class="toggle">
-      <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="">
+      <!-- <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="">
         <i class="material-symbols-outlined btn-icon">medical_information</i>
         Gestionar Especialidades
-      </button>
-      <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="">
+      </button> -->
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Profesional'" routerLink="speciality/branch/me">
         <i class="material-symbols-outlined btn-icon">medical_information</i>
         Gestionar Ramas de Especialidad
       </button>

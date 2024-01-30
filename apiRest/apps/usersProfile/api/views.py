@@ -23,7 +23,7 @@ from .serializers import (HealthInsuranceSerializer, MedicalSpecialitySerializer
                           DoctorProfileShortSerializer, SpecialityBranchListSerializer, SpecialityBranchCreateSerializer, DoctorCreateUpdateProfileSerializer, DoctorReportSerializer)
 
 
-from apps.permission import IsAdminOrReadOnly
+from apps.permission import IsAdminOrReadOnly, IsDoctorOrReadOnly
 
 # ADMIN VIEWS
 
@@ -125,12 +125,27 @@ class MedicalSpecialityAdminViewSet(BaseAdminViewSet):
     serializer_class = MedicalSpecialitySerializer
     permission_classes = [IsAdminOrReadOnly]
 
+class MeMedicalSpecialityViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
+    serializer_class = MedicalSpecialitySerializer
+    permission_classes = [IsDoctorOrReadOnly]
+
+    def get_object(self):
+        try:
+            doctor_profile = self.request.user.doctorProfile
+            if doctor_profile.is_active:
+               speciality=doctor_profile.specialty.first()
+               return speciality
+            else:
+                raise Http404("El perfil de Profesional no está activo.")
+        except ObjectDoesNotExist:
+            raise Http404("No existe un perfil de Profesional para el usuario autenticado.")    
+
 
 class SpecialityBranchAdminViewSet(BaseAdminViewSet):
     model = SpecialityBranch
     serializer_class = SpecialityBranchListSerializer
     create_serializer_class = SpecialityBranchCreateSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsDoctorOrReadOnly]
 
     def get_queryset(self):
         queryset = super().get_queryset()

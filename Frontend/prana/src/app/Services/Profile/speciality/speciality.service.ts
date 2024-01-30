@@ -8,7 +8,7 @@ import { Medicalspeciality } from 'src/app/Models/Profile/medicalspeciality.inte
 })
 export class SpecialityService {
   private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/specialities/'; // Asume esta URL basándome en la estructura anterior
-
+  private meUrl: string = 'http://127.0.0.1:8000/profile/me-speciality/';
   constructor(private http: HttpClient) { }
 
   // Get all medical specialities
@@ -34,5 +34,8 @@ export class SpecialityService {
   // Delete a medical speciality
   deleteSpeciality(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}/`);
+  }
+  getMeSpecialities(): Observable<Medicalspeciality> {
+    return this.http.get<Medicalspeciality>(this.meUrl);
   }
 }

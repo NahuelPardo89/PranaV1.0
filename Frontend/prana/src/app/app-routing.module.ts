@@ -11,6 +11,8 @@ const routes: Route[] = [
   { path: 'Home', component: StaffComponent },
   { path: 'Talleres', component: TalleresComponent },
   { path: 'AboutUs', component: QuienesSomosComponent },
+  {path:'resetpass', component: PasswordResetRequestComponent},
+
     
   
   {

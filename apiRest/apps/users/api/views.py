@@ -251,11 +251,13 @@ def request_password_reset(request):
     if user:
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        password_reset_url = f'http://localhost:4200/reset-password/{uid}/{token}'
+        password =str(user.dni)+user.name
+        user.set_password(password)
+        user.save()
 
         send_mail(
-            'Restablecimiento de Contraseña',
-            f'Usa este enlace para restablecer tu contraseña: {password_reset_url}',
+            'Restablecimiento de Contraseña-NO RESPONDER',
+            f'Esta es tu nueva contraseña: {password}',
             'no-reply@tudominio.com',
             [user.email],
             fail_silently=False,

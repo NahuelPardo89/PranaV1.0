@@ -190,14 +190,7 @@ export class AuthService {
     this.router.navigate(['/Home']);
   }
 
-  requestPasswordReset(email:string): void {
-    this.http.post(this.resetPasswordUrl, { email: email })
-      .subscribe((response) => {
-        console.log(response);
-        // Mostrar mensaje de éxito
-      }, error => {
-        console.error(error);
-        // Mostrar mensaje de error
-      });
-  }
+  requestPasswordReset(email: string): Observable<any> {
+    return this.http.post(this.resetPasswordUrl, { email: email });
+}
 }

@@ -5,9 +5,9 @@ from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet,
                     InsurancePlanDoctorAdminViewSet, InsurancePlanPatientAdminViewSet,
                     PatientProfileAdminViewSet, DoctorUserViewSet, PatientUserViewSet,
                     SpecialityBranchAdminViewSet, DoctorScheduleAvailableTimesView,
-
-                    DoctorPatientCommonInsurancesView, DoctorBranchesView, DoctorSpecialityBranchViewSet, DoctorReportView, DoctorInsurancePlanViewSet,
-                    MeDoctorSpecialityBranchViewSet, MeMedicalSpecialityViewSet)
+                    DoctorPatientCommonInsurancesView, DoctorBranchesView, DoctorSpecialityBranchViewSet,
+                    DoctorReportView, DoctorInsurancePlanViewSet,
+                    MeDoctorSpecialityBranchViewSet, MeMedicalSpecialityViewSet, SeminaristProfileAdminViewSet)
 
 
 routerAdmin = DefaultRouter()

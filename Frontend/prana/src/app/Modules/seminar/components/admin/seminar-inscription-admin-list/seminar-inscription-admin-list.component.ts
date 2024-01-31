@@ -32,6 +32,7 @@ export class SeminarInscriptionAdminListComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
+  currentSeminar: SeminarAdminInterface = history.state.seminar;
   constructor(
     private seminarInscriptionService: SeminarInscriptionService,
     private router: Router,
@@ -76,13 +77,32 @@ export class SeminarInscriptionAdminListComponent {
 
   /**
    * Edits an inscription.
-   * @param {number} seminar - The inscription to edit
-   * @author Alvaro Olguin
+   * @param {number} seminarInscription - The inscription to edit
+   *
    */
-  onEdit(seminar: SeminarAdminInterface) {
-    this.router.navigate(['Dashboard/seminar/admin/update'], {
-      state: { seminar },
-    });
+  onEdit(seminarInscription: SeminarAdminInterface) {
+    let seminar = this.currentSeminar;
+    this.router.navigate(
+      ['/Dashboard/seminar/admin/seminar-inscription/update'],
+      {
+        state: { seminarInscription, seminar },
+      }
+    );
+  }
+
+  /**
+   * Navigates to the seminar inscription creation route and passes the seminar as state.
+   *
+   * @param {SeminarAdminInterface} seminar - The seminar to which a participant will be added.
+   * @author Alvaro Olguin Armendariz
+   */
+  addParticipant(seminar: SeminarAdminInterface) {
+    this.router.navigate(
+      ['/Dashboard/seminar/admin/seminar-inscription/create'],
+      {
+        state: { seminar },
+      }
+    );
   }
 
   /**

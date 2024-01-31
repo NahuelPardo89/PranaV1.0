@@ -1,7 +1,7 @@
 from datetime import datetime
 from rest_framework import serializers
 from apps.seminar.models import Room, SeminarRoomUsage, SeminarInscription, Seminar, SeminarSchedule
-from apps.usersProfile.models import InsurancePlanSeminarist
+from apps.usersProfile.models import InsurancePlanSeminarist, HealthInsurance
 
 
 class SeminarScheduleSerializer(serializers.ModelSerializer):
@@ -64,7 +64,7 @@ class SeminarRoomUsageSerializer(serializers.ModelSerializer):
         return value
 
 
-class SeminarInscriptionSerializer(serializers.ModelSerializer):
+class SeminarInscriptionViewSerializer(serializers.ModelSerializer):
     """
     Serializer class for handling SeminarInscription model instances.
 
@@ -256,43 +256,87 @@ class SeminarInscriptionSerializer(serializers.ModelSerializer):
         fields = ['id', 'seminar', 'patient', 'meetingNumber', 'seminar_status',
                   'insurance', 'patient_copayment', 'hi_copayment', 'payment_method', 'payment_status', 'created_at', 'updated_at', 'created_by']
 
+
+class SeminarInscriptionCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for handling SeminarInscription model instances.
+
+    This serializer provides representation and validation logic for SeminarInscription objects.
+
+    Author:
+        Alvaro Olguin Armendariz    
+    """
+
+    class Meta:
+        model = SeminarInscription
+        fields = ['id', 'seminar', 'patient', 'meetingNumber', 'seminar_status',
+                  'insurance', 'patient_copayment', 'hi_copayment', 'payment_method', 'payment_status', 'created_at', 'updated_at', 'created_by']
+
+    def calculate_cost(self, validated_data):
+        seminar_price = validated_data['seminar'].price
+        total_meetings = validated_data['seminar'].meetingNumber
+        participant_meetings = validated_data['meetingNumber']
+
+        cost_per_meeting = seminar_price / total_meetings
+        participant_cost = cost_per_meeting * participant_meetings
+
+        return participant_cost
+
+    def create(self, validated_data):
+        # Assign cost to patient
+        validated_data['patient_copayment'] = self.calculate_cost(
+            validated_data)
+
+        seminar_inscription = SeminarInscription.objects.create(
+            **validated_data)
+
+        return seminar_inscription
+
     def validate(self, data):
+        # Validate payments
+        payment_status = data.get('payment_status')
+        payment_method = data.get('payment_method')
 
-        if 'insurance' in data and data['insurance'] is not None:
-            return data
-        # Accessing the insurances of the patient
-        patient_insurances = set(data['patient'].insurances.all())
-        print(patient_insurances)
-        # Accessing the insurances of the seminarist associated with the seminar
-        seminarist_insurances = set(
-            data['seminar'].seminarist.first().insurances.all())
-        print(seminarist_insurances)
-        # Finding common insurances
-        common_insurances = patient_insurances.intersection(
-            seminarist_insurances)
-
-        print("comunes", common_insurances)
-        if not common_insurances:
+        if payment_status == 2 and not payment_method:
             raise serializers.ValidationError(
-                "No common insurances found between patient and seminarist.")
-        common_insurance_ids = {
-            insurance.id for insurance in common_insurances}
-
-        # Filtrando los planes de seguro del seminarista que están en los seguros comunes
-        common_insurances_plans = InsurancePlanSeminarist.objects.filter(
-            insurance__id__in=common_insurance_ids)
-
-        # Encontrando el plan de seguro con la mayor cobertura
-        highest_coverage_plan = max(
-            common_insurances_plans, key=lambda plan: plan.coverage, default=None)
-
-        if highest_coverage_plan is None:
+                "Es obligatorio proporcionar un método de pago si el estado de pago es 'pagado'.")
+        elif payment_status == 1 and payment_method:
             raise serializers.ValidationError(
-                "No valid insurance with coverage found.")
+                "No se puede proporcionar un método de pago si el estado de pago es 'adeuda'.")
+        ###
 
-        # Asignando el ID del seguro con la mayor cobertura
-        data['insurance'] = highest_coverage_plan.insurance
-        print(data)
+        # Validate meeting number
+        seminar_meeting_number = data['seminar'].meetingNumber
+
+        if data['meetingNumber'] > seminar_meeting_number:
+            raise serializers.ValidationError(
+                f'Un participante no puede inscribirse a más encuentros de los que tiene el taller ({seminar_meeting_number}).')
+        ###
+
+        # Validate MaxInscriptions
+        seminar_max_inscriptions = data['seminar'].maxInscription
+
+        confirmed_inscriptions = SeminarInscription.objects.filter(
+            seminar=data['seminar'], seminar_status=2).count()
+
+        if confirmed_inscriptions >= seminar_max_inscriptions:
+            raise serializers.ValidationError(
+                f"El número de inscripciones confirmadas no puede superar el cupo máximo del taller ({seminar_max_inscriptions}).")
+        ###
+
+       # validate patient inscription
+        existing_inscriptions = SeminarInscription.objects.filter(
+            seminar=data['seminar'], patient=data['patient'])
+
+        if self.instance:  # Si estamos actualizando un registro existente
+            existing_inscriptions = existing_inscriptions.exclude(
+                id=self.instance.id)
+
+        if existing_inscriptions.exists():
+            raise serializers.ValidationError(
+                "Este usuario ya está inscripto en este taller.")
+        ###
+
         return data
 
 

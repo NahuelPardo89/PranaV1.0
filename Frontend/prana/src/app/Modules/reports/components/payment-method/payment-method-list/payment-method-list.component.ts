@@ -3,31 +3,28 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { SeminaristProfileDisplayInterface, SeminaristProfileFlatInterface } from 'src/app/Models/Profile/seminaristProfile.interface';
-
-import { SeminaristService } from 'src/app/Services/Profile/seminarist/seminarist.service';
+import { PaymentMethod } from 'src/app/Models/appointments/paymentmethod.interface';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
+import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
 
 @Component({
-  selector: 'app-seminarist-list',
-  templateUrl: './seminarist-list.component.html',
-  styleUrls: ['./seminarist-list.component.css']
+  selector: 'app-payment-method-list',
+  templateUrl: './payment-method-list.component.html',
+  styleUrls: ['./payment-method-list.component.css']
 })
-export class SeminaristListComponent {
+export class PaymentMethodListComponent {
   displayedColumns: string[] = [
     'id',
-    'user',
-    // 'insurances',
-    'is_active',
+    'name',
     'actions',
   ];
-  dataSource!: MatTableDataSource<SeminaristProfileDisplayInterface>;
+  dataSource!: MatTableDataSource<PaymentMethod>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private seminaristService: SeminaristService,
+    private paymentService: PaymentmethodService,
     private dialogService: DialogService,
     private router: Router
   ) {}
@@ -37,7 +34,7 @@ export class SeminaristListComponent {
   }
 
   setDataTable() {
-    this.seminaristService.getSeminaristsDisplay().subscribe((data) => {
+    this.paymentService.getPaymentMethods().subscribe((data) => {
       console.log(data);
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
@@ -60,32 +57,32 @@ export class SeminaristListComponent {
     }
   }
 
-  editSeminarist(seminarist: SeminaristProfileFlatInterface) {
-    this.router.navigate(['Dashboard/accounts/doctores/edit'], {
-      state: { seminarist },
+  editPayment(payment: PaymentMethod) {
+    this.router.navigate(['Dashboard/reports/payment-method/edit'], {
+      state: { payment },
     });
   }
 
 
 
-  deleteSeminarist(id: number) {
+  deletePayment(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas desactivar este Tallerista?'
+      '¿Estás seguro de que deseas elminar este metodo de pago?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      console.log('eliminar usuario');
+      
       if (confirmResult) {
-        this.seminaristService.deleteSeminarist(id).subscribe({
+        this.paymentService.deletePaymentMethod(id).subscribe({
           next: () => {
             this.setDataTable();
             this.dialogService.showSuccessDialog(
-              'Tallerista Desactivado con éxito'
+              'Metodo de pago eliminado con éxito'
             );
           },
           error: (error) => {
             this.dialogService.showErrorDialog(
-              'Hubo un error al Desactivar el Tallerista'
+              'Hubo un error al eliminar el metodo de pago'
             );
           },
         });
@@ -93,18 +90,5 @@ export class SeminaristListComponent {
     });
   }
 
-  activeDoctor(seminarist: SeminaristProfileFlatInterface) {
-    const dataToUpdate = { is_active: true };
-    const id=seminarist.id||0
-    this.seminaristService.partialupdateSeminarist(id, dataToUpdate).subscribe({
-      next: () => {
-        this.dialogService.showSuccessDialog('Tallerista Activado con éxito');
-        this.setDataTable();
-      },
-      error: (error) => {
-        this.dialogService.showErrorDialog('Error al Activar el Tallerista');
-        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-      },
-    });
-  }
+  
 }

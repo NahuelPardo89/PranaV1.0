@@ -18,12 +18,21 @@ import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
+import { PaymentMethodListComponent } from './components/payment-method/payment-method-list/payment-method-list.component';
+import { PaymentMethodCreateComponent } from './components/payment-method/payment-method-create/payment-method-create.component';
+import { PaymentMethodEditComponent } from './components/payment-method/payment-method-edit/payment-method-edit.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
   declarations: [
     AdminReportsComponent,
-    DoctorReportsComponent
+    DoctorReportsComponent,
+    PaymentMethodListComponent,
+    PaymentMethodCreateComponent,
+    PaymentMethodEditComponent
   ],
   imports: [
     CommonModule,
@@ -35,6 +44,9 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
     MatButtonModule,
     MatAutocompleteModule,
     MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   providers: [
     ReportService,

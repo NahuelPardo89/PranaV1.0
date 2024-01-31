@@ -218,24 +218,38 @@ class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterUserSerializer
 
     def post(self, request):
-        print(request.data)
+        # Extraer DNI y email del request
+        dni = request.data.get('dni')
+        email = request.data.get('email')
+
+        # Verificar si ya existe un usuario con ese DNI
+        if User.objects.filter(dni=dni).exists():
+            print("aqui entre: dni")
+            return Response({"message": "Ya existe un usuario con ese DNI."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verificar si ya existe un usuario con ese email
+        if User.objects.filter(email=email).exists():
+            print("aqui entre: email")
+            return Response({"message": "Ya existe un usuario con ese email."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Procesar la creación del usuario
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
-            roles = self.get_user_roles(user)
 
             return Response({
                 "user": UserShortSerializer(user, context=self.get_serializer_context()).data,
-                "roles": roles,
+                "roles": self.get_user_roles(user),
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
-            
                 "message": "Usuario creado con éxito"
             }, status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
     def get_user_roles(self, user):
         roles = []

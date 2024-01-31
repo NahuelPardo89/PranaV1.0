@@ -69,7 +69,7 @@ export class AuthService {
       .subscribe();
   }
 
-  register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
+  register1(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
     return this.http
       .post<JwtResponse>(this.registerUrl, user, { observe: 'response' })
       .pipe(
@@ -79,8 +79,13 @@ export class AuthService {
             this.handleLogin(response.body!);
           }
         }),
-        catchError((error) => this.handleError(error, 'Error al registrarse'))
+        catchError((error) => 
+        
+        this.handleError(error, 'Error al registrarse'))
       );
+  }
+  register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
+    return this.http.post<JwtResponse>(this.registerUrl, user, { observe: 'response' });
   }
 
   logout(): Observable<void> {
@@ -134,22 +139,23 @@ export class AuthService {
     error: HttpErrorResponse,
     defaultMessage: string
   ): Observable<never> {
+    
     // Proporciona un manejo de errores más específico según cada método
     const errorMessage =
       error.error instanceof ErrorEvent
         ? `Error del lado del cliente: ${error.error.message}`
         : `Error del servidor: ${error.message}`;
-    console.error(errorMessage);
+    
     return throwError(() => new Error(defaultMessage));
   }
 
-  private handleLogin(response: JwtResponse): void {
+  public handleLogin(response: JwtResponse): void {
     this.storeService.setUser(response);
     this.storeService.setTokens(response);
     this.storeService.setRoles(response.roles);
     this.currentUserSubject.next(response.user);
     this.isloggedIn.next(true);
-    this.router.navigate(['/Dashboard']);
+    this.router.navigate(['/Dashboard/accounts/myaccount']);
   }
 
   setCurrentRole(role: string): void {

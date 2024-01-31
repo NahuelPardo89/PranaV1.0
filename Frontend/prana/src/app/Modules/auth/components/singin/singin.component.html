@@ -6,7 +6,9 @@
         <mat-error *ngIf="dni?.invalid && (dni?.dirty || dni?.touched)">
           <span *ngIf="dni?.errors?.['required']">El DNI es requerido.</span>
           <span *ngIf="dni?.errors?.['pattern']">El DNI debe tener entre 7 y 9 números, sin puntos ni comas.</span>
+          <span *ngIf="dni?.errors?.['dniExists']">Ya existe un usuario con ese DNI.</span>
         </mat-error>
+        
       </mat-form-field>
   
       <mat-form-field appearance="outline">
@@ -26,6 +28,8 @@
         <mat-error *ngIf="email?.invalid && (email?.dirty || email?.touched)">
           <span *ngIf="email?.errors?.['required']">El correo electrónico es requerido.</span>
           <span *ngIf="email?.errors?.['email']">El correo electrónico debe ser válido.</span>
+          <span *ngIf="email?.errors?.['emailExists']">Ya existe un usuario con ese email.</span>
+
         </mat-error>
       </mat-form-field>
   

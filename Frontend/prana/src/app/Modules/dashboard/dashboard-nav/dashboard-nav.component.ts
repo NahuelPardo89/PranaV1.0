@@ -18,6 +18,7 @@ export class DashboardNavComponent {
   showSeminarPatientOptions = false;
   showSeminarSeminaristOptions = false;
   showDoctorEspecialityOptions = false;
+  showContableOptions = false;
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -45,6 +46,9 @@ export class DashboardNavComponent {
 
   toggleInsuranceOptions() {
     this.showInsuranceOptions = !this.showInsuranceOptions;
+  }
+  toggleContableOptions() {
+    this.showContableOptions = !this.showContableOptions;
   }
   toggleUserOptions() {
     this.showUserOptions = !this.showUserOptions;

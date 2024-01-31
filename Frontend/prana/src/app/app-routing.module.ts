@@ -5,11 +5,16 @@ import { TalleresComponent } from './Modules/workshops/components/talleres/talle
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
 import { SinginComponent } from './Modules/auth/components/singin/singin.component';
+import { PasswordResetRequestComponent } from './Modules/auth/components/password-reset-request/password-reset-request.component';
 
 const routes: Route[] = [
   { path: 'Home', component: StaffComponent },
   { path: 'Talleres', component: TalleresComponent },
   { path: 'AboutUs', component: QuienesSomosComponent },
+  {path:'resetpass', component: PasswordResetRequestComponent},
+
+    
+  
   {
     path: 'Dashboard',
     loadChildren: () =>
@@ -23,6 +28,7 @@ const routes: Route[] = [
       import('./Modules/auth/auth.module').then((m) => m.AuthModule),
   },
   { path: 'singin', component: SinginComponent },
+  
   { path: '**', component: PageNotFoundComponent },
 ];
 

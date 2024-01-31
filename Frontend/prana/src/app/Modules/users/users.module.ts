@@ -32,6 +32,10 @@ import { EditmypasswordComponent } from './components/myaccount/editmypassword/e
 import { ScheduleListComponent } from './components/admin/doctor/schedule/schedule-list/schedule-list.component';
 import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
 import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
+import { PasswordResetRequestComponent } from '../auth/components/password-reset-request/password-reset-request.component';
+import { SeminaristListComponent } from './components/admin/seminarist/seminarist-list/seminarist-list.component';
+import { SeminaristEditComponent } from './components/admin/seminarist/seminarist-edit/seminarist-edit.component';
+import { SeminaristCreateComponent } from './components/admin/seminarist/seminarist-create/seminarist-create.component';
 @NgModule({
   declarations: [
    
@@ -51,6 +55,10 @@ import { ScheduleCreateComponent } from './components/admin/doctor/schedule/sche
     ScheduleListComponent,
     ScheduleEditComponent,
     ScheduleCreateComponent,
+    SeminaristListComponent,
+    SeminaristEditComponent,
+    SeminaristCreateComponent,
+    
     
   ],
   imports: [
@@ -70,6 +78,7 @@ import { ScheduleCreateComponent } from './components/admin/doctor/schedule/sche
     MatSelectModule,
     MatAutocompleteModule,
     MatListModule
-  ]
+  ],
+ 
 })
 export class UsersModule { }

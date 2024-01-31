@@ -30,6 +30,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEsAr from '@angular/common/locales/es-AR';
 
 
+
 // Registrar la localización española (Argentina)
 registerLocaleData(localeEsAr);
 
@@ -54,6 +55,8 @@ registerLocaleData(localeEsAr);
     DashboardModule,
     BrowserAnimationsModule,
     ReportsModule,
+    
+    
    
     
     // AgmCoreModule.forRoot({

@@ -75,7 +75,8 @@ export class AuthService {
       .pipe(
         tap((response) => {
           if (response.status === 201) {
-            this.router.navigate(['/auth/login']);
+            console.log(response.body)
+            this.handleLogin(response.body!);
           }
         }),
         catchError((error) => this.handleError(error, 'Error al registrarse'))

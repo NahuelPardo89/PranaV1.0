@@ -223,15 +223,32 @@ class RegisterAPI(generics.GenericAPIView):
         if serializer.is_valid():
             user = serializer.save()
             refresh = RefreshToken.for_user(user)
+            roles = self.get_user_roles(user)
+
             return Response({
                 "user": UserShortSerializer(user, context=self.get_serializer_context()).data,
+                "roles": roles,
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
+            
                 "message": "Usuario creado con éxito"
             }, status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_user_roles(self, user):
+        roles = []
+        if hasattr(user, 'patientProfile'):
+            roles.append('Paciente')
+        if hasattr(user, 'doctorProfile'):
+            roles.append('Profesional')
+        if hasattr(user, 'seminaristProfile'):
+            roles.append('Tallerista')
+        if user.is_staff:
+           roles.append('Administrador')
+        return roles
+
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode

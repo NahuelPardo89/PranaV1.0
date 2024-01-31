@@ -49,6 +49,10 @@ export class SinginComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
+      const nameInUpperCase = this.registerForm.get('name')?.value.toUpperCase();
+      const lastNameInUpperCase = this.registerForm.get('last_name')?.value.toUpperCase();
+      this.registerForm.get('name')?.setValue(nameInUpperCase);
+      this.registerForm.get('last_name')?.setValue(lastNameInUpperCase);
       const userData: RegisterUser = this.registerForm.value;
   
       this.authService.register(userData).subscribe(

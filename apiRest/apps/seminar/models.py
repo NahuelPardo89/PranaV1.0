@@ -138,7 +138,9 @@ class SeminarInscription(BaseModel):
     meetingNumber = models.IntegerField(validators=[MinValueValidator(1)])
     seminar_status = models.IntegerField(
         choices=SEMINAR_STATUS_CHOICES, default=1)
-    insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
+    insurance = models.ForeignKey(
+        HealthInsurance, on_delete=models.SET_NULL, blank=True, null=True)
+    # insurance = models.ForeignKey(HealthInsurance, on_delete=models.CASCADE)
     patient_copayment = models.DecimalField(
         max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], default=0)
     hi_copayment = models.DecimalField(

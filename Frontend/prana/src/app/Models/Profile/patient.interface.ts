@@ -6,7 +6,6 @@ export interface Patient {
   address: string;
   is_active: boolean;
   insurance: string[];
-  
 }
 
 export interface PatientView {
@@ -16,6 +15,5 @@ export interface PatientView {
   instagram: string;
   address: string;
   is_active: boolean;
-  insurance: string[];
-  
+  insurances: string[];
 }

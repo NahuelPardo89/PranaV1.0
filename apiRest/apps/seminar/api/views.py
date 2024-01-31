@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from apps.seminar.models import Room, SeminarRoomUsage, SeminarInscription, Seminar, Payment, SeminarSchedule
-from .serializers import RoomSerializer, SeminarRoomUsageSerializer, SeminarInscriptionSerializer, SeminarSerializer, SeminarScheduleSerializer
+from .serializers import RoomSerializer, SeminarRoomUsageSerializer, SeminarInscriptionViewSerializer, SeminarInscriptionCreateSerializer, SeminarSerializer, SeminarScheduleSerializer
 from apps.permission import IsAdminOrReadOnly
 
 
@@ -58,7 +58,23 @@ class SeminarInscriptionViewSet(viewsets.ModelViewSet):
     """
 
     queryset = SeminarInscription.objects.all()
-    serializer_class = SeminarInscriptionSerializer
+    serializer_view_class = SeminarInscriptionViewSerializer
+    serializer_create_class = SeminarInscriptionCreateSerializer
+
+    def get_serializer_class(self):
+        """
+        Return the appropriate serializer class based on the action.
+
+        Returns:
+            type: The serializer class.
+
+        """
+        if self.action in ['list', 'retrieve']:
+            return self.serializer_view_class
+        elif self.action in ['create', 'update']:
+            # elif self.action == 'create':
+            return self.serializer_create_class
+        return self.serializer_class
 
     def list(self, request):
         """
@@ -71,13 +87,12 @@ class SeminarInscriptionViewSet(viewsets.ModelViewSet):
             rest_framework.response.Response: The serialized data.
 
         """
-
         display = request.query_params.get('display', 'false') == 'true'
         inscriptions = SeminarInscription.objects.all()
         seminar = request.query_params.get('seminar')
         if seminar:
             inscriptions = inscriptions.filter(seminar=seminar)
-        serializer = SeminarInscriptionSerializer(
+        serializer = self.get_serializer(
             inscriptions, many=True, display=display)
         return Response(serializer.data)
 
@@ -93,10 +108,10 @@ class SeminarInscriptionViewSet(viewsets.ModelViewSet):
             rest_framework.response.Response: The serialized data.
 
         """
-
         display = request.query_params.get('display', 'false') == 'true'
         inscription = self.get_object()
-        serializer = SeminarInscriptionSerializer(inscription, display=display)
+        serializer = self.get_serializer(
+            inscription, display=display)
         return Response(serializer.data)
 
     def create(self, request):
@@ -110,7 +125,6 @@ class SeminarInscriptionViewSet(viewsets.ModelViewSet):
             rest_framework.response.Response: The serialized data or error messages.
 
         """
-
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             inscription = serializer.save()
@@ -238,13 +252,6 @@ class SeminarViewSet(viewsets.GenericViewSet):
 
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # seminar = self.get_object()
-        # serializer = SeminarSerializer(seminar, data=request.data)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def partial_update(self, request, pk=None):
         """

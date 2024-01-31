@@ -21,6 +21,8 @@ import { SeminarAdminUpdateComponent } from './components/admin/seminar-admin-up
 import { SeminarInscriptionAdminListComponent } from './components/admin/seminar-inscription-admin-list/seminar-inscription-admin-list.component';
 import { SeminarService } from 'src/app/Services/seminar/seminar.service';
 import { SeminarInscriptionService } from 'src/app/Services/seminar/seminar-inscription.service';
+import { SeminarInscriptionAdminCreateComponent } from './components/admin/seminar-inscription-admin-create/seminar-inscription-admin-create.component';
+import { SeminarInscriptionAdminUpdateComponent } from './components/admin/seminar-inscription-admin-update/seminar-inscription-admin-update.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { SeminarInscriptionService } from 'src/app/Services/seminar/seminar-insc
     SeminarAdminListComponent,
     SeminarAdminUpdateComponent,
     SeminarInscriptionAdminListComponent,
+    SeminarInscriptionAdminCreateComponent,
+    SeminarInscriptionAdminUpdateComponent,
   ],
   imports: [
     CommonModule,

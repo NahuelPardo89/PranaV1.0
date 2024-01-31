@@ -101,4 +101,8 @@ export class SeminaristService {
   deleteSeminarist(seminaristId: number): Observable<void> {
     return this.http.delete<void>(this.apiUrl + seminaristId + '/');
   }
+
+  partialupdateSeminarist(seminaristId: number, data: Partial<SeminaristProfileFlatInterface>): Observable<any> {
+    return this.http.patch(`${this.apiUrl}${seminaristId}/`, data);
+  }
 }

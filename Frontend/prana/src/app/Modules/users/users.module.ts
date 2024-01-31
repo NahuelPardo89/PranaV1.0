@@ -33,6 +33,9 @@ import { ScheduleListComponent } from './components/admin/doctor/schedule/schedu
 import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
 import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
 import { PasswordResetRequestComponent } from '../auth/components/password-reset-request/password-reset-request.component';
+import { SeminaristListComponent } from './components/admin/seminarist/seminarist-list/seminarist-list.component';
+import { SeminaristEditComponent } from './components/admin/seminarist/seminarist-edit/seminarist-edit.component';
+import { SeminaristCreateComponent } from './components/admin/seminarist/seminarist-create/seminarist-create.component';
 @NgModule({
   declarations: [
    
@@ -52,6 +55,9 @@ import { PasswordResetRequestComponent } from '../auth/components/password-reset
     ScheduleListComponent,
     ScheduleEditComponent,
     ScheduleCreateComponent,
+    SeminaristListComponent,
+    SeminaristEditComponent,
+    SeminaristCreateComponent,
     
     
   ],

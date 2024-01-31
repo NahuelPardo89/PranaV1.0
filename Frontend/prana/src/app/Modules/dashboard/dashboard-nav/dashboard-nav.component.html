@@ -84,11 +84,24 @@
         Gestionar Horarios
       </button>
     </div>
-    <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'"
+    <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" (click)="toggleContableOptions()">
+      <i class="material-symbols-outlined btn-icon">self_improvement</i>
+      Gestionar Contabilidad
+    </button>
+    <div *ngIf="showContableOptions" class="toggle">
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'" routerLink="reports/payment-method">
+        <i class="material-symbols-outlined btn-icon">self_improvement</i>
+        Gestionar Metodos de pago
+      </button>
+      <button class="btn btn-secondary" *ngIf="currentRole === 'Administrador'"
       routerLink="reports/copayment/appointment/admin/list"><i
         class="material-symbols-outlined btn-icon">account_balance</i>
       Gestionar Contabilidad
     </button>
+    </div>
+    
+    
+   
 
 
 

@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminReportsComponent } from './components/admin-reports/admin-reports.component';
 import { DoctorReportsComponent } from './components/doctor-reports/doctor-reports.component';
+import { PaymentMethodListComponent } from './components/payment-method/payment-method-list/payment-method-list.component';
+import { PaymentMethodCreateComponent } from './components/payment-method/payment-method-create/payment-method-create.component';
+import { PaymentMethodEditComponent } from './components/payment-method/payment-method-edit/payment-method-edit.component';
 
 const routes: Routes = [
   {
@@ -22,6 +25,11 @@ const routes: Routes = [
       },
     ],
   },
+  {path:'payment-method', children: [
+    {path:'', component:PaymentMethodListComponent},
+    {path:'create', component:PaymentMethodCreateComponent},
+    {path:'edit', component:PaymentMethodEditComponent},
+  ]}
 ];
 
 @NgModule({

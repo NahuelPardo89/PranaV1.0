@@ -17,6 +17,7 @@ import { ScheduleListComponent } from './components/admin/doctor/schedule/schedu
 import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
 import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
 
+
 const routes: Routes = [
   { 
     path: 'users', 
@@ -58,6 +59,9 @@ const routes: Routes = [
       { path: 'editdoctor', component: EditmydoctorComponent },
     ]
   },
+  
+    
+  
   
  
 ];

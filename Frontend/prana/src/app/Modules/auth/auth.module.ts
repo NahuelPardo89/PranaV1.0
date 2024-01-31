@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from 'src/app/Services/auth/auth.service';
+import { PasswordResetRequestComponent } from './components/password-reset-request/password-reset-request.component';
 
 
 
@@ -16,7 +17,8 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
 @NgModule({
   declarations: [
     LoginComponent,
-    SinginComponent
+    SinginComponent,
+    PasswordResetRequestComponent
   ],
   imports: [
     CommonModule,

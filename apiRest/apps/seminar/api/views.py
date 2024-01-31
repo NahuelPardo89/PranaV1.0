@@ -90,8 +90,11 @@ class SeminarInscriptionViewSet(viewsets.ModelViewSet):
         display = request.query_params.get('display', 'false') == 'true'
         inscriptions = SeminarInscription.objects.all()
         seminar = request.query_params.get('seminar')
+        patient = request.query_params.get('patient')
         if seminar:
             inscriptions = inscriptions.filter(seminar=seminar)
+        if patient:
+            inscriptions = inscriptions.filter(patient=patient)
         serializer = self.get_serializer(
             inscriptions, many=True, display=display)
         return Response(serializer.data)

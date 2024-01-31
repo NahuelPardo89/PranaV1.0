@@ -7,6 +7,7 @@ import { SeminarAdminUpdateComponent } from './components/admin/seminar-admin-up
 import { SeminarInscriptionAdminListComponent } from './components/admin/seminar-inscription-admin-list/seminar-inscription-admin-list.component';
 import { SeminarInscriptionAdminCreateComponent } from './components/admin/seminar-inscription-admin-create/seminar-inscription-admin-create.component';
 import { SeminarInscriptionAdminUpdateComponent } from './components/admin/seminar-inscription-admin-update/seminar-inscription-admin-update.component';
+import { SeminarInscriptionPatientListComponent } from './components/patient/seminar-inscription-patient-list/seminar-inscription-patient-list.component';
 
 const routes: Routes = [
   {
@@ -31,7 +32,15 @@ const routes: Routes = [
   },
   {
     path: 'patient',
-    children: [{ path: 'list', component: SeminarPatientListComponent }],
+    children: [
+      { path: 'list', component: SeminarPatientListComponent },
+      {
+        path: 'seminar-inscription',
+        children: [
+          { path: 'list', component: SeminarInscriptionPatientListComponent },
+        ],
+      },
+    ],
   },
 ];
 

@@ -44,6 +44,19 @@ export class SeminarInscriptionService {
   }
 
   /**
+   * Fetches a list of seminar inscriptions for a specific patient.
+   *
+   * @param {number} patientId - The ID of the patient.
+   * @returns {Observable<SeminarInscriptionAdminGetDetailInterface[]>} - An Observable that will emit an array of seminar inscriptions.
+   */
+  getPatientSeminarInscriptions(
+    patientId: number
+  ): Observable<SeminarInscriptionAdminGetDetailInterface[]> {
+    const url = this.apiUrl + '?patient=' + patientId + '&display=true';
+    return this.http.get<SeminarInscriptionAdminGetDetailInterface[]>(url);
+  }
+
+  /**
    * Creates a seminar inscription.
    *
    * @param {SeminarInscriptionAdminPostInterface} body - The data for the seminar inscription.

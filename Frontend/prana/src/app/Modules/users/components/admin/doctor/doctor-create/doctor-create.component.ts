@@ -94,8 +94,8 @@ export class DoctorCreateComponent {
           this.router.navigate(['/Dashboard/accounts/doctores']);
         },
         error: (error) => {
-          console.log(error);
-          this.dialog.showErrorDialog('Hubo un error al crear el Profesional');
+          
+          this.dialog.showErrorDialog(error.error.message);
         },
       });
     }

@@ -15,6 +15,13 @@ export class InsuranceDoctorService {
   getAll(): Observable<InsurancePlanDoctor[]> {
     return this.http.get<InsurancePlanDoctor[]>(`${this.url}`);
   }
+  getAllofDoctor(doctorId?: number): Observable<InsurancePlanDoctor[]> {
+    let apiUrl = this.url;
+    if (doctorId) {
+      apiUrl += `?doctorId=${doctorId}`; // Asume que el backend puede filtrar por doctorId como un query param
+    }
+    return this.http.get<InsurancePlanDoctor[]>(apiUrl);
+  }
   delete(id: number): Observable<any>{
     return this.http.delete(`${this.url}${id}/`);
   }

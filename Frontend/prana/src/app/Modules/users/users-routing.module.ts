@@ -19,6 +19,9 @@ import { ScheduleCreateComponent } from './components/admin/doctor/schedule/sche
 import { SeminaristListComponent } from './components/admin/seminarist/seminarist-list/seminarist-list.component';
 import { SeminaristCreateComponent } from './components/admin/seminarist/seminarist-create/seminarist-create.component';
 import { SeminaristEditComponent } from './components/admin/seminarist/seminarist-edit/seminarist-edit.component';
+import { InsuranceDoctorListComponent } from './components/admin/doctor/insurance/insurance-doctor-list/insurance-doctor-list.component';
+import { InsuranceDoctorCreateComponent } from './components/admin/doctor/insurance/insurance-doctor-create/insurance-doctor-create.component';
+import { InsuranceDoctorUpdateComponent } from './components/admin/doctor/insurance/insurance-doctor-update/insurance-doctor-update.component';
 
 
 const routes: Routes = [
@@ -48,6 +51,11 @@ const routes: Routes = [
         { path: '', component: ScheduleListComponent },
         { path: 'edit', component: ScheduleEditComponent },
         { path: 'create', component: ScheduleCreateComponent }
+      ]},
+      { path: 'insurance',children: [
+        { path: '', component: InsuranceDoctorListComponent },
+        { path: 'edit', component: InsuranceDoctorUpdateComponent },
+        { path: 'create', component:  InsuranceDoctorCreateComponent }
       ]},
     ]
   },

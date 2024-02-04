@@ -74,6 +74,12 @@ export class DoctorListComponent {
     });
 
   }
+  doctorInsurance(doctor: DoctorProfile) {
+    this.router.navigate(['Dashboard/accounts/doctores/insurance/'], {
+      state: { doctor },
+    });
+
+  }
 
   deleteDoctor(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(

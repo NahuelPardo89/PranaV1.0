@@ -36,6 +36,9 @@ import { PasswordResetRequestComponent } from '../auth/components/password-reset
 import { SeminaristListComponent } from './components/admin/seminarist/seminarist-list/seminarist-list.component';
 import { SeminaristEditComponent } from './components/admin/seminarist/seminarist-edit/seminarist-edit.component';
 import { SeminaristCreateComponent } from './components/admin/seminarist/seminarist-create/seminarist-create.component';
+import { InsuranceDoctorListComponent } from './components/admin/doctor/insurance/insurance-doctor-list/insurance-doctor-list.component';
+import { InsuranceDoctorCreateComponent } from './components/admin/doctor/insurance/insurance-doctor-create/insurance-doctor-create.component';
+import { InsuranceDoctorUpdateComponent } from './components/admin/doctor/insurance/insurance-doctor-update/insurance-doctor-update.component';
 @NgModule({
   declarations: [
    
@@ -58,6 +61,9 @@ import { SeminaristCreateComponent } from './components/admin/seminarist/seminar
     SeminaristListComponent,
     SeminaristEditComponent,
     SeminaristCreateComponent,
+    InsuranceDoctorListComponent,
+    InsuranceDoctorCreateComponent,
+    InsuranceDoctorUpdateComponent,
     
     
   ],

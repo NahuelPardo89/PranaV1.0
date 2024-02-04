@@ -399,13 +399,18 @@ class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
             return Response({
                 'message': 'No existe el Profile que desea eliminar'
             }, status=status.HTTP_404_NOT_FOUND)
-
-
 class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
     model = InsurancePlanDoctor
     serializer_class = InsurancePlanDoctorListSerializer
     serializer_create_class = InsurancePlanDoctorCreateSerializer
     permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        doctor_id = self.request.query_params.get('doctorId', None)
+        if doctor_id is not None:
+            queryset = queryset.filter(doctor__id=doctor_id)
+        return queryset
 
     def create(self, request):
         instance_serializer = self.serializer_create_class(data=request.data)
@@ -430,6 +435,37 @@ class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
             return Response({
                 'message': 'No existe el Profile que desea eliminar'
             }, status=status.HTTP_404_NOT_FOUND)
+
+
+# class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
+#     model = InsurancePlanDoctor
+#     serializer_class = InsurancePlanDoctorListSerializer
+#     serializer_create_class = InsurancePlanDoctorCreateSerializer
+#     permission_classes = [IsAdminOrReadOnly]
+
+#     def create(self, request):
+#         instance_serializer = self.serializer_create_class(data=request.data)
+#         if instance_serializer.is_valid():
+#             instance = instance_serializer.save()
+#             return Response({
+#                 'message': 'Profile creado correctamente.'
+#             }, status=status.HTTP_201_CREATED)
+#         return Response({
+#             'message': 'Hay errores en el registro de Profile',
+#             'errors': instance_serializer.errors
+#         }, status=status.HTTP_400_BAD_REQUEST)
+
+#     def destroy(self, request, pk=None):
+#         try:
+#             instance_to_destroy = self.get_object(pk)
+#             instance_to_destroy.delete()
+#             return Response({
+#                 'message': 'Profile eliminado correctamente'
+#             }, status=status.HTTP_204_NO_CONTENT)
+#         except self.model.DoesNotExist:
+#             return Response({
+#                 'message': 'No existe el Profile que desea eliminar'
+#             }, status=status.HTTP_404_NOT_FOUND)
 
 class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
     serializer_class = InsurancePlanDoctorListSerializer

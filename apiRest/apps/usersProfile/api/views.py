@@ -94,11 +94,11 @@ class HealthInsuranceAdminViewSet(BaseAdminViewSet):
     serializer_class = HealthInsuranceSerializer
     permission_classes = [IsAdminOrReadOnly]
     def create(self, request):
-        print(request.data,"es este")
+        
         name = request.data.get('name')
         
         if HealthInsurance.objects.filter(name=name).exists():
-            print("entre al if")
+          
             return Response({"message": "Ya existe esa obra social"}, status=status.HTTP_400_BAD_REQUEST)
         instance_serializer = self.serializer_class(data=request.data)
         if instance_serializer.is_valid():
@@ -141,6 +141,24 @@ class MedicalSpecialityAdminViewSet(BaseAdminViewSet):
     model = MedicalSpeciality
     serializer_class = MedicalSpecialitySerializer
     permission_classes = [IsAdminOrReadOnly]
+
+    def create(self, request):
+        
+        name = request.data.get('name')
+        
+        if MedicalSpeciality.objects.filter(name=name).exists():
+          
+            return Response({"message": "Ya existe esa especialidad"}, status=status.HTTP_400_BAD_REQUEST)
+        instance_serializer = self.serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Especialidad creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Especialidad',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 class MeMedicalSpecialityViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     serializer_class = MedicalSpecialitySerializer

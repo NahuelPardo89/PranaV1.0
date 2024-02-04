@@ -45,7 +45,7 @@ export class CreateInsurancePatientComponent implements OnInit {
 
   loadPatient():void{
     this.patientProfileService.getAllPatients().subscribe(data=>{
-      console.log(data);
+     
       this.patients = data
 
     })
@@ -54,7 +54,7 @@ export class CreateInsurancePatientComponent implements OnInit {
   loadInsurance():void{
     this.insuranceService.getAll().subscribe(data=>{
       this.insurances = data
-      console.log(data);
+      
     })
   }
 
@@ -87,7 +87,7 @@ export class CreateInsurancePatientComponent implements OnInit {
               
             },
             error: (error) => {
-              console.log(error);
+             
               this.dialog.showErrorDialog(error.error.message);
             }
            

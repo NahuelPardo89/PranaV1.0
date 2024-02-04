@@ -79,7 +79,7 @@ export class ListInsurancePatientComponent {
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      console.log('eliminar Obra Social');
+   
       if (confirmResult) {
         this.insurancePatientService.delete(id).subscribe({
           next: () => {

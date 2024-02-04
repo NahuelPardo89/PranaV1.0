@@ -56,7 +56,7 @@ export class EditEspecialityComponent {
               this.router.navigate(['Dashboard/speciality/speciality']); // Ajusta la ruta según sea necesario
             },
             error: (error) => {
-              console.error('Error al actualizar Especialidad', error);
+       
               this.dialogService.showErrorDialog(
                 'Error al actualizar Especialidad'
               );

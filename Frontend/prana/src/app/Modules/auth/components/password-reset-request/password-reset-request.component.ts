@@ -27,15 +27,15 @@ export class PasswordResetRequestComponent {
   
 
   onSubmit(): void {
-    console.log(this.loginForm.value.email);
+    
     this.authService.requestPasswordReset(this.loginForm.value.email).subscribe({
       next: (response) => {
-          console.log(response);
+          
           this.dialogService.showSuccessDialog("Se envió un correo electrónico a su cuenta para restablecer la contraseña");
           this.router.navigate(['Home']);
       },
       error: (error) => {
-          console.error(error);
+          
           // Aquí puedes manejar el error, mostrando un mensaje al usuario
           this.dialogService.showErrorDialog("Hubo un error al enviar el correo o el correo ingresado no existe en nuestro sistema");
       }

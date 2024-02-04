@@ -36,7 +36,7 @@ export class PatientComponent implements OnInit {
       (users) => {
         this.users = users;
         this.filteredUsers = [...this.users];
-        console.log(this.users)
+     
       },
       (error) => {
         console.error('Error al obtener la lista de usuarios:', error);

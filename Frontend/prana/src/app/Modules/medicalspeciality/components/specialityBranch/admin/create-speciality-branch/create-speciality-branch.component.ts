@@ -55,7 +55,7 @@ export class CreateSpecialityBranchComponent {
             this.router.navigate(['/Dashboard/speciality/branch']);
           },
           error: (error) => {
-            console.log(error);
+           
             this.dialog.showErrorDialog(
               'Hubo un error al crear la rama de especialidad '
             );

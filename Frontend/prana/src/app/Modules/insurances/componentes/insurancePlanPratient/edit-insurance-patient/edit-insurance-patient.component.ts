@@ -54,7 +54,7 @@ export class EditInsurancePatientComponent {
             this.router.navigate(['/Dashboard/insurances/patient']); 
           },
           error: (error) => {
-            console.log(error);
+           
             this.dialogService.showErrorDialog("Error al actualizar el Profesional")
             
           }

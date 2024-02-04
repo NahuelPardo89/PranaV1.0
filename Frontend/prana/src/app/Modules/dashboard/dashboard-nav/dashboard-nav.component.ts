@@ -41,7 +41,7 @@ export class DashboardNavComponent {
 
   toggleRoleSelector(): void {
     this.showRoleSelector = !this.showRoleSelector;
-    console.log('Role selector toggled. Current state:', this.showRoleSelector);
+
   }
 
   toggleInsuranceOptions() {

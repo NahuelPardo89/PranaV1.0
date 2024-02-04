@@ -43,7 +43,7 @@ export class ListInsuranceDoctorComponent {
   setDataTable() {
     this.insuranceDoctorService.getAll().subscribe((data) => {
       //const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
-      console.log(data)
+   
       this.dataSource = new MatTableDataSource(data);
       
       this.paginator._intl.itemsPerPageLabel = 'items por página';
@@ -80,7 +80,7 @@ export class ListInsuranceDoctorComponent {
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      console.log('eliminar Obra Social');
+    
       if (confirmResult) {
         this.insuranceDoctorService.delete(id).subscribe({
           next: () => {

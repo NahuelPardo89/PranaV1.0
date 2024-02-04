@@ -104,7 +104,7 @@ export class ListespecialityComponent {
       .updateSpeciality(especiality.id, especiality)
       .subscribe({
         next: () => {
-          console.log('Obra Social actualizado con éxito');
+      
           this.dialogService.showSuccessDialog(
             'Obra Social Activada con éxito'
           );

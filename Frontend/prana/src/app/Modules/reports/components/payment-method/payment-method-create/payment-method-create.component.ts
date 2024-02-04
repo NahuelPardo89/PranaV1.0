@@ -37,7 +37,7 @@ export class PaymentMethodCreateComponent {
           this.router.navigate(['/Dashboard/reports/payment-method']);
         },
         error: (error) => {
-          console.log(error);
+   
           this.dialogService.showErrorDialog('Hubo un error al crear el Tallerista');
         },
       });

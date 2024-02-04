@@ -75,7 +75,7 @@ export class CreateInsuranceDoctorComponent {
     this.specialityBranchService.getDoctorBranchesBySpeciality(idDoctor)
     .subscribe(branches => {
     this.branchs = branches;
-    console.log("branchs",branches)
+
     // Realiza las acciones necesarias con las ramas obtenidas
   });
   }
@@ -85,7 +85,7 @@ export class CreateInsuranceDoctorComponent {
   loadInsurance():void{
     this.insuranceService.getAll().subscribe(data=>{
       this.insurances = data
-      console.log(data);
+     
     })
   }
 
@@ -110,7 +110,7 @@ export class CreateInsuranceDoctorComponent {
     if (this.insuranceDoctorForm.valid) {
       const doctorid =this.insuranceDoctorForm.value.doctor.id
       this.insuranceDoctorForm.value.doctor=doctorid;
-      console.log(this.insuranceDoctorForm.value)
+   
       this.insuranceDoctorService.create(this.insuranceDoctorForm.value).subscribe({
         next: (response) => {
               this.dialog.showSuccessDialog("Obra Social agregada correctamente");
@@ -118,7 +118,7 @@ export class CreateInsuranceDoctorComponent {
               
             },
             error: (error) => {
-              console.log(error);
+            
               this.dialog.showErrorDialog(error.error.message);
             }
            

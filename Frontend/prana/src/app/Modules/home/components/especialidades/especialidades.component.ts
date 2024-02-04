@@ -14,7 +14,7 @@ export class EspecialidadesComponent implements OnInit {
   ngOnInit(): void {
       this._especialidadesService.getEspecialidades().subscribe(data => {
         this.especialidades = data.especialidades;
-        console.log(this.especialidades)
+   
       })
   }
 

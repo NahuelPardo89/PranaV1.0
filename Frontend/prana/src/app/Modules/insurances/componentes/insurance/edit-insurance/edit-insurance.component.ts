@@ -45,13 +45,13 @@ export class EditInsuranceComponent {
         this.insuranceForm.get('name')?.setValue(nameInUpperCase);
         this.insuranceService.update(insuranceId, this.insuranceForm.value).subscribe({
           next: () => {
-            console.log('Obra Social actualizada con éxito');
+      
             this.dialogService.showSuccessDialog('Obra Social Editada con éxito');
 
             this.router.navigate(['Dashboard/insurances/insurance']); // Ajusta la ruta según sea necesario
           },
           error: (error) => {
-            console.error('Error al actualizar Obra Social', error);
+         
             this.dialogService.showErrorDialog(
               'Error al actualizar Obra Social'
             );

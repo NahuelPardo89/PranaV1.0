@@ -56,7 +56,7 @@ export class EditInsuranceDoctorComponent {
             this.router.navigate(['/Dashboard/insurances/doctor']); 
           },
           error: (error) => {
-            console.log(error);
+          
             this.dialogService.showErrorDialog("Error al actualizar la Obra Social")
             
           }

@@ -34,21 +34,21 @@ export class MyaccountComponent {
     
     this.userService.getLoggedUser().subscribe((user) => {
       this.user = user;
-      console.log(this.user);
+      
     });
 
     
   
     this.patientService.getCurrentPatient().subscribe((patient) => {
       this.patient = patient;
-      console.log(this.patient);
+      
     });
 
     if (this.roles.includes('Profesional')) {
       this.hasDoctorProfile = true;
       this.doctorService.getMyDoctorProfile().subscribe((doctor) => {
         this.doctor = doctor;
-        console.log(this.doctor);
+        
       });
     }
   }

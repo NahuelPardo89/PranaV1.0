@@ -78,7 +78,7 @@ export class ListarPacientesComponent implements OnInit {
 
   deletePatient(id: number): void {
     if (id === undefined || id <= 0) {
-      console.error("ID de paciente no válido.");
+    
       return;
     }
   

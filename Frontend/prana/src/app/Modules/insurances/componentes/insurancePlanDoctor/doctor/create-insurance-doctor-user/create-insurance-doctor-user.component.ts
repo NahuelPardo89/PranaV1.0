@@ -57,7 +57,7 @@ export class CreateInsuranceDoctorUserComponent {
     this.specialityBranchService.getMeSpecialityBranches()
     .subscribe(branches => {
     this.branchs = branches;
-    console.log(this.branchs);
+
     
     // Realiza las acciones necesarias con las ramas obtenidas
   });
@@ -68,7 +68,7 @@ export class CreateInsuranceDoctorUserComponent {
   loadInsurance():void{
     this.insuranceService.getAll().subscribe(data=>{
       this.insurances = data
-      console.log(data);
+      
     })
   }
 
@@ -86,7 +86,7 @@ export class CreateInsuranceDoctorUserComponent {
               
             },
             error: (error) => {
-              console.log(error);
+              
               this.dialog.showErrorDialog(error.error.message);
             }
            

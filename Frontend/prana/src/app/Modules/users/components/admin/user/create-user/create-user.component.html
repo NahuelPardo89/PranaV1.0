@@ -19,6 +19,7 @@
           <mat-error *ngIf="userForm.get('dni')!.errors?.['pattern']"
             >Solo se permiten números</mat-error
           >
+          <mat-error *ngIf="userForm.get('dni')!.errors?.['dniExists']">Ya existe un usuario con ese DNI.</mat-error>
         </mat-form-field>
 
         <!-- Campo Nombre -->
@@ -47,6 +48,7 @@
             >El campo Email es obligatorio</mat-error
           >
           <mat-error *ngIf="userForm.get('email')!.errors?.['email']">Email no válido</mat-error>
+          <mat-error *ngIf="userForm.get('email')!.errors?.['emailExists']">Ya existe un usuario con ese email.</mat-error>
         </mat-form-field>
 
         <!-- Campo Teléfono -->

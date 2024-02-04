@@ -93,6 +93,23 @@ class HealthInsuranceAdminViewSet(BaseAdminViewSet):
     model = HealthInsurance
     serializer_class = HealthInsuranceSerializer
     permission_classes = [IsAdminOrReadOnly]
+    def create(self, request):
+        print(request.data,"es este")
+        name = request.data.get('name')
+        
+        if HealthInsurance.objects.filter(name=name).exists():
+            print("entre al if")
+            return Response({"message": "Ya existe esa obra social"}, status=status.HTTP_400_BAD_REQUEST)
+        instance_serializer = self.serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Profile',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DoctorPatientCommonInsurancesView(APIView):

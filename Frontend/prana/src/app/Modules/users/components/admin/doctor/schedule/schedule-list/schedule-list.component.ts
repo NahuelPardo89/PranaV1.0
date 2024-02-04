@@ -36,7 +36,7 @@ export class ScheduleListComponent {
     private router: Router
   ) {
     if (history.state.doctor) {
-      console.log(history.state.doctor)
+      
       this.doctorName = history.state.doctor.user;
       this.doctorId = history.state.doctor.id
       this.doctor=history.state.doctor

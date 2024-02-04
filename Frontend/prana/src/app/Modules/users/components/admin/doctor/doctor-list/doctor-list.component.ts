@@ -40,7 +40,7 @@ export class DoctorListComponent {
 
   setDataTable() {
     this.doctorService.getDoctors().subscribe((data) => {
-      console.log(data);
+      
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';

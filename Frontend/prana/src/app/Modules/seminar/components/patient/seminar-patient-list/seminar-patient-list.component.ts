@@ -4,8 +4,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs';
+import { SeminarInscriptionPatientPostInterface } from 'src/app/Models/seminar-inscription/admin/seminarInscriptionAdminGetDetailInterface.interface';
 import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterface.interface';
+import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
+import { SeminarInscriptionService } from 'src/app/Services/seminar/seminar-inscription.service';
 import { SeminarService } from 'src/app/Services/seminar/seminar.service';
 
 @Component({
@@ -34,6 +37,8 @@ export class SeminarPatientListComponent {
 
   constructor(
     private seminarService: SeminarService,
+    private patientService: PatientService,
+    private seminarInscriptionService: SeminarInscriptionService,
     private router: Router,
     private dialogService: DialogService
   ) {}
@@ -75,110 +80,63 @@ export class SeminarPatientListComponent {
   }
 
   /**
-   * Activates a seminar by updating its 'is_active' status to true.
-   *
-   * @param {SeminarAdminInterface} seminar - The seminar to be activated.
-   * @throws {Error} Throws an error if the activation process fails.
-   * @returns {void}
-   * @author Alvaro Olguin Armendariz
+   * Registers a patient for a seminar by creating a seminar inscription
+   * request and displaying success or error messages accordingly.
+   * @param {SeminarAdminInterface} currentSeminar - The currentSeminar parameter is of type
+   * SeminarAdminInterface.
+   * @author Alvaro Olguin
    */
-  activateSeminar(seminar: SeminarAdminInterface): void {
-    const data = { is_active: true };
-    if (seminar.id) {
-      this.seminarService
-        .partialUpdateSeminar(seminar.id, data)
-        .pipe(
-          catchError((error) => {
-            console.error('Error en la solicitud:', error);
+  onRegister(currentSeminar: SeminarAdminInterface): void {
+    this.patientService.getCurrentPatient().subscribe((data) => {
+      if (currentSeminar.id) {
+        const filteredBody: SeminarInscriptionPatientPostInterface = {
+          seminar: currentSeminar.id,
+          patient: data.id,
+          meetingNumber: 1,
+        };
+        //console.log('BODY: ', filteredBody);
 
-            // Checks "non_field_errors"
-            if (error.error && error.error.non_field_errors) {
-              const errorMessage = error.error.non_field_errors[0];
-              this.dialogService.showErrorDialog(
-                'Error al activar el seminario: ' + errorMessage
-              );
-            } else {
-              // Show a general error
-              this.dialogService.showErrorDialog(
-                'Ha ocurrido un error en la solicitud.'
-              );
-            }
+        const confirmAppointment = this.dialogService.openConfirmDialog(
+          'Se enviará una solicitud de inscripción al taller'
+        );
+        confirmAppointment.afterClosed().subscribe((confirmResult) => {
+          if (confirmResult) {
+            this.seminarInscriptionService
+              .createPatientSeminarInscription(filteredBody)
+              .pipe(
+                catchError((error) => {
+                  console.error('Error en la solicitud:', error);
 
-            throw error;
-          })
-        )
-        .subscribe((data: any) => {
-          this.setDataTable();
-          this.dialogService.showSuccessDialog('Seminario activado con éxito');
+                  // Checks "non_field_errors"
+                  if (error.error && error.error.non_field_errors) {
+                    const errorMessage = error.error.non_field_errors[0];
+                    this.dialogService.showErrorDialog(
+                      'Error al crear la solicitud de inscripción: ' +
+                        errorMessage
+                    );
+                  } else {
+                    // Show a general error
+                    this.dialogService.showErrorDialog(
+                      'Ha ocurrido un error en la solicitud.'
+                    );
+                  }
+
+                  throw error;
+                })
+              )
+              .subscribe((data: any) => {
+                const successDialog = this.dialogService.showSuccessDialog(
+                  '¡Buenas noticias! Tu solicitud de inscripción se ha creado exitosamente. Puedes ver el estado actual de tu inscripción en el panel "Mis Inscripciones".'
+                );
+
+                successDialog.afterClosed().subscribe(() => {
+                  this.router.navigate([
+                    '/Dashboard/seminar/patient/seminar-inscription/list',
+                  ]);
+                });
+              });
+          }
         });
-    }
-  }
-
-  /**
-   * Edits a seminar.
-   * @param {number} seminar - The seminar to edit
-   * @author Alvaro Olguin
-   */
-  onEdit(seminar: SeminarAdminInterface) {
-    this.router.navigate(['Dashboard/seminar/admin/update'], {
-      state: { seminar },
-    });
-  }
-
-  /**
-   * Redirects to the seminar inscription screen
-   * @param {SeminarAdminInterface} seminar - The ID of the seminar to view.
-   * @author Alvaro Olguin
-   */
-  onView(seminar: SeminarAdminInterface) {
-    this.router.navigate(['Dashboard/seminar/admin/seminar-inscription/list'], {
-      state: { seminar },
-    });
-  }
-
-  onRegister(seminar: SeminarAdminInterface) {}
-
-  /**
-   * Deletes a seminar when its ID is provided. It opens a confirmation dialog before deleting.
-   * If the deletion is confirmed, it sends a request to delete the seminar and updates the data table.
-   * @param {number} seminar_id - The ID of the seminar to delete.
-   * @author Alvaro Olguin
-   */
-  onDelete(seminar_id: number) {
-    const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Confirma la desactivación de este Taller?'
-    );
-
-    confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      if (confirmResult) {
-        this.seminarService
-          .deleteSeminar(seminar_id)
-          .pipe(
-            catchError((error) => {
-              console.error('Error en la solicitud:', error);
-
-              // Checks "non_field_errors"
-              if (error.error && error.error.non_field_errors) {
-                const errorMessage = error.error.non_field_errors[0];
-                this.dialogService.showErrorDialog(
-                  'Error al desactivar el seminario: ' + errorMessage
-                );
-              } else {
-                // Show a general error
-                this.dialogService.showErrorDialog(
-                  'Ha ocurrido un error en la solicitud.'
-                );
-              }
-
-              throw error;
-            })
-          )
-          .subscribe((data: any) => {
-            this.setDataTable();
-            this.dialogService.showSuccessDialog(
-              'Seminario desactivado con éxito'
-            );
-          });
       }
     });
   }

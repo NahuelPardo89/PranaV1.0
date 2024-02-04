@@ -41,3 +41,9 @@ export interface SeminarInscriptionAdminPostInterface {
   payment_method?: number;
   payment_status: number;
 }
+
+export interface SeminarInscriptionPatientPostInterface {
+  seminar: number;
+  patient: number;
+  meetingNumber: number;
+}

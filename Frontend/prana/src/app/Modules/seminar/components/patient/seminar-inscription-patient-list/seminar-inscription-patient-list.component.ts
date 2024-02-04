@@ -80,47 +80,6 @@ export class SeminarInscriptionPatientListComponent {
   }
 
   /**
-   * Edits an inscription.
-   * @param {number} seminarInscription - The inscription to edit
-   *
-   */
-  onEdit(seminarInscription: SeminarAdminInterface) {
-    let seminar = this.currentSeminar;
-    this.router.navigate(
-      ['/Dashboard/seminar/admin/seminar-inscription/update'],
-      {
-        state: { seminarInscription, seminar },
-      }
-    );
-  }
-
-  /**
-   * Navigates to the seminar inscription creation route and passes the seminar as state.
-   *
-   * @param {SeminarAdminInterface} seminar - The seminar to which a participant will be added.
-   * @author Alvaro Olguin Armendariz
-   */
-  addParticipant(seminar: SeminarAdminInterface) {
-    this.router.navigate(
-      ['/Dashboard/seminar/admin/seminar-inscription/create'],
-      {
-        state: { seminar },
-      }
-    );
-  }
-
-  /**
-   * Redirects to the seminar inscription screen
-   * @param {number} seminar_id - The ID of the seminar to view.
-   * @author Alvaro Olguin
-   */
-  onView(seminar_id: SeminarAdminInterface) {
-    this.router.navigate(['Dashboard/seminar/admin/seminar-inscription/list'], {
-      state: { seminar_id },
-    });
-  }
-
-  /**
    * Deletes a seminar inscription when its ID is provided. It opens a confirmation dialog before deleting.
    * If the deletion is confirmed, it sends a request to delete the seminar inscription and updates the data table.
    * @param {number} inscription_id - The ID of the seminar to delete.
@@ -128,12 +87,12 @@ export class SeminarInscriptionPatientListComponent {
    */
   onDelete(inscription_id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Confirma la eliminación de esta Inscripción? esta acción es irreversible'
+      '¿Confirmas que deseas solicitar la baja de este taller?'
     );
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
       if (confirmResult) {
         this.seminarInscriptionService
-          .deleteInscription(inscription_id)
+          .deletePatientInscription(inscription_id)
           .pipe(
             catchError((error) => {
               console.error('Error en la solicitud:', error);
@@ -141,12 +100,13 @@ export class SeminarInscriptionPatientListComponent {
               if (error.error && error.error.non_field_errors) {
                 const errorMessage = error.error.non_field_errors[0];
                 this.dialogService.showErrorDialog(
-                  'Error al desactivar el seminario: ' + errorMessage
+                  'Ha ocurrido un error al intentar procesar la solicitud de baja de la inscripción: ' +
+                    errorMessage
                 );
               } else {
                 // Show a general error
                 this.dialogService.showErrorDialog(
-                  'Ha ocurrido un error en la solicitud.'
+                  'Se ha producido un error durante el procesamiento de tu solicitud de baja.'
                 );
               }
               throw error;
@@ -155,7 +115,8 @@ export class SeminarInscriptionPatientListComponent {
           .subscribe((data: any) => {
             this.setDataTable();
             this.dialogService.showSuccessDialog(
-              'Inscripción eliminada con éxito'
+              'Tu solicitud de baja ha sido procesada exitosamente <br>' +
+                data.message
             );
           });
       }

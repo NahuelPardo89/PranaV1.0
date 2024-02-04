@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,20 +28,27 @@ export class CreateUserComponent {
     if (this.userForm.valid) {
       const nameInUpperCase = this.userForm.get('name')?.value.toUpperCase();
       const lastNameInUpperCase = this.userForm.get('last_name')?.value.toUpperCase();
-
-    // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
+  
+      // Actualizar el valor del campo name en el formulario con la versión en mayúsculas
       this.userForm.get('name')?.setValue(nameInUpperCase);
       this.userForm.get('last_name')?.setValue(lastNameInUpperCase);
+      
       this.userService.createUser(this.userForm.value).subscribe({
         next: (response) => {
           this.dialog.showSuccessDialog("Usuario creado correctamente");
           this.router.navigate(['/Dashboard/accounts/users']);
-          
         },
-        error: (error) => {
-          this.dialog.showErrorDialog(error);
+        error: (error: HttpErrorResponse) => {
+          // Aquí manejas el error basado en el mensaje específico
+          if (error.error.message.includes("DNI")) {
+            this.dialog.showErrorDialog("Ya existe un usuario con ese DNI.");
+          } else if (error.error.message.includes("email")) {
+            this.dialog.showErrorDialog("Ya existe un usuario con ese email.");
+          } else {
+            // Para otros tipos de errores no esperados
+            this.dialog.showErrorDialog("Error al crear el usuario.");
+          }
         }
-        // Opcionalmente, puedes incluir 'complete' si necesitas manejar la finalización
       });
     }
   }

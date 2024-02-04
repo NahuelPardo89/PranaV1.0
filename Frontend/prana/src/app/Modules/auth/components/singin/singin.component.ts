@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegisterUser } from 'src/app/Models/user/registerUser.interface';
 import { AuthService } from 'src/app/Services/auth/auth.service';
+import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({
   selector: 'app-singin',
@@ -12,7 +13,7 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
 export class SinginComponent {
   registerForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router,private authService: AuthService) {
+  constructor(private fb: FormBuilder, private router: Router,private authService: AuthService, private dialogService: DialogService) {
     
   }
 
@@ -51,20 +52,27 @@ export class SinginComponent {
     if (this.registerForm.valid) {
       const userData: RegisterUser = this.registerForm.value;
   
-      this.authService.register(userData).subscribe(
-        response => {
-          if (response.status === 201) {
-            // Usuario registrado y autenticado con éxito, redirige al admin
-            this.router.navigate(['/Dashboard']);
-          } else {
-            alert('Error inesperado durante el registro.');
-          }
+      this.authService.register(userData).subscribe({
+        next: (response) => {
+          this.authService.handleLogin(response.body!);
+          this.dialogService.showSuccessDialog("Cuenta creada con éxito!. Bienvenido/a")
+          
+          this.router.navigate(['/Dashboard/accounts/myaccount']);
         },
-        error => {
-          // Muestra los errores de validación al usuario
-          alert('Errores durante el registro: ' + error);
+        error: (error) => {
+          
+          if (error.error.message.includes("DNI")) {
+            // Manejar error específico de DN
+            
+            this.registerForm.controls['dni'].setErrors({ 'dniExists': true });
+          }
+          if (error.error.message.includes("email")) {
+            // Manejar error específico de email
+            
+            this.registerForm.controls['email'].setErrors({ 'emailExists': true });
+          }
         }
-      );
+      });
     }
   }
 }

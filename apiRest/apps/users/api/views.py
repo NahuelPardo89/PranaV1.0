@@ -37,17 +37,29 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         return Response(users_serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request):
+        # Extraer DNI y email del request
+        dni = request.data.get('dni')
+        email = request.data.get('email')
 
-        user_serializer = self.serializer_class(data=request.data)
-        if user_serializer.is_valid():
-            user = user_serializer.save()
+        # Verificar si ya existe un usuario con ese DNI
+        if User.objects.filter(dni=dni).exists():
+            return Response({"message": "Ya existe un usuario con ese DNI."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verificar si ya existe un usuario con ese email
+        if User.objects.filter(email=email).exists():
+            return Response({"message": "Ya existe un usuario con ese email."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Procesar la creación del usuario si no hay conflictos de DNI o email
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
             return Response({
-                'message': 'Usuario creado correctamente.'
+                'message': 'Usuario creado correctamente.',
+                "user": UserShortSerializer(user, context={'request': request}).data
             }, status=status.HTTP_201_CREATED)
-        return Response({
-            'message': 'Hay errores en el registro',
-            'errors': user_serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Si el serializador no es válido por otros motivos, devuelve los errores
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
         user = self.get_object(pk)
@@ -224,12 +236,12 @@ class RegisterAPI(generics.GenericAPIView):
 
         # Verificar si ya existe un usuario con ese DNI
         if User.objects.filter(dni=dni).exists():
-            print("aqui entre: dni")
+          
             return Response({"message": "Ya existe un usuario con ese DNI."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Verificar si ya existe un usuario con ese email
         if User.objects.filter(email=email).exists():
-            print("aqui entre: email")
+           
             return Response({"message": "Ya existe un usuario con ese email."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Procesar la creación del usuario

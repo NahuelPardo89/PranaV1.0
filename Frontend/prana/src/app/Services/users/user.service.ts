@@ -28,14 +28,10 @@ export class UserService {
   }
 
   createUser(user: User): Observable<void> {
-    ; // Ajusta esta URL según la API
-    return this.http.post<void>(this.apiUrl, user).pipe(
-      catchError(error => {
-
-        return throwError(() => new Error(error));
-      })
-    );
+   
+    return this.http.post<void>(this.apiUrl, user)
   }
+
 
   updateUser(userId: number, userData: User): Observable<void> {
     const url = `${this.apiUrl}${userId}/`;

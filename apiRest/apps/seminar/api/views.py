@@ -1,7 +1,10 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from apps.seminar.models import Room, SeminarRoomUsage, SeminarInscription, Seminar, Payment, SeminarSchedule
-from .serializers import RoomSerializer, SeminarRoomUsageSerializer, SeminarInscriptionViewSerializer, SeminarInscriptionCreateSerializer, SeminarSerializer, SeminarScheduleSerializer
+from .serializers import (RoomSerializer, SeminarRoomUsageSerializer, SeminarInscriptionViewSerializer,
+                          SeminarInscriptionCreateSerializer, SeminarSerializer, SeminarScheduleSerializer,
+                          SeminarInscriptionPatientSerializer)
 from apps.permission import IsAdminOrReadOnly
 
 
@@ -90,8 +93,11 @@ class SeminarInscriptionViewSet(viewsets.ModelViewSet):
         display = request.query_params.get('display', 'false') == 'true'
         inscriptions = SeminarInscription.objects.all()
         seminar = request.query_params.get('seminar')
+        patient = request.query_params.get('patient')
         if seminar:
             inscriptions = inscriptions.filter(seminar=seminar)
+        if patient:
+            inscriptions = inscriptions.filter(patient=patient)
         serializer = self.get_serializer(
             inscriptions, many=True, display=display)
         return Response(serializer.data)
@@ -311,3 +317,44 @@ class SeminarScheduleViewSet(viewsets.ModelViewSet):
 
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SeminarInscriptionPatientViewSet(viewsets.ModelViewSet):
+    """
+    A simple ViewSet for viewing and editing the SeminarInscription instances.
+    """
+    queryset = SeminarInscription.objects.all()
+    serializer_class = SeminarInscriptionPatientSerializer
+
+    def perform_create(self, serializer):
+        inscription = serializer.save()
+        inscription.created_by = self.request.user
+        inscription.save()
+
+    def perform_update(self, serializer):
+        inscription = serializer.save()
+        inscription.created_by = self.request.user
+        inscription.save()
+
+    @action(detail=True, methods=['post'])
+    def cancel(self, request, pk=None):
+        inscription = self.get_object()
+
+        if inscription.seminar_status == 1:
+            inscription.delete()
+            return Response({"message": "La inscripción ha sido eliminada exitosamente."})
+
+        elif inscription.seminar_status == 2:
+            if inscription.payment_status == 2:
+                inscription.seminar_status = 4
+                inscription.save()
+                return Response({"message": "La baja ha sido confirmada exitosamente."})
+
+            elif inscription.payment_status == 1:
+                inscription.seminar_status = 3
+                inscription.save()
+                return Response({"message": "La baja ha sido solicitada. Por favor, contacta con la administración para confirmarla."})
+        else:
+            return Response({"message": "Ya existe una solicitud de baja pendiente o confirmada para este taller"})
+
+        return Response({"message": "No se pudo procesar la solicitud."})

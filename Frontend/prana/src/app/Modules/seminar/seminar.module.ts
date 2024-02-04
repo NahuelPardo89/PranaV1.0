@@ -23,6 +23,7 @@ import { SeminarService } from 'src/app/Services/seminar/seminar.service';
 import { SeminarInscriptionService } from 'src/app/Services/seminar/seminar-inscription.service';
 import { SeminarInscriptionAdminCreateComponent } from './components/admin/seminar-inscription-admin-create/seminar-inscription-admin-create.component';
 import { SeminarInscriptionAdminUpdateComponent } from './components/admin/seminar-inscription-admin-update/seminar-inscription-admin-update.component';
+import { SeminarInscriptionPatientListComponent } from './components/patient/seminar-inscription-patient-list/seminar-inscription-patient-list.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { SeminarInscriptionAdminUpdateComponent } from './components/admin/semin
     SeminarInscriptionAdminListComponent,
     SeminarInscriptionAdminCreateComponent,
     SeminarInscriptionAdminUpdateComponent,
+    SeminarInscriptionPatientListComponent,
   ],
   imports: [
     CommonModule,

@@ -328,13 +328,66 @@ class SeminarInscriptionCreateSerializer(serializers.ModelSerializer):
         existing_inscriptions = SeminarInscription.objects.filter(
             seminar=data['seminar'], patient=data['patient'])
 
-        if self.instance:  # Si estamos actualizando un registro existente
+        if self.instance:
             existing_inscriptions = existing_inscriptions.exclude(
                 id=self.instance.id)
 
         if existing_inscriptions.exists():
             raise serializers.ValidationError(
                 "Este usuario ya está inscripto en este taller.")
+        ###
+
+        return data
+
+
+class SeminarInscriptionPatientSerializer(serializers.ModelSerializer):
+    """
+    Serializer class for handling SeminarInscription model instances.
+
+    This serializer provides representation and validation logic for SeminarInscription objects.
+
+    Author:
+        Alvaro Olguin Armendariz    
+    """
+
+    class Meta:
+        model = SeminarInscription
+        fields = ['seminar', 'patient', 'meetingNumber']
+        read_only_fields = ('id', 'seminar_status', 'insurance', 'created_by')
+
+    def calculate_cost(self, validated_data):
+        seminar_price = validated_data['seminar'].price
+        total_meetings = validated_data['seminar'].meetingNumber
+        participant_meetings = validated_data['meetingNumber']
+
+        cost_per_meeting = seminar_price / total_meetings
+        participant_cost = cost_per_meeting * participant_meetings
+
+        return participant_cost
+
+    def create(self, validated_data):
+        # Assign cost to patient
+        validated_data['patient_copayment'] = self.calculate_cost(
+            validated_data)
+
+        seminar_inscription = SeminarInscription.objects.create(
+            **validated_data)
+
+        return seminar_inscription
+
+    def validate(self, data):
+
+       # validate patient inscription
+        existing_inscriptions = SeminarInscription.objects.filter(
+            seminar=data['seminar'], patient=data['patient'])
+
+        if self.instance:
+            existing_inscriptions = existing_inscriptions.exclude(
+                id=self.instance.id)
+
+        if existing_inscriptions.exists():
+            raise serializers.ValidationError(
+                "Ya tienes una inscripción en curso o en proceso de confirmación para este taller.")
         ###
 
         return data

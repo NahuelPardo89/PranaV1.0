@@ -28,8 +28,10 @@ DAY_CHOICES = [
     ("Domingo", "Domingo"),]
 
 SEMINAR_STATUS_CHOICES = [
-    (1, "En Espera"),
-    (2, "Confirmado"),
+    (1, "EN ESPERA"),
+    (2, "CONFIRMADO"),
+    (3, "BAJA SOLICITADA"),
+    (4, "BAJA CONFIRMADA"),
 ]
 
 SEMINAR_PAYMENT_STATUS_CHOICES = [

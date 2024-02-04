@@ -5,6 +5,7 @@ import {
   SeminarInscriptionAdminGetDetailInterface,
   SeminarInscriptionAdminGetFlatInterface,
   SeminarInscriptionAdminPostInterface,
+  SeminarInscriptionPatientPostInterface,
 } from 'src/app/Models/seminar-inscription/admin/seminarInscriptionAdminGetDetailInterface.interface';
 
 @Injectable({
@@ -12,6 +13,8 @@ import {
 })
 export class SeminarInscriptionService {
   private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminar-inscriptions/';
+  private apiPatientUrl =
+    'http://127.0.0.1:8000/seminar/patient/seminar-inscription/';
   private seminarParam = '?seminar=';
 
   constructor(private http: HttpClient) {}
@@ -44,6 +47,19 @@ export class SeminarInscriptionService {
   }
 
   /**
+   * Fetches a list of seminar inscriptions for a specific patient.
+   *
+   * @param {number} patientId - The ID of the patient.
+   * @returns {Observable<SeminarInscriptionAdminGetDetailInterface[]>} - An Observable that will emit an array of seminar inscriptions.
+   */
+  getPatientSeminarInscriptions(
+    patientId: number
+  ): Observable<SeminarInscriptionAdminGetDetailInterface[]> {
+    const url = this.apiUrl + '?patient=' + patientId + '&display=true';
+    return this.http.get<SeminarInscriptionAdminGetDetailInterface[]>(url);
+  }
+
+  /**
    * Creates a seminar inscription.
    *
    * @param {SeminarInscriptionAdminPostInterface} body - The data for the seminar inscription.
@@ -54,6 +70,22 @@ export class SeminarInscriptionService {
   ): Observable<SeminarInscriptionAdminGetDetailInterface> {
     return this.http.post<SeminarInscriptionAdminGetDetailInterface>(
       this.apiUrl,
+      body
+    );
+  }
+
+  /**
+   * Creates a seminar inscription for a patient.
+   * @param {SeminarInscriptionPatientPostInterface} body - The parameter `body` is of type
+   * `SeminarInscriptionPatientPostInterface`. It represents the data that will be sent in the request
+   * body when making a POST request to the `apiPatientUrl`.
+   * @returns an Observable of type SeminarInscriptionPatientPostInterface.
+   */
+  createPatientSeminarInscription(
+    body: SeminarInscriptionPatientPostInterface
+  ): Observable<SeminarInscriptionPatientPostInterface> {
+    return this.http.post<SeminarInscriptionPatientPostInterface>(
+      this.apiPatientUrl,
       body
     );
   }
@@ -82,5 +114,17 @@ export class SeminarInscriptionService {
    */
   deleteInscription(inscription_id: number): Observable<void> {
     return this.http.delete<void>(this.apiUrl + inscription_id + '/');
+  }
+
+  /**
+   * Cancels a patient's inscription for a seminar
+   * @param {number} seminarId - The seminarId parameter is a number that represents the ID of the
+   * seminar for which the patient's inscription needs to be deleted.
+   * @returns an Observable of type 'any'.
+   * @author Alvaro Olguin Armendariz
+   */
+  deletePatientInscription(seminarId: number): Observable<any> {
+    const url = this.apiPatientUrl + seminarId + '/cancel/';
+    return this.http.post<any>(url, {});
   }
 }

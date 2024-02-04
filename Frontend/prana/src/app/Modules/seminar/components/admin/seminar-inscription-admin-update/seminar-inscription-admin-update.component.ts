@@ -52,8 +52,10 @@ export class SeminarInscriptionAdminUpdateComponent {
   ];
 
   seminar_status_choices = [
-    { value: 1, viewValue: 'En Espera' },
-    { value: 2, viewValue: 'Confirmado' },
+    { value: 1, viewValue: 'EN ESPERA' },
+    { value: 2, viewValue: 'CONFIRMADO' },
+    { value: 3, viewValue: 'BAJA SOLICITADA' },
+    { value: 4, viewValue: 'BAJA CONFIRMADA' },
   ];
   isPaid: boolean | null = null;
   currentInscription: SeminarInscriptionAdminGetDetailInterface =

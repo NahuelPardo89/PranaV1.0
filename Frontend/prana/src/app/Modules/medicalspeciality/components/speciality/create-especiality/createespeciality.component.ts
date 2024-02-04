@@ -39,7 +39,7 @@ export class CreateespecialityComponent {
             this.router.navigate(['/Dashboard/speciality/speciality']);
           },
           error: (error) => {
-            this.dialog.showErrorDialog(error);
+            this.dialog.showErrorDialog(error.error.message);
           },
           // Opcionalmente, puedes incluir 'complete' si necesitas manejar la finalización
         });

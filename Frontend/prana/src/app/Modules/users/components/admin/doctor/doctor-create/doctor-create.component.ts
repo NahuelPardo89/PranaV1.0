@@ -86,16 +86,18 @@ export class DoctorCreateComponent {
   onSubmit(): void {
     if (this.doctorForm.valid) {
       const userid = this.doctorForm.value.user.id;
-
+      const specialty= this.doctorForm.value.specialty
+      this.doctorForm.value.specialty = [specialty,]
       this.doctorForm.value.user = userid;
+      console.log(this.doctorForm.value)
       this.doctorProfileService.createDoctor(this.doctorForm.value).subscribe({
         next: (response) => {
           this.dialog.showSuccessDialog('Usuario creado correctamente');
           this.router.navigate(['/Dashboard/accounts/doctores']);
         },
         error: (error) => {
-          console.log(error);
-          this.dialog.showErrorDialog('Hubo un error al crear el Profesional');
+          
+          this.dialog.showErrorDialog(error.error.message);
         },
       });
     }

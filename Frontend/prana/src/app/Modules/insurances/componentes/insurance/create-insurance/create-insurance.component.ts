@@ -32,7 +32,7 @@ export class CreateInsuranceComponent {
           
         },
         error: (error) => {
-          this.dialog.showErrorDialog(error);
+          this.dialog.showErrorDialog(error.error.message);
         }
         // Opcionalmente, puedes incluir 'complete' si necesitas manejar la finalización
       });

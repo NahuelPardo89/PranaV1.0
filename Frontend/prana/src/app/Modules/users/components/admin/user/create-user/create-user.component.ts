@@ -41,9 +41,11 @@ export class CreateUserComponent {
         error: (error: HttpErrorResponse) => {
           // Aquí manejas el error basado en el mensaje específico
           if (error.error.message.includes("DNI")) {
-            this.dialog.showErrorDialog("Ya existe un usuario con ese DNI.");
+            //this.dialog.showErrorDialog("Ya existe un usuario con ese DNI.");
+            this.userForm.controls['dni'].setErrors({ 'dniExists': true });
           } else if (error.error.message.includes("email")) {
-            this.dialog.showErrorDialog("Ya existe un usuario con ese email.");
+            //this.dialog.showErrorDialog("Ya existe un usuario con ese email.");
+            this.userForm.controls['email'].setErrors({ 'emailExists': true });
           } else {
             // Para otros tipos de errores no esperados
             this.dialog.showErrorDialog("Error al crear el usuario.");

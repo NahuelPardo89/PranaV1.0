@@ -14,6 +14,13 @@ export class InsurancePatientService {
   getAll(): Observable<InsurancePlanPatient[]> {
     return this.http.get<InsurancePlanPatient[]>(`${this.url}`);
   }
+  getAllofPatient(patientId?: number): Observable<InsurancePlanPatient[]> {
+    let apiUrl = this.url;
+    if (patientId) {
+      apiUrl += `?patientId=${patientId}`; 
+    }
+    return this.http.get<InsurancePlanPatient[]>(apiUrl);
+  }
   delete(id: number): Observable<any>{
     return this.http.delete(`${this.url}${id}/`);
   }

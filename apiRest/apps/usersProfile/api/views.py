@@ -364,9 +364,14 @@ class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
     serializer_class = InsurancePlanPatientListSerializer
     create_serializer_class = InsurancePlanPatientSerializer
     permission_classes = [IsAdminOrReadOnly]
-
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        patient_id = self.request.query_params.get('patientId', None)
+        if patient_id is not None:
+            queryset = queryset.filter(patient__id=patient_id)
+        return queryset
     def create(self, request):
-        print(request.data)
+      
         instance_serializer = self.create_serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()

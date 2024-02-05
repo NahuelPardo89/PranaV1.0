@@ -107,4 +107,9 @@ export class PatientListComponent {
       },
     });
   }
+  patientInsurance(patient: Patient) {
+    this.router.navigate(['Dashboard/accounts/pacientes/insurance/'], {
+      state: { patient },
+    });
+  }
 }

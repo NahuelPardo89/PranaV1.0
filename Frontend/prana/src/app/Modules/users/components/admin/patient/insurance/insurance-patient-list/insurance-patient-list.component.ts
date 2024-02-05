@@ -4,22 +4,21 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { InsurancePlanPatient } from 'src/app/Models/Profile/isurancePlanPatient.interface';
-
+import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { InsurancePatientService } from 'src/app/Services/Profile/healthinsurance/insurancePatient/insurance-patient.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-list-insurance-patient',
-  templateUrl: './list-insurance-patient.component.html',
-  styleUrls: ['./list-insurance-patient.component.css']
+  selector: 'app-insurance-patient-list',
+  templateUrl: './insurance-patient-list.component.html',
+  styleUrls: ['./insurance-patient-list.component.css']
 })
-export class ListInsurancePatientComponent {
-
+export class InsurancePatientListComponent {
   
+  patient!:Patient
 
   displayedColumns: string[] = [
-    'id',
-    'patient',
+    
     'insurance',
     'code',
     'actions',
@@ -35,15 +34,18 @@ export class ListInsurancePatientComponent {
     private dialogService: DialogService,
     private router: Router
   ) {
-    
-  }
+    if (history.state.patient){
+      this.patient = history.state.patient
+      
+    }
+}
 
   ngOnInit() {
     this.setDataTable();
   }
 
   setDataTable() {
-    this.insurancePatientService.getAll().subscribe((data) => {
+    this.insurancePatientService.getAllofPatient(this.patient.id).subscribe((data) => {
       //const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
       
       this.dataSource = new MatTableDataSource(data);
@@ -55,7 +57,7 @@ export class ListInsurancePatientComponent {
       this.paginator._intl.previousPageLabel = 'página anterior';
 
       this.dataSource.paginator = this.paginator;
-      this.sort.active = 'name'; // El nombre de la columna por la que quieres ordenar inicialmente
+      this.sort.active = 'insurance'; // El nombre de la columna por la que quieres ordenar inicialmente
       this.sort.direction = 'asc';
       this.dataSource.sort = this.sort;
        // Puede ser 'asc' o 'desc'
@@ -71,9 +73,18 @@ export class ListInsurancePatientComponent {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  insurancePatientCreate(){
+    const patient=this.patient
+    this.router.navigate(['Dashboard/accounts/pacientes/insurance/create'], {
+      state: {patient},
+    });
+  }
+  
   insurancePatientEdit(insurancePlanPatient:InsurancePlanPatient){
-    this.router.navigate(['Dashboard/insurances/patient/edit'], {
-      state: { insurancePlanPatient },
+    const patient=this.patient
+    this.router.navigate(['Dashboard/accounts/pacientes/insurance/edit'], {
+      state: { insurancePlanPatient,patient },
     });
   }
   insuranceDelete(id:number){
@@ -104,21 +115,4 @@ export class ListInsurancePatientComponent {
       }
     });
   }
-  //activeInsurance(insurance:HealthInsurance){
-    //insurance.is_active = true;
-
-    //this.insuranceService.update(insurance.id, insurance).subscribe({
-    //  next: () => {
-    //    console.log('Obra Social actualizado con éxito');
-    //    this.dialogService.showSuccessDialog('Obra Social Activada con éxito');
-
-   //     this.setDataTable();
-   //   },
-  //    error: (error) => {
-   //     console.error('Error al actualizar obra social', error);
-   //     this.dialogService.showErrorDialog('Error al Activar Obra Social');
-        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-  ////    },
-   // });
-//  }
 }

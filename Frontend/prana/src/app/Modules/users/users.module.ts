@@ -36,6 +36,12 @@ import { PasswordResetRequestComponent } from '../auth/components/password-reset
 import { SeminaristListComponent } from './components/admin/seminarist/seminarist-list/seminarist-list.component';
 import { SeminaristEditComponent } from './components/admin/seminarist/seminarist-edit/seminarist-edit.component';
 import { SeminaristCreateComponent } from './components/admin/seminarist/seminarist-create/seminarist-create.component';
+import { InsuranceDoctorListComponent } from './components/admin/doctor/insurance/insurance-doctor-list/insurance-doctor-list.component';
+import { InsuranceDoctorCreateComponent } from './components/admin/doctor/insurance/insurance-doctor-create/insurance-doctor-create.component';
+import { InsuranceDoctorUpdateComponent } from './components/admin/doctor/insurance/insurance-doctor-update/insurance-doctor-update.component';
+import { InsurancePatientListComponent } from './components/admin/patient/insurance/insurance-patient-list/insurance-patient-list.component';
+import { InsurancePatientEditComponent } from './components/admin/patient/insurance/insurance-patient-edit/insurance-patient-edit.component';
+import { InsurancePatientCreateComponent } from './components/admin/patient/insurance/insurance-patient-create/insurance-patient-create.component';
 @NgModule({
   declarations: [
    
@@ -58,6 +64,12 @@ import { SeminaristCreateComponent } from './components/admin/seminarist/seminar
     SeminaristListComponent,
     SeminaristEditComponent,
     SeminaristCreateComponent,
+    InsuranceDoctorListComponent,
+    InsuranceDoctorCreateComponent,
+    InsuranceDoctorUpdateComponent,
+    InsurancePatientListComponent,
+    InsurancePatientEditComponent,
+    InsurancePatientCreateComponent,
     
     
   ],

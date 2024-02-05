@@ -3,39 +3,44 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { InsurancePlanPatient } from 'src/app/Models/Profile/isurancePlanPatient.interface';
-
-import { InsurancePatientService } from 'src/app/Services/Profile/healthinsurance/insurancePatient/insurance-patient.service';
+import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
+import { InsurancePlanDoctor } from 'src/app/Models/Profile/insurancePlanDoctor.interface';
+import { InsuranceDoctorService } from 'src/app/Services/Profile/healthinsurance/insuranceDoctor/insurance-doctor.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 
 @Component({
-  selector: 'app-list-insurance-patient',
-  templateUrl: './list-insurance-patient.component.html',
-  styleUrls: ['./list-insurance-patient.component.css']
+  selector: 'app-insurance-doctor-list',
+  templateUrl: './insurance-doctor-list.component.html',
+  styleUrls: ['./insurance-doctor-list.component.css']
 })
-export class ListInsurancePatientComponent {
-
-  
-
+export class InsuranceDoctorListComponent {
+  doctorName=""
+  doctorId!:number
+  doctor!:DoctorProfile
   displayedColumns: string[] = [
-    'id',
-    'patient',
+    
     'insurance',
-    'code',
+    'branch',
+    'price',
     'actions',
     
   ];
-  dataSource!: MatTableDataSource<InsurancePlanPatient>;
+  dataSource!: MatTableDataSource<InsurancePlanDoctor>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private insurancePatientService:InsurancePatientService,
+    private insuranceDoctorService:InsuranceDoctorService,
     private dialogService: DialogService,
     private router: Router
   ) {
-    
+    if (history.state.doctor) {
+      
+      this.doctorName = history.state.doctor.user;
+      this.doctorId = history.state.doctor.id
+      this.doctor=history.state.doctor
+    }
   }
 
   ngOnInit() {
@@ -43,8 +48,8 @@ export class ListInsurancePatientComponent {
   }
 
   setDataTable() {
-    this.insurancePatientService.getAll().subscribe((data) => {
-      //const filteredData = this.showInactive ? data : data.filter(d => d.is_active);
+    this.insuranceDoctorService.getAllofDoctor(this.doctorId).subscribe((data) => {
+      
       
       this.dataSource = new MatTableDataSource(data);
       
@@ -71,20 +76,27 @@ export class ListInsurancePatientComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-  insurancePatientEdit(insurancePlanPatient:InsurancePlanPatient){
-    this.router.navigate(['Dashboard/insurances/patient/edit'], {
-      state: { insurancePlanPatient },
+  insuranceDoctorCreate(){
+    const doctor=this.doctor
+    this.router.navigate(['Dashboard/accounts/doctores/insurance/create'], {
+      state: {doctor},
+    });
+  }
+  insuranceDoctorEdit(insurancePlanDoctor:InsurancePlanDoctor){
+    const doctor=this.doctor
+    this.router.navigate(['Dashboard/accounts/doctores/insurance/edit'], {
+      state: { insurancePlanDoctor,doctor },
     });
   }
   insuranceDelete(id:number){
     const confirmDialogRef = this.dialogService.openConfirmDialog(
-      '¿Estás seguro de que deseas Eliminar esta Obra Social del Paciente?'
+      '¿Estás seguro de que deseas Eliminar esta Obra Social del Profesional?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-   
+      
       if (confirmResult) {
-        this.insurancePatientService.delete(id).subscribe({
+        this.insuranceDoctorService.delete(id).subscribe({
           next: () => {
             // Manejo de la respuesta de eliminación exitosa
             this.setDataTable();
@@ -104,21 +116,4 @@ export class ListInsurancePatientComponent {
       }
     });
   }
-  //activeInsurance(insurance:HealthInsurance){
-    //insurance.is_active = true;
-
-    //this.insuranceService.update(insurance.id, insurance).subscribe({
-    //  next: () => {
-    //    console.log('Obra Social actualizado con éxito');
-    //    this.dialogService.showSuccessDialog('Obra Social Activada con éxito');
-
-   //     this.setDataTable();
-   //   },
-  //    error: (error) => {
-   //     console.error('Error al actualizar obra social', error);
-   //     this.dialogService.showErrorDialog('Error al Activar Obra Social');
-        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
-  ////    },
-   // });
-//  }
 }

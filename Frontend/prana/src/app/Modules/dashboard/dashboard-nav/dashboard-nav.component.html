@@ -74,15 +74,13 @@
       </button>
     </div>
     <button
-        class="btn btn-primary"
-        *ngIf="currentRole === 'Administrador'"
-        routerLink="insurances/insurance/"
-      >
-        <i class="material-symbols-outlined btn-icon">medical_services</i>
-        Gestionar Obras Sociales
-      </button>
-
-    
+      class="btn btn-primary"
+      *ngIf="currentRole === 'Administrador'"
+      routerLink="insurances/insurance/"
+    >
+      <i class="material-symbols-outlined btn-icon">medical_services</i>
+      Gestionar Obras Sociales
+    </button>
 
     <button
       class="btn btn-primary"
@@ -269,21 +267,13 @@
       <button
         class="btn btn-secondary"
         *ngIf="currentRole === 'Tallerista'"
-        routerLink=""
+        routerLink="seminar/seminarist/list"
       >
         <i class="material-symbols-outlined btn-icon">self_improvement</i>
-        Gestionar Talleres
-      </button>
-      <button
-        class="btn btn-secondary"
-        *ngIf="currentRole === 'Tallerista'"
-        routerLink=""
-      >
-        <i class="material-symbols-outlined btn-icon">self_improvement</i>
-        Gestionar Inscripciones
+        Mis Talleres
       </button>
     </div>
-    <button
+    <!-- <button
       class="btn btn-primary"
       *ngIf="currentRole === 'Tallerista'"
       routerLink=""
@@ -298,7 +288,7 @@
     >
       <i class="material-symbols-outlined btn-icon">account_balance</i>
       Gestionar Contabilidad
-    </button>
+    </button> -->
 
     <button class="btn btn-primary" routerLink="accounts/myaccount">
       <i class="material-symbols-outlined btn-icon">manage_accounts</i> Mi

@@ -6,7 +6,7 @@ from .views import (HealthInsuranceAdminViewSet, MedicalSpecialityAdminViewSet,
                     PatientProfileAdminViewSet, DoctorUserViewSet, PatientUserViewSet,
                     SpecialityBranchAdminViewSet, DoctorScheduleAvailableTimesView,
                     DoctorPatientCommonInsurancesView, DoctorBranchesView, DoctorSpecialityBranchViewSet,
-                    DoctorReportView, DoctorInsurancePlanViewSet,
+                    DoctorReportView, DoctorInsurancePlanViewSet, CurrentSeminaristProfileView,
                     MeDoctorSpecialityBranchViewSet, MeMedicalSpecialityViewSet, SeminaristProfileAdminViewSet)
 
 
@@ -54,4 +54,6 @@ urlpatterns = [
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
     path('patient/', PatientUserViewSet.as_view(
         {'get': 'retrieve', 'put': 'update', 'patch': 'partial_update'})),
+    path('seminarist/', CurrentSeminaristProfileView.as_view(),
+         name='current-seminarist-profile'),
 ]

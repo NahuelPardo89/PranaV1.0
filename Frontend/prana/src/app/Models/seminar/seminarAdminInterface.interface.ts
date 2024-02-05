@@ -8,7 +8,22 @@ export interface SeminarAdminInterface {
   maxInscription: number;
   price: number;
   is_active: boolean;
-  seminarist: number[]; // Array de IDs de SeminaristProfile
-  patients: number[]; // Array de IDs de PatientProfile
+  seminarist: number[];
+  patients: number[];
+  rooms?: number[];
+}
+
+export interface SeminarAdminDisplayInterface {
+  id: number;
+  name: string;
+  month: string;
+  year: number;
+  schedule: string[];
+  meetingNumber: number;
+  maxInscription: number;
+  price: number;
+  is_active: boolean;
+  seminarist: string[];
+  patients: number[];
   rooms?: number[];
 }

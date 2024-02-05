@@ -93,12 +93,13 @@ class HealthInsuranceAdminViewSet(BaseAdminViewSet):
     model = HealthInsurance
     serializer_class = HealthInsuranceSerializer
     permission_classes = [IsAdminOrReadOnly]
+
     def create(self, request):
-        
+
         name = request.data.get('name')
-        
+
         if HealthInsurance.objects.filter(name=name).exists():
-          
+
             return Response({"message": "Ya existe esa obra social"}, status=status.HTTP_400_BAD_REQUEST)
         instance_serializer = self.serializer_class(data=request.data)
         if instance_serializer.is_valid():
@@ -143,11 +144,11 @@ class MedicalSpecialityAdminViewSet(BaseAdminViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
     def create(self, request):
-        
+
         name = request.data.get('name')
-        
+
         if MedicalSpeciality.objects.filter(name=name).exists():
-          
+
             return Response({"message": "Ya existe esa especialidad"}, status=status.HTTP_400_BAD_REQUEST)
         instance_serializer = self.serializer_class(data=request.data)
         if instance_serializer.is_valid():
@@ -160,6 +161,7 @@ class MedicalSpecialityAdminViewSet(BaseAdminViewSet):
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
+
 class MeMedicalSpecialityViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     serializer_class = MedicalSpecialitySerializer
     permission_classes = [IsDoctorOrReadOnly]
@@ -168,12 +170,13 @@ class MeMedicalSpecialityViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMi
         try:
             doctor_profile = self.request.user.doctorProfile
             if doctor_profile.is_active:
-               speciality=doctor_profile.specialty.first()
-               return speciality
+                speciality = doctor_profile.specialty.first()
+                return speciality
             else:
                 raise Http404("El perfil de Profesional no está activo.")
         except ObjectDoesNotExist:
-            raise Http404("No existe un perfil de Profesional para el usuario autenticado.")    
+            raise Http404(
+                "No existe un perfil de Profesional para el usuario autenticado.")
 
 
 class SpecialityBranchAdminViewSet(BaseAdminViewSet):
@@ -228,6 +231,7 @@ class DoctorSpecialityBranchViewSet(viewsets.ViewSet):
         except DoctorProfile.DoesNotExist:
             return Response({"message": "Doctor no encontrado"}, status=status.HTTP_404_NOT_FOUND)
 
+
 class MeDoctorSpecialityBranchViewSet(viewsets.ViewSet):
     """
     ViewSet para obtener las ramas de especialidades de un doctor específico.
@@ -235,7 +239,6 @@ class MeDoctorSpecialityBranchViewSet(viewsets.ViewSet):
 
     def list(self, request):
         doctor_id = request.user.doctorProfile.id
-        
 
         try:
             doctor = DoctorProfile.objects.get(pk=doctor_id)
@@ -364,14 +367,16 @@ class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
     serializer_class = InsurancePlanPatientListSerializer
     create_serializer_class = InsurancePlanPatientSerializer
     permission_classes = [IsAdminOrReadOnly]
+
     def get_queryset(self):
         queryset = super().get_queryset()
         patient_id = self.request.query_params.get('patientId', None)
         if patient_id is not None:
             queryset = queryset.filter(patient__id=patient_id)
         return queryset
+
     def create(self, request):
-      
+
         instance_serializer = self.create_serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
@@ -404,6 +409,8 @@ class InsurancePlanPatientAdminViewSet(BaseAdminViewSet):
             return Response({
                 'message': 'No existe el Profile que desea eliminar'
             }, status=status.HTTP_404_NOT_FOUND)
+
+
 class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
     model = InsurancePlanDoctor
     serializer_class = InsurancePlanDoctorListSerializer
@@ -487,7 +494,8 @@ class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
         # Agregar el doctorProfile del usuario logueado al data
         doctor_profile = request.user.doctorProfile
         data['doctor'] = doctor_profile.id
-        serializer = InsurancePlanDoctorCreateSerializer(data=data, context={'request': request})
+        serializer = InsurancePlanDoctorCreateSerializer(
+            data=data, context={'request': request})
         if serializer.is_valid():
             # Asignar el doctorProfile del usuario logueado al InsurancePlanDoctor creado
             serializer.save(doctor=request.user.doctorProfile)
@@ -495,7 +503,8 @@ class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, *args, **kwargs):
-        instance = get_object_or_404(InsurancePlanDoctor, pk=pk, doctor__user=request.user)
+        instance = get_object_or_404(
+            InsurancePlanDoctor, pk=pk, doctor__user=request.user)
         instance.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -534,14 +543,15 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
         if speciality is not None:
             queryset = queryset.filter(specialty__name=speciality)
         return queryset
-    
+
     def create(self, request):
-        print(request.data,"es este")
+        print(request.data, "es este")
         userId = request.data.get('user')
-        
+
         if DoctorProfile.objects.filter(user=userId).exists():
             return Response({"message": "Ya existe un profesional para este usuario"}, status=status.HTTP_400_BAD_REQUEST)
-        instance_serializer = self.createUpdate_serializer_class(data=request.data)
+        instance_serializer = self.createUpdate_serializer_class(
+            data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
             return Response({
@@ -551,6 +561,7 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
             'message': 'Hay errores en el registro de Profile',
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
     def update(self, request, pk=None):
 
         instance = self.get_object(pk)
@@ -665,3 +676,24 @@ class SeminaristProfileAdminViewSet(viewsets.ModelViewSet):
         seminarist_profile.is_active = False
         seminarist_profile.save()
         return Response(status=204)
+
+
+class CurrentSeminaristProfileView(APIView):
+    """
+    View to retrieve the current SeminaristProfile.
+
+    Author: Alvaro Olguin Armendariz
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        """
+        GET method to retrieve the current SeminaristProfile.
+
+        Returns:
+            Response: A Response object with the serialized SeminaristProfile data.
+        """
+        seminarist_profile = request.user.seminaristProfile
+        serializer = SeminaristProfileSerializer(
+            seminarist_profile, context={'request': request})
+        return Response(serializer.data)

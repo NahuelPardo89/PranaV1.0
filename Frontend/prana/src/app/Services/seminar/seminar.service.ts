@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SeminarAdminInterface } from 'src/app/Models/seminar/seminarAdminInterface.interface';
+import {
+  SeminarAdminDisplayInterface,
+  SeminarAdminInterface,
+} from 'src/app/Models/seminar/seminarAdminInterface.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +22,16 @@ export class SeminarService {
   getSeminarsList(): Observable<SeminarAdminInterface[]> {
     const url = this.apiUrl + '?display=true';
     return this.http.get<SeminarAdminInterface[]>(url);
+  }
+
+  /**
+   * Get all seminars with admin permissions and detailed JSON format response (all fields).
+   * @author Alvaro Olguin
+   * @returns {Observable<SeminarAdminInterface[]>} An observable of the seminars.
+   */
+  getSeminarsListAux(): Observable<SeminarAdminDisplayInterface[]> {
+    const url = this.apiUrl + '?display=true';
+    return this.http.get<SeminarAdminDisplayInterface[]>(url);
   }
 
   getSeminars(): Observable<SeminarAdminInterface[]> {

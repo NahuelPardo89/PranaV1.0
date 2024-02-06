@@ -106,7 +106,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
       appointment_status: [null],
       payment_status: [null],
       payment_method: [null],
-      full_cost: [null],
+      full_cost: [null, [Validators.min(0)]],
       health_insurance: [null],
     });
     this.appointmentResponse = {
@@ -1084,5 +1084,14 @@ export class AppointmentAdminCreateComponent implements OnInit {
         }
       });
     }
+  }
+
+  /**
+   * Handles the cancellation of the appointment creation.
+   *
+   * @method
+   */
+  onCancel() {
+    this.router.navigate(['/Dashboard/appointments/admin/list']);
   }
 }

@@ -938,4 +938,13 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * Handles the cancellation of the appointment creation.
+   *
+   * @method
+   */
+  onCancel() {
+    this.router.navigate(['/Dashboard/appointments/doctor/list']);
+  }
 }

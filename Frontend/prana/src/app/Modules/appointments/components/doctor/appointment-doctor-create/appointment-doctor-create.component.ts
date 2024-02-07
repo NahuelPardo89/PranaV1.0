@@ -30,8 +30,6 @@ import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doc
 import { DoctorscheduleService } from 'src/app/Services/Profile/doctorschedule/doctorschedule.service';
 import { HealthinsuranceService } from 'src/app/Services/Profile/healthinsurance/insurance/healthinsurance.service';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
-import { SpecialityService } from 'src/app/Services/Profile/speciality/speciality.service';
-import { SpecialtyFilterService } from 'src/app/Services/Profile/speciality/specialty-filter/specialty-filter.service';
 import { AppointmentService } from 'src/app/Services/appointments/appointment.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
 import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmethod.service';
@@ -937,5 +935,14 @@ export class AppointmentDoctorCreateComponent implements OnInit {
         }
       });
     }
+  }
+
+  /**
+   * Handles the cancellation of the appointment creation.
+   *
+   * @method
+   */
+  onCancel() {
+    this.router.navigate(['/Dashboard/appointments/doctor/list']);
   }
 }

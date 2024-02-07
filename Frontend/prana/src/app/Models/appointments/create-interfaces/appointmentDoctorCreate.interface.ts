@@ -5,7 +5,7 @@ export interface AppointmentDoctorCreateInterface
   duration?: string;
   branch?: number;
   state?: number;
-  payment_method?: number;
+  payment_method?: number | null;
   appointment_status?: number;
   payment_status?: number;
 }

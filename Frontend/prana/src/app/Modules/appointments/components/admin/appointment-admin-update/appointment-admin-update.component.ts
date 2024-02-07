@@ -116,7 +116,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       appointment_status: [null],
       payment_status: [null],
       payment_method: [null],
-      full_cost: [null],
+      full_cost: [null, Validators.min(0)],
       health_insurance: [null],
     });
     this.appointmentResponse = {
@@ -1118,17 +1118,11 @@ export class AppointmentAdminUpdateComponent implements OnInit {
         hour: this.finalJsonHour,
         doctor: this.selectedDoctor,
         patient: this.selectedPatient,
+        payment_method: formValues.payment_method,
       };
 
       if (formValues.branch !== undefined && formValues.branch !== null) {
         filteredBody.branch = formValues.branch;
-      }
-
-      if (
-        formValues.payment_method !== undefined &&
-        formValues.payment_method !== null
-      ) {
-        filteredBody.payment_method = formValues.payment_method;
       }
 
       if (formValues.full_cost !== undefined && formValues.full_cost !== null) {

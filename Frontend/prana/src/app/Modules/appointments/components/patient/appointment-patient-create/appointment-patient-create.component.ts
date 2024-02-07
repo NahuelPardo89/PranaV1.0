@@ -297,7 +297,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
     let branch = this.specialtyFilteredBranches.find(
       (branch) => branch.id === branchId
     );
-    // its neccesary to reset full_cost, state and health insurances fields, since on branch selection could change the cost of the appointment
+    // its neccesary to reset health insurances field, since on branch selection could change the cost of the appointment
     this.resetForm(this.appointmentForm, { hi: true });
     if (branch) {
       this.branchName = branch.name;
@@ -773,8 +773,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
     <strong> Hora: </strong> ${this.appointmentForm.get('hour')?.value}<br>
     <strong> Especialidad: </strong> ${this.specialtytName}<br>
     <strong> Rama: </strong> ${this.branchName}<br>
-    <strong>Obra Social: </strong> ${this.findFormHi()}<br>
-    <strong>Costo: </strong> ${this.findFormFullCost()}<br>`;
+    <strong>Obra Social: </strong> ${this.findFormHi()}<br>`;
     return preview.replace(/\n/g, '');
   }
 
@@ -790,16 +789,6 @@ export class AppointmentPatientCreateComponent implements OnInit {
       return hi ? hi.name : 'Sin Especificar';
     }
     return 'Sin Especificar';
-  }
-
-  /**
-   * Finds the full cost from the form.
-   * @author Alvaro Olguin
-   * @returns {string} The full cost or 'Sin especificar' if not found.
-   */
-  findFormFullCost(): string {
-    const formFullCost = this.appointmentForm.get('full_cost')?.value;
-    return formFullCost ? formFullCost.toString() : 'Sin especificar';
   }
 
   /* FORM ACTIONS SECTION */
@@ -889,5 +878,14 @@ export class AppointmentPatientCreateComponent implements OnInit {
         }
       });
     }
+  }
+
+  /**
+   * Handles the cancellation of the appointment creation.
+   *
+   * @method
+   */
+  onCancel() {
+    this.router.navigate(['/Dashboard/appointments/patient/list']);
   }
 }

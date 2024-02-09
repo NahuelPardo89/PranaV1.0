@@ -40,13 +40,14 @@ class AppointmentListCreateView(APIView):
 
         # Filter appointments
         if appointment_status:
-            appointments.filter(appointment_status=appointment_status)
+            appointments = appointments.filter(
+                appointment_status=appointment_status)
         if payment_status:
-            appointments.filter(payment_status=payment_status)
+            appointments = appointments.filter(payment_status=payment_status)
         if doctor_id:
-            appointments.filter(doctor=doctor_id)
+            appointments = appointments.filter(doctor=doctor_id)
         if day:
-            appointments.filter(day=day)
+            appointments = appointments.filter(day=day)
 
         appointments = appointments.order_by('-day', 'hour')
 

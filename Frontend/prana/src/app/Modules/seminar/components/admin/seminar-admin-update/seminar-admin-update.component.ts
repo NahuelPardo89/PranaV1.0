@@ -113,7 +113,6 @@ export class SeminarAdminUpdateComponent {
   /***** INIT DATA SECTION *****/
 
   initForm(seminar: SeminarAdminInterface): void {
-    console.log('HISTORY: ', seminar);
     if (seminar.id) {
       this.seminarService.getSeminarById(seminar.id).subscribe((data) => {
         console.log('Dataaaa: ', data);

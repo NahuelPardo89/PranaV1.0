@@ -51,7 +51,7 @@ class CopaymentReportSerializer(serializers.Serializer):
                 "La fecha de inicio debe ser anterior o igual a la fecha de fin")
 
         appointments = Appointment.objects.filter(
-            day__range=[start_date, end_date], appointment_status=2)
+            day__range=[start_date, end_date], payment_status=2)
 
         # Checks if the doctor exists
         if doctor:

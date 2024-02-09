@@ -24,7 +24,8 @@ import { PaymentMethodEditComponent } from './components/payment-method/payment-
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-
+import { AdminReportListComponent } from './components/admin-report-list/admin-report-list.component';
+import { DoctorReportListComponent } from './components/doctor-report-list/doctor-report-list.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,9 @@ import { MatSortModule } from '@angular/material/sort';
     DoctorReportsComponent,
     PaymentMethodListComponent,
     PaymentMethodCreateComponent,
-    PaymentMethodEditComponent
+    PaymentMethodEditComponent,
+    AdminReportListComponent,
+    DoctorReportListComponent,
   ],
   imports: [
     CommonModule,
@@ -57,7 +60,7 @@ import { MatSortModule } from '@angular/material/sort';
     HealthinsuranceService,
     SpecialtyFilterService,
     PaymentmethodService,
-    DialogService
-  ]
+    DialogService,
+  ],
 })
-export class ReportsModule { }
+export class ReportsModule {}

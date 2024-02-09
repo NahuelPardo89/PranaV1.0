@@ -331,11 +331,6 @@ class SeminarInscriptionPatientViewSet(viewsets.ModelViewSet):
         inscription.created_by = self.request.user
         inscription.save()
 
-    def perform_update(self, serializer):
-        inscription = serializer.save()
-        inscription.created_by = self.request.user
-        inscription.save()
-
     @action(detail=True, methods=['post'])
     def cancel(self, request, pk=None):
         inscription = self.get_object()

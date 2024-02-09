@@ -115,7 +115,6 @@ export class SeminarAdminUpdateComponent {
   initForm(seminar: SeminarAdminInterface): void {
     if (seminar.id) {
       this.seminarService.getSeminarById(seminar.id).subscribe((data) => {
-        console.log('Dataaaa: ', data);
         this.seminarForm.patchValue({
           name: data.name,
           month: data.month,
@@ -188,7 +187,7 @@ export class SeminarAdminUpdateComponent {
         patients: [],
       };
 
-      console.log('BODY: ', filteredBody);
+      //console.log('BODY: ', filteredBody);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         'Confirma la actualización del taller'
       );

@@ -1153,7 +1153,7 @@ export class AppointmentAdminUpdateComponent implements OnInit {
       ) {
         filteredBody.health_insurance = formValues.health_insurance;
       }
-      console.log('BODY: ', filteredBody);
+      //console.log('BODY: ', filteredBody);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );

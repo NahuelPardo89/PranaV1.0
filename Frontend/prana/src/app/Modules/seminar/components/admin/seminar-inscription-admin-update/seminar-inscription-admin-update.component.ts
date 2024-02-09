@@ -321,7 +321,7 @@ export class SeminarInscriptionAdminUpdateComponent {
         filteredBody.insurance = formValues.insurance;
       }
 
-      console.log('BODY: ', filteredBody);
+      //console.log('BODY: ', filteredBody);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         'Confirma la actualización de esta inscripción'
       );

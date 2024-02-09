@@ -116,7 +116,7 @@ export class RoomAdminCreateComponent {
         cost: this.roomForm.value.cost,
       };
 
-      console.log('BODY: ', body);
+      //console.log('BODY: ', body);
       const confirmAppointment = this.dialogService.openConfirmDialog(
         'Desea confirmar la creación de la sala?'
       );

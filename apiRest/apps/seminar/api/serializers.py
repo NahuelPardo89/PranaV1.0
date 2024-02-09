@@ -292,6 +292,16 @@ class SeminarInscriptionCreateSerializer(serializers.ModelSerializer):
 
         return seminar_inscription
 
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.patient_copayment = self.calculate_cost(validated_data)
+
+        instance.save()
+
+        return instance
+
     def validate(self, data):
         # Validate payments
         payment_status = data.get('payment_status')

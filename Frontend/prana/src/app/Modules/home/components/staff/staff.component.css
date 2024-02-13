@@ -294,7 +294,10 @@ a{
   .prana {
     font-size: 6.8rem;
   }
-  
+  .subtitulo {
+    font-size: 3.3rem;
+    text-align: center
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -309,9 +312,31 @@ a{
   }
   .subtitulo {
     font-size: 3rem;
+    ;
   }
 }
 
+
+@media screen and (max-width: 550px) {
+  .prana { 
+    font-size: 6rem;
+  }
+  .homeDerecha  {
+    width: 370px;
+  }
+  .carrousel-container {
+    width: 340px;
+  }
+}
+@media screen and (max-height: 715px) {
+  .prana {
+    margin-top: 125px;
+  }
+  .homeDerecha {
+    height: fit-content;
+  }
+
+}
 
 
 /* profesionales */

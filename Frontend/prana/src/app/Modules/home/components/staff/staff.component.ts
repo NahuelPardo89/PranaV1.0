@@ -2,6 +2,10 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { StaffService } from 'src/app/Services/staff.service';
 import { ViewportScroller } from '@angular/common';
 import { Router } from '@angular/router';
+import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { Patient } from 'src/app/Models/Profile/patient.interface';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -10,6 +14,11 @@ import { Router } from '@angular/router';
   styleUrls: ['./staff.component.css']
 })
 export class StaffComponent implements OnInit, AfterViewInit {
+
+  webInstragram: string = '';
+  
+
+  dataSource!: MatTableDataSource<Patient>;
   
   staff: any[] = [];
 
@@ -21,7 +30,24 @@ export class StaffComponent implements OnInit, AfterViewInit {
 
   
 
-  constructor(private staffService: StaffService, private viewportScroller: ViewportScroller, private router : Router) { }
+  constructor(private staffService: StaffService, private viewportScroller: ViewportScroller, private router : Router, private patientService: PatientService, private sanitizer: DomSanitizer) { }
+
+ 
+
+  getIg = () => {
+    this.patientService.getAllPatients().subscribe((data) => {
+      this.dataSource = new MatTableDataSource(data);
+      const filterValue = 'User, Prana';
+      this.dataSource.filter = filterValue.trim();
+      this.webInstragram= this.dataSource.filteredData[0].instagram;
+      
+    });
+  }
+  get instagramUrl(): SafeResourceUrl {
+    const unsafeUrl = `https://www.instagram.com/${this.webInstragram}/embed/`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(unsafeUrl);
+  }
+  
 
   scrollToSection() {
     const targetElement = document.getElementById('encontrarnos');
@@ -56,9 +82,11 @@ export class StaffComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit(): void {
+    
     this.staffService.getStaff().subscribe(data => {
       this.staff = data.profesionales.map((pro: any) => ({ ...pro, showDescription: false }));
     });
+    this.getIg();
   }
 
 

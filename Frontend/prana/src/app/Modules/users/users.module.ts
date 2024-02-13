@@ -42,6 +42,8 @@ import { InsuranceDoctorUpdateComponent } from './components/admin/doctor/insura
 import { InsurancePatientListComponent } from './components/admin/patient/insurance/insurance-patient-list/insurance-patient-list.component';
 import { InsurancePatientEditComponent } from './components/admin/patient/insurance/insurance-patient-edit/insurance-patient-edit.component';
 import { InsurancePatientCreateComponent } from './components/admin/patient/insurance/insurance-patient-create/insurance-patient-create.component';
+import { EditinstagramComponent } from './components/myaccount/editinstagram/editinstagram.component';
+
 @NgModule({
   declarations: [
    
@@ -71,6 +73,7 @@ import { InsurancePatientCreateComponent } from './components/admin/patient/insu
     InsurancePatientEditComponent,
     InsurancePatientCreateComponent,
     
+    EditinstagramComponent
     
   ],
   imports: [

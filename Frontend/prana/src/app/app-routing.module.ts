@@ -8,6 +8,7 @@ import { SinginComponent } from './Modules/auth/components/singin/singin.compone
 import { PasswordResetRequestComponent } from './Modules/auth/components/password-reset-request/password-reset-request.component';
 
 const routes: Route[] = [
+ 
   { path: 'Home', component: StaffComponent },
   { path: 'Talleres', component: TalleresComponent },
   { path: 'AboutUs', component: QuienesSomosComponent },
@@ -30,6 +31,7 @@ const routes: Route[] = [
   { path: 'singin', component: SinginComponent },
   
   { path: '**', component: PageNotFoundComponent },
+  
 ];
 
 @NgModule({

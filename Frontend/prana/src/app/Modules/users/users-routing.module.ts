@@ -76,6 +76,7 @@ const routes: Routes = [
       { path: 'editpassword', component: EditmypasswordComponent },
       { path: 'editpatient', component: EditmypatientComponent },
       { path: 'editdoctor', component: EditmydoctorComponent },
+      
     ]
   },
   { 

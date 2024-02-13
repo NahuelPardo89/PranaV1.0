@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StaffComponent } from './components/staff/staff.component';
 import { EspecialidadesComponent } from './components/especialidades/especialidades.component';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 
@@ -18,6 +19,7 @@ import { EspecialidadesComponent } from './components/especialidades/especialida
   ],
   imports: [
     CommonModule,
+    BrowserModule
   
     
     

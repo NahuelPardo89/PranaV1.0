@@ -89,6 +89,10 @@
         class="material-symbols-outlined btn-icon">account_balance</i>
       Gestionar Contabilidad
     </button>
+    <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink="accounts/myaccount/editinstagram">
+      <i class="material-symbols-outlined btn-icon">flip_camera_ios</i>
+      Gestionar Instagram
+    </button>
 
 
 
@@ -178,6 +182,7 @@
       <i class="material-symbols-outlined btn-icon">account_balance</i>
       Gestionar Contabilidad
     </button>
+    
 
     <button class="btn btn-primary" routerLink="accounts/myaccount">
       <i class="material-symbols-outlined btn-icon">manage_accounts</i> Mi
@@ -190,6 +195,7 @@
       <i class="material-icons">swap_horiz</i>
       <!-- Ícono Autorenew -->
     </div>
+
 
     <select class="select-role form-control" *ngIf="showRoleSelector" (change)="changeRole($event)"
       [value]="currentRole">

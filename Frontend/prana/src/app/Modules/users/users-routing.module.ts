@@ -16,6 +16,7 @@ import { EditmydoctorComponent } from './components/myaccount/editmydoctor/editm
 import { ScheduleListComponent } from './components/admin/doctor/schedule/schedule-list/schedule-list.component';
 import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
 import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
+import { EditinstagramComponent } from './components/myaccount/editinstagram/editinstagram.component';
 
 const routes: Routes = [
   { 
@@ -56,6 +57,7 @@ const routes: Routes = [
       { path: 'editpassword', component: EditmypasswordComponent },
       { path: 'editpatient', component: EditmypatientComponent },
       { path: 'editdoctor', component: EditmydoctorComponent },
+      { path: 'editinstagram', component: EditinstagramComponent },
     ]
   },
   

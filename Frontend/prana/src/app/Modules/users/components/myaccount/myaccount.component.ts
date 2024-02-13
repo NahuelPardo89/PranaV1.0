@@ -86,4 +86,9 @@ export class MyaccountComponent {
       state: { doctor },
     });
   }
+
+  editInstagram(){
+    this.router.navigate(['Dashboard/accounts/myaccount/editinstagram'], 
+    );
+  }
 }

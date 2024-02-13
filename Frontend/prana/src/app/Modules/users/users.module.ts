@@ -32,6 +32,8 @@ import { EditmypasswordComponent } from './components/myaccount/editmypassword/e
 import { ScheduleListComponent } from './components/admin/doctor/schedule/schedule-list/schedule-list.component';
 import { ScheduleEditComponent } from './components/admin/doctor/schedule/schedule-edit/schedule-edit.component';
 import { ScheduleCreateComponent } from './components/admin/doctor/schedule/schedule-create/schedule-create.component';
+import { EditinstagramComponent } from './components/myaccount/editinstagram/editinstagram.component';
+
 @NgModule({
   declarations: [
    
@@ -51,6 +53,7 @@ import { ScheduleCreateComponent } from './components/admin/doctor/schedule/sche
     ScheduleListComponent,
     ScheduleEditComponent,
     ScheduleCreateComponent,
+    EditinstagramComponent
     
   ],
   imports: [

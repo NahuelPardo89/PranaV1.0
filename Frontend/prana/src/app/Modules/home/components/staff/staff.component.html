@@ -24,9 +24,7 @@
                     <button class="css-button-sliding-to-right--blue" (click)="slideToLeft()"><</button>
                     <button class="css-button-sliding-to-left--blue" (click)="slideToRight()">></button>
                 </div>
-                <!-- <p class="description"> 
-                    <b>En Prana</b>, nuestro compromiso es ofrecerte un <b>abanico completo de servicios terapéuticos</b>, respaldados por un equipo de <b>profesionales altamente capacitados</b> en diversas especialidades. Estamos aquí para ayudarte a conseguir el <b>bienestar integral</b>.</p> -->
-                    <button class="css-button-sliding-to-bottom--blue"><a (click)="scrollToSection()">Contactanos</a></button>
+                <button class="css-button-sliding-to-bottom--blue"><a (click)="scrollToSection()">Contactanos</a></button>
                 </div>
             
             
@@ -127,15 +125,7 @@
     <div class="contenedorIg">
         <h2 class="ubicacionTitle">Seguinos en Instagram y enterate de nuestros talleres</h2>
         
-        <iframe width="550" height="440" src="https://www.instagram.com/pranaterapeutico/embed/" frameborder="0" class="embedIg"></iframe>    
+        <iframe width="550" height="440" [src]="instagramUrl" frameborder="0" class="embedIg"></iframe>
     </div>
 </section>
 
-
-<!-- IG -->
-<!-- 
-<div class="ig">
-    <h2 class="ubicacionTitle">Contactate con nosotros a través de nuestros canales</h2>
-    <h3>Seguinos en Instagram y enterate de nuestros talleres</h3>
-    <iframe width="320" height="440" src="https://www.instagram.com/prana_terapeutico/embed/" frameborder="0" class="embedIg"></iframe>    
-</div> -->

@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { DoctorScheduleInterface } from 'src/app/Models/Profile/doctorschedule.interface';
 import { DoctorAvailableTimes } from 'src/app/Models/appointments/doctor-availables-times/appointmentAdmin.interface';
-
+import { environment } from 'src/enviroments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorscheduleService {
 
-  private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/doctor-schedules/';
+  private baseUrl: string = environment.api_Url+'profile/admin/doctor-schedules/';
 
   constructor(private http: HttpClient) { }
 

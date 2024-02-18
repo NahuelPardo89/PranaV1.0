@@ -2,15 +2,15 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
-
+import { environment } from 'src/enviroments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class BranchService {
 
-  private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/speciality-branch/';
-  private meUrl: string = 'http://127.0.0.1:8000/profile/admin/me-speciality-branch/';
-  private baseUrl2: string = 'http://127.0.0.1:8000/profile/admin/';
+  private baseUrl: string = environment.api_Url+'profile/admin/speciality-branch/';
+  private meUrl: string = environment.api_Url+'profile/admin/me-speciality-branch/';
+  private baseUrl2: string = environment.api_Url+'profile/admin/';
   
 
   constructor(private http: HttpClient) { }

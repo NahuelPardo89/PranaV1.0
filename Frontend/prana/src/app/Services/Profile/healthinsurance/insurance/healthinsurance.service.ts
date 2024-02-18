@@ -5,7 +5,7 @@ import { Observable, throwError } from 'rxjs';
 
 import { tap, catchError } from 'rxjs/operators';
 import { HealthInsurance } from '../../../../Models/Profile/healthinsurance.interface';
-
+import { environment } from 'src/enviroments/environment';
 
 
 
@@ -13,7 +13,7 @@ import { HealthInsurance } from '../../../../Models/Profile/healthinsurance.inte
   providedIn: 'root'
 })
 export class HealthinsuranceService {
-  private url = 'http://127.0.0.1:8000/profile/admin/health-insurances/';
+  private url = environment.api_Url+'profile/admin/health-insurances/';
   constructor(private http: HttpClient) { }
 
   // Listar todas las HealthInsurances
@@ -27,7 +27,7 @@ export class HealthinsuranceService {
   }
 
   getDoctorPatientCommonHI(doctorId: number, patientId: number, branchId: number): Observable<HealthInsurance[]> {
-    const url = 'http://127.0.0.1:8000/profile/admin/common-insurances/?';
+    const url = environment.api_Url+'profile/admin/common-insurances/?';
     const doctor = 'doctor_id=' + doctorId;
     const patient = 'patient_id=' + patientId;
     const branch = 'branch_id=' + branchId;

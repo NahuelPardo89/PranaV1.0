@@ -18,16 +18,18 @@ import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { DialogService } from '../dialog/dialog.service';
 import { StoreService } from '../store/store.service';
+import {environment} from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private loginUrl = 'http://127.0.0.1:8000/account/login/';
-  private registerUrl = 'http://127.0.0.1:8000/account/singin/';
-  private logoutUrl = 'http://127.0.0.1:8000/account/logout/';
-  private refreshTokenUrl = 'http://127.0.0.1:8000/account/refresh/';
-  private resetPasswordUrl = 'http://127.0.0.1:8000/account/request-password-reset/'
+  private loginUrl=environment.api_Url+'account/login/'
+  
+  private registerUrl = environment.api_Url+'account/singin/';
+  private logoutUrl = environment.api_Url+'account/logout/';
+  private refreshTokenUrl = environment.api_Url+'account/refresh/';
+  private resetPasswordUrl = environment.api_Url+'account/request-password-reset/'
   private currentUserSubject: BehaviorSubject<UserShort | null> =
     new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();

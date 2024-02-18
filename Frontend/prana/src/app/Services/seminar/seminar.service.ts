@@ -5,12 +5,12 @@ import {
   SeminarAdminDisplayInterface,
   SeminarAdminInterface,
 } from 'src/app/Models/seminar/seminarAdminInterface.interface';
-
+import { environment } from 'src/enviroments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class SeminarService {
-  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminars/';
+  private apiUrl = environment.api_Url+'seminar/admin/seminars/';
 
   constructor(private http: HttpClient) {}
 

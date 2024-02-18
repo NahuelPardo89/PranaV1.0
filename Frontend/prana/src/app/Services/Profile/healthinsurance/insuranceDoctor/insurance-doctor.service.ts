@@ -2,14 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { InsurancePlanDoctor } from 'src/app/Models/Profile/insurancePlanDoctor.interface';
-
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InsuranceDoctorService {
-  private url = 'http://127.0.0.1:8000/profile/admin/insurance-plans-doctor/';
-  private meUrl = 'http://127.0.0.1:8000/profile/admin/me-insurance-plans-doctor/';
+  private url = environment.api_Url+'profile/admin/insurance-plans-doctor/';
+  private meUrl = environment.api_Url+'profile/admin/me-insurance-plans-doctor/';
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<InsurancePlanDoctor[]> {

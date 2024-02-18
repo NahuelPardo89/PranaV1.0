@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Medicalspeciality } from 'src/app/Models/Profile/medicalspeciality.interface';
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpecialityService {
-  private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/specialities/'; // Asume esta URL basándome en la estructura anterior
-  private meUrl: string = 'http://127.0.0.1:8000/profile/me-speciality/';
+  private baseUrl: string = environment.api_Url+'profile/admin/specialities/'; // Asume esta URL basándome en la estructura anterior
+  private meUrl: string = environment.api_Url+'profile/me-speciality/';
   constructor(private http: HttpClient) { }
 
   // Get all medical specialities

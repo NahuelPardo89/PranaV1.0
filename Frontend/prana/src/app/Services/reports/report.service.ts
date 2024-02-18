@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReportAppAdminPostInterface } from 'src/app/Models/reports/reportAppAdminPost.interface';
 import { ReportAppAdminResponseInterface } from 'src/app/Models/reports/reportAppAdminResponse.interface';
-
+import { environment } from 'src/enviroments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class ReportService {
-  private appointmentReportBaseUrl = 'http://127.0.0.1:8000/report/copayment/appointment/';
+  private appointmentReportBaseUrl = environment.api_Url+'report/copayment/appointment/';
   // not implemented yet
-  private seminarReportBaseUrl = 'http://127.0.0.1:8000/report/copayment/seminar/';
+  private seminarReportBaseUrl = environment.api_Url+'report/copayment/seminar/';
   constructor(private http: HttpClient) { }
 
   getAdminAppointmentReport(body: ReportAppAdminPostInterface): Observable<ReportAppAdminResponseInterface> {

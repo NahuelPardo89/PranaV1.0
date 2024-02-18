@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
 import { ReportAppDoctorResponseInterface } from 'src/app/Models/reports/reportAppDoctorResponse.interface';
-
+import { environment } from 'src/enviroments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class DoctorprofileService {
-  private baseUrl: string = 'http://127.0.0.1:8000/profile/admin/doctor/';
-  private meUrl: string = 'http://127.0.0.1:8000/profile/doctor/';
-  private doctorReportUrl: string = 'http://127.0.0.1:8000/profile/admin/doctor-report-data/';
+  private baseUrl: string = environment.api_Url+'profile/admin/doctor/';
+  private meUrl: string = environment.api_Url+'profile/doctor/';
+  private doctorReportUrl: string = environment.api_Url+'profile/admin/doctor-report-data/';
 
   constructor(private http: HttpClient) { }
 

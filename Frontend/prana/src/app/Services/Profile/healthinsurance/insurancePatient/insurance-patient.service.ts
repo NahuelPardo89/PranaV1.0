@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { InsurancePlanPatient } from 'src/app/Models/Profile/isurancePlanPatient.interface';
-
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InsurancePatientService {
-  private url = 'http://127.0.0.1:8000/profile/admin/insurance-plans-patient/';
+  private url = environment.api_Url+'profile/admin/insurance-plans-patient/';
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<InsurancePlanPatient[]> {

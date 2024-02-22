@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    api_Url: 'http://127.0.0.1:8000/',
+    api_Url: 'http://devcord.cloud:8000/',
     
   };

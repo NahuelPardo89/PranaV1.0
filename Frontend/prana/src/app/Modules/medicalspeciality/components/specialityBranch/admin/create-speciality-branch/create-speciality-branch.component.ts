@@ -35,7 +35,9 @@ export class CreateSpecialityBranchComponent {
 
   loadSpecialties(): void {
     this.specialtyService.getSpecialities().subscribe((data) => {
-      this.specialties = data;
+      const spec = data.filter((specialty) => specialty.is_active);
+      this.specialties = spec;
+      //this.specialties = data;
     });
   }
 
@@ -55,7 +57,6 @@ export class CreateSpecialityBranchComponent {
             this.router.navigate(['/Dashboard/speciality/branch']);
           },
           error: (error) => {
-           
             this.dialog.showErrorDialog(
               'Hubo un error al crear la rama de especialidad '
             );

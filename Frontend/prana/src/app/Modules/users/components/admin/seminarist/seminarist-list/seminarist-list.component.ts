@@ -3,7 +3,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { SeminaristProfileDisplayInterface, SeminaristProfileFlatInterface } from 'src/app/Models/Profile/seminaristProfile.interface';
+import {
+  SeminaristProfileDisplayInterface,
+  SeminaristProfileFlatInterface,
+} from 'src/app/Models/Profile/seminaristProfile.interface';
 
 import { SeminaristService } from 'src/app/Services/Profile/seminarist/seminarist.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
@@ -11,16 +14,10 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-seminarist-list',
   templateUrl: './seminarist-list.component.html',
-  styleUrls: ['./seminarist-list.component.css']
+  styleUrls: ['./seminarist-list.component.css'],
 })
 export class SeminaristListComponent {
-  displayedColumns: string[] = [
-    'id',
-    'user',
-    // 'insurances',
-    'is_active',
-    'actions',
-  ];
+  displayedColumns: string[] = ['user', 'is_active', 'actions'];
   dataSource!: MatTableDataSource<SeminaristProfileDisplayInterface>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -66,8 +63,6 @@ export class SeminaristListComponent {
     });
   }
 
-
-
   deleteSeminarist(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Estás seguro de que deseas desactivar este Tallerista?'
@@ -95,7 +90,7 @@ export class SeminaristListComponent {
 
   activeDoctor(seminarist: SeminaristProfileFlatInterface) {
     const dataToUpdate = { is_active: true };
-    const id=seminarist.id||0
+    const id = seminarist.id || 0;
     this.seminaristService.partialupdateSeminarist(id, dataToUpdate).subscribe({
       next: () => {
         this.dialogService.showSuccessDialog('Tallerista Activado con éxito');

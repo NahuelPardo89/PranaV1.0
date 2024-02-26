@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, map, startWith } from 'rxjs';
 import { User } from 'src/app/Models/user/user.interface';
@@ -10,18 +15,17 @@ import { UserService } from 'src/app/Services/users/user.service';
 @Component({
   selector: 'app-seminarist-create',
   templateUrl: './seminarist-create.component.html',
-  styleUrls: ['./seminarist-create.component.css']
+  styleUrls: ['./seminarist-create.component.css'],
 })
 export class SeminaristCreateComponent {
-  
   users: User[] = [];
   filteredUsers: Observable<User[]> = new Observable<User[]>();
   seminaristForm: FormGroup;
   userControl = new FormControl('', Validators.required);
-  
+
   constructor(
     private seminaristProfileService: SeminaristService,
-   
+
     private userService: UserService,
     private fb: FormBuilder,
     private dialog: DialogService,
@@ -29,21 +33,17 @@ export class SeminaristCreateComponent {
   ) {
     this.seminaristForm = this.fb.group({
       user: this.userControl,
-      
     });
   }
 
   ngOnInit(): void {
-    
     this.loadUsers();
-    this.filterUsers();
   }
-
-  
 
   loadUsers(): void {
     this.userService.getUsers().subscribe((data) => {
       this.users = data;
+      this.filterUsers();
     });
   }
 
@@ -60,16 +60,18 @@ export class SeminaristCreateComponent {
       const userid = this.seminaristForm.value.user.id;
 
       this.seminaristForm.value.user = userid;
-      this.seminaristProfileService.createSeminarist(this.seminaristForm.value).subscribe({
-        next: (response) => {
-          this.dialog.showSuccessDialog('Tallerista creado correctamente');
-          this.router.navigate(['/Dashboard/accounts/seminarist']);
-        },
-        error: (error) => {
-          console.log(error);
-          this.dialog.showErrorDialog('Hubo un error al crear el Tallerista');
-        },
-      });
+      this.seminaristProfileService
+        .createSeminarist(this.seminaristForm.value)
+        .subscribe({
+          next: (response) => {
+            this.dialog.showSuccessDialog('Tallerista creado correctamente');
+            this.router.navigate(['/Dashboard/accounts/seminarist']);
+          },
+          error: (error) => {
+            console.log(error);
+            this.dialog.showErrorDialog('Hubo un error al crear el Tallerista');
+          },
+        });
     }
   }
   onCancel() {

@@ -74,7 +74,7 @@ export class DoctorEditComponent {
       // Inicializa el formulario con los valores obtenidos
       this.doctorForm.patchValue({
         ...history.state.doctor,
-        specialty: selectedSpecialties,
+        specialty: selectedSpecialties[0],
         appointment_duration: durationInSeconds,
       });
     });
@@ -83,6 +83,8 @@ export class DoctorEditComponent {
   onSubmit(): void {
     if (this.doctorForm.valid) {
       const doctortId = history.state.doctor ? history.state.doctor.id : null;
+      const specialty = this.doctorForm.value.specialty;
+      this.doctorForm.value.specialty = [specialty];
       if (doctortId) {
         this.doctorService
           .partialupdateDoctor(doctortId, this.doctorForm.value)

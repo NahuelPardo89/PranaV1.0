@@ -132,15 +132,6 @@
       <i class="material-symbols-outlined btn-icon">self_improvement</i>
       Gestionar Contabilidad
     </button>
-    <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink="accounts/myaccount/editinstagram">
-      <i class="material-symbols-outlined btn-icon">flip_camera_ios</i>
-      Gestionar Instagram
-    </button>
-
-
-
-
-    
     <div *ngIf="showContableOptions" class="toggle">
       <button
         class="btn btn-secondary"
@@ -159,6 +150,15 @@
         Gestionar Contabilidad
       </button>
     </div>
+
+    <button
+      class="btn btn-primary"
+      *ngIf="currentRole === 'Administrador'"
+      routerLink="accounts/myaccount/editinstagram"
+    >
+      <i class="material-symbols-outlined btn-icon">flip_camera_ios</i>
+      Gestionar Instagram
+    </button>
 
     <button
       class="btn btn-primary"
@@ -310,7 +310,6 @@
       <i class="material-icons">swap_horiz</i>
       <!-- Ícono Autorenew -->
     </div>
-
 
     <select
       class="select-role form-control"

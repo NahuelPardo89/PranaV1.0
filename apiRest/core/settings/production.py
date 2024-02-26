@@ -5,7 +5,7 @@ DEBUG = env.bool('DEBUG', default=False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 CORS_ALLOWED_ORIGINS = [
     # "http://localhost:4200",
-    '*',
+    'http://216.196.63.221:4200',
     # !Acá poner ip y puerto del front¡
 ]
 

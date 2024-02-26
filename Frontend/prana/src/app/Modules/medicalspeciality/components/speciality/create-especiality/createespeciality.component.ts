@@ -35,7 +35,7 @@ export class CreateespecialityComponent {
         .createSpeciality(this.specialityForm.value)
         .subscribe({
           next: (response) => {
-            this.dialog.showSuccessDialog('Obra Social creada correctamente');
+            this.dialog.showSuccessDialog('Especialidad creada correctamente');
             this.router.navigate(['/Dashboard/speciality/speciality']);
           },
           error: (error) => {

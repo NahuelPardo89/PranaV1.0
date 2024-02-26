@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -48,18 +49,25 @@ export class EditUserComponent {
         this.userForm.get('name')?.setValue(nameInUpperCase);
         this.userForm.get('last_name')?.setValue(lastNameInUpperCase);
         this.userService.updateUser(userId, this.userForm.value).subscribe({
-          next: () => {
+          next: (response) => {
             console.log('Usuario actualizado con éxito');
             this.dialogService.showSuccessDialog('Usuario Editado con éxito');
-
             this.router.navigate(['Dashboard/accounts/users']); // Ajusta la ruta según sea necesario
           },
-          error: (error) => {
-            console.error('Error al actualizar el usuario', error);
-            this.dialogService.showErrorDialog(
-              'Error al actualizar el usuario'
-            );
-            // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
+          error: (error: HttpErrorResponse) => {
+            console.log(error)
+          
+            // Aquí manejas el error basado en el mensaje específico
+            if (error.error.message.includes("DNI")) {
+              //this.dialog.showErrorDialog("Ya existe un usuario con ese DNI.");
+              this.dialogService.showErrorDialog("Ya existe otro usuario con ese dni");
+            } else if (error.error.message.includes("email")) {
+              //this.dialog.showErrorDialog("Ya existe un usuario con ese email.");
+              this.dialogService.showErrorDialog("Ya existe otro usuario con ese email");
+            } else {
+              // Para otros tipos de errores no esperados
+              this.dialogService.showErrorDialog("Error al editar el usuario.");
+            }
           },
         });
       } else {

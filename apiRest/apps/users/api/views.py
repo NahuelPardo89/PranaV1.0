@@ -69,7 +69,17 @@ class UserAdminViewSet(viewsets.GenericViewSet):
 
     def update(self, request, pk=None):
         user = self.get_object(pk)
-        print(request.data)
+        dni = request.data.get('dni')
+        email = request.data.get('email')
+
+    # Verificar si ya existe otro usuario con ese DNI
+        if User.objects.filter(dni=dni).exclude(pk=user.pk).exists():
+             return Response({"message": "Ya existe otro usuario con ese DNI."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Verificar si ya existe otro usuario con ese email
+        if User.objects.filter(email=email).exclude(pk=user.pk).exists():
+            
+            return Response({"message": "Ya existe otro usuario con ese email."}, status=status.HTTP_400_BAD_REQUEST)
         user_serializer = self.serializer_class(user, data=request.data)
         if user_serializer.is_valid():
             # Check if is_active has changed
@@ -98,6 +108,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
                 'message': 'Usuario actualizado correctamente'
             }, status=status.HTTP_200_OK)
         else:
+            
             return Response({
                 'message': 'Hay errores en la actualización',
                 'errors': user_serializer.errors

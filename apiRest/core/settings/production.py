@@ -4,8 +4,9 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
-    # otros dominios que desees permitir
+    # "http://localhost:4200",
+    '*',
+    # !Acá poner ip y puerto del front¡
 ]
 
 # Database
@@ -20,12 +21,10 @@ DATABASES = {
         'HOST': env('DATABASE_HOST'),
         'PORT': env('DATABASE_PORT'),
         'OPTIONS': {
-        'sql_mode': 'traditional',
-        
-    }}
+            'sql_mode': 'traditional',
+
+        }}
 }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-

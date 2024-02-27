@@ -9,9 +9,9 @@ import { PasswordResetRequestComponent } from './Modules/auth/components/passwor
 
 const routes: Route[] = [
  
-  { path: 'Home', component: StaffComponent },
-  { path: 'Talleres', component: TalleresComponent },
-  { path: 'AboutUs', component: QuienesSomosComponent },
+  { path: '', component: StaffComponent },
+  { path: 'talleres', component: TalleresComponent },
+  { path: 'aboutus', component: QuienesSomosComponent },
   {path:'resetpass', component: PasswordResetRequestComponent},
 
     

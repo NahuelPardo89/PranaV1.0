@@ -1,7 +1,7 @@
 <nav class="navbar slide-in-top navbar-expand-lg navbar-light bg-ligth" id="navigator">
   <div class="container-fluid ">
     <!-- Logo o nombre de la aplicación -->
-    <a class="navbar-brand " routerLink="/home">
+    <a class="navbar-brand " routerLink="">
       <img src="../../../../../assets/img/logo.png" alt="Logo Prana">
     </a>
 
@@ -15,13 +15,13 @@
       <!-- Botones del lado izquierdo -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link under" aria-current="page" routerLink="/Home">Inicio</a>
+          <a class="nav-link under" aria-current="page" routerLink="">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link under" routerLink="/Talleres">Talleres</a>
+          <a class="nav-link under" routerLink="/talleres">Talleres</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link under" routerLink="/AboutUs">Sobre Nosotros</a>
+          <a class="nav-link under" routerLink="/aboutus">Sobre Nosotros</a>
         </li>
         <li class="nav-item" *ngIf="isLogged">
           <a class="nav-link" routerLink="/Dashboard/accounts/myaccount">Dashboard</a>

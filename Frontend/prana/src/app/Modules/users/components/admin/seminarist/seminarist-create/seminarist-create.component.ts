@@ -68,8 +68,8 @@ export class SeminaristCreateComponent {
             this.router.navigate(['/Dashboard/accounts/seminarist']);
           },
           error: (error) => {
-            console.log(error);
-            this.dialog.showErrorDialog('Hubo un error al crear el Tallerista');
+            
+            this.dialog.showErrorDialog(error.error.message);
           },
         });
     }

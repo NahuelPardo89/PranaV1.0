@@ -10,8 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, filters
 from rest_framework.views import APIView
-
-
+from apps.users.models import User
+from django.shortcuts import get_object_or_404
 from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  DoctorProfile,
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
                                       PatientProfile, SpecialityBranch, SeminaristProfile)
@@ -660,7 +660,27 @@ class SeminaristProfileAdminViewSet(viewsets.ModelViewSet):
 
     queryset = SeminaristProfile.objects.all()
     serializer_class = SeminaristProfileSerializer
+    def create(self, request):
+        user_id = request.data.get('user')
+        
+        
 
+
+        # Verificar si ya existe un usuario con ese DNI
+        if SeminaristProfile.objects.filter(user=user_id).exists():
+            user = get_object_or_404(User, id=user_id)
+            message = f"Ya existe un perfil Tallerista para el usuario  {user.name} {user.last_name}."
+            return Response({"message": message}, status=status.HTTP_400_BAD_REQUEST)
+        instance_serializer = self.serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Profile',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
     def destroy(self, request, *args, **kwargs):
         """
         Overridden destroy method for soft delete.

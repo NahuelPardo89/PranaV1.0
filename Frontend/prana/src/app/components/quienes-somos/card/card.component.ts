@@ -20,7 +20,7 @@ export class CardComponent implements OnInit {
       
 
       setTimeout(() => {
-        console.log(this.especialidades)
+        
         
       }, 500);
   }

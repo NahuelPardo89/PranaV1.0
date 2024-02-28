@@ -83,14 +83,9 @@ export class SeminarInscriptionAdminUpdateComponent {
         ],
       ],
       insurance: [null],
-      patient_copayment: [
-        null,
-        [Validators.pattern(/^[0-9]\d*$/), Validators.min(0)],
-      ],
-      hi_copayment: [
-        null,
-        [Validators.pattern(/^[0-9]\d*$/), Validators.min(0)],
-      ],
+      patient_copayment: [null, [Validators.min(0)]],
+      // validator deleted Validators.pattern(/^[0-9]\d*$/),
+      hi_copayment: [null, [Validators.min(0)]],
       payment_status: [null, [Validators.required]],
       payment_method: [null],
     });

@@ -44,13 +44,6 @@ const routes: Routes = [
           ).then((m) => m.SpecialityBranchModule),
       },
       {
-        path: 'paymentmethod',
-        loadChildren: () =>
-          import('src/app/Modules/paymentmthod/paymentmthod.module').then(
-            (m) => m.PaymentmthodModule
-          ),
-      },
-      {
         path: 'accounts',
         loadChildren: () =>
           import('src/app/Modules/users/users.module').then(
@@ -62,13 +55,6 @@ const routes: Routes = [
         loadChildren: () =>
           import('src/app/Modules/reports/reports.module').then(
             (m) => m.ReportsModule
-          ),
-      },
-      {
-        path: 'semniar',
-        loadChildren: () =>
-          import('src/app/Modules/semniar/semniar.module').then(
-            (m) => m.SemniarModule
           ),
       },
       {

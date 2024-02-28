@@ -67,12 +67,12 @@
         <!-- Patient Copayment Field (input)-->
         <mat-form-field appearance="outline">
           <mat-label>Copago Paciente</mat-label>
-          <input matInput formControlName="patient_copayment" />
+          <input matInput type="number" formControlName="patient_copayment" />
           <mat-error
             *ngIf="seminarInscriptionForm.get('patient_copayment')!.errors?.['required']"
             >Este campo es obligatorio</mat-error
           >
-          <mat-error
+          <!-- <mat-error
             *ngIf="
               seminarInscriptionForm
                 .get('patient_copayment')!
@@ -80,7 +80,7 @@
             "
           >
             Este campo debe ser un número entero
-          </mat-error>
+          </mat-error> -->
           <mat-error
             *ngIf="
               seminarInscriptionForm.get('patient_copayment')!.hasError('min')
@@ -93,18 +93,18 @@
         <!-- HI Copayment Field (input)-->
         <mat-form-field appearance="outline">
           <mat-label>Copago O.Social</mat-label>
-          <input matInput formControlName="hi_copayment" />
+          <input matInput type="number" formControlName="hi_copayment" />
           <mat-error
             *ngIf="seminarInscriptionForm.get('hi_copayment')!.errors?.['required']"
             >Este campo es obligatorio</mat-error
           >
-          <mat-error
+          <!-- <mat-error
             *ngIf="
               seminarInscriptionForm.get('hi_copayment')!.hasError('pattern')
             "
           >
             Este campo debe ser un número entero
-          </mat-error>
+          </mat-error> -->
           <mat-error
             *ngIf="seminarInscriptionForm.get('hi_copayment')!.hasError('min')"
           >

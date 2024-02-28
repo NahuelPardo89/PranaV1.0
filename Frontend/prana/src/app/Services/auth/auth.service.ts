@@ -18,23 +18,24 @@ import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 import { DialogService } from '../dialog/dialog.service';
 import { StoreService } from '../store/store.service';
-import {environment} from 'src/enviroments/environment';
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private loginUrl=environment.api_Url+'account/login/'
-  
-  private registerUrl = environment.api_Url+'account/singin/';
-  private logoutUrl = environment.api_Url+'account/logout/';
-  private refreshTokenUrl = environment.api_Url+'account/refresh/';
-  private resetPasswordUrl = environment.api_Url+'account/request-password-reset/'
+  private loginUrl = environment.api_Url + 'account/login/';
+
+  private registerUrl = environment.api_Url + 'account/singin/';
+  private logoutUrl = environment.api_Url + 'account/logout/';
+  private refreshTokenUrl = environment.api_Url + 'account/refresh/';
+  private resetPasswordUrl =
+    environment.api_Url + 'account/request-password-reset/';
   private currentUserSubject: BehaviorSubject<UserShort | null> =
     new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();
   private currentRole = new BehaviorSubject<string>('');
-  public readonly currentRoleSubject=this.currentRole.asObservable()  // Inicializa con un rol predeterminado o vacío
+  public readonly currentRoleSubject = this.currentRole.asObservable(); // Inicializa con un rol predeterminado o vacío
   private isloggedIn = new BehaviorSubject<boolean>(false); // Inicializa
 
   constructor(
@@ -77,17 +78,17 @@ export class AuthService {
       .pipe(
         tap((response) => {
           if (response.status === 201) {
-            console.log(response.body)
+            console.log(response.body);
             this.handleLogin(response.body!);
           }
         }),
-        catchError((error) => 
-        
-        this.handleError(error, 'Error al registrarse'))
+        catchError((error) => this.handleError(error, 'Error al registrarse'))
       );
   }
   register(user: RegisterUser): Observable<HttpResponse<JwtResponse>> {
-    return this.http.post<JwtResponse>(this.registerUrl, user, { observe: 'response' });
+    return this.http.post<JwtResponse>(this.registerUrl, user, {
+      observe: 'response',
+    });
   }
 
   logout(): Observable<void> {
@@ -141,13 +142,12 @@ export class AuthService {
     error: HttpErrorResponse,
     defaultMessage: string
   ): Observable<never> {
-    
     // Proporciona un manejo de errores más específico según cada método
     const errorMessage =
       error.error instanceof ErrorEvent
         ? `Error del lado del cliente: ${error.error.message}`
         : `Error del servidor: ${error.message}`;
-    
+
     return throwError(() => new Error(defaultMessage));
   }
 
@@ -196,10 +196,10 @@ export class AuthService {
     this.currentUserSubject.next(null);
     this.currentRole.next('Paciente');
     this.isloggedIn.next(false);
-    this.router.navigate(['/Home']);
+    this.router.navigate(['']);
   }
 
   requestPasswordReset(email: string): Observable<any> {
     return this.http.post(this.resetPasswordUrl, { email: email });
-}
+  }
 }

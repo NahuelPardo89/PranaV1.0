@@ -8,7 +8,7 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-password-reset-request',
   templateUrl: './password-reset-request.component.html',
-  styleUrls: ['./password-reset-request.component.css']
+  styleUrls: ['./password-reset-request.component.css'],
 })
 export class PasswordResetRequestComponent {
   loginForm!: FormGroup;
@@ -16,30 +16,30 @@ export class PasswordResetRequestComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private dialogService:DialogService,
-    private router:Router
+    private dialogService: DialogService,
+    private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
-      email: [null, [Validators.required,Validators.email]],
-      
+      email: [null, [Validators.required, Validators.email]],
     });
   }
-  
 
   onSubmit(): void {
-    
-    this.authService.requestPasswordReset(this.loginForm.value.email).subscribe({
-      next: (response) => {
-          
-          this.dialogService.showSuccessDialog("Se envió un correo electrónico a su cuenta para restablecer la contraseña");
-          this.router.navigate(['Home']);
-      },
-      error: (error) => {
-          
+    this.authService
+      .requestPasswordReset(this.loginForm.value.email)
+      .subscribe({
+        next: (response) => {
+          this.dialogService.showSuccessDialog(
+            'Se envió un correo electrónico a su cuenta para restablecer la contraseña'
+          );
+          this.router.navigate(['']);
+        },
+        error: (error) => {
           // Aquí puedes manejar el error, mostrando un mensaje al usuario
-          this.dialogService.showErrorDialog("Hubo un error al enviar el correo o el correo ingresado no existe en nuestro sistema");
-      }
-  });
-    
+          this.dialogService.showErrorDialog(
+            'Hubo un error al enviar el correo o el correo ingresado no existe en nuestro sistema'
+          );
+        },
+      });
   }
 }

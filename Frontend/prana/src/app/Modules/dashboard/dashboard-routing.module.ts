@@ -44,13 +44,6 @@ const routes: Routes = [
           ).then((m) => m.SpecialityBranchModule),
       },
       {
-        path: 'paymentmethod',
-        loadChildren: () =>
-          import('src/app/Modules/paymentmthod/paymentmthod.module').then(
-            (m) => m.PaymentmthodModule
-          ),
-      },
-      {
         path: 'accounts',
         loadChildren: () =>
           import('src/app/Modules/users/users.module').then(

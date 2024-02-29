@@ -76,7 +76,7 @@ export class StaffComponent implements OnInit, AfterViewInit {
     }
   }
   navigateToAboutUs() {
-    this.router.navigate(['/AboutUs']);
+    this.router.navigate(['/aboutus']);
 }
 
 

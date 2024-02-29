@@ -37,7 +37,7 @@ export class StaffComponent implements OnInit, AfterViewInit {
   getIg = () => {
     this.patientService.getAllPatients().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data);
-      const filterValue = 'User, Prana';
+      const filterValue = 'PRANA';
       this.dataSource.filter = filterValue.trim();
       this.webInstragram= this.dataSource.filteredData[0].instagram;
       

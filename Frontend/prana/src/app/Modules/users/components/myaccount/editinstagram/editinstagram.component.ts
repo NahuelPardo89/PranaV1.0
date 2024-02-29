@@ -4,6 +4,7 @@ import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
+import { DataSource } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-editinstagram',
@@ -22,13 +23,19 @@ export class EditinstagramComponent implements OnInit {
   userPranaId: number = 0;
 
   getIg = () => {
-    this.patientService.getAllPatients().subscribe((data) => {
+    this.patientService.getAllPatients().subscribe((data: Patient[]) => {
+      
       this.dataSource = new MatTableDataSource(data);
-      const filterValue = 'User, Prana';
+      const filterValue = 'PRANA';
+      
       this.dataSource.filter = filterValue.trim();
+      
       this.webInstagram = this.dataSource.filteredData[0].instagram;
       this.userPranaId = this.dataSource.filteredData[0].id;
+      
+     
     });
+
   }
 
   ngOnInit(): void {

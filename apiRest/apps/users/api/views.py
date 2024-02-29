@@ -294,7 +294,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
-
+import secrets
+import string
 @api_view(['POST'])
 @permission_classes([])
 def request_password_reset(request):
@@ -305,7 +306,7 @@ def request_password_reset(request):
     if user:
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        password =str(user.dni)+user.name
+        password = ''.join(secrets.choice(string.ascii_letters + string.digits) for i in range(10))
         user.set_password(password)
         user.save()
 

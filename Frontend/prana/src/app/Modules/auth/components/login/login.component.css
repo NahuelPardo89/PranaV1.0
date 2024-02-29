@@ -1,7 +1,7 @@
 .container-sm {
     width: 50%;
     max-width: 500px;
-    Display: flex;
+    display: flex;
     flex-direction: column;
 
     

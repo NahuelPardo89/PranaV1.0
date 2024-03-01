@@ -16,12 +16,21 @@
   
       <mat-form-field appearance="outline">
         <input matInput placeholder="Nombre" formControlName="name">
-        <mat-error *ngIf="name?.invalid && (name?.dirty || name?.touched)">El nombre es requerido.</mat-error>
+        <mat-error *ngIf="name?.invalid && (name?.dirty || name?.touched)">
+          <span *ngIf="name?.errors?.['required']">El Nombre es requerido.</span>
+          <span *ngIf="name?.errors?.['pattern']">Ingrese un nombre válido.</span>
+        
+        </mat-error>
+        
       </mat-form-field>
   
       <mat-form-field appearance="outline">
         <input matInput placeholder="Apellido" formControlName="last_name">
-        <mat-error *ngIf="last_name?.invalid && (last_name?.dirty || last_name?.touched)">El apellido es requerido.</mat-error>
+        <mat-error *ngIf="last_name?.invalid && (last_name?.dirty || last_name?.touched)">
+          <span *ngIf="last_name?.errors?.['required']">El Apellido es requerido.</span>
+          <span *ngIf="last_name?.errors?.['pattern']">Ingrese un apellido válido.</span>
+        
+        </mat-error>
       </mat-form-field>
   
       

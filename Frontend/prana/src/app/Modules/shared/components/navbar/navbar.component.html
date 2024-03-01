@@ -36,7 +36,7 @@
       <div *ngIf="!isLogged">
         <div class="dropdown">
           <button class="btn btn-primary  dropdown-toggle" type="button" id="dropdownLoginButton"
-            data-bs-toggle="dropdown" aria-expanded="false">
+            data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
             <i class="material-symbols-outlined btn-icon">login</i>Iniciar Sesión</button>
           <ul class="dropdown-menu tamaño dropdown-menu-end " aria-labelledby="dropdownLoginButton">
             <form [formGroup]="loginForm" (ngSubmit)="login()">

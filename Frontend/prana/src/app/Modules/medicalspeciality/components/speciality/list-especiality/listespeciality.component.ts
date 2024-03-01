@@ -14,7 +14,7 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 })
 export class ListespecialityComponent {
   specialities: Medicalspeciality[] = [];
-  displayedColumns: string[] = ['id', 'name', 'is_active', 'actions'];
+  displayedColumns: string[] = [ 'name', 'is_active', 'actions'];
   dataSource!: MatTableDataSource<Medicalspeciality>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

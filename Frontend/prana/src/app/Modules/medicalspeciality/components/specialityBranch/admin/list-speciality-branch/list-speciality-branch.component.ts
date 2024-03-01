@@ -14,7 +14,7 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 })
 export class ListSpecialityBranchComponent {
   displayedColumns: string[] = [
-    'id',
+    
     'name',
     'speciality',
     'is_active',

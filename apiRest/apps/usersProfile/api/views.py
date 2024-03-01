@@ -425,14 +425,20 @@ class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
+        print(request.data)
         instance_serializer = self.serializer_create_class(data=request.data)
+        insurance = request.data.get('insurance')
+        branch = request.data.get('branch')
+        if InsurancePlanDoctor.objects.filter(insurance=insurance,branch=branch).exists():
+            return Response({"message": "Ya existe esa obra social con la rama seleccionada para este profesional."}, status=status.HTTP_400_BAD_REQUEST)
+        
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
             return Response({
-                'message': 'Profile creado correctamente.'
+                'message': 'obra social profesional creada correctamente.'
             }, status=status.HTTP_201_CREATED)
         return Response({
-            'message': 'Hay errores en el registro de Profile',
+            'message': 'Hay errores en el registro de obra social profesional',
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 

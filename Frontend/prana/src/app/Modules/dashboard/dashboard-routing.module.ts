@@ -36,13 +36,7 @@ const routes: Routes = [
             'src/app/Modules/medicalspeciality/medicalspeciality.module'
           ).then((m) => m.MedicalspecialityModule),
       },
-      {
-        path: 'speciality/branch',
-        loadChildren: () =>
-          import(
-            'src/app/Modules/speciality-branch/speciality-branch.module'
-          ).then((m) => m.SpecialityBranchModule),
-      },
+   
       {
         path: 'accounts',
         loadChildren: () =>

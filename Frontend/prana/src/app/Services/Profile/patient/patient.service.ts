@@ -9,8 +9,8 @@ import { environment } from 'src/enviroments/environment';
   providedIn: 'root',
 })
 export class PatientService {
-  private apiUrl = environment.api_Url+'profile/admin/patient/';
-  private currentPatientUrl = environment.api_Url+'profile/patient/';
+  private apiUrl = environment.api_Url + 'profile/admin/patient/';
+  private currentPatientUrl = environment.api_Url + 'profile/patient/';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -68,7 +68,7 @@ export class PatientService {
   }
 
   updateLoggedPatient(patient: Patient): Observable<void> {
-    const url = this.currentPatientUrl; // Solo el endpoint a LoggedUserViewSet
+    const url = this.currentPatientUrl;
     return this.httpClient.put<void>(url, patient).pipe(
       catchError((error) => {
         return throwError(() => new Error(error));

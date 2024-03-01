@@ -4,16 +4,16 @@ import { Observable } from 'rxjs';
 import { SpecialityBranch } from 'src/app/Models/Profile/branch.interface';
 import { environment } from 'src/enviroments/environment';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BranchService {
+  private baseUrl: string =
+    environment.api_Url + 'profile/admin/speciality-branch/';
+  private meUrl: string =
+    environment.api_Url + 'profile/admin/me-speciality-branch/';
+  private baseUrl2: string = environment.api_Url + 'profile/admin/';
 
-  private baseUrl: string = environment.api_Url+'profile/admin/speciality-branch/';
-  private meUrl: string = environment.api_Url+'profile/admin/me-speciality-branch/';
-  private baseUrl2: string = environment.api_Url+'profile/admin/';
-  
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // Get all speciality branches
   getSpecialityBranches(): Observable<SpecialityBranch[]> {
@@ -26,11 +26,15 @@ export class BranchService {
   }
 
   getDoctorBranches(doctor_id: number): Observable<SpecialityBranch[]> {
-    const url = 'http://127.0.0.1:8000/profile/admin/doctor-branches/';
+    const url = environment.api_Url + 'profile/admin/doctor-branches/';
     return this.http.get<SpecialityBranch[]>(url + '?doctor_id=' + doctor_id);
   }
-  getDoctorBranchesBySpeciality(doctorId: number): Observable<SpecialityBranch[]> {
-    return this.http.get<SpecialityBranch[]>(this.baseUrl2 + `doctor-branches-by-speciality/?doctor_id=${doctorId}`);
+  getDoctorBranchesBySpeciality(
+    doctorId: number
+  ): Observable<SpecialityBranch[]> {
+    return this.http.get<SpecialityBranch[]>(
+      this.baseUrl2 + `doctor-branches-by-speciality/?doctor_id=${doctorId}`
+    );
   }
   // Create a new speciality branch
   createSpecialityBranch(data: SpecialityBranch): Observable<SpecialityBranch> {
@@ -38,7 +42,10 @@ export class BranchService {
   }
 
   // Update an existing speciality branch
-  updateSpecialityBranch(id: number, data: SpecialityBranch): Observable<SpecialityBranch> {
+  updateSpecialityBranch(
+    id: number,
+    data: SpecialityBranch
+  ): Observable<SpecialityBranch> {
     return this.http.put<SpecialityBranch>(`${this.baseUrl}${id}/`, data);
   }
 

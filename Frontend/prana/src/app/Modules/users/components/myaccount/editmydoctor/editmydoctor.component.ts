@@ -38,7 +38,9 @@ export class EditmydoctorComponent {
   ngOnInit(): void {
     this.initForm();
     if (history.state.doctor) {
-      const durationInSeconds = this.convertTimeToSeconds(history.state.doctor.appointment_duration);
+      const durationInSeconds = this.convertTimeToSeconds(
+        history.state.doctor.appointment_duration
+      );;
       this.doctorForm.patchValue({...history.state.doctor,appointment_duration: durationInSeconds});
       this.doctorName = history.state.doctor.user;
     }

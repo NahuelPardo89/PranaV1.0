@@ -5,15 +5,28 @@ import { ReportAppAdminPostInterface } from 'src/app/Models/reports/reportAppAdm
 import { ReportAppAdminResponseInterface } from 'src/app/Models/reports/reportAppAdminResponse.interface';
 import { environment } from 'src/enviroments/environment';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportService {
-  private appointmentReportBaseUrl = environment.api_Url+'report/copayment/appointment/';
+  private appointmentReportBaseUrl =
+    environment.api_Url + 'report/copayment/appointment/';
   // not implemented yet
-  private seminarReportBaseUrl = environment.api_Url+'report/copayment/seminar/';
-  constructor(private http: HttpClient) { }
+  private seminarReportBaseUrl =
+    environment.api_Url + 'report/copayment/seminar/';
+  constructor(private http: HttpClient) {}
 
-  getAdminAppointmentReport(body: ReportAppAdminPostInterface): Observable<ReportAppAdminResponseInterface> {
-    return this.http.post<ReportAppAdminResponseInterface>(this.appointmentReportBaseUrl + 'admin/', body)
+  /**
+   * sends a POST request to the server with a body containing
+   * appointment filters.
+   * @param {ReportAppAdminPostInterface} body This parameter contains the data needed to generate the appointment report.
+   * @returns An Observable of type ReportAppAdminResponseInterface is being returned.
+   */
+  getAdminAppointmentReport(
+    body: ReportAppAdminPostInterface
+  ): Observable<ReportAppAdminResponseInterface> {
+    return this.http.post<ReportAppAdminResponseInterface>(
+      this.appointmentReportBaseUrl + 'admin/',
+      body
+    );
   }
 }

@@ -5,12 +5,12 @@ import { Medicalspeciality } from 'src/app/Models/Profile/medicalspeciality.inte
 import { environment } from 'src/enviroments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SpecialityService {
-  private baseUrl: string = environment.api_Url+'profile/admin/specialities/'; // Asume esta URL basándome en la estructura anterior
-  private meUrl: string = environment.api_Url+'profile/me-speciality/';
-  constructor(private http: HttpClient) { }
+  private baseUrl: string = environment.api_Url + 'profile/admin/specialities/';
+  private meUrl: string = environment.api_Url + 'profile/me-speciality/';
+  constructor(private http: HttpClient) {}
 
   // Get all medical specialities
   getSpecialities(): Observable<Medicalspeciality[]> {
@@ -28,7 +28,10 @@ export class SpecialityService {
   }
 
   // Update an existing medical speciality
-  updateSpeciality(id: number, data: Medicalspeciality): Observable<Medicalspeciality> {
+  updateSpeciality(
+    id: number,
+    data: Medicalspeciality
+  ): Observable<Medicalspeciality> {
     return this.http.put<Medicalspeciality>(`${this.baseUrl}${id}/`, data);
   }
 
@@ -36,6 +39,7 @@ export class SpecialityService {
   deleteSpeciality(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}${id}/`);
   }
+
   getMeSpecialities(): Observable<Medicalspeciality> {
     return this.http.get<Medicalspeciality>(this.meUrl);
   }

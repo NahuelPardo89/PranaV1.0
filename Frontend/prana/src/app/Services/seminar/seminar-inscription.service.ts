@@ -7,14 +7,15 @@ import {
   SeminarInscriptionAdminPostInterface,
   SeminarInscriptionPatientPostInterface,
 } from 'src/app/Models/seminar-inscription/admin/seminarInscriptionAdminGetDetailInterface.interface';
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SeminarInscriptionService {
-  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminar-inscriptions/';
+  private apiUrl = environment.api_Url + 'seminar/admin/seminar-inscriptions/';
   private apiPatientUrl =
-    'http://127.0.0.1:8000/seminar/patient/seminar-inscription/';
+    environment.api_Url + 'seminar/patient/seminar-inscription/';
   private seminarParam = '?seminar=';
 
   constructor(private http: HttpClient) {}

@@ -46,6 +46,12 @@
           <mat-form-field appearance="outline">
             <mat-label>Cobertura</mat-label>
             <input matInput type="number" formControlName="price" />
+            <mat-error
+            *ngIf="insuranceDoctorForm.get('price')?.invalid">
+            <span *ngIf="insuranceDoctorForm.get('price')?.errors?.['required']">Cobertura es requerido.</span>
+            <span *ngIf="insuranceDoctorForm.get('price')?.errors?.['min']">debe ingresar un número positivo </span>
+            </mat-error
+          >
             
           </mat-form-field>
   

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { InsuranceDoctorService } from 'src/app/Services/Profile/healthinsurance/insuranceDoctor/insurance-doctor.service';
 import { DialogService } from 'src/app/Services/dialog/dialog.service';
@@ -38,7 +38,7 @@ export class InsuranceDoctorUpdateComponent {
 
   private initForm() {
     this.insuranceDoctorForm = this.fb.group({
-    price: ['', ],
+    price: ['',[Validators.required, Validators.min(0)]],
    
     });
     

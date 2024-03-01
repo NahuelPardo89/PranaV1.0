@@ -213,6 +213,7 @@ class DoctorSpecialityBranchViewSet(viewsets.ViewSet):
 
     def list(self, request):
         doctor_id = request.query_params.get('doctor_id')
+        print(doctor_id)
         if not doctor_id:
             return Response({"message": "Doctor ID no proporcionado"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -239,15 +240,18 @@ class MeDoctorSpecialityBranchViewSet(viewsets.ViewSet):
 
     def list(self, request):
         doctor_id = request.user.doctorProfile.id
+        print (request)
 
         try:
             doctor = DoctorProfile.objects.get(pk=doctor_id)
+            print(doctor)
             # Obtener todas las especialidades del doctor
             doctor_specialities = doctor.specialty.all()
-
+            print(doctor_specialities)
             # Filtrar las ramas que pertenecen a las especialidades del doctor
             branches = SpecialityBranch.objects.filter(
                 speciality__in=doctor_specialities, is_active=True)
+            print(branches)    
 
             serializer = SpecialityBranchListSerializer(branches, many=True)
             return Response(serializer.data)

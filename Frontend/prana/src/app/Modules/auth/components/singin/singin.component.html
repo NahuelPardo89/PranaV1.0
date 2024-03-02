@@ -1,5 +1,7 @@
 <div class="container-sm">
-    <h2>Registrar Usuario</h2>
+    
+    <img src="../../../../../assets/img/logo.png" alt="Logo Prana">
+    <h4>Registrar Usuario</h4>
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline">
         <input matInput placeholder="DNI" formControlName="dni">
@@ -60,7 +62,7 @@
   
       
   
-      <button mat-raised-button color="primary" type="submit" class="boton-enviar" [disabled]="registerForm.invalid">
+      <button  type="submit" class="btn btn-primary mb-5" [disabled]="registerForm.invalid">
         Registrarse
       </button>
     </form>

@@ -9,6 +9,12 @@ h2 {
     flex-direction: column;
     
 }
+.container-sm > img {
+    padding: 2rem ;
+
+    width: 40%;
+    margin: auto;
+}
 
 .container-sm > form {
     display: flex;

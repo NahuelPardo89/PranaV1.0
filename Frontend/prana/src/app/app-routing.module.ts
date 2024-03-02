@@ -6,6 +6,7 @@ import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
 import { SinginComponent } from './Modules/auth/components/singin/singin.component';
 import { PasswordResetRequestComponent } from './Modules/auth/components/password-reset-request/password-reset-request.component';
+import { LoginComponent } from './Modules/auth/components/login/login.component';
 
 const routes: Route[] = [
  
@@ -29,6 +30,7 @@ const routes: Route[] = [
       import('./Modules/auth/auth.module').then((m) => m.AuthModule),
   },
   { path: 'singin', component: SinginComponent },
+  { path: 'login', component: LoginComponent },
   
   { path: '**', component: PageNotFoundComponent },
   

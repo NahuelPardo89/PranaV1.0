@@ -34,7 +34,10 @@
       </div>
 
       <div *ngIf="!isLogged">
-        <div class="dropdown">
+        <button class="btn btn-primary" type="button"
+              routerLink="login">
+            <i class="material-symbols-outlined btn-icon">login</i>Iniciar Sesión</button>
+        <!-- <div class="dropdown">
           <button class="btn btn-primary  dropdown-toggle" type="button" id="dropdownLoginButton"
             data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
             <i class="material-symbols-outlined btn-icon">login</i>Iniciar Sesión</button>
@@ -73,7 +76,7 @@
             </li>
 
           </ul>
-        </div>
+        </div> -->
 
       </div>
       <!-- Botón de cierre de sesión -->

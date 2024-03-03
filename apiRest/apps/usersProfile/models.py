@@ -38,6 +38,7 @@ class SpecialityBranch(models.Model):
     class Meta:
         verbose_name = 'Rama'
         verbose_name_plural = 'Ramas'
+        unique_together = ('name', 'speciality')
 
     def __str__(self):
         return f'{self.speciality.name} - {self.name}'

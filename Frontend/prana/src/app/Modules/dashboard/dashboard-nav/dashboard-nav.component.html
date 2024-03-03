@@ -320,7 +320,7 @@
       cuenta
     </button>
   </div>
-  <div class="selector-rol mt-4" id="option">
+  <div class="selector-rol mt-4" id="{{ isScreenSmall ? 'option' : '' }}">
     <div class="rol-actual" (click)="toggleRoleSelector()" >
       Rol: <span class="rol-color">{{ currentRole | titlecase }}</span>
       <i class="material-icons">swap_horiz</i>

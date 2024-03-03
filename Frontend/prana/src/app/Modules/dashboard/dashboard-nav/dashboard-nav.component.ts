@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component,HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth/auth.service';
 
@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/Services/auth/auth.service';
   styleUrls: ['./dashboard-nav.component.css'],
 })
 export class DashboardNavComponent {
+  isScreenSmall!: boolean;
   availableRoles: string[] = [];
   currentRole: string = '';
   showRoleSelector: boolean = false;
@@ -20,7 +21,9 @@ export class DashboardNavComponent {
   showDoctorEspecialityOptions = false;
   showContableOptions = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    this.onResize()
+  }
 
   ngOnInit() {
     this.availableRoles = this.authService.getUserRoles();
@@ -28,6 +31,11 @@ export class DashboardNavComponent {
       this.currentRole = role;
       
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.isScreenSmall = window.innerWidth < 1020;
   }
 
   changeRole(event: Event): void {

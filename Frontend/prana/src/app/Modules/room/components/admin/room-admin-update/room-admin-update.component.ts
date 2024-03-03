@@ -41,7 +41,11 @@ export class RoomAdminUpdateComponent {
       ],
       cost: [
         null,
-        [Validators.required, this.floatValidator, this.positiveFloatValidator],
+        [
+          Validators.required,
+          this.integerValidator,
+          this.positiveIntegerValidator,
+        ],
       ],
     });
   }

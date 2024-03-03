@@ -44,12 +44,8 @@
             >Este campo es obligatorio</mat-error
           >
           <mat-error
-            *ngIf="roomForm.get('cost')!.value && roomForm.get('cost')!.errors?.['notFloat']"
-            >Este campo debe ser un número (Entero/Real)
-          </mat-error>
-          <mat-error
-            *ngIf="roomForm.get('cost')!.value && roomForm.get('cost')!.errors?.['notPositiveFloat']"
-            >El número debe ser positivo
+            *ngIf="roomForm.get('cost')!.value && roomForm.get('cost')!.errors?.['notPositiveInteger']"
+            >El número debe ser positivo y entero
           </mat-error>
         </mat-form-field>
 

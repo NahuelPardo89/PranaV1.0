@@ -345,9 +345,10 @@ class SeminarInscriptionCreateSerializer(serializers.ModelSerializer):
         confirmed_inscriptions = SeminarInscription.objects.filter(
             seminar=data['seminar'], seminar_status=2).count()
 
-        if confirmed_inscriptions >= seminar_max_inscriptions:
+        if data.get('seminar_status') == 2 and (confirmed_inscriptions >= seminar_max_inscriptions):
             raise serializers.ValidationError(
                 f"El número de inscripciones confirmadas no puede superar el cupo máximo del taller ({seminar_max_inscriptions}).")
+
         ###
 
        # validate patient inscription

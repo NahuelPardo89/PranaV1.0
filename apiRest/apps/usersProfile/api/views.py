@@ -183,7 +183,7 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
     model = SpecialityBranch
     serializer_class = SpecialityBranchListSerializer
     create_serializer_class = SpecialityBranchCreateSerializer
-    permission_classes = [IsDoctorOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -193,7 +193,7 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
-
+        print("DATAAA: ", request.data)
         instance_serializer = self.create_serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
@@ -240,7 +240,7 @@ class MeDoctorSpecialityBranchViewSet(viewsets.ViewSet):
 
     def list(self, request):
         doctor_id = request.user.doctorProfile.id
-        print (request)
+        print(request)
 
         try:
             doctor = DoctorProfile.objects.get(pk=doctor_id)
@@ -251,7 +251,7 @@ class MeDoctorSpecialityBranchViewSet(viewsets.ViewSet):
             # Filtrar las ramas que pertenecen a las especialidades del doctor
             branches = SpecialityBranch.objects.filter(
                 speciality__in=doctor_specialities, is_active=True)
-            print(branches)    
+            print(branches)
 
             serializer = SpecialityBranchListSerializer(branches, many=True)
             return Response(serializer.data)
@@ -433,9 +433,9 @@ class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
         instance_serializer = self.serializer_create_class(data=request.data)
         insurance = request.data.get('insurance')
         branch = request.data.get('branch')
-        if InsurancePlanDoctor.objects.filter(insurance=insurance,branch=branch).exists():
+        if InsurancePlanDoctor.objects.filter(insurance=insurance, branch=branch).exists():
             return Response({"message": "Ya existe esa obra social con la rama seleccionada para este profesional."}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
             return Response({
@@ -670,11 +670,9 @@ class SeminaristProfileAdminViewSet(viewsets.ModelViewSet):
 
     queryset = SeminaristProfile.objects.all()
     serializer_class = SeminaristProfileSerializer
+
     def create(self, request):
         user_id = request.data.get('user')
-        
-        
-
 
         # Verificar si ya existe un usuario con ese DNI
         if SeminaristProfile.objects.filter(user=user_id).exists():
@@ -691,6 +689,7 @@ class SeminaristProfileAdminViewSet(viewsets.ModelViewSet):
             'message': 'Hay errores en el registro de Profile',
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+
     def destroy(self, request, *args, **kwargs):
         """
         Overridden destroy method for soft delete.

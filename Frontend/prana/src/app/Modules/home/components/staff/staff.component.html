@@ -12,12 +12,12 @@
                 
                 <div class="carrousel-container">
                     <div class="carrousel">
-                        <div class="carrousel-item"><img src="../../../../../assets/img/foto1.jpeg" alt=""></div>
-                        <div class="carrousel-item"><img src="../../../../../assets/img/foto2.jpeg" alt=""></div>
-                        <div class="carrousel-item"><img src="../../../../../assets/img/foto3.jpeg" alt=""></div>
-                        <div class="carrousel-item"><img src="../../../../../assets/img/foto5.jpeg" alt=""></div>
-                        <div class="carrousel-item"><img src="../../../../../assets/img/foto6.jpeg" alt=""></div>
-                        <div class="carrousel-item"><img src="../../../../../assets/img/foto7.jpeg" alt=""></div>
+                        <div class="carrousel-item"><img loading="lazy" src="../../../../../assets/img/foto1.jpeg" alt=""></div>
+                        <div class="carrousel-item"><img loading="lazy" src="../../../../../assets/img/foto2.jpeg" alt=""></div>
+                        <div class="carrousel-item"><img loading="lazy" src="../../../../../assets/img/foto3.jpeg" alt=""></div>
+                        <div class="carrousel-item"><img loading="lazy" src="../../../../../assets/img/foto5.jpeg" alt=""></div>
+                        <div class="carrousel-item"><img loading="lazy" src="../../../../../assets/img/foto6.jpeg" alt=""></div>
+                        <div class="carrousel-item"><img loading="lazy" src="../../../../../assets/img/foto7.jpeg" alt=""></div>
                     </div>
                 </div>
                 <div class="carrousel-controls">
@@ -83,7 +83,7 @@
     <div class="contenedorStaff">
         <div class="tarjeta" *ngFor="let pro of staff; let i = index">
             <div class="foto">
-                <img [src]="pro.img" class="tarjetaImagen">
+                <img loading="lazy" [src]="pro.img" class="tarjetaImagen">
             </div>
             <div class="TarjetaCuerpo">
                 <h3 class="tarjetaNombre">{{pro.name}}</h3>

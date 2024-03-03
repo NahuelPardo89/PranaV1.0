@@ -16,6 +16,7 @@ export class EditSpecialityBranchComponent {
 
   specialityName: string = '';
   branchForm: FormGroup;
+  doctorProfile=false
 
   constructor(
     private branchService: BranchService,
@@ -36,6 +37,10 @@ export class EditSpecialityBranchComponent {
       this.branchForm.patchValue(history.state.branch);
       this.specialityName = history.state.branch.speciality;
     }
+    if (history.state.doctor) {
+      this.doctorProfile=true
+    }
+
   }
 
   loadSpecialties(): void {
@@ -64,8 +69,13 @@ export class EditSpecialityBranchComponent {
               this.dialogService.showSuccessDialog(
                 'Rama de Especialidad Editada con éxito'
               );
+              if (this.doctorProfile){
+                this.router.navigate(['Dashboard/speciality/branch/me']);
+              }else{
+                this.router.navigate(['Dashboard/speciality/branch']);
+              }
 
-              this.router.navigate(['Dashboard/speciality/branch']); // Ajusta la ruta según sea necesario
+               // Ajusta la ruta según sea necesario
             },
             error: (error) => {
               console.error('Error al actualizar Rama de Especialidad', error);
@@ -86,6 +96,10 @@ export class EditSpecialityBranchComponent {
   }
 
   onCancel() {
-    this.router.navigate(['/Dashboard/speciality/branch']);
+    if (this.doctorProfile){
+      this.router.navigate(['Dashboard/speciality/branch/me']);
+    }else{
+      this.router.navigate(['Dashboard/speciality/branch']);
+    }
   }
 }

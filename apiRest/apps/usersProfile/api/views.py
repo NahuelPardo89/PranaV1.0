@@ -211,7 +211,7 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
 
             # Respuesta genérica para otros errores
             return Response({
-                'message': 'Hay errores en el registro de Profile',
+                'message': 'Hay errores en el registro de Rama de Especialidad',
                 'errors': errors
             }, status=status.HTTP_400_BAD_REQUEST)
 

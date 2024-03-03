@@ -70,8 +70,9 @@ export class ListSpecialityBranchDoctorComponent {
   }
 
   editBranch(branch: SpecialityBranch) {
+    const doctor=true
     this.router.navigate(['Dashboard/speciality/branch/edit'], {
-      state: { branch },
+      state: { branch, doctor},
     });
   }
 
@@ -85,7 +86,7 @@ export class ListSpecialityBranchDoctorComponent {
         this.specialityBranchService.deleteSpecialityBranch(id).subscribe({
           next: () => {
             this.setDataTable();
-            this.dialogService.showSuccessDialog('Rama Desactivado con éxito');
+            this.dialogService.showSuccessDialog('Rama Desactivada con éxito');
           },
           error: (error) => {
             this.dialogService.showErrorDialog(
@@ -103,7 +104,7 @@ export class ListSpecialityBranchDoctorComponent {
       .updateSpecialityBranch(branch.id, branch)
       .subscribe({
         next: () => {
-          this.dialogService.showSuccessDialog('Rama Activado con éxito');
+          this.dialogService.showSuccessDialog('Rama Activada con éxito');
           this.setDataTable();
         },
         error: (error) => {

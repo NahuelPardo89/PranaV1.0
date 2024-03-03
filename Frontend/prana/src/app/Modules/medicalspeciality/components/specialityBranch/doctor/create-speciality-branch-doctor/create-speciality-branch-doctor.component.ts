@@ -59,15 +59,15 @@ export class CreateSpecialityBranchDoctorComponent {
             this.router.navigate(['/Dashboard/speciality/branch/me/']);
           },
           error: (error) => {
-            console.log(error.errors.message);
+           
             this.dialog.showErrorDialog(
-              error.errors.message
+              error.error.message
             );
           },
         });
     }
   }
   onCancel() {
-    this.router.navigate(['/Dashboard/speciality/branch']);
+    this.router.navigate(['/Dashboard/speciality/branch/me/']);
   }
 }

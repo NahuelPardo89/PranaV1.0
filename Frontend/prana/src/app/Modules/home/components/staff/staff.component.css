@@ -244,18 +244,33 @@ a{
   }
 }
 @media screen and (max-width: 768px) {
+  .main {
+    margin-top: -150px;
+    height: 850px;
+  }
   .prana {
     font-size: 6.4rem;
   }
   .homeDerecha {
-    width: 460px;
-  }
-  .carrousel-container {
+    
     width: 420px;
   }
+  .carrousel-container {
+    margin-top: -40px;
+    width: 420px;
+    height: 300px;
+    
+  }
+  .carrousel-container img {
+    height: 250px;
+  }
   .subtitulo {
-    font-size: 3rem;
+    font-size: 2.5rem;
     ;
+  }
+  #boton-contacto {
+    width: 30px;
+    height: 40px;
   }
 }
 @media screen and (max-width: 550px) {

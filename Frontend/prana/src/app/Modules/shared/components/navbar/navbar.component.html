@@ -15,16 +15,16 @@
       <!-- Botones del lado izquierdo -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link under" aria-current="page" routerLink="">Inicio</a>
+          <a class="nav-link under" aria-current="page" routerLink="" (click)="toggleMenu()">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link under" routerLink="/talleres">Talleres</a>
+          <a class="nav-link under" routerLink="/talleres" (click)="toggleMenu()">Talleres</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link under" routerLink="/aboutus">Sobre Nosotros</a>
+          <a class="nav-link under" routerLink="/aboutus" (click)="toggleMenu()">Sobre Nosotros</a>
         </li>
         <li class="nav-item" *ngIf="isLogged">
-          <a class="nav-link" routerLink="/Dashboard/accounts/myaccount">Dashboard</a>
+          <a class="nav-link" routerLink="/Dashboard/accounts/myaccount" (click)="toggleMenu()">Dashboard</a>
         </li>
       </ul>
 

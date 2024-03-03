@@ -70,4 +70,18 @@ export class DashboardNavComponent {
   toggleDoctorEspecialityOptions() {
     this.showDoctorEspecialityOptions = !this.showDoctorEspecialityOptions;
   }
+
+  scrollToStaff() {
+    const targetElement = document.getElementById('option');
+  
+    if (targetElement) {
+      const offset = window.innerHeight * 0.3;
+      const targetPosition = targetElement.offsetTop - offset;
+  
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
 }

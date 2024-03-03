@@ -33,12 +33,12 @@ export class PaymentMethodCreateComponent {
       this.paymentForm.get('name')?.setValue(nameInUpperCase);
       this.paymentService.createPaymentMethod(this.paymentForm.value).subscribe({
         next: (response) => {
-          this.dialogService.showSuccessDialog('Tallerista creado correctamente');
+          this.dialogService.showSuccessDialog('Método de pago creado correctamente');
           this.router.navigate(['/Dashboard/reports/payment-method']);
         },
         error: (error) => {
    
-          this.dialogService.showErrorDialog('Hubo un error al crear el Tallerista');
+          this.dialogService.showErrorDialog('Hubo un error al crear el metodo de pago');
         },
       });
     }

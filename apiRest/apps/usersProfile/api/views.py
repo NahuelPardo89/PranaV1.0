@@ -510,7 +510,18 @@ class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
             # Asignar el doctorProfile del usuario logueado al InsurancePlanDoctor creado
             serializer.save(doctor=request.user.doctorProfile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            errors = serializer.errors
+            # Comprobar si existe el error de campos únicos
+            if 'non_field_errors' in errors and errors['non_field_errors']:
+                return Response({'message': 'Ya existe la Obra Social con esa rama para ese profesional'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Respuesta genérica para otros errores
+            return Response({
+                'message': 'Hay errores en el registro de Profile',
+                'errors': errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, *args, **kwargs):
         instance = get_object_or_404(

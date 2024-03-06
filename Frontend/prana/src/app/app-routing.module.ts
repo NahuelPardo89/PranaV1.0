@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, Route, Router } from '@angular/router';
 import { StaffComponent } from './Modules/home/components/staff/staff.component';
-import { TalleresComponent } from './Modules/workshops/components/talleres/talleres.component';
+import { ProfessionalsComponent } from './Modules/professionals/professionals/professionals.component';
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
 import { PageNotFoundComponent } from './Modules/shared/components/pagenotfound/pagenotfound.component';
 import { SinginComponent } from './Modules/auth/components/singin/singin.component';
@@ -11,7 +11,7 @@ import { LoginComponent } from './Modules/auth/components/login/login.component'
 const routes: Route[] = [
  
   { path: '', component: StaffComponent },
-  { path: 'talleres', component: TalleresComponent },
+  { path: 'profesionales', component: ProfessionalsComponent },
   { path: 'aboutus', component: QuienesSomosComponent },
   {path:'resetpass', component: PasswordResetRequestComponent},
 

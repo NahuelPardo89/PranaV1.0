@@ -62,22 +62,16 @@ export class StaffComponent implements OnInit, AfterViewInit {
       });
     }
   }
-  scrollToStaff() {
-    const targetElement = document.getElementById('staff');
   
-    if (targetElement) {
-      const offset = window.innerHeight * 0.3;
-      const targetPosition = targetElement.offsetTop - offset;
-  
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
-    }
-  }
   navigateToAboutUs() {
     this.router.navigate(['/aboutus']);
-}
+    
+  }
+
+  navigateToProf() {
+    this.router.navigate(['/profesionales']);
+    
+  }
 
 
 

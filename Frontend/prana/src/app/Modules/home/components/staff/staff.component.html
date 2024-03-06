@@ -54,7 +54,7 @@
             <p>Podés encontrarnos en la ciudad de Río Cuarto, ¡hacé click para buscarnos!</p>
             
         </div>
-        <div class="bodyNav-container" (click)="scrollToStaff()">
+        <div class="bodyNav-container" (click)="navigateToProf()">
             
                 <img src="../../../../../assets/img/profesionales/MILAGROSPEIRETTI.jpg" alt="profesionales">
             
@@ -68,35 +68,7 @@
 <hr class="separator">
 
 
-<!-- Staff Section -->
-<!-- Staff Section -->
-<section class="staff" id="staff">
-    <div class="introduccion">
-        
-    <h2 class="nuestrosProfesionales">Un excepcional equipo de profesionales en salud integral en Prana.</h2>
-    <h3 class="subtituloIntro">BIENVENIDOS A NUESTRO EQUIPO DE ESPECIALISTAS Y FACILITADORES</h3>
-    <p class="textIntro">En Prana, nuestro centro integral de salud liderado por la fundadora y psicóloga <b>Romina Rondoletto</b>, te presentamos a nuestro conjunto de expertos.
-        <br>Contamos con <b>profesionales altamente capacitados</b> en diversas áreas, como psicología y psiquiatría <b>para todas las edades</b>, coaching, yoga, nutrición, psicopedagogía y variados talleres.
-        Nuestro equipo está dedicado a ofrecer soluciones adaptadas y efectivas, brindando atención integral para tu bienestar emocional y  físico.
-        <br> No importa tu edad o las dificultades que enfrentes, en <b>Prana</b> encontrarás terapias y servicios diseñados para superar desafíos y <b>promover tu crecimiento personal</b>.</p>
-    </div>
-    <div class="contenedorStaff">
-        <div class="tarjeta" *ngFor="let pro of staff; let i = index">
-            <div class="foto">
-                <img loading="lazy" [src]="pro.img" class="tarjetaImagen">
-            </div>
-            <div class="TarjetaCuerpo">
-                <h3 class="tarjetaNombre">{{pro.name}}</h3>
-                
-            </div>
-        </div>
-    </div>
-    
-</section>
 
-
-
-<hr class="separator">
 <!-- ¿Cómo encontrarnos? -->
 <!-- ¿Cómo encontrarnos? -->
 <!-- apiGoogleMaps AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM -->
@@ -113,7 +85,7 @@
            
         </div>
         <div class="maps">
-            <iframe class="mapa" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3341.020154473364!2d-64.34820572341567!3d-33.13483508141987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95d20003814317e1%3A0xe00edc3414b67557!2sLavalle%201715%2C%20X5800ANI%20R%C3%ADo%20Cuarto%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1701033219536!5m2!1ses-419!2sar" width="500" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe class="mapa" loading="lazy" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3341.020154473364!2d-64.34820572341567!3d-33.13483508141987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95d20003814317e1%3A0xe00edc3414b67557!2sLavalle%201715%2C%20X5800ANI%20R%C3%ADo%20Cuarto%2C%20C%C3%B3rdoba!5e0!3m2!1ses-419!2sar!4v1701033219536!5m2!1ses-419!2sar" width="500" height="350" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
        
         
@@ -122,7 +94,7 @@
     <div class="contenedorIg">
         <h2 class="ubicacionTitle">Seguinos en Instagram y enterate de nuestros talleres</h2>
         
-        <iframe width="550" height="440" [src]="instagramUrl" frameborder="0" class="embedIg"></iframe>
+        <iframe width="550" height="440" [src]="instagramUrl" frameborder="0" class="embedIg" loading="lazy"></iframe>
     </div>
 </section>
 

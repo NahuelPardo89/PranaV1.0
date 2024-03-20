@@ -287,7 +287,8 @@ a{
     height: 250px;
   }
   .subtitulo {
-    font-size: 2.5rem;
+    font-size: 3rem;
+    font-weight: 400
     ;
   }
   #boton-contacto {
@@ -405,14 +406,14 @@ a{
 .ubicacionTitle {
   width: 90%;
   padding: 15px;
-  font-family: 'Lora';
+  font-family: 'Open Sans', "Helvetica Neue", sans-serif;
   font-size: 2rem;
   color: #68335a;
 }
 .listaEncontrarnos {
   list-style: none;
   margin: 20px 0; 
-  font-family: 'Lora';
+  font-family: 'Open Sans', "Helvetica Neue", sans-serif;
   font-size: 1.2rem;
 }
 .listaEncontrarnos li {

@@ -410,6 +410,31 @@ a{
   font-size: 2rem;
   color: #68335a;
 }
+
+.listaDatos{
+  width: 100%;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  
+}
+.wspIcon {
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+
 .listaEncontrarnos {
   list-style: none;
   margin: 20px 0; 
@@ -422,6 +447,11 @@ a{
 }
 .listaEncontrarnos li img {
   margin-right: 10px;
+}
+.wsp {
+  font-family: 'Open Sans', "Helvetica Neue", sans-serif;
+  color: #68335a;
+  font-size: 1.2rem;
 }
 .maps {
   
@@ -470,6 +500,9 @@ a{
   }
   .embedIg {
     width: 80%;
+  }
+  .wspImg {
+    width: 45px;
   }
 }
 /* ANIMACIONES */

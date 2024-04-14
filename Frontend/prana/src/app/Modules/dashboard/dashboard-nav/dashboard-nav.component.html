@@ -5,8 +5,6 @@
       class="btn btn-primary"
       *ngIf="currentRole === 'Administrador'"
       (click)="toggleUserOptions()"
-      
-      
     >
       <i class="material-symbols-outlined btn-icon">patient_list</i>Gestionar
       Usuarios
@@ -274,6 +272,15 @@
     <button
       class="btn btn-primary"
       *ngIf="currentRole === 'Profesional'"
+      (click)="MydoctorSchedule()"
+    >
+      <i class="material-symbols-outlined btn-icon">schedule</i>
+      Gestionar Mis Horarios
+    </button>
+
+    <button
+      class="btn btn-primary"
+      *ngIf="currentRole === 'Profesional'"
       routerLink="reports/copayment/appointment/doctor/list"
     >
       <i class="material-symbols-outlined btn-icon">account_balance</i>
@@ -315,27 +322,29 @@
       Gestionar Contabilidad
     </button> -->
 
-    <button class="btn btn-primary" routerLink="accounts/myaccount" (click)="scrollToStaff()">
+    <button
+      class="btn btn-primary"
+      routerLink="accounts/myaccount"
+      (click)="scrollToStaff()"
+    >
       <i class="material-symbols-outlined btn-icon">manage_accounts</i> Mi
       cuenta
     </button>
   </div>
   <div class="selector-rol mt-4" id="{{ isScreenSmall ? 'option' : '' }}">
-    <div class="rol-actual" (click)="toggleRoleSelector()" >
+    <div class="rol-actual" (click)="toggleRoleSelector()">
       Rol: <span class="rol-color">{{ currentRole | titlecase }}</span>
       <i class="material-icons">swap_horiz</i>
       <!-- Ícono Autorenew -->
     </div>
 
     <select
-    
       class="select-role form-control"
       *ngIf="showRoleSelector"
       (change)="changeRole($event)"
       [value]="currentRole"
     >
-      <option 
-        
+      <option
         *ngFor="let role of availableRoles"
         [value]="role"
         [selected]="role === currentRole"

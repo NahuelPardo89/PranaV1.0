@@ -1,3 +1,12 @@
+from django.core.mail import send_mail
+import string
+import secrets
+from django.contrib.auth import get_user_model
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
@@ -6,6 +15,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from apps.users.models import User
+from apps.usersProfile.models import PatientProfile
 from apps.users.api.serializers import (
     UserSerializer, UserListSerializer, LoginSerializer,
     PasswordSerializer, RegisterUserSerializer, UserShortSerializer,
@@ -53,9 +63,11 @@ class UserAdminViewSet(viewsets.GenericViewSet):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            patient_profile = PatientProfile.objects.get(user=user)
             return Response({
                 'message': 'Usuario creado correctamente.',
-                "user": UserShortSerializer(user, context={'request': request}).data
+                "user": UserShortSerializer(user, context={'request': request}).data,
+                "patient_id": patient_profile.id
             }, status=status.HTTP_201_CREATED)
         else:
             # Si el serializador no es válido por otros motivos, devuelve los errores
@@ -74,11 +86,11 @@ class UserAdminViewSet(viewsets.GenericViewSet):
 
     # Verificar si ya existe otro usuario con ese DNI
         if User.objects.filter(dni=dni).exclude(pk=user.pk).exists():
-             return Response({"message": "Ya existe otro usuario con ese DNI."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Ya existe otro usuario con ese DNI."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Verificar si ya existe otro usuario con ese email
         if User.objects.filter(email=email).exclude(pk=user.pk).exists():
-            
+
             return Response({"message": "Ya existe otro usuario con ese email."}, status=status.HTTP_400_BAD_REQUEST)
         user_serializer = self.serializer_class(user, data=request.data)
         if user_serializer.is_valid():
@@ -108,7 +120,7 @@ class UserAdminViewSet(viewsets.GenericViewSet):
                 'message': 'Usuario actualizado correctamente'
             }, status=status.HTTP_200_OK)
         else:
-            
+
             return Response({
                 'message': 'Hay errores en la actualización',
                 'errors': user_serializer.errors
@@ -165,14 +177,15 @@ class LoggedUserViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixi
     @action(detail=False, methods=['post'])
     def set_password(self, request):
         user = request.user
-        password_serializer = PasswordSerializer(data=request.data, context={'request': request})
-        
+        password_serializer = PasswordSerializer(
+            data=request.data, context={'request': request})
+
         if password_serializer.is_valid():
             new_password = password_serializer.validated_data['new_password']
             user.set_password(new_password)
             user.save()
             return Response({'message': 'Contraseña actualizada correctamente'})
-        
+
         return Response({'message': 'Hay errores en la información enviada', 'errors': password_serializer.errors},
                         status=status.HTTP_400_BAD_REQUEST)
 
@@ -247,12 +260,12 @@ class RegisterAPI(generics.GenericAPIView):
 
         # Verificar si ya existe un usuario con ese DNI
         if User.objects.filter(dni=dni).exists():
-          
+
             return Response({"message": "Ya existe un usuario con ese DNI."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Verificar si ya existe un usuario con ese email
         if User.objects.filter(email=email).exists():
-           
+
             return Response({"message": "Ya existe un usuario con ese email."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Procesar la creación del usuario
@@ -272,8 +285,6 @@ class RegisterAPI(generics.GenericAPIView):
             print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
     def get_user_roles(self, user):
         roles = []
         if hasattr(user, 'patientProfile'):
@@ -283,19 +294,10 @@ class RegisterAPI(generics.GenericAPIView):
         if hasattr(user, 'seminaristProfile'):
             roles.append('Tallerista')
         if user.is_staff:
-           roles.append('Administrador')
+            roles.append('Administrador')
         return roles
 
-from django.core.mail import send_mail
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth import get_user_model
-import secrets
-import string
+
 @api_view(['POST'])
 @permission_classes([])
 def request_password_reset(request):
@@ -306,7 +308,8 @@ def request_password_reset(request):
     if user:
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        password = ''.join(secrets.choice(string.ascii_letters + string.digits) for i in range(10))
+        password = ''.join(secrets.choice(
+            string.ascii_letters + string.digits) for i in range(10))
         user.set_password(password)
         user.save()
 
@@ -318,5 +321,5 @@ def request_password_reset(request):
             fail_silently=False,
         )
         return Response({'message': 'Se ha enviado un email para restablecer tu contraseña.'})
-    
+
     return Response({'message': 'No se encontró un usuario con ese email.'}, status=status.HTTP_400_BAD_REQUEST)

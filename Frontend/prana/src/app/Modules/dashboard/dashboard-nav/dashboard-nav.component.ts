@@ -1,5 +1,7 @@
-import { Component,HostListener } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { DoctorProfile } from 'src/app/Models/Profile/doctorprofile.interface';
+import { DoctorprofileService } from 'src/app/Services/Profile/doctorprofile/doctorprofile.service';
 import { AuthService } from 'src/app/Services/auth/auth.service';
 
 @Component({
@@ -20,16 +22,23 @@ export class DashboardNavComponent {
   showSeminarSeminaristOptions = false;
   showDoctorEspecialityOptions = false;
   showContableOptions = false;
+  proffesional: DoctorProfile | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {
-    this.onResize()
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private doctorService: DoctorprofileService
+  ) {
+    this.onResize();
   }
 
   ngOnInit() {
     this.availableRoles = this.authService.getUserRoles();
     this.authService.currentRoleSubject.subscribe((role: string) => {
       this.currentRole = role;
-      
+    });
+    this.doctorService.getMyDoctorProfile().subscribe((data) => {
+      this.proffesional = data;
     });
   }
 
@@ -49,7 +58,6 @@ export class DashboardNavComponent {
 
   toggleRoleSelector(): void {
     this.showRoleSelector = !this.showRoleSelector;
-
   }
 
   toggleInsuranceOptions() {
@@ -81,15 +89,25 @@ export class DashboardNavComponent {
 
   scrollToStaff() {
     const targetElement = document.getElementById('option');
-  
+
     if (targetElement) {
       const offset = window.innerHeight * 0.3;
       const targetPosition = targetElement.offsetTop - offset;
-  
+
       window.scrollTo({
         top: targetPosition,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
+  }
+
+  /**
+   * navigates to the doctor's schedule page with the specified
+   * doctor information.
+   */
+  MydoctorSchedule() {
+    this.router.navigate(['Dashboard/accounts/doctores/schedule/'], {
+      state: { doctor: this.proffesional },
+    });
   }
 }

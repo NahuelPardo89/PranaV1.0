@@ -295,7 +295,7 @@ class DoctorBranchesView(APIView):
 class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):
     queryset = DoctorSchedule.objects.all()
     serializer_class = DoctorScheduleSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsDoctorOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['doctor__id']
 

@@ -51,6 +51,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
 ]
 
 THIRT_APPS = [
@@ -59,7 +60,6 @@ THIRT_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'corsheaders',
-
 ]
 
 OWN_APPS = [
@@ -71,6 +71,10 @@ OWN_APPS = [
 
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRT_APPS + OWN_APPS
+
+CRONJOBS = [
+    ('0 10 * * *', 'apps.appointments.tasks.SendReminders'),
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

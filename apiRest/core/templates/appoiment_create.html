@@ -1,0 +1,55 @@
+<!-- templates/email_template.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            padding: 20px;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Turno Centro terapéutico PRANA</h1>
+        </div>
+        <div class="content">
+            <p>Hola,</p>
+            <p>Se ha generado un nuevo turno el día: <strong>{{ day }}</strong> a las <strong>{{ hour }}</strong> para el profesional <strong>{{ doctor }}</strong>.</p>
+            <p>Por favor, no respondas a este correo.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; Centro Terapéutico PRANA</p>
+        </div>
+    </div>
+</body>
+</html>

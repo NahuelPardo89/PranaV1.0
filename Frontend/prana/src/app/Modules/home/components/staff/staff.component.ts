@@ -37,7 +37,7 @@ export class StaffComponent implements OnInit, AfterViewInit {
   getIg = () => {
     this.patientService.getAllPatients().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data);
-      const filterValue = 'User, Prana';
+      const filterValue = 'PRANA';
       this.dataSource.filter = filterValue.trim();
       this.webInstragram= this.dataSource.filteredData[0].instagram;
       
@@ -62,22 +62,16 @@ export class StaffComponent implements OnInit, AfterViewInit {
       });
     }
   }
-  scrollToStaff() {
-    const targetElement = document.getElementById('staff');
   
-    if (targetElement) {
-      const offset = window.innerHeight * 0.3;
-      const targetPosition = targetElement.offsetTop - offset;
-  
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
-    }
-  }
   navigateToAboutUs() {
-    this.router.navigate(['/AboutUs']);
-}
+    this.router.navigate(['/aboutus']);
+    
+  }
+
+  navigateToProf() {
+    this.router.navigate(['/profesionales']);
+    
+  }
 
 
 

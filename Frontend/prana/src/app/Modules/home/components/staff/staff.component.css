@@ -1,40 +1,28 @@
-/* color violeta #502c36 */
+
+
+
 
 ::-webkit-scrollbar {
     width: 10px;
 }
 
-
-/* home */
-/* home */
 .bgFull {
-  /* background: rgb(211,146,202);
-  background: linear-gradient(0deg, rgba(211,146,202,1) 11%, rgba(255,255,255,1) 92%); */
-
   overflow: hidden;
-  background-image: url(../../../../../assets/img/foto4Blur.jpg);
+  background-image: url(../../../../../assets/img/fondo.jpeg);
   background-size: cover;
   position: relative;
   backdrop-filter: blur(10px);
   margin-top: -15px;
-  /* background-color: #f9f9f9; */
-
+  font-family: "Jua", sans-serif;
 }
-/* Media queries para tabletas y móviles */
-
-/* Carrousel */
 
 :root {
   --slide-transform: 0;
   --transition: transform 1s;
 }
 .carrousel-container {
-  width: 450px;
-  margin-right: auto;
-  margin-left: auto;
-  
+  width: 100%;
   overflow: hidden;
-  
 }
 .carrousel {
   display: flex;
@@ -43,30 +31,24 @@
 }
 .carrousel-item {
   min-width: 100%;
-  height: 300px;
+  
   font-size: 3rem;
   text-align: center;
   line-height: 300px;
-  
-  
 }
 .carrousel-item img {
-  width: 100%;
-  height: 100%;
+  width: 550px;
+  height: 550px;
+  
   object-fit: cover;
   opacity: 0;
-  
   border-radius: 5px;
   transition: opacity 0.5s ease, visibility 0.5s ease;
-  
-
 }
-
 .carrousel-item img:not(.hidden-image) {
   opacity: 1;
   visibility: visible;
 }
-
 .carrousel-controls {
   margin-top: 5px;
   width: 100px;
@@ -74,9 +56,7 @@
   justify-content: space-around;
   gap: 30px;
 }
-
 .css-button-sliding-to-right--blue {
-  
   min-width: 2%;
   height: 40px;
   color: #fff;
@@ -113,7 +93,6 @@
   background: #502c36;
 }
 .css-button-sliding-to-left--blue {
-  
   min-width: 2%;
   height: 40px;
   color: #ffffff;
@@ -150,47 +129,43 @@
   background: #502c36;
 }
 /* Carrousel */
-
 .main {
   margin: auto;
   width: 90%;
   height: 93vh;
-  
-  
-  
-
-
-  
-  
-
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .titlePrana {
- 
-  width: 50%;
+  width: 80%;
   padding: 10px;
-  
   display: flex;
-  
+  flex-direction: column;
   justify-content: center;
-  
+  align-items: center;
+  text-align: center;
+  margin-top: 25px;
 
-  
 }
 .prana{
   color: #502c36;
   padding: 1rem;
+  font-family: "Jua", sans-serif;
   font-size: 9rem;
-  font-weight: 500;
-  font-family: 'Lora', "Helvetica Neue", sans-serif;
+  font-weight: 300;
+  filter: drop-shadow(
+    0 0 10px rgba(250,250,250, .95)
+  )
+  
 }
 .logo{
   width: 250px;
   padding: 1rem;
+  filter: drop-shadow(
+    0 0 10px rgba(0,0,0, .8)
+  )
 }
-
 .css-button-sliding-to-bottom--blue {
   margin-top: 4%;
   min-width: 130px;
@@ -233,36 +208,33 @@ a{
   text-decoration: none;
   color: WHITE;
 }
-
-
-
-.homeDerecha {
+.slider-section {
   box-shadow: -7px 0px 65px 0px #68335a;
   padding: 5px;
-  width:500px;
+  width:100%;
   height: 600px;
   border-radius: 0.5%;
   display: flex;
+  margin: auto;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-color: #f9f9f980;
-  
-  
-  
-
-  
-  
-
 }
 .subtitulo {
   color: #502c36;
   padding: 1rem;
-  font-size: 3rem;
-  font-family: Lora, "Helvetica Neue", sans-serif;
+  font-size: 4.2rem;
+  font-weight: 500;
+  font-family: "Helvetica Neue", sans-serif;
+  filter: drop-shadow(
+    0 0 10px rgba(250,250,250, 1)
+  )
+  
+  
 }
 .ciudad {
   width: 100%;
- 
   color: #ae71a3;
   padding:1rem;
   font-family: Lora, "Helvetica Neue", sans-serif;
@@ -275,18 +247,12 @@ a{
   padding: 1rem;
   font-family: Lora, "Helvetica Neue", sans-serif;
   font-size: 1.2rem;
-
 }
 
 @media screen and (max-width: 1700px) {
-  
   .main {
-    
-    
     display: flex;
     flex-direction: column;
-    
-      
   }
   .logo {
     display: none;
@@ -299,29 +265,42 @@ a{
     text-align: center
   }
 }
-
 @media screen and (max-width: 768px) {
+  .main {
+    
+    height: 850px;
+  }
   .prana {
     font-size: 6.4rem;
   }
-  .homeDerecha {
-    width: 460px;
+  .slider-section {
+    
+    display: none;
   }
   .carrousel-container {
+    margin-top: -40px;
     width: 420px;
+    height: 300px;
+    
+  }
+  .carrousel-container img {
+    height: 250px;
   }
   .subtitulo {
     font-size: 3rem;
+    font-weight: 400
     ;
   }
+  #boton-contacto {
+    width: 30px;
+    height: 40px;
+  }
 }
-
-
 @media screen and (max-width: 550px) {
   .prana { 
     font-size: 6rem;
   }
-  .homeDerecha  {
+  .slider-section  {
     width: 370px;
   }
   .carrousel-container {
@@ -332,149 +311,10 @@ a{
   .prana {
     margin-top: 125px;
   }
-  .homeDerecha {
+  .slider-section {
     height: fit-content;
   }
-
 }
-
-
-/* profesionales */
-.introduccion {
-  display: flex;
-  width: 80%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-}
-
-.nuestrosProfesionales {
-  font-size: 2.5rem;
-  text-align: center;
-  color: #ae71a3;
-  padding: 20px;
-  margin-top: 20px;
-  font-family: 'Lora';
-  width: 80%;
-}
-
-.subtituloIntro {
-  font-size: 1rem;
-  padding: 15px;
-  text-align: center;
-}
-
-.textIntro {
-  width: 80%;
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 1.12rem;
-  line-height: 1.5; /* Añadido: Mejora la legibilidad con un espacio de línea adecuado */
-}
-
-.contenedorStaff {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around; /* Añadido: Distribuye uniformemente los elementos */
-  width: 80%;
-  margin: auto;
-}
-
-.staff {
-  width: 100%;
-  background-color: #f9f9f9;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Añadido: Sutil sombra para destacar el contenedor */
-  margin-bottom: 20px; /* Añadido: Espacio entre los elementos del staff */
-  border-radius: 8px; /* Añadido: Bordes redondeados */
-}
-
-.info > img {
-  border: none;
-}
-
-.tarjeta {
-  width: 200px; /* Modificado: Ajusta el ancho para tabletas */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  margin-bottom: 20px;
-  transition: transform 300ms ease; /* Añadido: Efecto de transición al hacer hover */
-}
-
-.tarjeta:hover {
-  transform: scale(1.05); /* Añadido: Efecto de escala al hacer hover */
-}
-
-.tarjetaCuerpo {
-  display: flex;
-  flex-direction: column;
-  width: 150px;
-  height: 80px;
-  border: none;
-  overflow: hidden; /* Modificado: Evita la barra de desplazamiento horizontal */
-  font-family: 'Lora', "Helvetica Neue", sans-serif;
-}
-
-.tarjetaNombre {
-  font-size: 1rem;
-  color: #ae71a3;
-}
-
-.tarjetaTitulo {
-  font-size: 0.8rem;
-  color: #888;
-}
-
-.foto {
-  width: 100%;
-  height: 200px;
-  overflow: hidden; /* Añadido: Evita que las imágenes se salgan del contenedor */
-  border-radius: 50%;
-}
-
-.tarjetaImagen {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%; /* Modificado: Bordes redondeados del 50% para hacer un círculo */
-}
-
-p {
-  text-align: left; /* Modificado: Alinea el texto a la izquierda */
-  font-size: 1rem;
-}
-
-.tarjetaTexto {
-  display: none;
-  padding: 5px;
-}
-
-/* Media queries para tabletas y móviles */
-@media screen and (max-width: 1024px) {
-  .tarjeta {
-      width: 30%; /* Modificado: Ajusta el ancho para tabletas */
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .tarjeta {
-      width: 30%; /* Modificado: Ajusta el ancho para móviles */
-      min-width: 200px;
-  }
-}
-
-
-
-
-
-
-
-/* body Nav */
-/* body Nav */
-/* body Nav */
 
 .bodyNav {
     margin: auto;
@@ -484,7 +324,6 @@ p {
     justify-content: space-between;
     
 }
-
 .bodyNav-container{
     min-height: 45vh;
     width: 30%;
@@ -495,21 +334,17 @@ p {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     transition: transform 300ms ease;
 }
 .bodyNav-container:hover {
     transform: scale(106%);
     transition: all 200ms ease;
 }
-
-
 .bodyNav-container a {
     display: flex;
     justify-content: center;
     
 }
-
 .mid{
     border-radius: 2%;
     box-shadow: 0px 0px 100px -14px #68335a;
@@ -522,7 +357,6 @@ p {
     width: 80%;
     margin: auto;
 }
-
 .bodyNav-container img {
     width: 60%;
     min-width: 200px;
@@ -530,7 +364,6 @@ p {
     aspect-ratio: 1/1;
     object-fit: cover;
 }
-
 .separador {
     background-color:  #f9f9f9;
     width: 80%;
@@ -543,22 +376,16 @@ p {
       flex-direction: column;
       font-size: 0.8rem;
   }
-
   .bodyNav-container {
       width: 48%;
-      margin-bottom: 20px; /* Espacio entre los contenedores */
+      margin-bottom: 20px; 
   }
 }
-
-/* Media queries para móviles */
 @media screen and (max-width: 480px) {
   .bodyNav-container {
       width: 100%;
   }
 }
-/* ¿Cómo encontrarnos? */
-/* ¿Cómo encontrarnos? */
-/* ¿Cómo encontrarnos? */
 .comoEncontrarnos {
   margin: auto;
   width: 80%;
@@ -568,57 +395,75 @@ p {
   background-color: #f9f9f9;
   
 }
-
 .contenedorUbicacion {
-  width: 80%; /* Modificado: Ajusta el ancho para tabletas y móviles */
+  width: 80%; 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   padding: 10px;
 }
-
 .ubicacionTitle {
   width: 90%;
   padding: 15px;
-  font-family: 'Lora';
+  font-family: 'Open Sans', "Helvetica Neue", sans-serif;
   font-size: 2rem;
   color: #68335a;
 }
 
-.listaEncontrarnos {
-  list-style: none;
-  margin: 20px 0; /* Modificado: Reduce el margen superior e inferior */
-  font-family: 'Lora';
-  font-size: 1.2rem;
+.listaDatos{
+  width: 100%;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  
+}
+.wspIcon {
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
 }
 
+
+.listaEncontrarnos {
+  list-style: none;
+  margin: 20px 0; 
+  font-family: 'Open Sans', "Helvetica Neue", sans-serif;
+  font-size: 1.2rem;
+}
 .listaEncontrarnos li {
   margin-top: 10px;
   color: #68335a;
 }
-
 .listaEncontrarnos li img {
   margin-right: 10px;
 }
-
+.wsp {
+  font-family: 'Open Sans', "Helvetica Neue", sans-serif;
+  color: #68335a;
+  font-size: 1.2rem;
+}
 .maps {
   
-  max-width: 100%; /* Modificado: Evita que el mapa se desborde en pantallas pequeñas */
+  max-width: 100%;
 }
 .embedIg {
   width: 80%;
   margin: auto;
 }
-
-
-
-/* Media queries para tabletas y móviles */
 @media screen and (max-width: 1024px) {
   .contenedorUbicacion {
-      width: 100%; /* Modificado: Ajusta el ancho para tabletas */
-      
-      
+      width: 100%;       
       padding: 10px;
       align-items: center;
   }
@@ -629,19 +474,16 @@ p {
     margin: auto;
   }
   .maps {
-    width: 80%;
-    
+    width: 80%;    
     text-align: center;
   }
   .mapa {
-
     width: 80%;
   }
   .ubicacionTitle {
     margin-left: 15px;
     text-align: center;
-    text-wrap: balance;
-    
+    text-wrap: balance;    
   }
   .contenedorIg{
     display: flex;
@@ -649,11 +491,9 @@ p {
     align-items: center;
   }
 }
-
 @media screen and (max-width: 768px) {
   .contenedorUbicacion {
-      width: 100%; /* Modificado: Ajusta el ancho para móviles */
-      
+      width: 100%;       
   }
   .comoEncontrarnos{
     flex-direction: column;
@@ -661,11 +501,11 @@ p {
   .embedIg {
     width: 80%;
   }
+  .wspImg {
+    width: 45px;
+  }
 }
-
-
 /* ANIMACIONES */
-
 .slide-in-left {
 	-webkit-animation: slide-in-left 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 	        animation: slide-in-left 0.9s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -699,7 +539,6 @@ p {
 	-webkit-animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
 	        animation: scale-in-center 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s both;
 }
-
 @-webkit-keyframes scale-in-center {
     0% {
       -webkit-transform: scale(0);
@@ -729,7 +568,6 @@ p {
 	-webkit-animation: slide-in-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.1s both;
 	        animation: slide-in-top 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.1s both;
 }
-
 @-webkit-keyframes slide-in-top {
     0% {
       -webkit-transform: translateY(-1000px);
@@ -754,12 +592,10 @@ p {
       opacity: 1;
     }
   }
-
 .puff-in-center {
 	-webkit-animation: puff-in-center 1s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 	        animation: puff-in-center 1s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 }
-
 @-webkit-keyframes puff-in-center {
     0% {
       -webkit-transform: scale(2);
@@ -791,6 +627,4 @@ p {
               filter: blur(0px);
       opacity: 1;
     }
-  }
-
- 
+  } 

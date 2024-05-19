@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, throwError } from 'rxjs';
 import { User } from 'src/app/Models/user/user.interface';
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://127.0.0.1:8000/account/admin/';
-  private meUrl ='http://127.0.0.1:8000/account/me/';
+  private apiUrl = environment.api_Url+'account/admin/';
+  private meUrl =environment.api_Url+'account/me/';
 
   constructor(private http: HttpClient) { }
 
@@ -35,11 +36,7 @@ export class UserService {
 
   updateUser(userId: number, userData: User): Observable<void> {
     const url = `${this.apiUrl}${userId}/`;
-    return this.http.put<void>(url, userData).pipe(
-      catchError(error => {
-        return throwError(() => new Error(error));
-      })
-    );
+    return this.http.put<void>(url, userData);
   }
 
   deleteUser(userId: number): Observable<void> {

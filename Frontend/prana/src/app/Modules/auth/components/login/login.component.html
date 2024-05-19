@@ -1,8 +1,8 @@
 <div class="container-sm">
-  <img src="../../../../assets/img/usuario.png" alt="" srcset="">
+  <img src="../../../../../assets/img/logo.png" alt="Logo Prana">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     
-    <mat-form-field class="ancho" appearance="fill">
+    <mat-form-field class="ancho" appearance="outline">
       <mat-label>DNI</mat-label>
       <input matInput formControlName="dni" required>
       <mat-error *ngIf="loginForm.controls['dni'].errors?.['required']">Este campo es requerido</mat-error>
@@ -11,7 +11,7 @@
       <mat-error *ngIf="loginForm.controls['dni'].errors?.['min']">Ingrese un DNI Correcto</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="ancho" appearance="fill">
+    <mat-form-field class="ancho" appearance="outline">
       <mat-label>Contraseña</mat-label>
       <input matInput type="password" formControlName="password" required>
       <mat-error *ngIf="loginForm.controls['password'].errors?.['required']">Este campo es requerido</mat-error>
@@ -20,9 +20,9 @@
     <div *ngIf="errorMessage" class="error-message danger">
       {{ errorMessage }}
     </div>
-    <button mat-raised-button class="ancho button mt-4" color="primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
+    <button class="btn btn-primary" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</button>
   </form>
-    <p>¿No tienes cuenta?  <a routerLink="/Registro">Registrarse</a>  </p> 
-    <p>¿No tienes cuenta?  <a routerLink="/Dashboard/accounts/resetpassword">¿Olvidaste tu Contraseña?</a>  </p>
+    <p>¿No tienes cuenta?  <a routerLink="/singin">Registrarse</a>  </p> 
+    <p>¿No tienes cuenta?  <a routerLink="/resetpass">¿Olvidaste tu Contraseña?</a>  </p>
     
 </div>

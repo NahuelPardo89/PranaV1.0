@@ -37,7 +37,7 @@ export class CreateInsuranceDoctorComponent {
       doctor: this.doctorControl,
       insurance: ['', Validators.required],
       branch: ['',Validators.required ],
-      price: ['', Validators.required]
+      price: ['', Validators.required, Validators.min(1)],
 
       
       

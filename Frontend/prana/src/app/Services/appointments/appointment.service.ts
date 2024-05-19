@@ -7,13 +7,13 @@ import { AppointmentPatientGetInterface } from 'src/app/Models/appointments/get-
 import { AppointmentDoctorGetInterface } from 'src/app/Models/appointments/get-interfaces/appointmentDoctorGet.interface';
 import { AppointmentPatientCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentPatientCreate.interface';
 import { AppointmentAdminCreateInterface } from 'src/app/Models/appointments/create-interfaces/appointmentAdminCreate.interface';
-import { AppointmentDoctorCreateComponent } from 'src/app/Modules/appointments/components/doctor/appointment-doctor-create/appointment-doctor-create.component';
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppointmentService {
-  private baseUrl = 'http://127.0.0.1:8000/appointment/';
+  private baseUrl: string = environment.api_Url + 'appointment/';
   private currentUserSubject: BehaviorSubject<UserShort | null> =
     new BehaviorSubject<UserShort | null>(null);
   public readonly currentUser = this.currentUserSubject.asObservable();

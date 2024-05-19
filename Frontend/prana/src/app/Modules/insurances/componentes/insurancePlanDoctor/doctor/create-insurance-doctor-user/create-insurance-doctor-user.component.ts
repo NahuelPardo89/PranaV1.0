@@ -11,91 +11,68 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-create-insurance-doctor-user',
   templateUrl: './create-insurance-doctor-user.component.html',
-  styleUrls: ['./create-insurance-doctor-user.component.css']
+  styleUrls: ['./create-insurance-doctor-user.component.css'],
 })
 export class CreateInsuranceDoctorUserComponent {
- 
-  insurances: HealthInsurance[]= [];
-  branchs:SpecialityBranch[]= [];
-  
+  insurances: HealthInsurance[] = [];
+  branchs: SpecialityBranch[] = [];
+
   insuranceDoctorForm: FormGroup;
-  
+
   showBranch: boolean = false;
   constructor(
-   
     private insuranceService: HealthinsuranceService,
     private insuranceDoctorService: InsuranceDoctorService,
     private specialityBranchService: BranchService,
     private fb: FormBuilder,
     private dialog: DialogService,
-    private router: Router,
+    private router: Router
   ) {
     this.insuranceDoctorForm = this.fb.group({
-      
       insurance: ['', Validators.required],
-      branch: ['',Validators.required ],
-      price: ['', Validators.required]
-
-      
-      
+      branch: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(0)]],
     });
-    
   }
-  
+
   ngOnInit(): void {
-    
     this.loadInsurance();
-    this.loadBranch()
-    
-    
-   
-    
-  }
-  
- 
-  loadBranch(idDoctor:number=0):void{
-    this.specialityBranchService.getMeSpecialityBranches()
-    .subscribe(branches => {
-    this.branchs = branches;
-
-    
-    // Realiza las acciones necesarias con las ramas obtenidas
-  });
+    this.loadBranch();
   }
 
-  
+  loadBranch(idDoctor: number = 0): void {
+    this.specialityBranchService
+      .getMeSpecialityBranches()
+      .subscribe((branches) => {
+        this.branchs = branches;
 
-  loadInsurance():void{
-    this.insuranceService.getAll().subscribe(data=>{
-      this.insurances = data
-      
-    })
+        // Realiza las acciones necesarias con las ramas obtenidas
+      });
   }
 
-  
-  
- 
+  loadInsurance(): void {
+    this.insuranceService.getAll().subscribe((data) => {
+      this.insurances = data;
+    });
+  }
+
   onSubmit(): void {
     if (this.insuranceDoctorForm.valid) {
-     
-      
-      this.insuranceDoctorService.createMeDoctorInsurance(this.insuranceDoctorForm.value).subscribe({
-        next: (response) => {
-              this.dialog.showSuccessDialog("Obra Social agregada correctamente");
-              this.router.navigate(['/Dashboard/insurances/doctor/me']);
-              
-            },
-            error: (error) => {
-              
-              this.dialog.showErrorDialog(error.error.message);
-            }
-           
-          });
-        
-    } 
+      this.insuranceDoctorService
+        .createMeDoctorInsurance(this.insuranceDoctorForm.value)
+        .subscribe({
+          next: (response) => {
+            this.dialog.showSuccessDialog('Obra Social agregada correctamente');
+            this.router.navigate(['/Dashboard/insurances/doctor/me']);
+          },
+          error: (error) => {
+            this.dialog.showErrorDialog(error.error.message);
+          },
+        });
+    }
   }
-  
-  onCancel(): void{
+
+  onCancel(): void {
     this.router.navigate(['/Dashboard/insurances/doctor/me']);
   }
 }

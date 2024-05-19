@@ -14,6 +14,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="accounts/users"
+        (click)="scrollToStaff()"
       >
         <i
           class="material-symbols-outlined btn-icon"
@@ -25,6 +26,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="accounts/doctores"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">patient_list</i> Gestionar
         Profesionales
@@ -33,6 +35,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="accounts/pacientes"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">patient_list</i> Gestionar
         Pacientes
@@ -41,6 +44,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="accounts/seminarist"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">patient_list</i> Gestionar
         Talleristas
@@ -60,6 +64,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="speciality/speciality/"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">medical_services</i>
         Especialidades
@@ -68,6 +73,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="speciality/branch/"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">medical_services</i>
         Ramas de atención
@@ -77,6 +83,7 @@
       class="btn btn-primary"
       *ngIf="currentRole === 'Administrador'"
       routerLink="insurances/insurance/"
+      (click)="scrollToStaff()"
     >
       <i class="material-symbols-outlined btn-icon">medical_services</i>
       Gestionar Obras Sociales
@@ -86,6 +93,7 @@
       class="btn btn-primary"
       *ngIf="currentRole === 'Administrador'"
       routerLink="appointments/admin/list"
+      (click)="scrollToStaff()"
     >
       <i class="material-symbols-outlined btn-icon">calendar_month</i>
       Gestionar Turnos
@@ -103,6 +111,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="seminar/admin/list"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">self_improvement</i>
         Gestionar Talleres
@@ -111,6 +120,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="room/admin/list"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">self_improvement</i>
         Gestionar Salas
@@ -119,6 +129,7 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="schedule/admin/list"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">self_improvement</i>
         Gestionar Horarios
@@ -132,20 +143,12 @@
       <i class="material-symbols-outlined btn-icon">self_improvement</i>
       Gestionar Contabilidad
     </button>
-    <button class="btn btn-primary" *ngIf="currentRole === 'Administrador'" routerLink="accounts/myaccount/editinstagram">
-      <i class="material-symbols-outlined btn-icon">flip_camera_ios</i>
-      Gestionar Instagram
-    </button>
-
-
-
-
-    
     <div *ngIf="showContableOptions" class="toggle">
       <button
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="reports/payment-method"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">self_improvement</i>
         Gestionar Metodos de pago
@@ -154,11 +157,22 @@
         class="btn btn-secondary"
         *ngIf="currentRole === 'Administrador'"
         routerLink="reports/copayment/appointment/admin/list"
+        (click)="scrollToStaff()"
       >
         <i class="material-symbols-outlined btn-icon">account_balance</i>
         Gestionar Contabilidad
       </button>
     </div>
+
+    <button
+      class="btn btn-primary"
+      *ngIf="currentRole === 'Administrador'"
+      routerLink="accounts/myaccount/editinstagram"
+      (click)="scrollToStaff()"
+    >
+      <i class="material-symbols-outlined btn-icon">flip_camera_ios</i>
+      Gestionar Instagram
+    </button>
 
     <button
       class="btn btn-primary"
@@ -258,6 +272,15 @@
     <button
       class="btn btn-primary"
       *ngIf="currentRole === 'Profesional'"
+      (click)="MydoctorSchedule()"
+    >
+      <i class="material-symbols-outlined btn-icon">schedule</i>
+      Gestionar Mis Horarios
+    </button>
+
+    <button
+      class="btn btn-primary"
+      *ngIf="currentRole === 'Profesional'"
       routerLink="reports/copayment/appointment/doctor/list"
     >
       <i class="material-symbols-outlined btn-icon">account_balance</i>
@@ -299,18 +322,21 @@
       Gestionar Contabilidad
     </button> -->
 
-    <button class="btn btn-primary" routerLink="accounts/myaccount">
+    <button
+      class="btn btn-primary"
+      routerLink="accounts/myaccount"
+      (click)="scrollToStaff()"
+    >
       <i class="material-symbols-outlined btn-icon">manage_accounts</i> Mi
       cuenta
     </button>
   </div>
-  <div class="selector-rol mt-4">
+  <div class="selector-rol mt-4" id="{{ isScreenSmall ? 'option' : '' }}">
     <div class="rol-actual" (click)="toggleRoleSelector()">
       Rol: <span class="rol-color">{{ currentRole | titlecase }}</span>
       <i class="material-icons">swap_horiz</i>
       <!-- Ícono Autorenew -->
     </div>
-
 
     <select
       class="select-role form-control"

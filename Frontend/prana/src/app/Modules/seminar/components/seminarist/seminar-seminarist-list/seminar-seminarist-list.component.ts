@@ -65,6 +65,11 @@ export class SeminarSeminaristListComponent {
             // Show only active seminars to patient
             let activeSeminars = data.filter((seminar) => seminar.is_active);
             this.dataSource = new MatTableDataSource(activeSeminars);
+            this.paginator._intl.itemsPerPageLabel = 'items por página';
+            this.paginator._intl.firstPageLabel = 'primera página';
+            this.paginator._intl.lastPageLabel = 'última página';
+            this.paginator._intl.nextPageLabel = 'página siguiente';
+            this.paginator._intl.previousPageLabel = 'página anterior';
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
           });

@@ -19,10 +19,10 @@ export class SinginComponent {
 
   ngOnInit() {
     this.registerForm = this.fb.group({
-      dni: [null, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1), Validators.max(999000000)]],
-      name: ['', [Validators.required]],
-      last_name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
+      dni: [null, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.min(1), Validators.max(999000000),Validators.minLength(7)]],
+      name: ['', [Validators.required, Validators.pattern("^[a-zA-Z0-9+\-ñ ]*$"),]],
+      last_name: ['', [Validators.required,Validators.pattern("^[a-zA-Z0-9+\-ñ ]*$")]],
+      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9._+-ñ]+@[a-zA-Z0-9_.-]+\.[a-zA-Z]{2,4}$')]],
       phone: [''],
       password: ['', [Validators.required, Validators.minLength(8)]]
       

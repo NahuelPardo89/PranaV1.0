@@ -14,7 +14,7 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
   styleUrls: ['./insurance-doctor-create.component.css']
 })
 export class InsuranceDoctorCreateComponent {
-  doctorId=""
+  doctorId=0
   doctorName=""
   insurances: HealthInsurance[]= [];
   branchs:SpecialityBranch[]= [];
@@ -40,7 +40,7 @@ export class InsuranceDoctorCreateComponent {
       
       insurance: ['', Validators.required],
       branch: ['',Validators.required ],
-      price: ['', Validators.required]
+      price: ['', [Validators.required, Validators.min(0)]]
 
       
       
@@ -51,7 +51,7 @@ export class InsuranceDoctorCreateComponent {
   ngOnInit(): void {
     
     this.loadInsurance();
-    this.loadBranch()
+    this.loadBranch(this.doctorId)
     
     
    
@@ -59,8 +59,8 @@ export class InsuranceDoctorCreateComponent {
   }
   
  
-  loadBranch(idDoctor:number=0):void{
-    this.specialityBranchService.getMeSpecialityBranches()
+  loadBranch(idDoctor:number):void{
+    this.specialityBranchService.getDoctorBranchesBySpeciality(idDoctor)
     .subscribe(branches => {
     this.branchs = branches;
 

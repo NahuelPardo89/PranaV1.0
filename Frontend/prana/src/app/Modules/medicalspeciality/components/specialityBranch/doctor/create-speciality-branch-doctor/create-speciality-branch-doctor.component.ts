@@ -37,7 +37,7 @@ export class CreateSpecialityBranchDoctorComponent {
   loadSpecialties(): void {
     this.specialtyService.getMeSpecialities().subscribe((data) => {
       this.specialties = data;
-      console.log(this.specialties)
+      
     });
   }
 
@@ -56,18 +56,18 @@ export class CreateSpecialityBranchDoctorComponent {
             this.dialog.showSuccessDialog(
               'Rama de Especialidad creada correctamente'
             );
-            this.router.navigate(['/Dashboard/speciality/branch']);
+            this.router.navigate(['/Dashboard/speciality/branch/me/']);
           },
           error: (error) => {
-            console.log(error);
+           
             this.dialog.showErrorDialog(
-              'Hubo un error al crear la rama de especialidad '
+              error.error.message
             );
           },
         });
     }
   }
   onCancel() {
-    this.router.navigate(['/Dashboard/speciality/branch']);
+    this.router.navigate(['/Dashboard/speciality/branch/me/']);
   }
 }

@@ -132,7 +132,7 @@
         <tr
           mat-row
           *matRowDef="let row; columns: displayedColumns"
-          [class.bg-danger]="isPendingAndOverdueAppointment(row)"
+          [class.bg-warning]="isPendingAndOverdueAppointment(row)"
           [class.bg-success]="
             row.appointment_status.toUpperCase() === 'CONFIRMADO'
           "

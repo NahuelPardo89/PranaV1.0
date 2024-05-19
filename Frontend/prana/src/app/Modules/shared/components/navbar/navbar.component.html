@@ -1,7 +1,7 @@
 <nav class="navbar slide-in-top navbar-expand-lg navbar-light bg-ligth" id="navigator">
   <div class="container-fluid ">
     <!-- Logo o nombre de la aplicación -->
-    <a class="navbar-brand " routerLink="/home">
+    <a class="navbar-brand " routerLink="">
       <img src="../../../../../assets/img/logo.png" alt="Logo Prana">
     </a>
 
@@ -15,16 +15,16 @@
       <!-- Botones del lado izquierdo -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link under" aria-current="page" routerLink="/Home">Inicio</a>
+          <a class="nav-link under" aria-current="page" routerLink="" (click)="toggleMenu()">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link under" routerLink="/Talleres">Talleres</a>
+          <a class="nav-link under" routerLink="/profesionales" (click)="toggleMenu()">Profesionales</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link under" routerLink="/AboutUs">Sobre Nosotros</a>
+          <a class="nav-link under" routerLink="/aboutus" (click)="toggleMenu()">Sobre Nosotros</a>
         </li>
         <li class="nav-item" *ngIf="isLogged">
-          <a class="nav-link" routerLink="/Dashboard/accounts/myaccount">Dashboard</a>
+          <a class="nav-link" routerLink="/Dashboard/accounts/myaccount" (click)="toggleMenu()">Dashboard</a>
         </li>
       </ul>
 
@@ -34,9 +34,12 @@
       </div>
 
       <div *ngIf="!isLogged">
-        <div class="dropdown">
+        <button class="btn btn-primary" type="button"
+              routerLink="login">
+            <i class="material-symbols-outlined btn-icon">login</i>Iniciar Sesión</button>
+        <!-- <div class="dropdown">
           <button class="btn btn-primary  dropdown-toggle" type="button" id="dropdownLoginButton"
-            data-bs-toggle="dropdown" aria-expanded="false">
+            data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
             <i class="material-symbols-outlined btn-icon">login</i>Iniciar Sesión</button>
           <ul class="dropdown-menu tamaño dropdown-menu-end " aria-labelledby="dropdownLoginButton">
             <form [formGroup]="loginForm" (ngSubmit)="login()">
@@ -73,7 +76,7 @@
             </li>
 
           </ul>
-        </div>
+        </div> -->
 
       </div>
       <!-- Botón de cierre de sesión -->

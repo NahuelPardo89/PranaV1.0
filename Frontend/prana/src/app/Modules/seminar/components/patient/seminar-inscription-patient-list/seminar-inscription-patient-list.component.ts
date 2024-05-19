@@ -59,6 +59,11 @@ export class SeminarInscriptionPatientListComponent {
         .getPatientSeminarInscriptions(data.id)
         .subscribe((patientData) => {
           this.dataSource = new MatTableDataSource(patientData);
+          this.paginator._intl.itemsPerPageLabel = 'items por página';
+          this.paginator._intl.firstPageLabel = 'primera página';
+          this.paginator._intl.lastPageLabel = 'última página';
+          this.paginator._intl.nextPageLabel = 'página siguiente';
+          this.paginator._intl.previousPageLabel = 'página anterior';
           this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         });

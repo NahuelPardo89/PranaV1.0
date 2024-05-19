@@ -4,13 +4,13 @@ import { Observable, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Patient, PatientView } from 'src/app/Models/Profile/patient.interface';
 import { catchError } from 'rxjs/operators';
-
+import { environment } from 'src/enviroments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class PatientService {
-  private apiUrl = 'http://127.0.0.1:8000/profile/admin/patient/';
-  private currentPatientUrl = 'http://127.0.0.1:8000/profile/patient/';
+  private apiUrl = environment.api_Url + 'profile/admin/patient/';
+  private currentPatientUrl = environment.api_Url + 'profile/patient/';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -68,7 +68,7 @@ export class PatientService {
   }
 
   updateLoggedPatient(patient: Patient): Observable<void> {
-    const url = this.currentPatientUrl; // Solo el endpoint a LoggedUserViewSet
+    const url = this.currentPatientUrl;
     return this.httpClient.put<void>(url, patient).pipe(
       catchError((error) => {
         return throwError(() => new Error(error));

@@ -29,20 +29,6 @@
             "profesionales" : ["Benitez, Paola", "Vega Ayala, Cristina"]
         },
         {
-            "idEspecialidad" : 5,
-            "nombre" : "Kinesiología",
-            "descripcion" : "Realizamos terapias y ejercicios físicos para prevenir y tratar problemas musculoesqueléticos, ayudando a nuestros pacientes a mejorar su movilidad, fuerza y funcionalidad.",
-            "foto" : "../../assets/img/Quienes somos/kinesiologia.jpg",
-            "profesionales" : ["Lic. Gonzalez, Natalia"]
-        },
-        {
-            "idEspecialidad" : 6,
-            "nombre" : "Masajes y podología",
-            "descripcion" : " A través de sesiones de masajes terapéuticos y tratamientos podológicos, aliviamos dolores musculares, mejoramos la salud de los pies y promovemos el bienestar general de nuestros pacientes.",
-            "foto" : "../../assets/img/Quienes somos/masajista.jpg",
-            "profesionales" : ["Quiñonez, Juan"]
-        },
-        {
             "idEspecialidad" : 7,
             "nombre" : "Nutricionistas",
             "descripcion" : "Brindamos asesoramiento personalizado y planes de alimentación equilibrados, promoviendo hábitos saludables y una buena nutrición para mejorar la salud y el bienestar general de nuestros pacientes.",

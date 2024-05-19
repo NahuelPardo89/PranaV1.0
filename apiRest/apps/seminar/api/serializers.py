@@ -16,6 +16,22 @@ class SeminarScheduleSerializer(serializers.ModelSerializer):
         model = SeminarSchedule
         fields = ['id', 'weekday', 'start_hour', 'end_hour']
 
+    def validate(self, data):
+        """
+        Check that start_hour is before end_hour and that the combination of weekday, start_hour, and end_hour is unique.
+        """
+        if data['start_hour'] >= data['end_hour']:
+            raise serializers.ValidationError(
+                "El horario de inicio debe ser menor que el horario de finalización")
+
+        # Check for uniqueness
+        if SeminarSchedule.objects.filter(weekday=data['weekday'], start_hour=data['start_hour'], end_hour=data['end_hour']).exists():
+            print("entré")
+            raise serializers.ValidationError(
+                "Ya se ha existe un horario para este día, horario de inicio y horario de finalización")
+
+        return data
+
     def to_representation(self, instance):
         """
         Convert `start_hour` and `end_hour` to strings and remove milliseconds.
@@ -329,9 +345,10 @@ class SeminarInscriptionCreateSerializer(serializers.ModelSerializer):
         confirmed_inscriptions = SeminarInscription.objects.filter(
             seminar=data['seminar'], seminar_status=2).count()
 
-        if confirmed_inscriptions >= seminar_max_inscriptions:
+        if data.get('seminar_status') == 2 and (confirmed_inscriptions >= seminar_max_inscriptions):
             raise serializers.ValidationError(
                 f"El número de inscripciones confirmadas no puede superar el cupo máximo del taller ({seminar_max_inscriptions}).")
+
         ###
 
        # validate patient inscription

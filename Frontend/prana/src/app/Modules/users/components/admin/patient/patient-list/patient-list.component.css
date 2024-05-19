@@ -27,3 +27,9 @@
     vertical-align: middle; 
 
 }
+
+@media (max-width: 599px) {
+  .hide-on-small-screen {
+    display: none;
+  }
+}

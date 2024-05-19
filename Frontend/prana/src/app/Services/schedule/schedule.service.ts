@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ScheduleAdminInterface } from 'src/app/Models/schedule/scheduleAdminInterface.interface';
-
+import { environment } from 'src/enviroments/environment';
 /**
  * Service for managing seminar schedules in the admin interface.
  * @author Alvaro Olguin Armendariz
@@ -11,7 +11,7 @@ import { ScheduleAdminInterface } from 'src/app/Models/schedule/scheduleAdminInt
   providedIn: 'root',
 })
 export class ScheduleService {
-  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/seminar-schedule/';
+  private apiUrl = environment.api_Url+'seminar/admin/seminar-schedule/';
 
   /**
    * Initializes the service.

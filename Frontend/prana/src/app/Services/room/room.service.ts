@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RoomAdminInterface } from 'src/app/Models/room/admin/roomAdminInterface.interface';
+import { environment } from 'src/enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,7 @@ import { RoomAdminInterface } from 'src/app/Models/room/admin/roomAdminInterface
  * @author Alvaro Olguin Armendariz
  */
 export class RoomService {
-  private apiUrl = 'http://127.0.0.1:8000/seminar/admin/rooms/';
+  private apiUrl = environment.api_Url+'seminar/admin/rooms/';
 
   constructor(private http: HttpClient) {}
 

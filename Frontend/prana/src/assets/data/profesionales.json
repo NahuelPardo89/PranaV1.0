@@ -2,88 +2,158 @@
     "profesionales" : 
     [
         {
-            "img" : "../../assets/img/profesionales/miliPeiretti.jpg",
+            "img" : "../../assets/img/profesionales/MILAGROSPEIRETTI.jpg",
             "name": "Milagros Peiretti" ,
             "title": "Psicología" ,
             "description": "Orientación psicoanalítica a niños, adolescentes y adultos."
         },
         {
-            "img" : "../../assets/img/profesionales/juliCapellini.jpg" ,
-            "name": "Julieta Capellini" ,
+            "img" : "../../assets/img/profesionales/JULIETACAPELLINI.jpg" ,
+            "name": "Julieta Cappellini" ,
             "title": "Psicología",
             "description": "Recibida de la Universidad Nacional de Córdoba. Formada en terapia psicoanalítica para atencion a niños, adolescentes y adultos. Formación en psicodiagnóstico."
         },
         {
-            "img" : "../../assets/img/profesionales/marianaGutierrez.jpg" ,
+            "img" : "../../assets/img/profesionales/MARIANAGUTIERREZ.jpg" ,
             "name": "Mariana Gutierrez" ,
             "title": "Psicología",
             "description": "Terapia cognitiva conductual para adolescentes y adultos. Formación superior en salud mental perinatal. Formación en terapia se aceptación y compromiso."
         },
         {
-            "img" : "../../assets/img/profesionales/aguirreFernanda.jpg" ,
-            "name": "Fernanda Aguirre" ,
+            "img" : "../../assets/img/profesionales/SILVANASETTI.jpg" ,
+            "name": "Silvana Setti" ,
             "title": "Cosmetología",
             "description": "Tratamientos Faciales personalizados y asesoramiento profesional"
         },
         {
-            "img" : "../../assets/img/profesionales/micaOrtiz.jpg" ,
+            "img" : "../../assets/img/profesionales/MICAELAORTIZ.jpeg" ,
             "name": "Micaela Ortiz" ,
             "title": "Nutrición",
             "description": "Trabajo en el consultorio con un abordaje no restrictivo focalizado en el cambio de hábitos alimentarios que perduren en el tiempo. Realizo educación alimentaria constantemente. Adapto planes de alimentación a distintas patologia y realizo analisis de la composicion corporal mediante balanza de bioimpedancia (medicion de masa grasa y masa muscular)"
         },
         {
-            "img" : "../../assets/img/profesionales/florCotela.jpg" ,
+            "img" : "../../assets/img/profesionales/FLORENCIACOTELA.jpg" ,
             "name": "Florencia Cotela" ,
             "title": "Psicología",
             "description": "Psicoanálisis en niños, adolescentes y adultos."
         },
         {
-            "img" : "../../assets/img/profesionales/soleJuarez.jpg" ,
-            "name": "Soledad Juarez" ,
+            "img" : "../../assets/img/profesionales/BELENCARRERAS.jpg" ,
+            "name": "Belen Carreras" ,
             "title": "Esteticista",
             "description": "Tratamientos corporales: vela Slim Plus, criolipolisis, Electroestimulacion, masajes reductores y modeladores. Depilacion Definitiva Soprano Ice."
         },
         {
-            "img" : "../../assets/img/profesionales/marianaBruno.jpg" ,
-            "name": "Mariana Loreley Bruno" ,
+            "img" : "../../assets/img/profesionales/MARIANABRUNO.jpg" ,
+            "name": "Mariana Bruno" ,
             "title": "Psicopedagogía",
             "description": "Neuropsicología del aprendizaje- Niños/adolescentes."
         },
         {
-            "img" : "../../assets/img/profesionales/giselGirardi.jpg" ,
-            "name": "Gisel Solange Girardi" ,
+            "img" : "../../assets/img/profesionales/giselagirardi.jpg" ,
+            "name": "Gisel Girardi" ,
             "title": "Psicología",
             "description": "Licenciada en Psicología con Orientación Cognitivo Integrativa. Formación en Evaluación, Estimulación y Rehabilitación Cognitiva en adolescentes y adultos. Psicoterapia a niños, adultos y adultos mayores. Formación en Terapia de Aceptación y Compromiso / Psicoterapia Analítico Funcional (ACT / FAP)."
         },
         {
-            "img" : "../../assets/img/profesionales/erikaGerasumchuk.jpg" ,
+            "img" : "../../assets/img/profesionales/ERIKAGERASIMCHUK.jpg" ,
             "name": "Erika Gerasimchuk" ,
             "title": "Psicología",
             "description": "Orientación psicoanalítica a niños, adolescentes y adultos."
         },
         {
-            "img" : "../../assets/img/profesionales/juliFernandez.jpg" ,
+            "img" : "../../assets/img/profesionales/JULIETAFERNANDEZ.jpg" ,
             "name": "Julieta Fernández" ,
             "title": "Coach ontológico",
             "description": "Mi profesión y mi propósito hoy es enfocarme especialmente en el acompañamiento personal del cliente a través de una fluida y natural dinámica de transformación mediante la cual las personas y organizaciones revisan, desarrollan y optimizan la forma de estar siendo en el mundo y entre ellas. A través de esta herramienta mi propósito como acompañante es alcanzar todos los objetivos propuestos a través de preguntas, autoobservación, reflexiones y el análisis del comportamiento, acompasando el desarrollo y la evolución de cada cliente."
         },
         {
-            "img" : "../../assets/img/profesionales/sofiGramaglia.jpg" ,
+            "img" : "../../assets/img/profesionales/SOFIAGRAMAGLIA.jpg" ,
             "name": "Sofía Luz Gramaglia" ,
             "title": "Psicología",
             "description": "Brindo atención principalmente a niños, adolescentes y jóvenes adultos. Desde el Psicoanálisis Focalizado, de la línea de Hector Fiorini."
         },
         {
-            "img" : "../../assets/img/profesionales/paoBenitez.jpg" ,
+            "img" : "../../assets/img/profesionales/PAOLABENITEZ.jpg" ,
             "name": "Paola Benitez" ,
             "title": "Instructora de Yoga",
             "description": "En nuestras prácticas trabajamos el cuerpo a través de las asanas de yoga, aquietamos la mente con la meditación para poder darle lugar a nuestro espíritu.  Y así generar un todo. En nuestros talleres generamos un espacio de reflexión y compartimos experiencias y  herramientas de minfullnes para nuestra vida diaria."
         },
         {
-            "img" : "../../assets/img/profesionales/noeFunes.jpg" ,
+            "img" : "../../assets/img/profesionales/NOELIAFUNES.jpg" ,
             "name": "Noelia Funes" ,
             "title": "Psicopedagogía",
             "description": "Tratamientos psicopedagógico, procesos de inclusión escolar (DAI), acompañamiento en tareas escolares y universitarias, organización y técnicas de estudio."
+        },
+        {
+            "img" : "../../assets/img/profesionales/AYELENLOMBARDI.jpg" ,
+            "name": "Ayelen Lombardi" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/CECILAANTE.jpg" ,
+            "name": "Cecilia Ante" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/CRISTINAVEGAAYALA.jpg" ,
+            "name": "Cristina Vega Ayala" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/FRANCISCOSURIN.jpg" ,
+            "name": "Francisco Surin" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/DENISESENZ.jpg" ,
+            "name": "Denise Senz" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/EUGENIAALVAREZ.jpg" ,
+            "name": "Eugenia Alvarez" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/FLORENCIAARIAUDO.jpg" ,
+            "name": "Florencia Ariaudo" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/MACARENAVAZQUEZ.jpg" ,
+            "name": "Macarena Vazquez" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/MARISAMONTIEL.jpg" ,
+            "name": "Marisa Montiel" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/PAULAAVILA.jpg" ,
+            "name": "Paula Avila" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/PRISCILAPIUSSI.jpg" ,
+            "name": "Priscila Piussi" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/ROMINARONDOLETTO.jpg" ,
+            "name": "Romina Rondoletto" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/VALERIAMADINI.jpg" ,
+            "name": "Valeria Madini" 
+           
+        },
+        {
+            "img" : "../../assets/img/profesionales/YAMILAOLIVA.jpg" ,
+            "name": "Yamila Oliva" 
+           
         }
     ]
 }

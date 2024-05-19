@@ -5,6 +5,7 @@ import {
   SeminaristProfileDisplayInterface,
   SeminaristProfileFlatInterface,
 } from 'src/app/Models/Profile/seminaristProfile.interface';
+import { environment } from 'src/enviroments/environment';
 
 /**
  * Service for handling operations related to seminarists' profiles.
@@ -20,8 +21,8 @@ export class SeminaristService {
    * @private
    * @type {string}
    */
-  private apiUrl: string = 'http://127.0.0.1:8000/profile/admin/seminarist/';
-  private seminaristUrl: string = 'http://127.0.0.1:8000/profile/seminarist/';
+  private apiUrl: string = environment.api_Url+'profile/admin/seminarist/';
+  private seminaristUrl: string = environment.api_Url+'profile/seminarist/';
 
   /**
    * Constructs the SeminaristService.

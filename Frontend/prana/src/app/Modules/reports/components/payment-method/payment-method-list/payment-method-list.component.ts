@@ -10,14 +10,10 @@ import { PaymentmethodService } from 'src/app/Services/paymentmethod/paymentmeth
 @Component({
   selector: 'app-payment-method-list',
   templateUrl: './payment-method-list.component.html',
-  styleUrls: ['./payment-method-list.component.css']
+  styleUrls: ['./payment-method-list.component.css'],
 })
 export class PaymentMethodListComponent {
-  displayedColumns: string[] = [
-    'id',
-    'name',
-    'actions',
-  ];
+  displayedColumns: string[] = ['name', 'actions'];
   dataSource!: MatTableDataSource<PaymentMethod>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -35,7 +31,6 @@ export class PaymentMethodListComponent {
 
   setDataTable() {
     this.paymentService.getPaymentMethods().subscribe((data) => {
-     
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
@@ -63,15 +58,12 @@ export class PaymentMethodListComponent {
     });
   }
 
-
-
   deletePayment(id: number) {
     const confirmDialogRef = this.dialogService.openConfirmDialog(
       '¿Estás seguro de que deseas elminar este metodo de pago?'
     );
 
     confirmDialogRef.afterClosed().subscribe((confirmResult) => {
-      
       if (confirmResult) {
         this.paymentService.deletePaymentMethod(id).subscribe({
           next: () => {
@@ -89,6 +81,4 @@ export class PaymentMethodListComponent {
       }
     });
   }
-
-  
 }

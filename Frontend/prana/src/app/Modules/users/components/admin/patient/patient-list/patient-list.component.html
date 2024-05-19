@@ -21,18 +21,18 @@
         </ng-container>
 
         <ng-container matColumnDef="user">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Paciente</th>
           <td mat-cell *matCellDef="let row">{{ row.user }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="facebook">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Facebook</th>
-          <td mat-cell *matCellDef="let row">{{ row.facebook }}</td>
+        <ng-container matColumnDef="facebook" class="hide-on-small-screen">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-small-screen">Facebook</th>
+          <td mat-cell *matCellDef="let row" class="hide-on-small-screen">{{ row.facebook }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="instagram">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Instagram</th>
-          <td mat-cell *matCellDef="let row">{{ row.instagram }}</td>
+        <ng-container matColumnDef="instagram" class="hide-on-small-screen">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-small-screen">Instagram</th>
+          <td mat-cell *matCellDef="let row" class="hide-on-small-screen">{{ row.instagram }}</td>
         </ng-container>
 
         <ng-container matColumnDef="address">
@@ -101,7 +101,7 @@
     </div>
 
     <mat-paginator
-      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSizeOptions]="[10, 20, 50, 100]"
       showFirstLastButtons
     ></mat-paginator>
   </div>

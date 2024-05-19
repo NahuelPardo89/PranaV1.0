@@ -10,8 +10,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets, filters
 from rest_framework.views import APIView
-
-
+from apps.users.models import User
+from django.shortcuts import get_object_or_404
 from apps.usersProfile.models import (HealthInsurance, MedicalSpeciality,  DoctorProfile,
                                       DoctorSchedule, InsurancePlanDoctor, InsurancePlanPatient,
                                       PatientProfile, SpecialityBranch, SeminaristProfile)
@@ -183,7 +183,7 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
     model = SpecialityBranch
     serializer_class = SpecialityBranchListSerializer
     create_serializer_class = SpecialityBranchCreateSerializer
-    permission_classes = [IsDoctorOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -193,17 +193,27 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
-
+        
         instance_serializer = self.create_serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
             return Response({
                 'message': 'Profile creado correctamente.'
             }, status=status.HTTP_201_CREATED)
-        return Response({
-            'message': 'Hay errores en el registro de Profile',
-            'errors': instance_serializer.errors
-        }, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            errors = instance_serializer.errors
+            # Comprobar si existe el error de campos únicos
+            if 'non_field_errors' in errors and errors['non_field_errors']:
+                
+                return Response({
+                        'message': 'Ya existe esa Rama para esa Especialidad'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Respuesta genérica para otros errores
+            return Response({
+                'message': 'Hay errores en el registro de Rama de Especialidad',
+                'errors': errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DoctorSpecialityBranchViewSet(viewsets.ViewSet):
@@ -213,6 +223,7 @@ class DoctorSpecialityBranchViewSet(viewsets.ViewSet):
 
     def list(self, request):
         doctor_id = request.query_params.get('doctor_id')
+        print(doctor_id)
         if not doctor_id:
             return Response({"message": "Doctor ID no proporcionado"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -239,15 +250,18 @@ class MeDoctorSpecialityBranchViewSet(viewsets.ViewSet):
 
     def list(self, request):
         doctor_id = request.user.doctorProfile.id
+        print(request)
 
         try:
             doctor = DoctorProfile.objects.get(pk=doctor_id)
+            print(doctor)
             # Obtener todas las especialidades del doctor
             doctor_specialities = doctor.specialty.all()
-
+            print(doctor_specialities)
             # Filtrar las ramas que pertenecen a las especialidades del doctor
             branches = SpecialityBranch.objects.filter(
                 speciality__in=doctor_specialities, is_active=True)
+            print(branches)
 
             serializer = SpecialityBranchListSerializer(branches, many=True)
             return Response(serializer.data)
@@ -281,7 +295,7 @@ class DoctorBranchesView(APIView):
 class DoctorScheduleAdminViewSet(viewsets.ModelViewSet):
     queryset = DoctorSchedule.objects.all()
     serializer_class = DoctorScheduleSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsDoctorOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ['doctor__id']
 
@@ -425,14 +439,20 @@ class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
+        print(request.data)
         instance_serializer = self.serializer_create_class(data=request.data)
+        insurance = request.data.get('insurance')
+        branch = request.data.get('branch')
+        if InsurancePlanDoctor.objects.filter(insurance=insurance, branch=branch).exists():
+            return Response({"message": "Ya existe esa obra social con la rama seleccionada para este profesional."}, status=status.HTTP_400_BAD_REQUEST)
+
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
             return Response({
-                'message': 'Profile creado correctamente.'
+                'message': 'obra social profesional creada correctamente.'
             }, status=status.HTTP_201_CREATED)
         return Response({
-            'message': 'Hay errores en el registro de Profile',
+            'message': 'Hay errores en el registro de obra social profesional',
             'errors': instance_serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -500,7 +520,18 @@ class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
             # Asignar el doctorProfile del usuario logueado al InsurancePlanDoctor creado
             serializer.save(doctor=request.user.doctorProfile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            errors = serializer.errors
+            # Comprobar si existe el error de campos únicos
+            if 'non_field_errors' in errors and errors['non_field_errors']:
+                return Response({'message': 'Ya existe la Obra Social con esa rama para ese profesional'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Respuesta genérica para otros errores
+            return Response({
+                'message': 'Hay errores en el registro de Profile',
+                'errors': errors
+            }, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, pk=None, *args, **kwargs):
         instance = get_object_or_404(
@@ -660,6 +691,25 @@ class SeminaristProfileAdminViewSet(viewsets.ModelViewSet):
 
     queryset = SeminaristProfile.objects.all()
     serializer_class = SeminaristProfileSerializer
+
+    def create(self, request):
+        user_id = request.data.get('user')
+
+        # Verificar si ya existe un usuario con ese DNI
+        if SeminaristProfile.objects.filter(user=user_id).exists():
+            user = get_object_or_404(User, id=user_id)
+            message = f"Ya existe un perfil Tallerista para el usuario  {user.name} {user.last_name}."
+            return Response({"message": message}, status=status.HTTP_400_BAD_REQUEST)
+        instance_serializer = self.serializer_class(data=request.data)
+        if instance_serializer.is_valid():
+            instance = instance_serializer.save()
+            return Response({
+                'message': 'Profile creado correctamente.'
+            }, status=status.HTTP_201_CREATED)
+        return Response({
+            'message': 'Hay errores en el registro de Profile',
+            'errors': instance_serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         """

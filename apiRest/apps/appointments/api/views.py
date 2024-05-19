@@ -1,10 +1,12 @@
 from django.http import Http404
+from django.core.mail import send_mail
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
 from apps.appointments.api.serializers import AppointmentSerializer, AppointmentSerializerList, PaymentMethodSerializer, PatientAppointmentSerializer, DoctorAppointmentSerializer
-from apps.usersProfile.models import PatientProfile
+from apps.usersProfile.models import PatientProfile, DoctorProfile
 from apps.appointments.models import Appointment, PaymentMethod
+from apps.users.models import User
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -61,6 +63,22 @@ class AppointmentListCreateView(APIView):
         serializer = AppointmentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+
+            # This feature sends an email to patient with the appointment data
+            # Uncomment later
+
+            # patient = PatientProfile.objects.get(
+            #     id=request.data.get('patient'))
+            # doctor = DoctorProfile.objects.get(id=request.data.get('doctor'))
+            # print("DOC: ", doctor)
+            # day = request.data.get('day')
+            # send_mail(
+            #     'Turno PRANA - NO RESPONDER',
+            #     f'Se ha generado un nuevo turno el día: {day} para el profesional {doctor}',
+            #     'no-reply@tudominio.com',
+            #     [patient.user.email],
+            #     fail_silently=False,
+            # )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

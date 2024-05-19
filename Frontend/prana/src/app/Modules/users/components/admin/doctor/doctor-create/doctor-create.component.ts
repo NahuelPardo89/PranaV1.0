@@ -60,7 +60,7 @@ export class DoctorCreateComponent {
   ngOnInit(): void {
     this.loadSpecialties();
     this.loadUsers();
-    this.filterUsers();
+    // this.filterUsers();
   }
 
   loadSpecialties(): void {
@@ -72,6 +72,7 @@ export class DoctorCreateComponent {
   loadUsers(): void {
     this.userService.getUsers().subscribe((data) => {
       this.users = data;
+      this.filterUsers();
     });
   }
 
@@ -86,17 +87,15 @@ export class DoctorCreateComponent {
   onSubmit(): void {
     if (this.doctorForm.valid) {
       const userid = this.doctorForm.value.user.id;
-      const specialty= this.doctorForm.value.specialty
-      this.doctorForm.value.specialty = [specialty,]
+      const specialty = this.doctorForm.value.specialty;
+      this.doctorForm.value.specialty = [specialty];
       this.doctorForm.value.user = userid;
-      console.log(this.doctorForm.value)
       this.doctorProfileService.createDoctor(this.doctorForm.value).subscribe({
         next: (response) => {
           this.dialog.showSuccessDialog('Usuario creado correctamente');
           this.router.navigate(['/Dashboard/accounts/doctores']);
         },
         error: (error) => {
-          
           this.dialog.showErrorDialog(error.error.message);
         },
       });

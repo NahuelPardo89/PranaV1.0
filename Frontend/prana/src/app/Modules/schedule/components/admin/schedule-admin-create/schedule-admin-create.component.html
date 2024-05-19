@@ -51,7 +51,8 @@
           >
           <mat-error
             *ngIf="scheduleForm.get('end_hour')!.value && scheduleForm.get('end_hour')!.errors?.['invalidTime']"
-            >Invalid time format. Please enter a valid time (HH:mm).
+            >Formato de tiempo invalido. Por favor ingrese un formato válido
+            (HH:mm).
           </mat-error>
         </mat-form-field>
 

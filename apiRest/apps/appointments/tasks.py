@@ -15,7 +15,14 @@ class SendReminders(CronJobBase):
             print("Running cron job")
             send_mail(
                 'Recordatorio de turno',
-                'Tienes un turno agendado para mañana.',
-                [app.patient.user.email],
+                'Este es un correo de prueba.',
+                'tu_correo@example.com',
+                ['alvaroarmendariz11@gmail.com', 'nahuel.pardo74@gmail.com'],
                 fail_silently=False,
             )
+            # send_mail(
+            #     'Recordatorio de turno',
+            #     'Tienes un turno agendado para mañana.',
+            #     [app.patient.user.email],
+            #     fail_silently=False,
+            # )

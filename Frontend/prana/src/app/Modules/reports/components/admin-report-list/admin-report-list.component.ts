@@ -119,8 +119,10 @@ export class AdminReportListComponent {
    
    * @author Catriel Pardo
    */
-  generatePDF() {
+  generatePDF(): void {
     const element = document.getElementById('pdfElement');
-    html2pdf().from(element).save('Reporte contable.pdf');
+    if (element) {
+      html2pdf().from(element).save('documento.pdf');
+    }
   }
 }

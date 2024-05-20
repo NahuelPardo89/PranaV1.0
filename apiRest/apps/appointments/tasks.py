@@ -10,13 +10,19 @@ class SendReminders(CronJobBase):
     def do(self):
         tomorrow = datetime.date.today() + datetime.timedelta(days=1)
         appointments = Appointment.objects.filter(day=tomorrow)
+        print("Running cron job")
+        send_mail(
+            'Recordatorio de turno',
+            'Este es un correo de prueba.',
+            ['alvaroarmendariz11@gmail.com', 'nahuel.pardo74@gmail.com'],
+            fail_silently=False,
+        )
 
         for app in appointments:
             print("Running cron job")
             send_mail(
                 'Recordatorio de turno',
                 'Este es un correo de prueba.',
-                'tu_correo@example.com',
                 ['alvaroarmendariz11@gmail.com', 'nahuel.pardo74@gmail.com'],
                 fail_silently=False,
             )

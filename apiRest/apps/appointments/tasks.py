@@ -14,7 +14,7 @@ class SendReminders(CronJobBase):
             send_mail(
                 'Recordatorio de turno',
                 'Este es un correo de prueba.',
-                'alvaroarmendariz11@gmail.com',
+                'info.pranaapp@gmail.com',
                 ['alvaroarmendariz11@gmail.com', 'nahuel.pardo74@gmail.com'],
                 fail_silently=False,
             )

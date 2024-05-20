@@ -8,6 +8,8 @@ import { Patient } from 'src/app/Models/Profile/patient.interface';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
+
+
 @Component({
   selector: 'app-staff',
   templateUrl: './staff.component.html',

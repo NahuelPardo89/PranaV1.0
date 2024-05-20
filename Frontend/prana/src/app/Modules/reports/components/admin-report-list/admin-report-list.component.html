@@ -1,3 +1,4 @@
+<div id="pdfElement">
 <div>
   <div
     class="title bg-info text-center text-bold border border-dark rounded-top mb-4"
@@ -12,9 +13,10 @@
       >
         <i class="material-symbols-outlined"></i>Volver
       </button>
+      <button class="btn btn-secondary" (click)="generatePDF()">generar pdf</button>
     </div>
-
-    <div class="table-responsive" id="pdfElement">
+    
+    <div class="table-responsive">
       <!-- Angular Material Table -->
       <table mat-table [dataSource]="dataSummarySource" matSort>
         <!-- Num Appointments Column -->
@@ -224,10 +226,12 @@
         ></tr>
       </table>
     </div>
+  </div>
+</div>
     <!-- Paginator -->
     <mat-paginator
       [pageSizeOptions]="[10, 25, 50, 100]"
       showFirstLastButtons
     ></mat-paginator>
-  </div>
+  
 </div>

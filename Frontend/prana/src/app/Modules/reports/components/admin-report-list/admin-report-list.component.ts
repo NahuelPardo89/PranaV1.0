@@ -122,7 +122,15 @@ export class AdminReportListComponent {
   generatePDF(): void {
     const element = document.getElementById('pdfElement');
     if (element) {
-      html2pdf().from(element).save('documento.pdf');
+      const options = {
+        
+        filename: 'reporte contable.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait'}
+      };
+
+      html2pdf().from(element).set(options).save();
     }
   }
 }

@@ -73,7 +73,7 @@ OWN_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRT_APPS + OWN_APPS
 
 CRONJOBS = [
-    ('* * * * *', 'apps.appointments.tasks.SendReminders'),
+    ('*/2 * * * *', 'apps.appointments.tasks.SendReminders'),
 ]
 
 REST_FRAMEWORK = {

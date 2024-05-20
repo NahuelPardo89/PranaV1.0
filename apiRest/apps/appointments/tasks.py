@@ -19,6 +19,3 @@ class SendReminders(CronJobBase):
                 [app.patient.user.email],
                 fail_silently=False,
             )
-
-
-# crontab.add(SendReminders, '0 12 * * *')

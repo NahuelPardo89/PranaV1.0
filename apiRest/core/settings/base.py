@@ -59,6 +59,7 @@ THIRT_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'corsheaders',
+    'django_crontab',
 
 ]
 
@@ -71,6 +72,10 @@ OWN_APPS = [
 
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRT_APPS + OWN_APPS
+
+CRONJOBS = [
+    ('0 10 * * *', 'apps.appointments.management.commands.send_reminder_emails.Command.handle', '>> /path/to/logfile.log 2>&1'),
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

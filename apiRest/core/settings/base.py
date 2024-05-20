@@ -52,6 +52,7 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_crontab',
+    'django_cron',
 ]
 
 THIRT_APPS = [

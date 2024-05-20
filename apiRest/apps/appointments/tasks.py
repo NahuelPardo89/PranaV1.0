@@ -12,6 +12,7 @@ class SendReminders(CronJobBase):
         appointments = Appointment.objects.filter(day=tomorrow)
 
         for app in appointments:
+            print("Running cron job")
             send_mail(
                 'Recordatorio de turno',
                 'Tienes un turno agendado para mañana.',

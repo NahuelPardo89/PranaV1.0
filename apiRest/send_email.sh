@@ -1,6 +1,6 @@
 #!/bin/bash
 # Activar el entorno virtual
-source /home/prueba/htdocs/PranaV1.0/env/bin/activate
+source /home/prueba/htdocs/PranaV1.0/apiRest/env/bin/activate
 
 # Cambiar al directorio del proyecto
 cd /home/prueba/htdocs/PranaV1.0/apiRest

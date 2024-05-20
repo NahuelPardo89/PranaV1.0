@@ -73,8 +73,14 @@ OWN_APPS = [
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRT_APPS + OWN_APPS
 
-CRONJOBS = [
-    ('*/2 * * * *', 'apps.appointments.tasks.SendReminders'),
+# CRONJOBS = [
+#     ('*/2 * * * *', 'apps.appointments.tasks.SendReminders'),
+# ]
+
+CRON_CLASSES = [
+    # La ruta de importación de tu trabajo cron
+    "apps.appointments.tasks.SendReminders",
+    # Aquí puedes agregar más trabajos cron si los tienes
 ]
 
 REST_FRAMEWORK = {

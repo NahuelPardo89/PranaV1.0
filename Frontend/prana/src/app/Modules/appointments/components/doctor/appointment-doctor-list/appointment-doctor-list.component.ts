@@ -108,6 +108,34 @@ export class AppointmentDoctorListComponent {
   }
 
   /**
+   * Checks if an appointment is overdue and pending payment.
+   * @param {any} row - The object representing the medical appointment.
+   * @returns {boolean} - Returns `true` if the appointment is overdue (i.e., the appointment date is in the past)
+   * and the payment status is 'ADEUDA' and the appointment status is 'PENDIENTE'.
+   * Otherwise, it returns `false`.
+   * @author Alvaro Olguin
+   */
+  isPendingAndOverdueAppointment(row: any): boolean {
+    let dateParts = row.day.split('-');
+    let timeParts = row.hour.split(':');
+    let appointmentDate = new Date(
+      +dateParts[2],
+      dateParts[1] - 1,
+      +dateParts[0],
+      +timeParts[0],
+      +timeParts[1]
+    );
+    let currentDate = new Date();
+    let differenceInHours =
+      (appointmentDate.getTime() - currentDate.getTime()) / 1000 / 60 / 60;
+    return (
+      differenceInHours < 0 &&
+      row.payment_status.toUpperCase() == 'ADEUDA' &&
+      row.appointment_status.toUpperCase() == 'PENDIENTE'
+    );
+  }
+
+  /**
    * Edits an appointment.
    * @param {number} appointment - The ID of the appointment to delete.
    * @author Alvaro Olguin

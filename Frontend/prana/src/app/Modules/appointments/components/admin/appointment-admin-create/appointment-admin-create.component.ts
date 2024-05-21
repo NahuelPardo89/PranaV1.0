@@ -1032,12 +1032,18 @@ export class AppointmentAdminCreateComponent implements OnInit {
       );
       confirmAppointment.afterClosed().subscribe((confirmResult) => {
         if (confirmResult) {
+          // Show the loading dialog
+          const loadingDialog = this.dialogService.showSuccessDialog(
+            'Se está enviando un correo con los datos del turno al paciente, por favor espere...'
+          );
+
           this.appointmentService
             .createAdminAppointment(filteredBody)
             .pipe(
               catchError((error) => {
                 console.error('Error en la solicitud:', error);
 
+                loadingDialog.close();
                 // Checks "non_field_errors"
                 if (error.error && error.error.non_field_errors) {
                   const errorMessage = error.error.non_field_errors[0];
@@ -1056,6 +1062,8 @@ export class AppointmentAdminCreateComponent implements OnInit {
             )
             .subscribe((data: AppointmentAdminGetInterface) => {
               this.appointmentResponse = data;
+
+              loadingDialog.close();
               const successDialog = this.dialogService.showSuccessDialog(
                 'Turno generado exitosamente'
               );

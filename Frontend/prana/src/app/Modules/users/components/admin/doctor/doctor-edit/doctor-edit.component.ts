@@ -52,6 +52,7 @@ export class DoctorEditComponent {
       medicLicence: ['', Validators.required],
       specialty: ['', Validators.required],
       appointment_duration: ['', Validators.required],
+      copayment: ['', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]],
     });
   }
 
@@ -76,6 +77,7 @@ export class DoctorEditComponent {
         ...history.state.doctor,
         specialty: selectedSpecialties[0],
         appointment_duration: durationInSeconds,
+        copayment: history.state.doctor.copayment,
       });
     });
   }

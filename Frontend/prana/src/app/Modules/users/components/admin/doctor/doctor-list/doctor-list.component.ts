@@ -14,12 +14,11 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 })
 export class DoctorListComponent {
   displayedColumns: string[] = [
-    
     'user',
     'medicLicence',
     'specialty',
-    
     'appointment_duration',
+    'copayment',
     'is_active',
     'actions',
   ];
@@ -40,7 +39,6 @@ export class DoctorListComponent {
 
   setDataTable() {
     this.doctorService.getDoctors().subscribe((data) => {
-      
       this.dataSource = new MatTableDataSource(data);
       this.paginator._intl.itemsPerPageLabel = 'items por página';
       this.paginator._intl.firstPageLabel = 'primera página';
@@ -72,13 +70,11 @@ export class DoctorListComponent {
     this.router.navigate(['Dashboard/accounts/doctores/schedule/'], {
       state: { doctor },
     });
-
   }
   doctorInsurance(doctor: DoctorProfile) {
     this.router.navigate(['Dashboard/accounts/doctores/insurance/'], {
       state: { doctor },
     });
-
   }
 
   deleteDoctor(id: number) {

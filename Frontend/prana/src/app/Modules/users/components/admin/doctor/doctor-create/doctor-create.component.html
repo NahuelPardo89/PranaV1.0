@@ -47,7 +47,7 @@
         <!-- Campo Especialidades -->
         <mat-form-field appearance="outline">
           <mat-label>Especialidades</mat-label>
-          <mat-select formControlName="specialty" >
+          <mat-select formControlName="specialty">
             <mat-option
               *ngFor="let specialty of specialties"
               [value]="specialty.id"
@@ -75,6 +75,18 @@
             *ngIf="doctorForm.get('appointment_duration')!.errors?.['required']"
             >El campo Duración del turno es obligatorio</mat-error
           >
+        </mat-form-field>
+
+        <!-- Copayment field -->
+        <mat-form-field appearance="outline">
+          <mat-label>Coseguro</mat-label>
+          <input type="number" matInput formControlName="copayment" />
+          <mat-error *ngIf="doctorForm.get('copayment')!.errors?.['required']"
+            >El campo coseguro es obligatorio</mat-error
+          >
+          <mat-error *ngIf="doctorForm.get('copayment')!.hasError('pattern')">
+            Este campo debe ser un número entero positivo
+          </mat-error>
         </mat-form-field>
 
         <!-- Botones -->

@@ -54,6 +54,7 @@ export class DoctorCreateComponent {
       medicLicence: ['', Validators.required],
       specialty: ['', Validators.required],
       appointment_duration: ['', Validators.required],
+      copayment: ['', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]],
     });
   }
 
@@ -92,7 +93,7 @@ export class DoctorCreateComponent {
       this.doctorForm.value.user = userid;
       this.doctorProfileService.createDoctor(this.doctorForm.value).subscribe({
         next: (response) => {
-          this.dialog.showSuccessDialog('Usuario creado correctamente');
+          this.dialog.showSuccessDialog('Profesional creado correctamente');
           this.router.navigate(['/Dashboard/accounts/doctores']);
         },
         error: (error) => {

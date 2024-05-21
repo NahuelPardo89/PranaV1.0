@@ -193,7 +193,7 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
-        
+
         instance_serializer = self.create_serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
@@ -204,10 +204,10 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
             errors = instance_serializer.errors
             # Comprobar si existe el error de campos únicos
             if 'non_field_errors' in errors and errors['non_field_errors']:
-                
+
                 return Response({
-                        'message': 'Ya existe esa Rama para esa Especialidad'
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                    'message': 'Ya existe esa Rama para esa Especialidad'
+                }, status=status.HTTP_400_BAD_REQUEST)
 
             # Respuesta genérica para otros errores
             return Response({
@@ -525,7 +525,7 @@ class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
             # Comprobar si existe el error de campos únicos
             if 'non_field_errors' in errors and errors['non_field_errors']:
                 return Response({'message': 'Ya existe la Obra Social con esa rama para ese profesional'
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # Respuesta genérica para otros errores
             return Response({
@@ -619,20 +619,6 @@ class DoctorProfileAdminViewSet(BaseAdminViewSet):
             return Response(serializer.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def create(self, request):
-    #     print(request.data)
-    #     instance_serializer = self.createUpdate_serializer_class(
-    #         data=request.data)
-    #     if instance_serializer.is_valid():
-    #         instance = instance_serializer.save()
-    #         return Response({
-    #             'message': 'Profile creado correctamente.'
-    #         }, status=status.HTTP_201_CREATED)
-    #     return Response({
-    #         'message': 'Hay errores en el registro de Profile',
-    #         'errors': instance_serializer.errors
-    #     }, status=status.HTTP_400_BAD_REQUEST)
 
 # NORMAL USERS VIEWSETS
 

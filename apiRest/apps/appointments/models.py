@@ -215,10 +215,16 @@ class Appointment(models.Model):
             self.patient_copayment = self.full_cost
             self.hi_copayment = 0
         else:
-            # For other insurances, calculate copayments based on coverage
-            self.patient_copayment = max(
-                self.full_cost - insurance_plan.price, 0)
+            # For other insurances, calculate copayments based on coverage and doctor copayment attribute
+            self.patient_copayment = self.doctor.copayment
             self.hi_copayment = min(insurance_plan.price, self.full_cost)
+
+        # This is the previous version to calculate patient_copayment, before to assign a static copayment for proffessionals
+        # else:
+        #     # For other insurances, calculate copayments based on coverage
+        #     self.patient_copayment = max(
+        #         self.full_cost - insurance_plan.price, 0)
+        #     self.hi_copayment = min(insurance_plan.price, self.full_cost)
 
     def set_fields(self):
         """

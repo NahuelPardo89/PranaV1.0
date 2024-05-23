@@ -5,7 +5,7 @@ from apps.seminar.models import Room, SeminarRoomUsage, SeminarInscription, Semi
 from .serializers import (RoomSerializer, SeminarRoomUsageSerializer, SeminarInscriptionViewSerializer,
                           SeminarInscriptionCreateSerializer, SeminarSerializer, SeminarScheduleSerializer,
                           SeminarInscriptionPatientSerializer)
-from apps.permission import IsAdminOrReadOnly
+from apps.permission import IsAdminOrReadOnly, IsSeminaristOrReadOnly
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
@@ -40,6 +40,7 @@ class RoomViewSet(viewsets.ModelViewSet):
 class SeminarRoomUsageViewSet(viewsets.ModelViewSet):
     queryset = SeminarRoomUsage.objects.all()
     serializer_class = SeminarRoomUsageSerializer
+    permission_classes = [IsSeminaristOrReadOnly]
 
 
 class SeminarInscriptionViewSet(viewsets.ModelViewSet):
@@ -63,6 +64,7 @@ class SeminarInscriptionViewSet(viewsets.ModelViewSet):
     queryset = SeminarInscription.objects.all()
     serializer_view_class = SeminarInscriptionViewSerializer
     serializer_create_class = SeminarInscriptionCreateSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def get_serializer_class(self):
         """
@@ -162,6 +164,7 @@ class SeminarViewSet(viewsets.GenericViewSet):
 
     queryset = Seminar.objects.all()
     serializer_class = SeminarSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def list(self, request):
         """
@@ -304,6 +307,7 @@ class SeminarScheduleViewSet(viewsets.ModelViewSet):
     """
     queryset = SeminarSchedule.objects.all()
     serializer_class = SeminarScheduleSerializer
+    permission_classes = [IsAdminOrReadOnly]
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

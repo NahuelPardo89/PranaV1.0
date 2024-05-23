@@ -2,7 +2,7 @@ from datetime import date, datetime
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from rest_framework import serializers
-from apps.usersProfile.models import DoctorProfile, InsurancePlanDoctor, HealthInsurance, SpecialityBranch
+from apps.usersProfile.models import DoctorProfile, PatientProfile, InsurancePlanDoctor, HealthInsurance, SpecialityBranch
 from apps.appointments.models import Appointment, PaymentMethod
 
 
@@ -656,6 +656,17 @@ class AppointmentSerializer(serializers.ModelSerializer):
         appointment = Appointment.objects.create(**validated_data)
         appointment.set_fields()
         appointment.save()
+
+        patient_profile = appointment.patient
+        try:
+            particular_insurance = HealthInsurance.objects.get(
+                name__iexact='PARTICULAR')
+            if particular_insurance not in patient_profile.insurances.all():
+                patient_profile.insurances.add(particular_insurance)
+                patient_profile.save()
+        except HealthInsurance.DoesNotExist:
+            print("La obra social 'Particular' no existe.")
+
         return appointment
 
     def update(self, instance, validated_data):

@@ -93,7 +93,9 @@ export class DoctorCreateComponent {
       this.doctorForm.value.user = userid;
       this.doctorProfileService.createDoctor(this.doctorForm.value).subscribe({
         next: (response) => {
-          this.dialog.showSuccessDialog('Profesional creado correctamente');
+          this.dialog.showSuccessDialog(
+            'Profesional creado correctamente, recuerde asignar las obra social PARTICULAR y sus horarios'
+          );
           this.router.navigate(['/Dashboard/accounts/doctores']);
         },
         error: (error) => {

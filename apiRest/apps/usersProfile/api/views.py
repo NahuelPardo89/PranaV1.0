@@ -439,11 +439,11 @@ class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
-        print(request.data)
         instance_serializer = self.serializer_create_class(data=request.data)
         insurance = request.data.get('insurance')
         branch = request.data.get('branch')
-        if InsurancePlanDoctor.objects.filter(insurance=insurance, branch=branch).exists():
+        doctor= request.data.get('doctor')
+        if InsurancePlanDoctor.objects.filter(doctor=doctor,insurance=insurance, branch=branch).exists():
             return Response({"message": "Ya existe esa obra social con la rama seleccionada para este profesional."}, status=status.HTTP_400_BAD_REQUEST)
 
         if instance_serializer.is_valid():
@@ -517,10 +517,12 @@ class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
         serializer = InsurancePlanDoctorCreateSerializer(
             data=data, context={'request': request})
         if serializer.is_valid():
+            print("serializer valido")
             # Asignar el doctorProfile del usuario logueado al InsurancePlanDoctor creado
             serializer.save(doctor=request.user.doctorProfile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print("serializer invavalido")
             errors = serializer.errors
             # Comprobar si existe el error de campos únicos
             if 'non_field_errors' in errors and errors['non_field_errors']:

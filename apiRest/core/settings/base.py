@@ -67,7 +67,8 @@ OWN_APPS = [
     'apps.usersProfile',
     'apps.appointments',
     'apps.seminar',
-    'apps.reports'
+    'apps.reports',
+    'apps.newletter'
 
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRT_APPS + OWN_APPS

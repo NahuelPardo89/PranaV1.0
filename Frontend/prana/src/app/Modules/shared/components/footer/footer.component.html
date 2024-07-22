@@ -36,6 +36,32 @@
             <img src="../../../../../assets/img/logo.png" alt="logo prana" srcset="" class="logo">
     
         </div>
+
+        <form [formGroup]="newletterForm" (ngSubmit)="suscribe()">
+            
+        
+            
+        
+            <mat-form-field appearance="outline">
+              <input matInput placeholder="Correo Electrónico" formControlName="email">
+              <mat-error *ngIf="email?.invalid && (email?.dirty || email?.touched)">
+                <span *ngIf="email?.errors?.['required']">El correo electrónico es requerido.</span>
+                <span *ngIf="email?.errors?.['pattern']">Ingrese un correo electrónico válido</span>
+                <span *ngIf="email?.errors?.['emailExists']">Ya existe un usuario con ese email.</span>
+      
+              </mat-error>
+            </mat-form-field>
+        
+            
+        
+            
+        
+            <button  type="submit" class="btn btn-primary mb-5" [disabled]="newletterForm.invalid">
+              Registrarse
+            </button>
+          </form>
+
+        
     </section>
    
 </footer>

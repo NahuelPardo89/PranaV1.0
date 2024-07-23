@@ -24,6 +24,8 @@ import { ReportsModule } from './Modules/reports/reports.module';
 
 
 
+
+
 // import { AgmCoreModule } from '@agm/core';
 
 import { registerLocaleData } from '@angular/common';
@@ -55,7 +57,7 @@ registerLocaleData(localeEsAr);
     DashboardModule,
     BrowserAnimationsModule,
     ReportsModule,
-    
+   
     
    
     

@@ -1,0 +1,32 @@
+footer {
+  background-color: rgb(24, 33, 27);
+  color: #8496a2;
+}
+
+footer a {
+  color: #8496a2;
+}
+
+footer a:hover {
+  color: #8496a2;
+}
+
+footer h5, footer p, footer span {
+  color: #8496a2;
+}
+h5{
+  font-size: 1.3rem;
+}
+.no-underline {
+  text-decoration: none;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.social-text {
+  font-size: 1.3rem; /* Ajusta el tamaño del texto para que sea similar al tamaño del icono */
+  margin-left: 0.5rem; /* Añade espacio entre el icono y el texto */
+}

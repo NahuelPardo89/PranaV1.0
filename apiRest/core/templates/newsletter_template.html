@@ -53,10 +53,10 @@
         display: inline-block;
         margin: 5px 0;
       }
-      .whatsapp-link {
+      .instagram-link {
         display: inline-block;
         text-decoration: none;
-        background-color: #25d366;
+        background-color: #e1306c;
         color: white;
         font-weight: bold;
         padding: 10px 20px;
@@ -64,38 +64,22 @@
         margin-top: 20px;
         transition: background-color 0.3s;
       }
-      .whatsapp-link:hover {
-        background-color: #1eb653;
+      .instagram-link:hover {
+        background-color: #c13584;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>Turno Centro terapéutico PRANA</h1>
+        <h1>Boletín Informativo PRANA</h1>
       </div>
       <div class="content">
-        <p><strong>Recordatorio de Turno </strong></p>
-        <p><span class="highlight">Día:</span> <strong>{{ day }}</strong></p>
-        <p><span class="highlight">Hora:</span> <strong>{{ hour }}</strong></p>
-        <p>
-          <span class="highlight">Profesional:</span>
-          <strong>{{ doctor }}</strong>
-        </p>
-        <p>Por favor, no respondas a este correo.</p>
-        <p>
-          Recuerde que, en caso de no asistir a la consulta, sin previo aviso de
-          24 hs, se aplicará el importe correspondiente a la misma.
-        </p>
-        <p>
-          Consultas por WhatsApp:
-          <a
-            href="https://api.whatsapp.com/send/?phone=5493584029619&text&type=phone_number&app_absent=0"
-            class="whatsapp-link"
-          >
-            Iniciar Chat
-          </a>
-        </p>
+        <p>{{ text_content }}</p>
+        <p>Para más información consulta nuestro post en Instagram:</p>
+        <a href="{{ instagram_url }}" class="instagram-link"
+          >Ver en Instagram</a
+        >
       </div>
       <div class="footer">
         <p>&copy; Centro Terapéutico PRANA</p>

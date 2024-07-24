@@ -60,15 +60,7 @@
 
 
 
-.bgFull {
-  overflow: hidden;
-  background-image: url(../../../../../assets/img/nuevofondo.jpeg);
-  background-size: cover;
-  position: relative;
-  backdrop-filter: blur(10px);
-  margin-top: -15px;
-  font-family: "Jua", sans-serif;
-}
+
 
 :root {
   --slide-transform: 0;
@@ -202,34 +194,17 @@ a{
     display: flex;
     flex-direction: column;
   }
+  .parallax h1 {
+    
+    
+    
+    font-size: 3rem;
+    
+  }
 
   
 }
-@media screen and (max-width: 768px) {
-  .main {
-    
-    height: 850px;
-  }
- 
-  .slider-section {
-    
-    display: none;
-  }
-  .carrousel-container {
-    margin-top: -40px;
-    width: 420px;
-    height: 300px;
-    
-  }
-  .carrousel-container img {
-    height: 250px;
-  }
-  
-  #boton-contacto {
-    width: 30px;
-    height: 40px;
-  }
-}
+
 @media screen and (max-width: 550px) {
  
   .slider-section  {
@@ -237,6 +212,9 @@ a{
   }
   .carrousel-container {
     width: 340px;
+  }
+  .parallax h1 {
+    font-size: 2rem;
   }
 }
 @media screen and (max-height: 715px) {

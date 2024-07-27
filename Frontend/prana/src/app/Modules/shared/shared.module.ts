@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { FooterComponent } from './components/footer/footer.component';
 
 
 
@@ -20,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
     PageNotFoundComponent,
     NavbarComponent,
     DialogBoxComponent,
+    FooterComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +36,7 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   exports: [
     NavbarComponent,
+    FooterComponent
   ],
   providers: [    
     AuthService,    

@@ -8,7 +8,6 @@ import { BannerComponent } from './Modules/home/components/banner/banner.compone
 
 import { QuienesSomosComponent } from './components/quienes-somos/quienes-somos.component';
 import { CardComponent } from './components/quienes-somos/card/card.component';
-import { FooterComponent } from './Modules/shared/components/footer/footer.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeModule } from './Modules/home/home.module';
 import { SharedModule } from './Modules/shared/shared.module';
@@ -39,12 +38,9 @@ registerLocaleData(localeEsAr);
 @NgModule({
   declarations: [
     AppComponent,
-
     BannerComponent,
     QuienesSomosComponent,
-
     CardComponent,
-    FooterComponent,
   ],
   imports: [
     BrowserModule,

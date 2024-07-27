@@ -53,13 +53,6 @@ registerLocaleData(localeEsAr);
     DashboardModule,
     BrowserAnimationsModule,
     ReportsModule,
-   
-    
-   
-    
-    // AgmCoreModule.forRoot({
-    //   apiKey: 'AIzaSyBphW12ssLTpdgl0LHX65NLCqrjqcanZbM'
-    // })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

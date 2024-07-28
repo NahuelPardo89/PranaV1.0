@@ -70,6 +70,14 @@ const routes: Routes = [
             (m) => m.ScheduleModule
           ),
       },
+      {
+        path: 'newsletter',
+        loadChildren: () =>
+          import('src/app/Modules/newsletter/newsletter.module').then(
+            (m) => m.NewsletterModule
+          ),
+      },
+      
     ],
   },
 ];

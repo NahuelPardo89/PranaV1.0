@@ -4,3 +4,9 @@ app-talleres {
 .container-fluid{
     width: 100%;
 }
+
+.content-wrapper {
+    padding-top: 70px; /* Ajusta este valor según la altura de tu navbar */
+    min-height: calc(100vh - 100px); /* Ajusta 100px según la altura del footer */
+    
+  }

@@ -1,5 +1,7 @@
 
-
+/* colores del logo 
+verde hoja #849170
+gris cemento #8496a2 */
 
 ::-webkit-scrollbar {
     width: 10px;
@@ -169,6 +171,53 @@ a{
   font-size: 1.2rem;
 }
 
+/* objetivos */
+.objetivos {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  align-items: center;
+  margin: auto;
+}
+.mision {
+  width: 25%;
+  min-height: 300px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mision h3 {
+  font-size: 2rem;
+  margin-top: 10px;
+}
+.mision p {
+  font-size: 120%;
+  text-align: justify;
+  width: 80%;
+}
+.vision {
+  width: 25%;
+  min-height: 300px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.vision h3 {
+  font-size: 2rem;
+  margin-top: 10px;
+}
+.vision p {
+  font-size: 120%;
+  text-align: justify;
+  width: 80%;
+}
+
+
+
+
 .swiper-carrousel {
   width: 100%;
   display: flex;
@@ -194,14 +243,10 @@ a{
     display: flex;
     flex-direction: column;
   }
-  .parallax h1 {
-    
-    
-    
+  .parallax h1 { 
     font-size: 3rem;
-    
   }
-
+  
   
 }
 
@@ -288,10 +333,27 @@ a{
       width: 48%;
       margin-bottom: 20px; 
   }
+  .objetivos {
+    flex-direction: column;
+    width: 100%;
+    
+  }
+  .objetivos div {
+    width: 60%;
+  }
+  .objetivos p {
+    width: 100%;
+  }
 }
 @media screen and (max-width: 480px) {
   .bodyNav-container {
       width: 100%;
+  }
+  .objetivos h3 {
+    font-size: 1.5rem;
+  }
+  .objetivos p {
+    font-size: 1rem;
   }
 }
 .comoEncontrarnos {
@@ -316,7 +378,7 @@ a{
   padding: 15px;
   font-family: 'Open Sans', "Helvetica Neue", sans-serif;
   font-size: 2rem;
-  color: #68335a;
+  
 }
 
 .listaDatos{
@@ -330,6 +392,7 @@ a{
 .wspIcon {
   animation: bounce 2s infinite;
 }
+
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
@@ -351,14 +414,14 @@ a{
 }
 .listaEncontrarnos li {
   margin-top: 10px;
-  color: #68335a;
+  
 }
 .listaEncontrarnos li img {
   margin-right: 10px;
 }
 .wsp {
   font-family: 'Open Sans', "Helvetica Neue", sans-serif;
-  color: #68335a;
+  
   font-size: 1.2rem;
 }
 .maps {
@@ -504,6 +567,7 @@ a{
 	-webkit-animation: puff-in-center 1s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 	        animation: puff-in-center 1s cubic-bezier(0.470, 0.000, 0.745, 0.715) both;
 }
+
 @-webkit-keyframes puff-in-center {
     0% {
       -webkit-transform: scale(2);
@@ -536,3 +600,69 @@ a{
       opacity: 1;
     }
   } 
+  .slide-in-blurred-bottom {
+    -webkit-animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+            animation: slide-in-blurred-bottom 1.2s cubic-bezier(0.230, 1.000, 0.320, 1.000) both;
+  }
+  .hidden {
+    visibility: hidden;
+  }
+  
+  .objetivos {
+    visibility: visible; /* Cambia a visible cuando se activa la animación */
+  }
+  
+  .slide-in-blurred-bottom {
+    animation: slideInUp 1s forwards;
+  }
+  
+  @keyframes slideInUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @-webkit-keyframes slide-in-blurred-bottom {
+    0% {
+      -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+              transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+      -webkit-transform-origin: 50% 100%;
+              transform-origin: 50% 100%;
+      -webkit-filter: blur(40px);
+              filter: blur(40px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+              transform: translateY(0) scaleY(1) scaleX(1);
+      -webkit-transform-origin: 50% 50%;
+              transform-origin: 50% 50%;
+      -webkit-filter: blur(0);
+              filter: blur(0);
+      opacity: 1;
+    }
+  }
+  @keyframes slide-in-blurred-bottom {
+    0% {
+      -webkit-transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+              transform: translateY(1000px) scaleY(2.5) scaleX(0.2);
+      -webkit-transform-origin: 50% 100%;
+              transform-origin: 50% 100%;
+      -webkit-filter: blur(40px);
+              filter: blur(40px);
+      opacity: 0;
+    }
+    100% {
+      -webkit-transform: translateY(0) scaleY(1) scaleX(1);
+              transform: translateY(0) scaleY(1) scaleX(1);
+      -webkit-transform-origin: 50% 50%;
+              transform-origin: 50% 50%;
+      -webkit-filter: blur(0);
+              filter: blur(0);
+      opacity: 1;
+    }
+  }

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { StaffService } from 'src/app/Services/staff.service';
 import { Router } from '@angular/router';
 import { PatientService } from 'src/app/Services/Profile/patient/patient.service';
@@ -26,7 +26,7 @@ export class StaffComponent implements OnInit {
 
   webInstragram: string = '';
   
-
+  showObjectives = false;
   dataSource!: MatTableDataSource<Patient>;
   
   staff: any[] = [];
@@ -83,6 +83,19 @@ export class StaffComponent implements OnInit {
   navigateToProf() {
     this.router.navigate(['/profesionales']);
     
+  }
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    const element = document.querySelector('.objetivos');
+    if (element) {
+      const rect = element.getBoundingClientRect();
+      const topShown = rect.top >= 0;
+      const bottomShown = rect.bottom <= window.innerHeight;
+
+      if (topShown && bottomShown) {
+        this.showObjectives = true;
+      }
+    }
   }
 
 

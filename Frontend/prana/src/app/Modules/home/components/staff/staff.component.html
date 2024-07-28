@@ -51,15 +51,30 @@
 
 
 <!-- Swiper Carrousel -->
-<swiper-container class="swiper-carrousel" lazy="true" pagination="true" effect="coverflow" grab-cursor="true" centered-slides="true" slides-per-view="auto" 
+<!-- <swiper-container class="swiper-carrousel" lazy="true" pagination="true" effect="coverflow" grab-cursor="true" centered-slides="true" slides-per-view="auto" 
 coverflow-effect-rotate="0" coverflow-effect-stretch="0" coverflow-effect-depth="200" coverflow-effect-modifier="1" coverflow-effect-slides-shadows="false">
     <swiper-slide *ngFor="let img of sliderImages" class="swiper-slide">
         <img [src]="img" alt="" class="swiper-img">
     </swiper-slide>
     
-  </swiper-container>
+  </swiper-container> -->
 
-    
+
+ <!-- mision y vision de prana -->
+<section class="objetivos" [ngClass]="{'slide-in-blurred-bottom': showObjectives, 'hidden': !showObjectives}">
+    <div class="mision">
+      <img src="../../../../../assets/img/Iconos/objetivo64.png" alt="misión de prana">
+      <h3>Nuestra misión</h3>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi quidem deleniti iusto in quam ullam deserunt assumenda commodi, consectetur repudiandae.</p>
+    </div>
+    <div class="vision">
+      <img src="../../../../../assets/img/Iconos/vision64.png" alt="visión de prana">
+      <h3>Nuestra visión</h3>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi quidem deleniti iusto in quam ullam deserunt assumenda commodi, consectetur repudiandae.</p>
+    </div>
+  </section>
+  
+  
             
 
  <hr class="separator">

@@ -56,10 +56,18 @@ gris cemento #8496a2 */
   background-size: cover; 
   z-index: -10;
 }
+.bg{
+  object-fit: contain;
+}
+.bg h1 {
+  font-size: 3rem;
+  text-align: center;
+  animation: fadeInUp 1.5s;
+}
 
 .bg::after {
   background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('../../../../../assets/img/nuevofondo.jpeg');
-  background-size: cover; /* Asegúrate de cubrir todo el contenedor */
+  background-size: cover;
 }
 
 
@@ -104,7 +112,7 @@ gris cemento #8496a2 */
 
 .css-button-sliding-to-bottom--blue {
   margin-top: 4%;
-  min-width: 130px;
+  min-width: 100px;
   height: 40px;
   color: #fff;
   padding: 5px 10px;
@@ -273,6 +281,8 @@ a{
   .slider-section {
     height: fit-content;
   }
+  
+  
 }
 
 .bodyNav {
@@ -349,6 +359,10 @@ a{
   }
   .objetivos p {
     width: 100%;
+  }
+  #botonscrollme {
+    min-width: none;
+    width: 10%;
   }
 }
 @media screen and (max-width: 480px) {
@@ -437,6 +451,7 @@ a{
 .embedIg {
   width: 80%;
   margin: auto;
+  margin-bottom: 10px;
 }
 @media screen and (max-width: 1024px) {
   .contenedorUbicacion {

@@ -3,6 +3,7 @@
 <main class="mainParallax">
     <section class="no-parallax section-parallax">
         <img src="../../../../../assets/img/logos/Logo Prana Vertical.png" alt="logo prana" class="logo">
+        <button class="css-button-sliding-to-bottom--blue heartbeat" (click)="scrollToBodyNav()"><img src="../../../../../assets/img/Iconos/chevron-doble-abajo.png" alt="scroll down"></button>
     </section>
     <section class="parallax bg section-parallax">
         <h1>Tu Bienestar, Nuestra Prioridad</h1>
@@ -61,7 +62,7 @@ coverflow-effect-rotate="0" coverflow-effect-stretch="0" coverflow-effect-depth=
 
 
  <!-- mision y vision de prana -->
-<section class="objetivos" [ngClass]="{'slide-in-blurred-bottom': showObjectives, 'hidden': !showObjectives}">
+<section class="objetivos" id="objetivos" [ngClass]="{'slide-in-blurred-bottom': showObjectives, 'hidden': !showObjectives}">
     <div class="mision">
       <img src="../../../../../assets/img/Iconos/objetivo64.png" alt="misión de prana">
       <h3>Nuestra misión</h3>

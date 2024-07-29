@@ -74,6 +74,19 @@ export class StaffComponent implements OnInit {
       });
     }
   }
+  scrollToBodyNav() {
+    const targetElement = document.getElementById('bodyNav');
+  
+    if (targetElement) {
+      const offset = window.innerHeight * 0.1;
+      const targetPosition = targetElement.offsetTop - offset;
+  
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
   
   navigateToAboutUs() {
     this.router.navigate(['/aboutus']);

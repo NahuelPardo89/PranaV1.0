@@ -1,25 +1,29 @@
 h2 {
     margin-top: 10px;
-}
-
-.container-sm {
+  }
+  
+  .container-sm {
     width: 50%;
     max-width: 500px;
     display: flex;
     flex-direction: column;
-    
-}
-.container-sm > img {
-    padding: 2rem ;
-
-    width: 40%;
+    border: 2px solid #ddd; /* Añadir borde */
+    border-radius: 10px; /* Añadir bordes redondeados si deseas */
+    padding: 20px; /* Añadir padding dentro del borde */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Añadir sombra para mejor apariencia */
+    background-color: #fff; /* Añadir fondo blanco para contraste */
+  }
+  
+  .container-sm > img {
+    padding: 2rem;
+    width: 60%; /* Ajusta el tamaño del logo */
     margin: auto;
-}
-
-.container-sm > form {
+  }
+  
+  .container-sm > form {
     display: flex;
     flex-direction: column;
-}
+  }
 
 .boton-enviar {
     height: 50px;

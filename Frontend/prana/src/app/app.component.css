@@ -6,7 +6,7 @@ app-talleres {
 }
 
 .content-wrapper {
-    padding-top: 70px; /* Ajusta este valor según la altura de tu navbar */
+    padding-top: 90px; /* Ajusta este valor según la altura de tu navbar */
     min-height: calc(100vh - 100px); /* Ajusta 100px según la altura del footer */
     
   }

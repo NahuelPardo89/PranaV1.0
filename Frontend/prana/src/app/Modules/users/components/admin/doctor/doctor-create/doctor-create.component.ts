@@ -66,13 +66,15 @@ export class DoctorCreateComponent {
 
   loadSpecialties(): void {
     this.specialtyService.getSpecialities().subscribe((data) => {
-      this.specialties = data;
+      let activeSpecialtys = data.filter((specialty) => specialty.is_active);
+      this.specialties = activeSpecialtys;
     });
   }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe((data) => {
-      this.users = data;
+      let activeUsers = data.filter((user) => user.is_active);
+      this.users = activeUsers;
       this.filterUsers();
     });
   }

@@ -1,12 +1,7 @@
 {
     "profesionales" : 
     [
-        {
-            "img" : "../../assets/img/profesionales/MILAGROSPEIRETTI.jpg",
-            "name": "Milagros Peiretti" ,
-            "title": "Psicología" ,
-            "description": "Orientación psicoanalítica a niños, adolescentes y adultos."
-        },
+        
         {
             "img" : "../../assets/img/profesionales/JULIETACAPELLINI.jpg" ,
             "name": "Julieta Cappellini" ,
@@ -44,6 +39,18 @@
             "description": "Tratamientos corporales: vela Slim Plus, criolipolisis, Electroestimulacion, masajes reductores y modeladores. Depilacion Definitiva Soprano Ice."
         },
         {
+            "img" : "../../assets/img/profesionales/MARIELALOPEZ.jpeg" ,
+            "name": "Mariela Lopez" ,
+            "title": "Médica clínica",
+            "description": "..."
+        },
+        {
+            "img" : "../../assets/img/profesionales/PATRICIABARRIONUEVO.jpeg" ,
+            "name": "Patricia Barrionuevo" ,
+            "title": "Pediatra",
+            "description": "..."
+        },
+        {
             "img" : "../../assets/img/profesionales/MARIANABRUNO.jpg" ,
             "name": "Mariana Bruno" ,
             "title": "Psicopedagogía",
@@ -67,18 +74,8 @@
             "title": "Coach ontológico",
             "description": "Mi profesión y mi propósito hoy es enfocarme especialmente en el acompañamiento personal del cliente a través de una fluida y natural dinámica de transformación mediante la cual las personas y organizaciones revisan, desarrollan y optimizan la forma de estar siendo en el mundo y entre ellas. A través de esta herramienta mi propósito como acompañante es alcanzar todos los objetivos propuestos a través de preguntas, autoobservación, reflexiones y el análisis del comportamiento, acompasando el desarrollo y la evolución de cada cliente."
         },
-        {
-            "img" : "../../assets/img/profesionales/SOFIAGRAMAGLIA.jpg" ,
-            "name": "Sofía Luz Gramaglia" ,
-            "title": "Psicología",
-            "description": "Brindo atención principalmente a niños, adolescentes y jóvenes adultos. Desde el Psicoanálisis Focalizado, de la línea de Hector Fiorini."
-        },
-        {
-            "img" : "../../assets/img/profesionales/PAOLABENITEZ.jpg" ,
-            "name": "Paola Benitez" ,
-            "title": "Instructora de Yoga",
-            "description": "En nuestras prácticas trabajamos el cuerpo a través de las asanas de yoga, aquietamos la mente con la meditación para poder darle lugar a nuestro espíritu.  Y así generar un todo. En nuestros talleres generamos un espacio de reflexión y compartimos experiencias y  herramientas de minfullnes para nuestra vida diaria."
-        },
+        
+       
         {
             "img" : "../../assets/img/profesionales/NOELIAFUNES.jpg" ,
             "name": "Noelia Funes" ,
@@ -143,16 +140,6 @@
         {
             "img" : "../../assets/img/profesionales/ROMINARONDOLETTO.jpg" ,
             "name": "Romina Rondoletto" 
-           
-        },
-        {
-            "img" : "../../assets/img/profesionales/VALERIAMADINI.jpg" ,
-            "name": "Valeria Madini" 
-           
-        },
-        {
-            "img" : "../../assets/img/profesionales/YAMILAOLIVA.jpg" ,
-            "name": "Yamila Oliva" 
            
         }
     ]

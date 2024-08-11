@@ -1,18 +1,19 @@
 {
     "especialidades" : [
+       
         {
             "idEspecialidad" : 1,
-            "nombre" : "Acompañamiento terapéutico",
-            "descripcion" : "Brindamos apoyo emocional y asistencia personalizada a los pacientes, promoviendo su autonomía y bienestar en su vida diaria.",
-            "foto" : "../../assets/img/Quienes somos/acompañamiento.jpg",
-            "profesionales" : ["Lic. Avila, Paula", "Lic. Cena, Melina", "Lic. Duarte, Yanel", "Lic. Gonzalez, María Sol", "Lic. Marquez, Veronica"]
+            "nombre" : "Medicina clínica",
+            "descripcion" : "Proveemos atención integral, evaluando y manejando diversas afecciones médicas en adultos, asegurando un diagnóstico preciso y un tratamiento adecuado.",
+            "foto" : "../../assets/img/Quienes somos/clinica.png",
+            "profesionales" : ["Dr. Pérez, Juan", "Dra. Gómez, Ana"]
         },
         {
             "idEspecialidad" : 2,
-            "nombre" : "Cosmetología y Dermatología",
-            "descripcion" : "Ofrecemos tratamientos estéticos y terapéuticos para cuidar la piel, el cabello y las uñas de nuestros pacientes, ayudándoles a sentirse mejor tanto física como emocionalmente.",
-            "foto" : "../../assets/img/Quienes somos/cosmetología.jpg",
-            "profesionales" : ["Aguirre, Fernanda"]
+            "nombre" : "Pediatría",
+            "descripcion" : "Cuidamos la salud de los niños desde el nacimiento hasta la adolescencia, proporcionando diagnósticos precisos, prevención y tratamiento de enfermedades.",
+            "foto" : "../../assets/img/Quienes somos/pediatria.png",
+            "profesionales" : ["Dr. López, Carlos", "Dra. Fernández, Laura"]
         },
         {
             "idEspecialidad" : 3,
@@ -21,6 +22,7 @@
             "foto" : "../../assets/img/Quienes somos/fonoaudiología.jpg",
             "profesionales" : ["Lic. Urquiza, Analía"]
         },
+       
         {
             "idEspecialidad" : 4,
             "nombre" : "Yoga",

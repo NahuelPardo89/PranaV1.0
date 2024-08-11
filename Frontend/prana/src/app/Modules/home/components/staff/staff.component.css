@@ -13,6 +13,7 @@ gris cemento #8496a2 */
   perspective: 2px;
 }
 
+
 .section-parallax {
   transform-style: preserve-3d;
   position: relative;

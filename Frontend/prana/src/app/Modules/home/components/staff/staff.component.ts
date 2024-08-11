@@ -55,7 +55,7 @@ export class StaffComponent implements OnInit {
       });
     }
   }
-
+  
   scrollToBodyNav() {
     const targetElement = document.getElementById('bodyNav');
     if (targetElement) {

@@ -194,7 +194,7 @@ a{
 .mision {
   width: 25%;
   min-height: 300px;
-  text-align: center;
+  text-align: start;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -205,13 +205,13 @@ a{
 }
 .mision p {
   font-size: 120%;
-  text-align: justify;
+  text-align: center;
   width: 80%;
 }
 .vision {
   width: 25%;
   min-height: 300px;
-  text-align: center;
+  text-align: start;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -222,7 +222,7 @@ a{
 }
 .vision p {
   font-size: 120%;
-  text-align: justify;
+  text-align: center;
   width: 80%;
 }
 

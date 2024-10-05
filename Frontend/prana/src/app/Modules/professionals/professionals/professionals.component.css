@@ -1,4 +1,4 @@
-/* profesionales */
+/* profesionales*/
 .introduccion {
     display: flex;
     width: 80%;
@@ -27,83 +27,62 @@
     margin-bottom: 20px;
     font-size: 1.12rem;
     line-height: 1.5; 
+  } 
+
+  .profesionales-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
   }
-  .contenedorStaff {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around; 
-    width: 80%;
-    margin: auto;
+  .profesional-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
   }
-  .staff {
-    width: 100%;
-    background-color: #f9f9f9;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
-    margin-bottom: 20px; 
-    border-radius: 8px; 
+  .profesional-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
   }
-  .info > img {
-    border: none;
+  .profesional-imagen-container {
+    height: 300px;
+    overflow: hidden;
   }
-  .tarjeta {
-    width: 200px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 20px;
-    transition: transform 300ms ease; 
-  }
-  .tarjeta:hover {
-    transform: scale(1.05); 
-  }
-  .tarjetaCuerpo {
-    display: flex;
-    flex-direction: column;
-    width: 150px;
-    height: 80px;
-    border: none;
-    overflow: hidden; 
-    font-family: 'Lora', "Helvetica Neue", sans-serif;
-  }
-  .tarjetaNombre {
-    font-size: 1rem;
-    color: #ae71a3;
-  }
-  .tarjetaTitulo {
-    font-size: 0.8rem;
-    color: #888;
-  }
-  .foto {
-    width: 100%;
-    height: 200px;
-    overflow: hidden; 
-    border-radius: 50%;
-  }
-  .tarjetaImagen {
+  .profesional-imagen {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 50%; 
+    transition: transform 0.3s ease;
   }
-  p {
-    text-align: left; 
+  .profesional-card:hover .profesional-imagen {
+    transform: scale(1.05);
+  }
+  .profesional-info {
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .profesional-nombre {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+  }
+  .profesional-especialidad {
+    margin: 0;
     font-size: 1rem;
+    color: #666;
+    font-style: italic;
   }
-  .tarjetaTexto {
-    display: none;
-    padding: 5px;
-  }
-  @media screen and (max-width: 1024px) {
-    .tarjeta {
-        width: 30%; 
+  @media (max-width: 768px) {
+    .profesionales-container {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 1.5rem;
     }
-  }
-  
-  @media screen and (max-width: 768px) {
-    .tarjeta {
-        width: 30%; 
-        min-width: 200px;
+    .profesional-imagen-container {
+      height: 300px;
     }
   }

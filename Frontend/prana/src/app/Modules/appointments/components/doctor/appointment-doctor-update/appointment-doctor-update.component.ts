@@ -121,7 +121,7 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
       appointment_status: [null],
       payment_status: [null],
       payment_method: [null],
-      full_cost: [null, Validators.min(0)],
+      full_cost: [null, Validators.min(0)], //REMOVE !! NO LONGER NECESARY
       patient_copayment: [null, [Validators.min(0)]],
       health_insurance: [null],
     });

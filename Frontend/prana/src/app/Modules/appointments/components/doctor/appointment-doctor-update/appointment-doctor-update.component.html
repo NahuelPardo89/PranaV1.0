@@ -168,23 +168,6 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- Cost Field -->
-        <mat-form-field
-          *ngIf="selectedSpecialty && selectedDoctor"
-          appearance="outline"
-        >
-          <mat-label>Costo (Opcional)</mat-label>
-          <input
-            matInput
-            formControlName="full_cost"
-            type="number"
-            id="full_cost"
-          />
-          <mat-error *ngIf="appointmentForm.get('full_cost')!.hasError('min')">
-            El costo no puede ser un valor negativo
-          </mat-error>
-        </mat-form-field>
-
         <!-- Patient Copayment Field -->
         <mat-form-field
           *ngIf="selectedSpecialty && selectedDoctor"

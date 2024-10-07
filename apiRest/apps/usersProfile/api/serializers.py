@@ -106,14 +106,14 @@ class DoctoListProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorProfile
         fields = ('id', 'user', 'medicLicence', 'specialty',
-                  'insurances', 'is_active', 'appointment_duration', 'copayment')
+                  'insurances', 'is_active', 'appointment_duration')
 
 
 class DoctorCreateUpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorProfile
         fields = ('id', 'user', 'medicLicence', 'specialty',
-                  'insurances', 'is_active', 'appointment_duration', 'copayment')
+                  'insurances', 'is_active', 'appointment_duration')
         read_only_fields = ('insurances',)
 
 
@@ -157,7 +157,7 @@ class DoctorProfileShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorProfile
         fields = ('id', 'user', 'medicLicence', 'specialty',
-                  'insurances', 'is_active', 'appointment_duration', 'copayment')
+                  'insurances', 'is_active', 'appointment_duration')
         read_only_fields = ('id', 'is_active', 'specialty',
                             'insurance', 'user')
 

@@ -58,11 +58,6 @@
           <td mat-cell *matCellDef="let row">{{ row.appointment_duration }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="copayment">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Coseguro</th>
-          <td mat-cell *matCellDef="let row">{{ row.copayment }}</td>
-        </ng-container>
-
         <ng-container matColumnDef="is_active">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Activo</th>
           <td mat-cell *matCellDef="let row">

@@ -67,6 +67,10 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
   availableTimes: string[] = [];
   finalJsonDate: string = '';
   finalJsonHour: string = '';
+  appointment_type_choices = [
+    { value: 1, viewValue: 'Presencial' },
+    { value: 2, viewValue: 'Virtual' },
+  ];
   appointment_status_choices = [
     { value: 1, viewValue: 'Pendiente' },
     { value: 2, viewValue: 'Confirmado' },
@@ -113,10 +117,12 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
       patient: [null, Validators.required],
       specialty: [null, Validators.required],
       branch: [null],
+      appointment_type: [null],
       appointment_status: [null],
       payment_status: [null],
       payment_method: [null],
       full_cost: [null, Validators.min(0)],
+      patient_copayment: [null, [Validators.min(0)]],
       health_insurance: [null],
     });
     this.appointmentResponse = {
@@ -133,6 +139,7 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
       branch: 0,
       health_insurance: 0,
       duration: '',
+      appointment_type: 0,
       appointment_status: 0,
       payment_status: 0,
     };
@@ -195,9 +202,11 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
         this.appointmentForm.patchValue({
           branch: data.branch,
           appointment_status: data.appointment_status,
+          appointment_type: data.appointment_type,
           payment_status: data.payment_status,
           payment_method: data.payment_method,
           full_cost: data.full_cost,
+          patient_copayment: data.patient_copayment,
           health_insurance: data.health_insurance,
         });
         this.appointmentForm.get('full_cost')?.disable();
@@ -847,8 +856,10 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
     form.patchValue({
       payment_method: null,
       full_cost: null,
+      patient_copayment: null,
       appointment_status: 1,
       payment_status: 1,
+      appointment_type: 1,
     });
   }
 
@@ -1026,11 +1037,43 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
     <strong> Especialidad: </strong> ${this.specialtytName} <br>
     <strong> Rama: </strong> ${this.branchName} <br>
     <strong> Obra Social: </strong> ${this.findFormHi()} <br>
+    <strong> Encuentro: </strong> ${this.findFormAppointmentType()} <br>
     <strong> Estado del Turno: </strong> ${this.findFormAppointmentStatus()} <br>
     <strong> Estado de Pago: </strong> ${this.findFormPaymentStatus()} <br>
     <strong> Costo: </strong> ${this.findFormFullCost()} <br>
+    <strong> Coseguro Paciente: </strong> ${this.findFormPatientCopayment()} <br>
     <strong> Método de Pago: </strong> ${this.findFormPaymentMethod()} <br>`;
     return preview;
+  }
+
+  /**
+   * Finds the appointment type from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The appointment status view value or 'Presencial' if not found.
+   */
+  findFormAppointmentType(): string {
+    const formAppointmentType =
+      this.appointmentForm.get('appointment_type')?.value;
+    if (formAppointmentType) {
+      const app_type = this.appointment_type_choices.find(
+        (app_type) => app_type.value === formAppointmentType
+      );
+      return app_type ? app_type.viewValue : 'Presencial';
+    }
+    return 'Presencial';
+  }
+
+  /**
+   * Finds the patient copayment from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The value or 'Sin especificar' if not found.
+   */
+  findFormPatientCopayment(): string {
+    const formPatientCopayment =
+      this.appointmentForm.get('patient_copayment')?.value;
+    return formPatientCopayment
+      ? formPatientCopayment.toString()
+      : 'Sin especificar';
   }
 
   /**
@@ -1124,6 +1167,7 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
         doctor: this.selectedDoctor,
         patient: this.selectedPatient,
         payment_method: formValues.payment_method,
+        patient_copayment: formValues.patient_copayment,
       };
 
       if (formValues.branch !== undefined && formValues.branch !== null) {
@@ -1143,6 +1187,13 @@ export class AppointmentDoctorUpdateComponent implements OnInit {
         formValues.appointment_status !== null
       ) {
         filteredBody.appointment_status = formValues.appointment_status;
+      }
+
+      if (
+        formValues.appointment_type !== undefined &&
+        formValues.appointment_type !== null
+      ) {
+        filteredBody.appointment_type = formValues.appointment_type;
       }
 
       if (

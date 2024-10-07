@@ -54,7 +54,6 @@ class DoctorProfile(models.Model):
         HealthInsurance, through='InsurancePlanDoctor')
     is_active = models.BooleanField(default=True)
     appointment_duration = models.DurationField(default=timedelta(minutes=60))
-    copayment = models.IntegerField(default=3000)
 
     class Meta:
         verbose_name = 'Profesional'

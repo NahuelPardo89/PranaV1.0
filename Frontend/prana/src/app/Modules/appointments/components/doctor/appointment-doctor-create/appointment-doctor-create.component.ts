@@ -65,6 +65,10 @@ export class AppointmentDoctorCreateComponent implements OnInit {
   availableTimes: string[] = [];
   finalJsonDate: string = '';
   finalJsonHour: string = '';
+  appointment_type_choices = [
+    { value: 1, viewValue: 'Presencial' },
+    { value: 2, viewValue: 'Virtual' },
+  ];
   appointment_status_choices = [
     { value: 1, viewValue: 'Pendiente' },
     { value: 2, viewValue: 'Confirmado' },
@@ -109,9 +113,11 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       specialty: [null, Validators.required],
       branch: [null],
       health_insurance: [null],
+      appointment_type: [null],
       appointment_status: [null],
       payment_status: [null],
       payment_method: [null],
+      patient_copayment: [null, [Validators.min(0)]],
     });
     this.appointmentResponse = {
       id: 0,
@@ -127,6 +133,7 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       branch: 0,
       health_insurance: 0,
       duration: '',
+      appointment_type: 0,
       appointment_status: 0,
       payment_status: 0,
     };
@@ -583,6 +590,8 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       appointment_status: null,
       payment_status: null,
       payment_method: null,
+      appointment_type: null,
+      patient_copayment: null,
     });
   }
 
@@ -758,6 +767,8 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     <strong> Especialidad:</strong> ${this.specialtytName} <br>
     <strong> Rama:</strong> ${this.branchName}<br>
     <strong> Obra Social:</strong> ${this.findFormHi()} <br>
+    <strong> Coseguro Paciente:</strong> ${this.findFormPatientCopayment()} <br>
+    <strong> Tipo de Encuentro:</strong> ${this.findFormAppointmentType()} <br>
     <strong> Estado del Turno:</strong> ${this.findFormAppointmentStatus()} <br>
     <strong> Estado de Pago:</strong> ${this.findFormPaymentStatus()} <br>
     <strong> Método de Pago:</strong> ${this.findFormPaymentMethod()} `;
@@ -776,6 +787,23 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       return hi ? hi.name : 'Sin Especificar';
     }
     return 'Sin Especificar';
+  }
+
+  /**
+   * Finds the appointment type from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The appointment status view value or 'Presencial' if not found.
+   */
+  findFormAppointmentType(): string {
+    const formAppointmentType =
+      this.appointmentForm.get('appointment_type')?.value;
+    if (formAppointmentType) {
+      const app_type = this.appointment_type_choices.find(
+        (app_type) => app_type.value === formAppointmentType
+      );
+      return app_type ? app_type.viewValue : 'Presencial';
+    }
+    return 'Presencial';
   }
 
   /**
@@ -827,6 +855,19 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     return 'Sin Especificar';
   }
 
+  /**
+   * Finds the patient copayment from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The value or 'Sin especificar' if not found.
+   */
+  findFormPatientCopayment(): string {
+    const formPatientCopayment =
+      this.appointmentForm.get('patient_copayment')?.value;
+    return formPatientCopayment
+      ? formPatientCopayment.toString()
+      : 'Sin especificar';
+  }
+
   /* FORM ACTIONS SECTION */
 
   /**
@@ -844,10 +885,18 @@ export class AppointmentDoctorCreateComponent implements OnInit {
         hour: this.finalJsonHour,
         doctor: this.selectedDoctor,
         patient: this.selectedPatient,
+        patient_copayment: formValues.patient_copayment,
       };
 
       if (formValues.branch !== undefined && formValues.branch !== null) {
         filteredBody.branch = formValues.branch;
+      }
+
+      if (
+        formValues.appointment_type !== undefined &&
+        formValues.appointment_type !== null
+      ) {
+        filteredBody.appointment_type = formValues.appointment_type;
       }
 
       if (

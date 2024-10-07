@@ -26,6 +26,7 @@ export class AppointmentAdminListComponent {
     'patient_copayment',
     'hi_copayment',
     'appointment_status',
+    'appointment_type',
     'payment_status',
     'actions',
   ];

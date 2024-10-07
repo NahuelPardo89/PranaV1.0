@@ -23,6 +23,7 @@ export class AppointmentPatientListComponent {
     //'specialty',
     'branch',
     'health_insurance',
+    'appointment_type',
     'appointment_status',
     'payment_status',
     'actions',

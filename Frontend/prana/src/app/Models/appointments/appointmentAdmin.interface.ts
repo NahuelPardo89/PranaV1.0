@@ -1,7 +1,7 @@
-import { AppointmentDoctorGetInterface } from "./get-interfaces/appointmentDoctorGet.interface";
+import { AppointmentDoctorGetInterface } from './get-interfaces/appointmentDoctorGet.interface';
 
-export interface AppointmentAdminGetInterface extends AppointmentDoctorGetInterface {
-  id: number,
-  patient_copayment: number;
+export interface AppointmentAdminGetInterface
+  extends AppointmentDoctorGetInterface {
+  id: number;
   hi_copayment: number;
 }

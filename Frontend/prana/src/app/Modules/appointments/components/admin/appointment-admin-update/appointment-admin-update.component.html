@@ -183,6 +183,41 @@
           </mat-error>
         </mat-form-field>
 
+        <!-- Patient Copayment Field -->
+        <mat-form-field
+          *ngIf="selectedSpecialty && selectedDoctor"
+          appearance="outline"
+        >
+          <mat-label>Coseguro Paciente (Opcional)</mat-label>
+          <input
+            matInput
+            formControlName="patient_copayment"
+            type="number"
+            id="patient_copayment"
+          />
+          <mat-error
+            *ngIf="appointmentForm.get('patient_copayment')!.hasError('min')"
+          >
+            El coseguro no puede ser un valor negativo
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Appointment Type Field -->
+        <mat-form-field
+          *ngIf="selectedSpecialty && selectedDoctor"
+          appearance="outline"
+        >
+          <mat-label>Tipo de Encuentro</mat-label>
+          <mat-select formControlName="appointment_type">
+            <mat-option
+              *ngFor="let app_type of appointment_type_choices"
+              [value]="app_type.value"
+            >
+              {{ app_type.viewValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <!-- Appointment Status Field -->
         <mat-form-field
           *ngIf="selectedSpecialty && selectedDoctor"

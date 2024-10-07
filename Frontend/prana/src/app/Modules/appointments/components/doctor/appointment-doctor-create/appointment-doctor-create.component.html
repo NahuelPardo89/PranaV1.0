@@ -114,7 +114,7 @@
 
         <!-- Branch Field -->
         <mat-form-field *ngIf="selectedDoctor" appearance="outline">
-          <mat-label>Rama (Opcional)</mat-label>
+          <mat-label>Rama</mat-label>
           <mat-select
             formControlName="branch"
             (ngModelChange)="onBranchSelect($event)"
@@ -127,7 +127,7 @@
             </mat-option>
           </mat-select>
           <mat-error
-            *ngIf="appointmentForm.controls['hour'].errors?.['required']"
+            *ngIf="appointmentForm.controls['branch'].errors?.['required']"
             >Este campo es requerido</mat-error
           >
         </mat-form-field>
@@ -145,6 +145,42 @@
               [value]="insurance.id"
             >
               {{ insurance.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Patient Copayment Field -->
+        <mat-form-field
+          *ngIf="selectedSpecialty && selectedDoctor"
+          appearance="outline"
+        >
+          <mat-label>Coseguro Paciente (Opcional)</mat-label>
+          <input
+            matInput
+            formControlName="patient_copayment"
+            type="number"
+            id="patient_copayment"
+          />
+          <mat-error
+            *ngIf="appointmentForm.get('patient_copayment')!.hasError('min')"
+          >
+            El coseguro no puede ser un valor negativo
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Appointment Type Field -->
+        <mat-form-field
+          *ngIf="selectedSpecialty && selectedDoctor"
+          appearance="outline"
+        >
+          <mat-label>Tipo de Encuentro (Opcional)</mat-label>
+          <mat-select formControlName="appointment_type">
+            <mat-option [value]="1">Sin Solicitar</mat-option>
+            <mat-option
+              *ngFor="let app_type of appointment_type_choices"
+              [value]="app_type.value"
+            >
+              {{ app_type.viewValue }}
             </mat-option>
           </mat-select>
         </mat-form-field>

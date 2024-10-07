@@ -48,18 +48,6 @@
           >
         </mat-form-field>
 
-        <!-- Copayment field -->
-        <mat-form-field appearance="outline">
-          <mat-label>Coseguro</mat-label>
-          <input type="number" matInput formControlName="copayment" />
-          <mat-error *ngIf="doctorForm.get('copayment')!.errors?.['required']"
-            >El campo coseguro es obligatorio</mat-error
-          >
-          <mat-error *ngIf="doctorForm.get('copayment')!.hasError('pattern')">
-            Este campo debe ser un número entero positivo
-          </mat-error>
-        </mat-form-field>
-
         <!-- Botón para enviar el formulario -->
         <button
           class="btn btn-primary"

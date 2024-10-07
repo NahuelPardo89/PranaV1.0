@@ -58,6 +58,10 @@ export class AppointmentAdminCreateComponent implements OnInit {
   availableTimes: string[] = [];
   finalJsonDate: string = '';
   finalJsonHour: string = '';
+  appointment_type_choices = [
+    { value: 1, viewValue: 'Presencial' },
+    { value: 2, viewValue: 'Virtual' },
+  ];
   appointment_status_choices = [
     { value: 1, viewValue: 'Pendiente' },
     { value: 2, viewValue: 'Confirmado' },
@@ -103,11 +107,13 @@ export class AppointmentAdminCreateComponent implements OnInit {
       duration: [null],
       specialty: [null, Validators.required],
       branch: [null],
+      appointment_type: [null],
       appointment_status: [null],
       payment_status: [null],
       payment_method: [null],
       full_cost: [null, [Validators.min(0)]],
       health_insurance: [null],
+      patient_copayment: [null, [Validators.min(0)]],
     });
     this.appointmentResponse = {
       id: 0,
@@ -123,6 +129,7 @@ export class AppointmentAdminCreateComponent implements OnInit {
       branch: 0,
       health_insurance: 0,
       duration: '',
+      appointment_type: 0,
       appointment_status: 0,
       payment_status: 0,
     };
@@ -710,7 +717,9 @@ export class AppointmentAdminCreateComponent implements OnInit {
       appointment_status: null,
       payment_status: null,
       payment_method: null,
+      appointment_type: null,
       full_cost: null,
+      patient_copayment: null,
     });
   }
 
@@ -888,9 +897,11 @@ export class AppointmentAdminCreateComponent implements OnInit {
     <strong>Especialidad:</strong> ${this.specialtytName} <br>
     <strong>Rama:</strong> ${this.branchName} <br>
     <strong>Obra Social:</strong> ${this.findFormHi()} <br>
+    <strong>Tipo de Encuentro:</strong> ${this.findFormAppointmentType()} <br>
     <strong>Estado del Turno:</strong> ${this.findFormAppointmentStatus()} <br>
     <strong>Estado del Pago:</strong> ${this.findFormPaymentStatus()} <br>
     <strong>Costo:</strong> ${this.findFormFullCost()} <br>
+    <strong>Coseguro Paciente:</strong> ${this.findFormPatientCopayment()} <br>
     <strong>Método de Pago:</strong> ${this.findFormPaymentMethod()} <br>`;
     return preview;
   }
@@ -907,6 +918,23 @@ export class AppointmentAdminCreateComponent implements OnInit {
       return hi ? hi.name : 'Sin Especificar';
     }
     return 'Sin Especificar';
+  }
+
+  /**
+   * Finds the appointment type from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The appointment status view value or 'Presencial' if not found.
+   */
+  findFormAppointmentType(): string {
+    const formAppointmentType =
+      this.appointmentForm.get('appointment_type')?.value;
+    if (formAppointmentType) {
+      const app_type = this.appointment_type_choices.find(
+        (app_type) => app_type.value === formAppointmentType
+      );
+      return app_type ? app_type.viewValue : 'Presencial';
+    }
+    return 'Presencial';
   }
 
   /**
@@ -968,6 +996,19 @@ export class AppointmentAdminCreateComponent implements OnInit {
     return formFullCost ? formFullCost.toString() : 'Sin especificar';
   }
 
+  /**
+   * Finds the patient copayment from the form.
+   * @author Alvaro Olguin
+   * @returns {string} The value or 'Sin especificar' if not found.
+   */
+  findFormPatientCopayment(): string {
+    const formPatientCopayment =
+      this.appointmentForm.get('patient_copayment')?.value;
+    return formPatientCopayment
+      ? formPatientCopayment.toString()
+      : 'Sin especificar';
+  }
+
   /* FORM ACTIONS SECTION */
 
   /**
@@ -1002,8 +1043,22 @@ export class AppointmentAdminCreateComponent implements OnInit {
         filteredBody.full_cost = formValues.full_cost;
       }
 
+      if (
+        formValues.patient_copayment !== undefined &&
+        formValues.patient_copayment !== null
+      ) {
+        filteredBody.patient_copayment = formValues.patient_copayment;
+      }
+
       if (formValues.duration !== undefined && formValues.duration !== null) {
         filteredBody.duration = formValues.duration;
+      }
+
+      if (
+        formValues.appointment_type !== undefined &&
+        formValues.appointment_type !== null
+      ) {
+        filteredBody.appointment_type = formValues.appointment_type;
       }
 
       if (

@@ -54,14 +54,12 @@ export class DoctorCreateComponent {
       medicLicence: ['', Validators.required],
       specialty: ['', Validators.required],
       appointment_duration: ['', Validators.required],
-      copayment: ['', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]],
     });
   }
 
   ngOnInit(): void {
     this.loadSpecialties();
     this.loadUsers();
-    // this.filterUsers();
   }
 
   loadSpecialties(): void {

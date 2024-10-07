@@ -18,7 +18,6 @@ export class DoctorListComponent {
     'medicLicence',
     'specialty',
     'appointment_duration',
-    'copayment',
     'is_active',
     'actions',
   ];
@@ -111,7 +110,6 @@ export class DoctorListComponent {
       },
       error: (error) => {
         this.dialogService.showErrorDialog('Error al Activar el Profesional');
-        // Aquí podrías añadir alguna lógica para manejar el error, como mostrar un mensaje al usuario
       },
     });
   }

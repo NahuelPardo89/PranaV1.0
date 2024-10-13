@@ -32,7 +32,7 @@
         },
         {
             "idEspecialidad" : 7,
-            "nombre" : "Nutricionistas",
+            "nombre" : "Nutrición",
             "descripcion" : "Brindamos asesoramiento personalizado y planes de alimentación equilibrados, promoviendo hábitos saludables y una buena nutrición para mejorar la salud y el bienestar general de nuestros pacientes.",
             "foto" : "../../assets/img/Quienes somos/nutricionista.jpg",
             "profesionales" : ["Lic. Cena, Melina","Lic. Ortiz Micaela"]
@@ -67,10 +67,22 @@
         },
         {
             "idEspecialidad" : 12,
-            "nombre" : "Tallerista",
+            "nombre" : "Talleres",
             "descripcion" : "Impartimos talleres y actividades grupales que promueven el desarrollo personal, la creatividad y el bienestar emocional de nuestros pacientes, creando espacios de aprendizaje y crecimiento en un entorno terapéutico.",
             "foto" : "../../assets/img/Quienes somos/talleres.jpg",
             "profesionales" : ["Alba, Lourdes"]
+        },
+        {
+            "idEspecialidad" : 13,
+            "nombre" : "Coaching Ontológico",
+            "descripcion" : "Ofrecemos procesos de transformación personal a través del diálogo, promoviendo cambios en la forma de interpretar la realidad para lograr mayor bienestar y efectividad en la vida personal y profesional.",
+            "foto" : "../../assets/img/Quienes somos/coaching.png"
+        },
+        {
+            "idEspecialidad" : 14,
+            "nombre" : "Puericultura",
+            "descripcion" : "Acompañamos a las familias en el cuidado y desarrollo de los bebés, brindando orientación sobre la lactancia, el sueño, la alimentación y el desarrollo físico y emocional durante los primeros años de vida.",
+            "foto" : "../../assets/img/Quienes somos/puericultura.png"
         }
         
     ]

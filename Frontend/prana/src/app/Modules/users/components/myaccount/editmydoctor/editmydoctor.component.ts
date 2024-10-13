@@ -55,7 +55,7 @@ export class EditmydoctorComponent {
     this.doctorForm = this.fb.group({
       medicLicence: ['', Validators.required],
       appointment_duration: ['', Validators.required],
-      copayment: ['', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]],
+      // copayment: ['', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]],
     });
   }
 

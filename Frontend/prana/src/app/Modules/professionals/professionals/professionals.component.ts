@@ -10,10 +10,11 @@ export class ProfessionalsComponent implements OnInit {
   constructor(private staffService: StaffService){}
 
   ngOnInit(): void {
-    
     this.staffService.getStaff().subscribe(data => {
-      this.staff = data.profesionales.map((pro: any) => ({ ...pro, showDescription: false }));
+      // Ordenar aleatoriamente los profesionales
+      this.staff = data.profesionales
+        .map((pro: any) => ({ ...pro, showDescription: false }))
+        .sort(() => Math.random() - 0.5); // Orden aleatorio
     });
-    
   }
 }

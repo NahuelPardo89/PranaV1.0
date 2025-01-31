@@ -11,7 +11,7 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
   styleUrls: ['./password-reset-request.component.css'],
 })
 export class PasswordResetRequestComponent {
-  loginForm!: FormGroup;
+  resetPassForm!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -19,26 +19,27 @@ export class PasswordResetRequestComponent {
     private dialogService: DialogService,
     private router: Router
   ) {
-    this.loginForm = this.formBuilder.group({
+    this.resetPassForm = this.formBuilder.group({
       email: [null, [Validators.required, Validators.email]],
     });
   }
 
   onSubmit(): void {
     this.authService
-      .requestPasswordReset(this.loginForm.value.email)
+      .requestPasswordReset(this.resetPassForm.value.email)
       .subscribe({
         next: (response) => {
           this.dialogService.showSuccessDialog(
             'Se envió un correo electrónico a su cuenta para restablecer la contraseña'
           );
-          this.router.navigate(['']);
+          this.router.navigate(['login']);
         },
         error: (error) => {
           // Aquí puedes manejar el error, mostrando un mensaje al usuario
           this.dialogService.showErrorDialog(
             'Hubo un error al enviar el correo o el correo ingresado no existe en nuestro sistema'
           );
+          
         },
       });
   }

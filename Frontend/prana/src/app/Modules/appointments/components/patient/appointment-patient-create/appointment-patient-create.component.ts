@@ -103,6 +103,7 @@ export class AppointmentPatientCreateComponent implements OnInit {
       branch: 0,
       health_insurance: 0,
       duration: '',
+      appointment_type: 0,
       appointment_status: 0,
       payment_status: 0,
     };

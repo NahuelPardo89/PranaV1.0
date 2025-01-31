@@ -8,6 +8,9 @@ import {
   ReportAppAdminSummaryResponseInterface,
 } from 'src/app/Models/reports/reportAppAdminResponse.interface';
 
+//HTML to PDF GENERATOR library
+import * as html2pdf from 'html2pdf.js'; 
+
 @Component({
   selector: 'app-admin-report-list',
   templateUrl: './admin-report-list.component.html',
@@ -107,6 +110,27 @@ export class AdminReportListComponent {
 
     if (this.dataAppointmentSource.paginator) {
       this.dataAppointmentSource.paginator.firstPage();
+    }
+  }
+
+
+  /**
+   * Genera un pdf a partir de un elemento html
+   
+   * @author Catriel Pardo
+   */
+  generatePDF(): void {
+    const element = document.getElementById('pdfElement');
+    if (element) {
+      const options = {
+        
+        filename: 'reporte contable.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait'}
+      };
+
+      html2pdf().from(element).set(options).save();
     }
   }
 }

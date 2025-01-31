@@ -1,5 +1,8 @@
 from django.http import Http404
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
@@ -7,6 +10,7 @@ from apps.appointments.api.serializers import AppointmentSerializer, Appointment
 from apps.usersProfile.models import PatientProfile, DoctorProfile
 from apps.appointments.models import Appointment, PaymentMethod
 from apps.users.models import User
+import datetime
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -65,20 +69,28 @@ class AppointmentListCreateView(APIView):
             serializer.save()
 
             # This feature sends an email to patient with the appointment data
-            # Uncomment later
+            patient = PatientProfile.objects.get(
+                id=request.data.get('patient'))
+            doctor = DoctorProfile.objects.get(id=request.data.get('doctor'))
+            day = request.data.get('day')
+            formatted_day = datetime.datetime.strptime(
+                day, '%Y-%m-%d').strftime('%d- %m- %Y')
+            hour = request.data.get('hour')
+            # Rendering the template with the context
+            html_content = render_to_string('appoiment_create.html', {
+                                            'day': formatted_day, 'doctor': doctor, 'hour': hour})
+            text_content = strip_tags(html_content)
 
-            # patient = PatientProfile.objects.get(
-            #     id=request.data.get('patient'))
-            # doctor = DoctorProfile.objects.get(id=request.data.get('doctor'))
-            # print("DOC: ", doctor)
-            # day = request.data.get('day')
-            # send_mail(
-            #     'Turno PRANA - NO RESPONDER',
-            #     f'Se ha generado un nuevo turno el día: {day} para el profesional {doctor}',
-            #     'no-reply@tudominio.com',
-            #     [patient.user.email],
-            #     fail_silently=False,
-            # )
+            # create mail
+            subject = 'Turno PRANA - NO RESPONDER'
+            from_email = 'no-reply@tudominio.com'
+            to_email = [patient.user.email]
+            msg = EmailMultiAlternatives(
+                subject, text_content, from_email, to_email)
+            msg.attach_alternative(html_content, "text/html")
+
+            # send
+            msg.send()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

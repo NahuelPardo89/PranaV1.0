@@ -2,7 +2,7 @@ from datetime import date, datetime
 from django.contrib.auth import authenticate
 from django.db.models import Q
 from rest_framework import serializers
-from apps.usersProfile.models import DoctorProfile, InsurancePlanDoctor, HealthInsurance, SpecialityBranch
+from apps.usersProfile.models import DoctorProfile, PatientProfile, InsurancePlanDoctor, HealthInsurance, SpecialityBranch
 from apps.appointments.models import Appointment, PaymentMethod
 
 
@@ -55,10 +55,14 @@ def perform_update(instance: Appointment, validated_data: dict) -> Appointment:
     instance.duration = validated_data.get('duration', instance.duration)
     instance.payment_method = validated_data.get(
         'payment_method', instance.payment_method)
+    instance.appointment_type = validated_data.get(
+        'appointment_type', instance.appointment_type)
     instance.appointment_status = validated_data.get(
         'appointment_status', instance.appointment_status)
     instance.payment_status = validated_data.get(
         'payment_status', instance.payment_status)
+    instance.patient_copayment = validated_data.get(
+        'patient_copayment')
     instance.set_cost()
     instance.save()
     return instance
@@ -291,7 +295,8 @@ def validate_doctor_schedule(attrs: dict, instance: Appointment) -> dict:
             schedule_end = datetime.combine(attrs.get('day'), entry.end)
 
             # The appointment fits within at least one schedule range
-            if appointment_start >= schedule_start and appointment_end <= schedule_end:
+            # if appointment_start >= schedule_start and appointment_end <= schedule_end:
+            if schedule_start <= appointment_start <= schedule_end:
                 appointment_flag = True
 
         if not appointment_flag:
@@ -598,6 +603,7 @@ class AppointmentSerializerList(serializers.ModelSerializer):
 
         rep = super().to_representation(instance)
         # Status
+        rep['appointment_type'] = instance.get_appointment_type_display()
         rep['appointment_status'] = instance.get_appointment_status_display()
         rep['payment_status'] = instance.get_payment_status_display()
         # Date format
@@ -637,7 +643,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = '__all__'
-        read_only_fields = ('hi_copayment', 'patient_copayment', 'specialty')
+        read_only_fields = ('hi_copayment', 'specialty')
 
     def create(self, validated_data):
         """
@@ -656,6 +662,17 @@ class AppointmentSerializer(serializers.ModelSerializer):
         appointment = Appointment.objects.create(**validated_data)
         appointment.set_fields()
         appointment.save()
+
+        patient_profile = appointment.patient
+        try:
+            particular_insurance = HealthInsurance.objects.get(
+                name__iexact='PARTICULAR')
+            if particular_insurance not in patient_profile.insurances.all():
+                patient_profile.insurances.add(particular_insurance)
+                patient_profile.save()
+        except HealthInsurance.DoesNotExist:
+            print("La obra social 'Particular' no existe.")
+
         return appointment
 
     def update(self, instance, validated_data):
@@ -723,7 +740,8 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = ('day', 'hour', 'patient', 'specialty', 'branch',
-                  'doctor', 'health_insurance', 'duration', 'appointment_status', 'payment_status', )
+                  'doctor', 'health_insurance', 'duration', 'appointment_status', 'payment_status', 'appointment_type')
+        # review here, duplicate appointment_status and payment_status
         read_only_fields = ('health_insurance', 'specialty', 'full_cost',
                             'duration', 'appointment_status', 'payment_status',)
 
@@ -780,9 +798,9 @@ class DoctorAppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = ('day', 'hour', 'duration', 'full_cost', 'appointment_status', 'payment_status', 'doctor', 'specialty',
-                  'branch', 'patient', 'health_insurance', 'payment_method')
-        read_only_fields = ('specialty', 'full_cost', 'health_insurance',)
+        fields = ('day', 'hour', 'duration', 'full_cost', 'appointment_status', 'appointment_type',  'payment_status', 'doctor', 'specialty',
+                  'branch', 'patient', 'health_insurance', 'payment_method', 'patient_copayment')
+        read_only_fields = ('specialty', 'full_cost',)
 
     def create(self, validated_data):
         """

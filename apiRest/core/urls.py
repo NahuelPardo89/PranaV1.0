@@ -31,5 +31,6 @@ urlpatterns = [
     path('profile/', include('apps.usersProfile.api.urls')),
     path('appointment/', include('apps.appointments.api.urls')),
     path('seminar/', include('apps.seminar.api.urls')),
-    path('report/', include('apps.reports.api.urls'))
+    path('report/', include('apps.reports.api.urls')),
+    path('newletter/', include('apps.newletters.api.urls'))
 ]

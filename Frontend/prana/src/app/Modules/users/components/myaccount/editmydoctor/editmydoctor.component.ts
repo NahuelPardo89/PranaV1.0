@@ -7,12 +7,12 @@ import { DialogService } from 'src/app/Services/dialog/dialog.service';
 @Component({
   selector: 'app-editmydoctor',
   templateUrl: './editmydoctor.component.html',
-  styleUrls: ['./editmydoctor.component.css']
+  styleUrls: ['./editmydoctor.component.css'],
 })
 export class EditmydoctorComponent {
   doctorForm!: FormGroup;
   doctorName!: string;
-  
+
   durationOptions = [
     { label: '15 min', value: 15 * 60 },
     { label: '30 min', value: 30 * 60 },
@@ -25,14 +25,14 @@ export class EditmydoctorComponent {
     { label: '135 min', value: 135 * 60 },
     { label: '150 min', value: 150 * 60 },
     { label: '165 min', value: 165 * 60 },
-    { label: '180 min', value: 180 * 60 }]
-  
-    constructor(
+    { label: '180 min', value: 180 * 60 },
+  ];
+
+  constructor(
     private fb: FormBuilder,
     private router: Router,
     private doctorService: DoctorprofileService,
-    private dialogService: DialogService,
-    
+    private dialogService: DialogService
   ) {}
 
   ngOnInit(): void {
@@ -40,39 +40,47 @@ export class EditmydoctorComponent {
     if (history.state.doctor) {
       const durationInSeconds = this.convertTimeToSeconds(
         history.state.doctor.appointment_duration
-      );;
-      this.doctorForm.patchValue({...history.state.doctor,appointment_duration: durationInSeconds});
+      );
+      this.doctorForm.patchValue({
+        ...history.state.doctor,
+        appointment_duration: durationInSeconds,
+        copayment: history.state.doctor.copayment,
+      });
+
       this.doctorName = history.state.doctor.user;
     }
-  
   }
 
   private initForm() {
     this.doctorForm = this.fb.group({
-    medicLicence: ['', Validators.required],
-    appointment_duration: ['', Validators.required],
+      medicLicence: ['', Validators.required],
+      appointment_duration: ['', Validators.required],
+      // copayment: ['', [Validators.required, Validators.pattern(/^[0-9]\d*$/)]],
     });
   }
-
- 
 
   onSubmit(): void {
     if (this.doctorForm.valid) {
       const doctortId = history.state.doctor ? history.state.doctor.id : null;
       if (doctortId) {
-         this.doctorService.updateLoggedDoctor( this.doctorForm.value).subscribe({
+        this.doctorService.updateLoggedDoctor(this.doctorForm.value).subscribe({
           next: () => {
-            this.dialogService.showSuccessDialog("Profesional Editado con éxito")
-            this.router.navigate(['Dashboard/accounts/myaccount']); 
+            this.dialogService.showSuccessDialog(
+              'Profesional Editado con éxito'
+            );
+            this.router.navigate(['Dashboard/accounts/myaccount']);
           },
           error: (error) => {
             console.log(error);
-            this.dialogService.showErrorDialog("Error al actualizar el Profesional")
-            
-          }
+            this.dialogService.showErrorDialog(
+              'Error al actualizar el Profesional'
+            );
+          },
         });
       } else {
-        console.error('Error: No se pudo obtener el ID del usuario para la actualización.');
+        console.error(
+          'Error: No se pudo obtener el ID del usuario para la actualización.'
+        );
         // Manejar el caso en que no se tiene un ID de usuario
       }
     } else {
@@ -80,14 +88,14 @@ export class EditmydoctorComponent {
       // Manejar el caso en que el formulario no es válido
     }
   }
-  onCancel(){
-    this.router.navigate(['Dashboard/accounts/myaccount'])
+  onCancel() {
+    this.router.navigate(['Dashboard/accounts/myaccount']);
   }
   private convertTimeToSeconds(timeString: string): number {
     const parts = timeString.split(':');
     const hours = parseInt(parts[0]);
     const minutes = parseInt(parts[1]);
-  
-    return (hours * 3600) + (minutes * 60);
+
+    return hours * 3600 + minutes * 60;
   }
 }

@@ -3,7 +3,7 @@
 >
   <div class="card">
     <div class="card-header bg-info text-dark text-center">
-      <h2>Crear Turno - Administrador</h2>
+      <h2 class="text-white">Crear Turno - Administrador</h2>
     </div>
     <div class="card-body">
       <form
@@ -128,7 +128,7 @@
           *ngIf="selectedSpecialty && selectedDoctor"
           appearance="outline"
         >
-          <mat-label>Rama (Opcional)</mat-label>
+          <mat-label>Rama</mat-label>
           <mat-select
             formControlName="branch"
             (ngModelChange)="onBranchSelect($event)"
@@ -159,21 +159,39 @@
           </mat-select>
         </mat-form-field>
 
-        <!-- Cost Field -->
+        <!-- Patient Copayment Field -->
         <mat-form-field
           *ngIf="selectedSpecialty && selectedDoctor"
           appearance="outline"
         >
-          <mat-label>Costo (Opcional)</mat-label>
+          <mat-label>Coseguro Paciente (Opcional)</mat-label>
           <input
             matInput
-            formControlName="full_cost"
+            formControlName="patient_copayment"
             type="number"
-            id="full_cost"
+            id="patient_copayment"
           />
-          <mat-error *ngIf="appointmentForm.get('full_cost')!.hasError('min')">
-            El costo no puede ser un valor negativo
+          <mat-error
+            *ngIf="appointmentForm.get('patient_copayment')!.hasError('min')"
+          >
+            El coseguro no puede ser un valor negativo
           </mat-error>
+        </mat-form-field>
+
+        <!-- Appointment Type Field -->
+        <mat-form-field
+          *ngIf="selectedSpecialty && selectedDoctor"
+          appearance="outline"
+        >
+          <mat-label>Tipo de Encuentro (Opcional)</mat-label>
+          <mat-select formControlName="appointment_type">
+            <mat-option
+              *ngFor="let app_type of appointment_type_choices"
+              [value]="app_type.value"
+            >
+              {{ app_type.viewValue }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
 
         <!-- Appointment Status Field -->

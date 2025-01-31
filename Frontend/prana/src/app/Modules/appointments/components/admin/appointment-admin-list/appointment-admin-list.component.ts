@@ -24,8 +24,9 @@ export class AppointmentAdminListComponent {
     'branch',
     'health_insurance',
     'patient_copayment',
-    'hi_copayment',
+    //'hi_copayment',
     'appointment_status',
+    'appointment_type',
     'payment_status',
     'actions',
   ];

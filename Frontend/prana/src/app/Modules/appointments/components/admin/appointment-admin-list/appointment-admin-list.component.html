@@ -2,7 +2,7 @@
   <div
     class="title bg-info text-center text-bold border border-dark rounded-top mb-4"
   >
-    <h1 class="">Listado de Turnos - Administrador</h1>
+    <h1 class="text-white">Listado de Turnos - Administrador</h1>
   </div>
   <div class="container-fluid">
     <div class="d-flex justify-content-start mb-3">
@@ -85,6 +85,12 @@
             Coseg. O.Social
           </th>
           <td mat-cell *matCellDef="let row">{{ row.hi_copayment }}</td>
+        </ng-container>
+
+        <!-- Appointment Type Column -->
+        <ng-container matColumnDef="appointment_type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Encuentro</th>
+          <td mat-cell *matCellDef="let row">{{ row.appointment_type }}</td>
         </ng-container>
 
         <!-- Appointment State Column -->

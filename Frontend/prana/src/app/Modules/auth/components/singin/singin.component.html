@@ -1,16 +1,15 @@
 <div class="container-sm">
     
-    <img src="../../../../../assets/img/logo.png" alt="Logo Prana">
-    <h4>Registrar Usuario</h4>
+    <img src="../../../../../assets/img/logoNuevoVertical.png" alt="Logo Prana">
+    
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="outline">
         <input matInput placeholder="DNI" formControlName="dni">
         <mat-error *ngIf="dni?.invalid && (dni?.dirty || dni?.touched)">
-          <span *ngIf="dni?.errors?.['required']">El DNI es requerido.</span>
-          <span *ngIf="dni?.errors?.['pattern']">El DNI debe tener entre 7 y 9 números, sin puntos ni comas.</span>
+          <span *ngIf="(dni?.errors?.['required'])">Ingrese DNI.</span>
+          <span *ngIf="dni?.errors?.['pattern']|| dni?.errors?.['minlength']">El DNI debe tener entre 7 y 9 números, sin punto ni coma.</span>
           <span *ngIf="dni?.errors?.['dniExists']">Ya existe un usuario con ese DNI.</span>
-          <span *ngIf="dni?.errors?.['minlength']">El DNI debe tener entre 7 y 9 números, sin puntos ni comas.</span>
-          <span *ngIf="dni?.errors?.['max']">El DNI debe tener entre 7 y 9 números, sin puntos ni comas</span>
+          <span *ngIf="dni?.errors?.['max']">El DNI debe tener entre 7 y 9 números, sin punto ni coma</span>
           
         </mat-error>
         
@@ -43,7 +42,7 @@
           <span *ngIf="email?.errors?.['required']">El correo electrónico es requerido.</span>
           <!-- <span *ngIf="email?.errors?.['email']">El correo electrónico debe ser válido.</span> -->
           <span *ngIf="email?.errors?.['pattern']">Ingrese un correo electrónico válido</span>
-          <span *ngIf="email?.errors?.['emailExists']">Ya existe un usuario con ese email.</span>
+          <span *ngIf="email?.errors?.['emailExists']">Ya existe un usuario con ese correo electrónico.</span>
 
         </mat-error>
       </mat-form-field>

@@ -193,7 +193,7 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
-        
+
         instance_serializer = self.create_serializer_class(data=request.data)
         if instance_serializer.is_valid():
             instance = instance_serializer.save()
@@ -204,10 +204,10 @@ class SpecialityBranchAdminViewSet(BaseAdminViewSet):
             errors = instance_serializer.errors
             # Comprobar si existe el error de campos únicos
             if 'non_field_errors' in errors and errors['non_field_errors']:
-                
+
                 return Response({
-                        'message': 'Ya existe esa Rama para esa Especialidad'
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                    'message': 'Ya existe esa Rama para esa Especialidad'
+                }, status=status.HTTP_400_BAD_REQUEST)
 
             # Respuesta genérica para otros errores
             return Response({
@@ -439,11 +439,11 @@ class InsurancePlanDoctorAdminViewSet(BaseAdminViewSet):
         return queryset
 
     def create(self, request):
-        print(request.data)
         instance_serializer = self.serializer_create_class(data=request.data)
         insurance = request.data.get('insurance')
         branch = request.data.get('branch')
-        if InsurancePlanDoctor.objects.filter(insurance=insurance, branch=branch).exists():
+        doctor= request.data.get('doctor')
+        if InsurancePlanDoctor.objects.filter(doctor=doctor,insurance=insurance, branch=branch).exists():
             return Response({"message": "Ya existe esa obra social con la rama seleccionada para este profesional."}, status=status.HTTP_400_BAD_REQUEST)
 
         if instance_serializer.is_valid():
@@ -517,15 +517,17 @@ class DoctorInsurancePlanViewSet(viewsets.ModelViewSet):
         serializer = InsurancePlanDoctorCreateSerializer(
             data=data, context={'request': request})
         if serializer.is_valid():
+           
             # Asignar el doctorProfile del usuario logueado al InsurancePlanDoctor creado
             serializer.save(doctor=request.user.doctorProfile)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            
             errors = serializer.errors
             # Comprobar si existe el error de campos únicos
             if 'non_field_errors' in errors and errors['non_field_errors']:
                 return Response({'message': 'Ya existe la Obra Social con esa rama para ese profesional'
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # Respuesta genérica para otros errores
             return Response({

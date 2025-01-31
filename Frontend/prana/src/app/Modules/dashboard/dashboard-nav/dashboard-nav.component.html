@@ -173,6 +173,15 @@
       <i class="material-symbols-outlined btn-icon">flip_camera_ios</i>
       Gestionar Instagram
     </button>
+    <button
+      class="btn btn-primary"
+      *ngIf="currentRole === 'Administrador'"
+      routerLink="newsletter/send"
+    >
+      <i class="material-symbols-outlined btn-icon">forward_to_inbox</i>
+      Enviar Boletin informativo
+    </button>
+    
 
     <button
       class="btn btn-primary"

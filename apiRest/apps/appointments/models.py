@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from apps.usersProfile.models import DoctorProfile, PatientProfile, HealthInsurance, InsurancePlanDoctor, MedicalSpeciality, SpecialityBranch
 
@@ -50,6 +51,9 @@ class Appointment(models.Model):
     CHOICES_PAYMENT_STATUS = [(1, 'ADEUDA'),
                               (2, 'PAGADO')]
 
+    CHOICES_APPOINTMENT_TYPE = [(1, 'PRESENCIAL'),
+                                (2, 'VIRTUAL')]
+
     doctor = models.ForeignKey(
         DoctorProfile, on_delete=models.PROTECT)
     specialty = models.ForeignKey(
@@ -74,6 +78,8 @@ class Appointment(models.Model):
         choices=CHOICES_APPOINTMENT_STATUS, default=1)
     payment_status = models.IntegerField(
         choices=CHOICES_PAYMENT_STATUS, default=1)
+    appointment_type = models.IntegerField(
+        choices=CHOICES_APPOINTMENT_TYPE, default=1)
 
     def find_common_hi(self):
         """
@@ -194,30 +200,42 @@ class Appointment(models.Model):
 
         self.specialty = self.doctor.specialty.first()
 
+    def round_to_hundred(self, value):
+        """
+        Round a Decimal value to the nearest hundred.
+
+        Args:
+            value (Decimal): The value to round.
+
+        Returns:
+            Decimal: The value rounded to the nearest hundred.
+        """
+        return (value / Decimal('100')).quantize(Decimal('1'), rounding='ROUND_HALF_UP') * Decimal('100')
+
     def set_cost(self):
         """
         Set the patient copayment and health insurance copayment based on the health insurance.
 
         Calculate the copayment amounts based on the doctor's insurance price and the appointment's full cost.
-
-        Returns:
-            None.
+        Round the patient copayment to the nearest hundred.
 
         Author:
             Alvaro Olguin Armendariz <alvaroarmendariz11@gmail.com>
         """
-
         insurance_plan = InsurancePlanDoctor.objects.get(
-            doctor=self.doctor, insurance=self.health_insurance, branch=self.branch)
+            doctor=self.doctor, insurance=self.health_insurance, branch=self.branch
+        )
 
         if self.health_insurance.name.upper() == "PARTICULAR":
-            # For "PARTICULAR" insurance, patient pays the full cost
-            self.patient_copayment = self.full_cost
+            if self.patient_copayment is None:
+                # If patient copayment is not set, default to full cost
+                self.patient_copayment = self.round_to_hundred(self.full_cost)
             self.hi_copayment = 0
         else:
-            # For other insurances, calculate copayments based on coverage
-            self.patient_copayment = max(
-                self.full_cost - insurance_plan.price, 0)
+            if self.patient_copayment is None:
+                # If patient copayment is not set, calculate based on full cost and insurance coverage
+                self.patient_copayment = self.round_to_hundred(
+                    max(Decimal('0'), self.full_cost - insurance_plan.price))
             self.hi_copayment = min(insurance_plan.price, self.full_cost)
 
     def set_fields(self):

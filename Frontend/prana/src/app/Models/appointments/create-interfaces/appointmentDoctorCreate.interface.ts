@@ -7,5 +7,7 @@ export interface AppointmentDoctorCreateInterface
   state?: number;
   payment_method?: number | null;
   appointment_status?: number;
+  appointment_type?: number;
   payment_status?: number;
+  patient_copayment?: number;
 }

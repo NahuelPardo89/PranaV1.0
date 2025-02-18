@@ -118,6 +118,7 @@ export class AppointmentDoctorCreateComponent implements OnInit {
       payment_status: [null],
       payment_method: [null],
       patient_copayment: [null, [Validators.min(0)]],
+      isRecurrent: [false],
     });
     this.appointmentResponse = {
       id: 0,
@@ -705,6 +706,34 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     }
   }
 
+  generateRecurrentAppointments(
+    baseAppointment: AppointmentAdminCreateInterface
+  ): AppointmentAdminCreateInterface[] {
+    const recurrentAppointments: AppointmentAdminCreateInterface[] = [
+      baseAppointment,
+    ];
+    const baseDate = new Date(baseAppointment.day); // Initial appointment date
+    const currentMonth = baseDate.getMonth(); // Current month
+
+    // Start from the next week
+    let currentDate = new Date(baseDate);
+    currentDate.setDate(currentDate.getDate() + 7);
+
+    // Generate appointments for the same day of the week within the current month
+    while (currentDate.getMonth() === currentMonth) {
+      const newAppointment = {
+        ...baseAppointment,
+        day: currentDate.toISOString().split('T')[0],
+      };
+      recurrentAppointments.push(newAppointment);
+
+      // Move to the next week
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return recurrentAppointments;
+  }
+
   /***** DISPLAY SECTION *****/
 
   /**
@@ -880,114 +909,173 @@ export class AppointmentDoctorCreateComponent implements OnInit {
     if (this.validateForm()) {
       const formValues = this.appointmentForm.value;
 
+      // Create the base appointment object with required fields
       const filteredBody: AppointmentAdminCreateInterface = {
         day: this.finalJsonDate,
         hour: this.finalJsonHour,
         doctor: this.selectedDoctor,
         patient: this.selectedPatient,
-        patient_copayment: formValues.patient_copayment,
       };
 
-      if (formValues.branch !== undefined && formValues.branch !== null) {
-        filteredBody.branch = formValues.branch;
-      }
+      // List of optional fields to assign conditionally
+      const fieldsToAssign = [
+        'branch',
+        'payment_method',
+        'patient_copayment',
+        'appointment_type',
+        'appointment_status',
+        'payment_status',
+        'health_insurance',
+      ];
 
-      if (
-        formValues.appointment_type !== undefined &&
-        formValues.appointment_type !== null
-      ) {
-        filteredBody.appointment_type = formValues.appointment_type;
-      }
+      // Assign optional fields if they are defined and not null
+      fieldsToAssign.forEach((field) => {
+        if (formValues[field] !== undefined && formValues[field] !== null) {
+          filteredBody[field] = formValues[field];
+        }
+      });
 
-      if (
-        formValues.appointment_status !== undefined &&
-        formValues.appointment_status !== null
-      ) {
-        filteredBody.appointment_status = formValues.appointment_status;
-      }
-
-      if (
-        formValues.payment_status !== undefined &&
-        formValues.payment_status !== null
-      ) {
-        filteredBody.payment_status = formValues.payment_status;
-      }
-
-      if (
-        formValues.payment_method !== undefined &&
-        formValues.payment_method !== null
-      ) {
-        filteredBody.payment_method = formValues.payment_method;
-      }
-
-      if (
-        formValues.health_insurance !== undefined &&
-        formValues.health_insurance !== null
-      ) {
-        filteredBody.health_insurance = formValues.health_insurance;
-      }
       //console.log('BODY: ', filteredBody);
+
+      // Open a confirmation dialog to preview the appointment
       const confirmAppointment = this.dialogService.openConfirmDialog(
         `${this.displayPreviewAppointment()}`
       );
+
       confirmAppointment.afterClosed().subscribe((confirmResult) => {
         if (confirmResult) {
           // Show the loading dialog
           const loadingDialog = this.dialogService.showSuccessDialog(
             'Se está enviando un correo con los datos del turno al paciente, por favor espere...'
           );
-          this.appointmentService
-            .createDoctorAppointment(filteredBody)
-            .pipe(
-              catchError((error) => {
-                console.error('Error en la solicitud:', error);
 
-                // Close processing dialog
+          // Check if the appointment is recurrent
+          if (this.appointmentForm.get('isRecurrent')?.value) {
+            // Generate recurrent appointments
+            const recurrentAppointments =
+              this.generateRecurrentAppointments(filteredBody);
+
+            // Create a promise for each recurrent appointment
+            const appointmentPromises = recurrentAppointments.map(
+              (appointment) => {
+                return firstValueFrom(
+                  this.appointmentService
+                    .createDoctorAppointment(appointment)
+                    .pipe(
+                      catchError((error) => {
+                        console.error('Request error:', error);
+                        loadingDialog.close();
+
+                        // Handle specific errors (e.g., non_field_errors)
+                        if (error.error && error.error.non_field_errors) {
+                          const errorMessage = error.error.non_field_errors[0];
+                          this.dialogService.showErrorDialog(
+                            'Error al generar el turno: ' + errorMessage
+                          );
+                        } else {
+                          // Handle generic errors
+                          this.dialogService.showErrorDialog(
+                            'Ha ocurrido un error en la solicitud.'
+                          );
+                        }
+
+                        throw error;
+                      })
+                    )
+                ); // Use firstValueFrom instead of .toPromise()
+              }
+            );
+
+            // Wait for all promises to resolve
+            Promise.all(appointmentPromises)
+              .then((responses) => {
                 loadingDialog.close();
-                // Checks "non_field_errors"
-                if (error.error && error.error.non_field_errors) {
-                  const errorMessage = error.error.non_field_errors[0];
-                  this.dialogService.showErrorDialog(
-                    'Error al generar el turno: ' + errorMessage
-                  );
-                } else {
-                  // Show a general error
-                  this.dialogService.showErrorDialog(
-                    'Ha ocurrido un error en la solicitud.'
-                  );
-                }
 
-                throw error;
+                // Show a success dialog after all appointments are created
+                const successDialog = this.dialogService.showSuccessDialog(
+                  'Turnos generados exitosamente'
+                );
+                successDialog.afterClosed().subscribe(() => {
+                  // Ask the user if they want to create another appointment
+                  const createAnotherAppointment =
+                    this.dialogService.openConfirmDialog(
+                      '¿Desea generar otro turno?'
+                    );
+                  createAnotherAppointment
+                    .afterClosed()
+                    .subscribe((confirmResult) => {
+                      if (confirmResult) {
+                        //this.appointmentForm.reset(); // Reset the form
+                        window.location.reload();
+                      } else {
+                        this.router.navigate([
+                          'Dashboard/appointments/admin/list',
+                        ]); // Navigate to the appointments list
+                      }
+                    });
+                });
               })
-            )
-            .subscribe((data: AppointmentAdminGetInterface) => {
-              this.appointmentResponse = data;
-              loadingDialog.close();
-              const successDialog = this.dialogService.showSuccessDialog(
-                'Turno generado exitosamente'
-              );
-
-              successDialog.afterClosed().subscribe(() => {
-                const createAnotherAppointment =
-                  this.dialogService.openConfirmDialog(
-                    '¿Desea generar otro turno?'
-                  );
-                createAnotherAppointment
-                  .afterClosed()
-                  .subscribe((confirmResult) => {
-                    if (confirmResult) {
-                      // reset form or reload?
-                      //this.appointmentForm.reset();
-                      window.location.reload();
-                    } else {
-                      // Redirect to apointment list
-                      this.router.navigate([
-                        'Dashboard/appointments/doctor/list',
-                      ]);
-                    }
-                  });
+              .catch((error) => {
+                console.error('Request error:', error);
+                loadingDialog.close();
+                this.dialogService.showErrorDialog(
+                  'Ha ocurrido un error al generar los turnos.'
+                );
               });
-            });
+          } else {
+            this.appointmentService
+              .createDoctorAppointment(filteredBody)
+              .pipe(
+                catchError((error) => {
+                  console.error('Error en la solicitud:', error);
+
+                  // Close processing dialog
+                  loadingDialog.close();
+                  // Checks "non_field_errors"
+                  if (error.error && error.error.non_field_errors) {
+                    const errorMessage = error.error.non_field_errors[0];
+                    this.dialogService.showErrorDialog(
+                      'Error al generar el turno: ' + errorMessage
+                    );
+                  } else {
+                    // Show a general error
+                    this.dialogService.showErrorDialog(
+                      'Ha ocurrido un error en la solicitud.'
+                    );
+                  }
+
+                  throw error;
+                })
+              )
+              .subscribe((data: AppointmentAdminGetInterface) => {
+                this.appointmentResponse = data;
+                loadingDialog.close();
+                const successDialog = this.dialogService.showSuccessDialog(
+                  'Turno generado exitosamente'
+                );
+
+                successDialog.afterClosed().subscribe(() => {
+                  const createAnotherAppointment =
+                    this.dialogService.openConfirmDialog(
+                      '¿Desea generar otro turno?'
+                    );
+                  createAnotherAppointment
+                    .afterClosed()
+                    .subscribe((confirmResult) => {
+                      if (confirmResult) {
+                        // reset form or reload?
+                        //this.appointmentForm.reset();
+                        window.location.reload();
+                      } else {
+                        // Redirect to apointment list
+                        this.router.navigate([
+                          'Dashboard/appointments/doctor/list',
+                        ]);
+                      }
+                    });
+                });
+              });
+          }
         }
       });
     }

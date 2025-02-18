@@ -245,6 +245,16 @@
           </mat-select>
         </mat-form-field>
 
+        <!-- Recurrent appointment checkbox -->
+        <mat-checkbox
+          formControlName="isRecurrent"
+          *ngIf="selectedSpecialty && selectedDoctor"
+          matTooltip="Se generarán turnos idénticos al actual para el mismo día de cada semana dentro del MES CORRIENTE."
+          matTooltipPosition="right"
+        >
+          ¿Es un turno recurrente?
+        </mat-checkbox>
+
         <!-- Button Section -->
         <button class="btn btn-primary" type="submit">Crear</button>
         <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
